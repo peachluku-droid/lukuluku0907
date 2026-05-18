@@ -225,6 +225,45 @@ body {
 .story-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
 @media (max-width: 600px) { .story-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; } }
 
+/* ─── "CÓ THỂ BẠN SẼ THÍCH" SECTION ─── */
+.suggest-section { padding: 1.25rem 1.5rem; }
+.suggest-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.suggest-title { font-size: 14px; font-weight: 800; }
+.suggest-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+@media (max-width: 600px) { .suggest-grid { grid-template-columns: 1fr 1fr; gap: 8px; } }
+.suggest-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  overflow: hidden; cursor: pointer; transition: all .2s;
+  text-decoration: none; color: var(--text); display: flex; flex-direction: column;
+}
+.suggest-card:hover { border-color: var(--peach-mid); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+.suggest-cover { position: relative; width: 100%; padding-top: 140%; background: linear-gradient(145deg, var(--peach-light), var(--gold-light)); overflow: hidden; flex-shrink: 0; }
+.suggest-cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none; }
+.suggest-cover.has-img img { display: block; }
+.suggest-cover .cover-ph { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 32px; }
+.suggest-cover.has-img .cover-ph { display: none; }
+.suggest-status {
+  position: absolute; top: 6px; left: 6px;
+  background: var(--peach); color: white;
+  font-size: 9px; font-weight: 800;
+  padding: 2px 7px; border-radius: 10px;
+  font-family: 'Nunito', sans-serif;
+}
+.suggest-info { padding: 8px 10px 10px; flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.suggest-name { font-size: 12px; font-weight: 800; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: var(--text); }
+.suggest-meta { font-size: 10px; color: var(--text-muted); }
+.suggest-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px; }
+.suggest-tag {
+  font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px;
+  background: var(--peach-light); color: var(--peach-dark);
+  border: 1px solid var(--border-hover);
+  white-space: nowrap;
+}
+
 /* ─── GENRE TAGS ON CARD ────────────── */
 .story-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
 .story-tag {
@@ -465,6 +504,22 @@ footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
   <div class="story-grid" id="new-list" style="display:none"></div>
 </div>
 
+<div class="divider"></div>
+
+<!-- CÓ THỂ BẠN SẼ THÍCH -->
+<div class="suggest-section" id="suggest-section-wrap" style="display:none">
+  <div class="suggest-head">
+    <div class="suggest-title">
+      <span class="ico">
+        <svg viewBox="0 0 24 24" width="15" height="15" style="margin-right:5px;vertical-align:-2px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+      </span>Có thể bạn sẽ thích
+    </div>
+    <button class="see-all" onclick="location.href='library.html'">Tất cả truyện →</button>
+  </div>
+  <div class="suggest-grid" id="suggest-list"></div>
+</div>
 
 <footer>
   <p>Peach Luku 🍑 — cute &amp; thơm</p>
@@ -567,6 +622,30 @@ async function loadStories() {
 
   const chCounts = {};
   if (chapters) chapters.forEach(c => { chCounts[c.story_id] = (chCounts[c.story_id] || 0) + 1; });
+
+  // ── Suggest Grid (Có thể bạn sẽ thích - randomized subset) ──
+  const shuffled = [...stories].sort(() => Math.random() - 0.5).slice(0, 6);
+  const suggestList = shuffled.filter(s => s.cover_url);
+  if (suggestList.length > 0) {
+    document.getElementById('suggest-section-wrap').style.display = '';
+    document.getElementById('suggest-list').innerHTML = suggestList.map(s => {
+      const ch = chCounts[s.id] || 0;
+      const tags = (s.genre || '').split(',').map(g => g.trim()).filter(Boolean).slice(0, 2);
+      const statusLabel = s.status || 'Đang cập nhật';
+      return `
+      <a class="suggest-card" href="story.html?story=${s.id}">
+        <div class="suggest-cover has-img">
+          <img src="${escapeHtml(s.cover_url)}" alt="${escapeHtml(s.title)}" loading="lazy">
+          <span class="suggest-status">${escapeHtml(statusLabel)}</span>
+        </div>
+        <div class="suggest-info">
+          <div class="suggest-name">${escapeHtml(s.title)}</div>
+          <div class="suggest-meta">${ch > 0 ? ch + ' chương' : 'Chưa có chương'}</div>
+          ${tags.length ? `<div class="suggest-tags">${tags.map(g => `<span class="suggest-tag">#${escapeHtml(g)}</span>`).join('')}</div>` : ''}
+        </div>
+      </a>`;
+    }).join('');
+  }
 
   // ── Wattpad grid (tất cả truyện) ──
   document.getElementById('new-list').innerHTML = stories.map(s => {
