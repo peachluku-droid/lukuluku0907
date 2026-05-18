@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đăng nhập — Peach Luku</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --peach: #E8835A; --peach-light: #FEF0E9; --peach-mid: #F2A882;
+  --peach-dark: #B85B30; --peach-darker: #7A3A1A;
+  --gold: #C9A84C; --gold-light: #FDF6E3;
+  --bg: #FDF6F2; --bg2: #ffffff;
+  --card: #ffffff; --text: #2C1A0E; --text-muted: #9A7A6A;
+  --border: rgba(232,131,90,0.18); --border-hover: #F2A882;
+  --danger: #e05252; --danger-light: #fff0f0;
+  --success: #4caf7d; --success-light: #f0fff6;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ─── BG DECORATION ──────────────────────────── */
+.bg-blob {
+  position: fixed; border-radius: 50%; pointer-events: none; z-index: 0;
+  filter: blur(60px); opacity: 0.35;
+}
+.bg-blob-1 { width: 340px; height: 340px; background: var(--peach-mid); top: -80px; right: -80px; }
+.bg-blob-2 { width: 280px; height: 280px; background: var(--gold-light); bottom: -60px; left: -60px; }
+.bg-blob-3 { width: 200px; height: 200px; background: var(--peach-light); top: 50%; left: -40px; transform: translateY(-50%); }
+
+/* ─── CARD ───────────────────────────────────── */
+.auth-card {
+  background: var(--bg2);
+  border-radius: 28px;
+  padding: 2.4rem 2rem 2rem;
+  width: 100%; max-width: 400px;
+  box-shadow: 0 20px 60px rgba(232,131,90,0.13), 0 4px 16px rgba(0,0,0,0.06);
+  border: 1px solid var(--border);
+  position: relative; z-index: 1;
+  animation: cardIn .35s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ─── HEADER ─────────────────────────────────── */
+.auth-logo {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin-bottom: 4px; text-decoration: none;
+}
+.auth-logo-text {
+  font-family: 'Pacifico', cursive; font-size: 26px; color: var(--peach);
+}
+.auth-tagline {
+  text-align: center; font-size: 12.5px; color: var(--text-muted);
+  font-weight: 600; margin-bottom: 1.8rem; line-height: 1.5;
+}
+
+/* ─── TAB BAR ────────────────────────────────── */
+.tab-bar {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  background: var(--bg); border-radius: 16px;
+  padding: 4px; gap: 3px;
+  margin-bottom: 1.8rem;
+  border: 1.5px solid var(--border);
+}
+.tab-btn {
+  padding: 9px 6px;
+  border: none; border-radius: 12px; background: transparent;
+  font-family: 'Nunito', sans-serif; font-size: 12.5px; font-weight: 700;
+  color: var(--text-muted); cursor: pointer;
+  transition: all .18s; display: flex; align-items: center; justify-content: center; gap: 5px;
+}
+.tab-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.tab-btn:hover { color: var(--peach-dark); background: var(--peach-light); }
+.tab-btn.active {
+  background: var(--peach); color: white;
+  box-shadow: 0 4px 14px rgba(232,131,90,0.28);
+}
+
+/* ─── PANE ───────────────────────────────────── */
+.tab-pane { display: none; }
+.tab-pane.active { display: block; animation: paneIn .2s ease both; }
+@keyframes paneIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ─── FORM ELEMENTS ──────────────────────────── */
+.pane-title {
+  font-size: 16px; font-weight: 800; margin-bottom: 4px;
+}
+.pane-sub {
+  font-size: 12px; color: var(--text-muted); font-weight: 600;
+  margin-bottom: 1.4rem; line-height: 1.5;
+}
+
+.field { margin-bottom: 1rem; }
+.field-label {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 800; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px;
+}
+.field-label svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.field-wrap { position: relative; }
+.field-input {
+  width: 100%; padding: 12px 44px 12px 14px;
+  border: 1.5px solid var(--border-hover);
+  border-radius: 13px; background: var(--bg);
+  color: var(--text); font-family: 'Nunito', sans-serif;
+  font-size: 14px; font-weight: 600; outline: none;
+  transition: border .15s, box-shadow .15s;
+}
+.field-input:focus { border-color: var(--peach); box-shadow: 0 0 0 3px rgba(232,131,90,0.12); }
+.field-input::placeholder { color: var(--text-muted); font-weight: 400; }
+.field-input.error { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(224,82,82,0.1); }
+.field-icon {
+  position: absolute; right: 13px; top: 50%; transform: translateY(-50%);
+  color: var(--text-muted); pointer-events: none; display: flex; align-items: center;
+}
+.field-icon svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+/* eye toggle */
+.eye-btn {
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer;
+  color: var(--text-muted); display: flex; align-items: center; padding: 2px;
+  transition: color .12s;
+}
+.eye-btn:hover { color: var(--peach); }
+.eye-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* strength bar */
+.pw-strength { margin-top: 7px; display: none; }
+.pw-strength.visible { display: block; }
+.pw-strength-bar { display: flex; gap: 4px; margin-bottom: 4px; }
+.pw-seg {
+  flex: 1; height: 3px; border-radius: 3px;
+  background: var(--border); transition: background .2s;
+}
+.pw-seg.weak   { background: var(--danger); }
+.pw-seg.fair   { background: var(--gold); }
+.pw-seg.good   { background: #74c0fc; }
+.pw-seg.strong { background: var(--success); }
+.pw-strength-label { font-size: 10px; font-weight: 800; color: var(--text-muted); }
+
+/* checkbox */
+.field-check {
+  display: flex; align-items: flex-start; gap: 9px;
+  margin-bottom: 1rem; cursor: pointer; user-select: none;
+}
+.field-check input[type="checkbox"] { display: none; }
+.check-box {
+  width: 18px; height: 18px; border-radius: 6px; flex-shrink: 0;
+  border: 1.5px solid var(--border-hover); background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 1px; transition: all .12s;
+}
+.field-check input:checked + .check-box {
+  background: var(--peach); border-color: var(--peach);
+}
+.field-check input:checked + .check-box svg { display: block; }
+.check-box svg { display: none; width: 11px; height: 11px; stroke: white; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.check-label { font-size: 12px; font-weight: 600; color: var(--text-muted); line-height: 1.5; }
+.check-label a { color: var(--peach); text-decoration: none; font-weight: 700; }
+.check-label a:hover { text-decoration: underline; }
+
+/* ─── ALERT ──────────────────────────────────── */
+.alert {
+  display: none; padding: 10px 14px; border-radius: 12px;
+  font-size: 12.5px; font-weight: 700; margin-bottom: 1rem;
+  display: flex; align-items: flex-start; gap: 8px;
+}
+.alert { display: none; }
+.alert.show { display: flex; }
+.alert svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; margin-top: 1px; }
+.alert-error { background: var(--danger-light); color: var(--danger); border: 1px solid rgba(224,82,82,0.2); }
+.alert-success { background: var(--success-light); color: var(--success); border: 1px solid rgba(76,175,125,0.2); }
+
+/* ─── SUBMIT BTN ─────────────────────────────── */
+.submit-btn {
+  width: 100%; padding: 13px;
+  background: var(--peach); color: white; border: none;
+  border-radius: 14px; font-family: 'Nunito', sans-serif;
+  font-size: 14px; font-weight: 800; cursor: pointer;
+  transition: all .15s; display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin-bottom: 1rem; box-shadow: 0 4px 16px rgba(232,131,90,0.25);
+}
+.submit-btn:hover:not(:disabled) { background: var(--peach-dark); box-shadow: 0 6px 20px rgba(232,131,90,0.35); transform: translateY(-1px); }
+.submit-btn:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+.submit-btn svg { width: 16px; height: 16px; stroke: white; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.btn-spinner {
+  width: 16px; height: 16px; border: 2.5px solid rgba(255,255,255,0.35);
+  border-top-color: white; border-radius: 50%;
+  animation: spin .7s linear infinite; display: none; flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── DIVIDER ────────────────────────────────── */
+.divider {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 1rem; color: var(--text-muted); font-size: 11px; font-weight: 700;
+}
+.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* ─── FOOTER LINK ────────────────────────────── */
+.auth-footer {
+  text-align: center; font-size: 12px; color: var(--text-muted); font-weight: 600;
+  margin-top: 0.5rem;
+}
+.auth-footer a {
+  color: var(--peach); font-weight: 700; text-decoration: none; cursor: pointer;
+}
+.auth-footer a:hover { text-decoration: underline; }
+
+/* ─── BACK TO HOME ───────────────────────────── */
+.back-home {
+  position: fixed; top: 16px; left: 16px; z-index: 10;
+  display: flex; align-items: center; gap: 6px;
+  text-decoration: none; color: var(--text-muted);
+  font-size: 12px; font-weight: 700;
+  background: var(--bg2); border: 1.5px solid var(--border);
+  padding: 7px 14px; border-radius: 20px;
+  transition: all .15s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.back-home:hover { background: var(--peach-light); color: var(--peach-dark); border-color: var(--peach-mid); }
+.back-home svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ─── SUCCESS SCREEN ─────────────────────────── */
+.success-screen {
+  display: none; text-align: center; padding: 0.5rem 0;
+  flex-direction: column; align-items: center; gap: 10px;
+}
+.success-screen.show { display: flex; animation: paneIn .25s ease both; }
+.success-icon-wrap {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: var(--success-light); border: 2px solid var(--success);
+  display: flex; align-items: center; justify-content: center; margin-bottom: 4px;
+}
+.success-icon-wrap svg { width: 30px; height: 30px; stroke: var(--success); fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.success-title { font-size: 16px; font-weight: 800; }
+.success-sub { font-size: 12.5px; color: var(--text-muted); max-width: 260px; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<!-- BG BLOBS -->
+<div class="bg-blob bg-blob-1"></div>
+<div class="bg-blob bg-blob-2"></div>
+<div class="bg-blob bg-blob-3"></div>
+
+<!-- BACK TO HOME -->
+<a class="back-home" href="index.html">
+  <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+  Về trang chủ
+</a>
+
+<!-- CARD -->
+<div class="auth-card">
+
+  <!-- LOGO -->
+  <a class="auth-logo" href="index.html">
+    <span class="auth-logo-text">Peach Luku</span>
+  </a>
+  <div class="auth-tagline">Web đọc truyện chữ của bạn</div>
+
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">
+      <svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+      Đăng nhập
+    </button>
+    <button class="tab-btn" id="tab-signup" onclick="switchTab('signup')">
+      <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+      Đăng ký
+    </button>
+    <button class="tab-btn" id="tab-reset" onclick="switchTab('reset')">
+      <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>
+      Đặt lại
+    </button>
+  </div>
+
+  <!-- ══ PANE: LOGIN ══ -->
+  <div class="tab-pane active" id="pane-login">
+    <div class="pane-title">Chào mừng trở lại</div>
+    <div class="pane-sub">Đăng nhập để tiếp tục đọc truyện</div>
+
+    <div class="alert alert-error" id="login-err">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span id="login-err-msg">Email hoặc mật khẩu không đúng</span>
+    </div>
+
+    <div class="field">
+      <div class="field-label">
+        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Email
+      </div>
+      <div class="field-wrap">
+        <input class="field-input" id="login-email" type="email" placeholder="you@email.com" autocomplete="email" onkeydown="if(event.key==='Enter')doLogin()">
+        <span class="field-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">
+        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Mật khẩu
+      </div>
+      <div class="field-wrap">
+        <input class="field-input" id="login-pw" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+        <button class="eye-btn" type="button" onclick="toggleEye('login-pw',this)">
+          <svg viewBox="0 0 24 24" class="eye-show"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div style="text-align:right;margin-top:-6px;margin-bottom:14px">
+      <a style="font-size:12px;font-weight:700;color:var(--peach);cursor:pointer;text-decoration:none" onclick="switchTab('reset')">Quên mật khẩu?</a>
+    </div>
+
+    <button class="submit-btn" id="login-btn" onclick="doLogin()">
+      <div class="btn-spinner" id="login-spinner"></div>
+      <svg viewBox="0 0 24 24" id="login-icon"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+      <span id="login-btn-text">Đăng nhập</span>
+    </button>
+
+    <div class="auth-footer">
+      Chưa có tài khoản? <a onclick="switchTab('signup')">Đăng ký ngay</a>
+    </div>
+  </div>
+
+  <!-- ══ PANE: SIGNUP ══ -->
+  <div class="tab-pane" id="pane-signup">
+    <div class="pane-title">Tạo tài khoản</div>
+    <div class="pane-sub">Tham gia để lưu tiến độ đọc và theo dõi truyện</div>
+
+    <div class="alert alert-error" id="signup-err">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span id="signup-err-msg">Đã có lỗi xảy ra</span>
+    </div>
+    <div class="alert alert-success" id="signup-ok">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Đăng ký thành công! Kiểm tra email để xác nhận tài khoản.</span>
+    </div>
+
+    <div class="field">
+      <div class="field-label">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Tên hiển thị
+      </div>
+      <div class="field-wrap">
+        <input class="field-input" id="signup-name" type="text" placeholder="Hamster đọc truyện" autocomplete="name" onkeydown="if(event.key==='Enter')doSignup()">
+        <span class="field-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">
+        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Email
+      </div>
+      <div class="field-wrap">
+        <input class="field-input" id="signup-email" type="email" placeholder="you@email.com" autocomplete="email" onkeydown="if(event.key==='Enter')doSignup()">
+        <span class="field-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">
+        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Mật khẩu
+      </div>
+      <div class="field-wrap">
+        <input class="field-input" id="signup-pw" type="password" placeholder="Tối thiểu 6 ký tự" autocomplete="new-password" oninput="checkStrength(this.value)" onkeydown="if(event.key==='Enter')doSignup()">
+        <button class="eye-btn" type="button" onclick="toggleEye('signup-pw',this)">
+          <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+      <div class="pw-strength" id="pw-strength">
+        <div class="pw-strength-bar">
+          <div class="pw-seg" id="ps1"></div>
+          <div class="pw-seg" id="ps2"></div>
+          <div class="pw-seg" id="ps3"></div>
+          <div class="pw-seg" id="ps4"></div>
+        </div>
+        <div class="pw-strength-label" id="ps-label">Quá ngắn</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">
+        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Xác nhận mật khẩu
+      </div>
+      <div class="field-wrap">
+        <input class="field-input" id="signup-pw2" type="password" placeholder="Nhập lại mật khẩu" autocomplete="new-password" onkeydown="if(event.key==='Enter')doSignup()">
+        <button class="eye-btn" type="button" onclick="toggleEye('signup-pw2',this)">
+          <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <label class="field-check">
+      <input type="checkbox" id="signup-agree">
+      <div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <span class="check-label">Tôi đồng ý với <a href="#">điều khoản sử dụng</a> của Peach Luku</span>
+    </label>
+
+    <button class="submit-btn" id="signup-btn" onclick="doSignup()">
+      <div class="btn-spinner" id="signup-spinner"></div>
+      <svg viewBox="0 0 24 24" id="signup-icon"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+      <span id="signup-btn-text">Tạo tài khoản</span>
+    </button>
+
+    <div class="auth-footer">
+      Đã có tài khoản? <a onclick="switchTab('login')">Đăng nhập</a>
+    </div>
+  </div>
+
+  <!-- ══ PANE: RESET ══ -->
+  <div class="tab-pane" id="pane-reset">
+
+    <!-- form -->
+    <div id="reset-form-wrap">
+      <div class="pane-title">Quên mật khẩu?</div>
+      <div class="pane-sub">Nhập email của bạn — chúng tôi sẽ gửi link đặt lại mật khẩu</div>
+
+      <div class="alert alert-error" id="reset-err">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span id="reset-err-msg">Không tìm thấy tài khoản với email này</span>
+      </div>
+
+      <div class="field">
+        <div class="field-label">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Email đã đăng ký
+        </div>
+        <div class="field-wrap">
+          <input class="field-input" id="reset-email" type="email" placeholder="you@email.com" autocomplete="email" onkeydown="if(event.key==='Enter')doReset()">
+          <span class="field-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+        </div>
+      </div>
+
+      <button class="submit-btn" id="reset-btn" onclick="doReset()">
+        <div class="btn-spinner" id="reset-spinner"></div>
+        <svg viewBox="0 0 24 24" id="reset-icon"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.6 3.4 2 2 0 0 1 3.57 1.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.75a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16"/></svg>
+        <span id="reset-btn-text">Gửi link đặt lại</span>
+      </button>
+
+      <div class="auth-footer">
+        Nhớ mật khẩu rồi? <a onclick="switchTab('login')">Đăng nhập</a>
+      </div>
+    </div>
+
+    <!-- success -->
+    <div class="success-screen" id="reset-success">
+      <div class="success-icon-wrap">
+        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      </div>
+      <div class="success-title">Email đã được gửi!</div>
+      <div class="success-sub">Kiểm tra hộp thư của bạn và nhấn link để đặt lại mật khẩu. Kiểm tra cả thư mục Spam nhé.</div>
+      <button class="submit-btn" style="margin-top:8px;max-width:220px" onclick="switchTab('login')">
+        <svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+        Về đăng nhập
+      </button>
+    </div>
+
+  </div><!-- /pane-reset -->
+
+</div><!-- /auth-card -->
+
+<script>
+/* ── SUPABASE ── */
+const SUPABASE_URL = 'https://jnlqzqtavfptkfvnndxq.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ojRrfSwxK_B6-TGSXaYGxQ_DKERN0-f';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+/* ── TAB SWITCHING ── */
+function switchTab(tab) {
+  ['login','signup','reset'].forEach(t => {
+    document.getElementById('tab-'+t).classList.toggle('active', t === tab);
+    document.getElementById('pane-'+t).classList.toggle('active', t === tab);
+  });
+  clearAlerts();
+  // update page title
+  const titles = { login: 'Đăng nhập', signup: 'Đăng ký', reset: 'Đặt lại mật khẩu' };
+  document.title = titles[tab] + ' — Peach Luku';
+}
+
+function clearAlerts() {
+  document.querySelectorAll('.alert').forEach(a => a.classList.remove('show'));
+}
+
+/* ── PASSWORD EYE TOGGLE ── */
+function toggleEye(inputId, btn) {
+  const inp = document.getElementById(inputId);
+  const isHidden = inp.type === 'password';
+  inp.type = isHidden ? 'text' : 'password';
+  btn.innerHTML = isHidden
+    ? `<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`
+    : `<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+}
+
+/* ── PASSWORD STRENGTH ── */
+function checkStrength(val) {
+  const bar = document.getElementById('pw-strength');
+  bar.classList.toggle('visible', val.length > 0);
+  if (!val.length) return;
+  let score = 0;
+  if (val.length >= 6) score++;
+  if (val.length >= 10) score++;
+  if (/[A-Z]/.test(val) && /[0-9]/.test(val)) score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
+  const classes = ['','weak','fair','good','strong'];
+  const labels  = ['','Yếu','Trung bình','Tốt','Mạnh'];
+  const colors  = ['','var(--danger)','var(--gold)','#74c0fc','var(--success)'];
+  [1,2,3,4].forEach(i => {
+    const seg = document.getElementById('ps'+i);
+    seg.className = 'pw-seg' + (i <= score ? ' '+classes[score] : '');
+  });
+  const lbl = document.getElementById('ps-label');
+  lbl.textContent = labels[score] || 'Quá ngắn';
+  lbl.style.color = colors[score] || 'var(--text-muted)';
+}
+
+/* ── LOADING STATE ── */
+function setLoading(prefix, loading) {
+  const btn = document.getElementById(prefix+'-btn');
+  const spinner = document.getElementById(prefix+'-spinner');
+  const icon = document.getElementById(prefix+'-icon');
+  const txt = document.getElementById(prefix+'-btn-text');
+  btn.disabled = loading;
+  spinner.style.display = loading ? 'block' : 'none';
+  if (icon) icon.style.display = loading ? 'none' : '';
+  if (txt) txt.textContent = loading
+    ? (prefix === 'login' ? 'Đang đăng nhập...' : prefix === 'signup' ? 'Đang tạo tài khoản...' : 'Đang gửi...')
+    : (prefix === 'login' ? 'Đăng nhập' : prefix === 'signup' ? 'Tạo tài khoản' : 'Gửi link đặt lại');
+}
+
+function showErr(prefix, msg) {
+  const el = document.getElementById(prefix+'-err');
+  const msgEl = document.getElementById(prefix+'-err-msg');
+  if (msgEl && msg) msgEl.textContent = msg;
+  el.classList.add('show');
+}
+
+/* ── LOGIN ── */
+async function doLogin() {
+  clearAlerts();
+  const email = document.getElementById('login-email').value.trim();
+  const pw    = document.getElementById('login-pw').value;
+
+  if (!email || !pw) { showErr('login', 'Vui lòng điền đầy đủ email và mật khẩu'); return; }
+
+  setLoading('login', true);
+  const { error } = await sb.auth.signInWithPassword({ email, password: pw });
+  setLoading('login', false);
+
+  if (error) {
+    const msg = error.message.includes('Invalid') ? 'Email hoặc mật khẩu không đúng'
+              : error.message.includes('confirm') ? 'Vui lòng xác nhận email trước khi đăng nhập'
+              : error.message;
+    showErr('login', msg);
+    document.getElementById('login-email').classList.toggle('error', true);
+    document.getElementById('login-pw').classList.toggle('error', true);
+    return;
+  }
+
+  // redirect after login
+  const redirect = new URLSearchParams(location.search).get('next') || 'index.html';
+  location.href = redirect;
+}
+
+/* ── SIGNUP ── */
+async function doSignup() {
+  clearAlerts();
+  const name  = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const pw    = document.getElementById('signup-pw').value;
+  const pw2   = document.getElementById('signup-pw2').value;
+  const agree = document.getElementById('signup-agree').checked;
+
+  if (!name)  { showErr('signup', 'Vui lòng nhập tên hiển thị'); return; }
+  if (!email) { showErr('signup', 'Vui lòng nhập email'); return; }
+  if (pw.length < 6) { showErr('signup', 'Mật khẩu phải có ít nhất 6 ký tự'); return; }
+  if (pw !== pw2)    { showErr('signup', 'Mật khẩu xác nhận không khớp'); return; }
+  if (!agree)        { showErr('signup', 'Bạn cần đồng ý với điều khoản sử dụng'); return; }
+
+  setLoading('signup', true);
+  const { error } = await sb.auth.signUp({
+    email, password: pw,
+    options: { data: { display_name: name } }
+  });
+  setLoading('signup', false);
+
+  if (error) {
+    const msg = error.message.includes('already') ? 'Email này đã được đăng ký. Thử đăng nhập?'
+              : error.message;
+    showErr('signup', msg);
+    return;
+  }
+
+  document.getElementById('signup-ok').classList.add('show');
+  // clear form
+  ['signup-name','signup-email','signup-pw','signup-pw2'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('signup-agree').checked = false;
+  document.getElementById('pw-strength').classList.remove('visible');
+}
+
+/* ── RESET ── */
+async function doReset() {
+  clearAlerts();
+  const email = document.getElementById('reset-email').value.trim();
+  if (!email) { showErr('reset', 'Vui lòng nhập email'); return; }
+
+  setLoading('reset', true);
+  const { error } = await sb.auth.resetPasswordForEmail(email, {
+    redirectTo: location.origin + '/auth.html?tab=newpw'
+  });
+  setLoading('reset', false);
+
+  if (error) {
+    showErr('reset', error.message);
+    return;
+  }
+
+  document.getElementById('reset-form-wrap').style.display = 'none';
+  document.getElementById('reset-success').classList.add('show');
+}
+
+/* ── CHECK SESSION (auto-redirect if logged in) ── */
+async function init() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    const redirect = new URLSearchParams(location.search).get('next') || 'index.html';
+    location.href = redirect;
+    return;
+  }
+  // check URL tab param
+  const tab = new URLSearchParams(location.search).get('tab');
+  if (tab === 'signup' || tab === 'reset') switchTab(tab);
+}
+
+init();
+</script>
+</body>
+</html>

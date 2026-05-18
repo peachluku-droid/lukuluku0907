@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hồ sơ — Peach Luku</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root, body.theme-light {
+  --peach: #E8835A; --peach-light: #FEF0E9; --peach-mid: #F2A882;
+  --peach-dark: #B85B30; --peach-darker: #7A3A1A;
+  --gold: #C9A84C; --gold-light: #FDF6E3;
+  --bg: #FDF6F2; --bg2: #ffffff;
+  --card: #ffffff; --text: #2C1A0E; --text-muted: #9A7A6A;
+  --border: rgba(232,131,90,0.18); --border-hover: #F2A882;
+  --danger: #e05252; --success: #4caf7d;
+}
+body.theme-dark {
+  --peach: #F2A882; --peach-light: #2A1A0E; --peach-mid: #C87050;
+  --peach-dark: #F2C0A0; --peach-darker: #FFE0CC;
+  --bg: #1a1a1a; --bg2: #242424; --card: #242424;
+  --text: #F0D8C8; --text-muted: #A08070;
+  --border: rgba(242,168,130,0.15); --border-hover: #C87050;
+  --danger: #e07070; --success: #6fcf97;
+}
+body.theme-sepia {
+  --peach: #8B5E3C; --peach-light: #F0E8D8; --peach-mid: #A67C52;
+  --peach-dark: #6B3E1C;
+  --bg: #f5f0e8; --bg2: #faf7f0; --card: #faf7f0;
+  --text: #3d2b1f; --text-muted: #9a8070;
+  --border: rgba(139,94,60,0.18); --border-hover: #A67C52;
+  --danger: #c05050; --success: #5a8a60;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg); color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── Header ── */
+.site-header {
+  background: var(--bg2); border-bottom: 1px solid var(--border);
+  padding: 0 1rem; height: 52px;
+  display: flex; align-items: center; gap: 10px;
+  position: sticky; top: 0; z-index: 100;
+}
+.back-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--text-muted); padding: 6px; border-radius: 8px;
+  display: flex; align-items: center;
+}
+.back-btn:hover { background: var(--peach-light); color: var(--peach); }
+.back-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.header-title { font-size: 15px; font-weight: 800; color: var(--peach-dark); flex: 1; }
+
+/* ── Layout ── */
+.container { max-width: 560px; margin: 0 auto; padding: 1.5rem 1rem 3rem; display: flex; flex-direction: column; gap: 1.25rem; }
+
+/* ── Avatar section ── */
+.avatar-section {
+  background: var(--card); border-radius: 20px;
+  border: 1px solid var(--border); padding: 1.5rem;
+  display: flex; flex-direction: column; align-items: center; gap: 1rem;
+}
+.avatar-wrap { position: relative; width: 88px; height: 88px; }
+.avatar-img {
+  width: 88px; height: 88px; border-radius: 50%;
+  object-fit: cover; border: 3px solid var(--peach-mid);
+  background: var(--peach-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px; font-weight: 800; color: var(--peach-dark);
+  overflow: hidden;
+}
+.avatar-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.avatar-edit-btn {
+  position: absolute; bottom: 0; right: 0;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--peach); border: 2px solid var(--bg2);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.avatar-edit-btn svg { width: 14px; height: 14px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+#avatar-file { display: none; }
+.user-email { font-size: 13px; color: var(--text-muted); font-weight: 600; }
+
+/* ── Card ── */
+.card {
+  background: var(--card); border-radius: 16px;
+  border: 1px solid var(--border); padding: 1.25rem;
+}
+.card-title {
+  font-size: 13px; font-weight: 800; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .5px; margin-bottom: 1rem;
+}
+
+/* ── Form ── */
+.field { display: flex; flex-direction: column; gap: 5px; margin-bottom: .9rem; }
+.field:last-of-type { margin-bottom: 0; }
+.field label { font-size: 12px; font-weight: 700; color: var(--text-muted); }
+.field input, .field textarea {
+  background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: 10px; padding: 9px 12px;
+  font-family: 'Nunito', sans-serif; font-size: 14px; color: var(--text);
+  outline: none; transition: border .15s; resize: none;
+}
+.field input:focus, .field textarea:focus { border-color: var(--peach-mid); }
+.field textarea { min-height: 72px; }
+
+.save-btn {
+  width: 100%; padding: 11px; border-radius: 12px;
+  background: var(--peach); border: none; cursor: pointer;
+  font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 800;
+  color: #fff; margin-top: 1rem; transition: opacity .15s;
+}
+.save-btn:hover { opacity: .88; }
+.save-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+/* ── Stats ── */
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.stat-box {
+  background: var(--peach-light); border-radius: 12px;
+  padding: .75rem .5rem; text-align: center; cursor: pointer;
+  border: 1px solid var(--border); transition: border-color .15s;
+}
+.stat-box:hover { border-color: var(--peach-mid); }
+.stat-num { font-size: 20px; font-weight: 800; color: var(--peach-dark); }
+.stat-label { font-size: 11px; font-weight: 700; color: var(--text-muted); margin-top: 2px; }
+
+/* ── Danger zone ── */
+.danger-btn {
+  width: 100%; padding: 10px; border-radius: 12px;
+  background: none; border: 1.5px solid var(--danger);
+  cursor: pointer; font-family: 'Nunito', sans-serif;
+  font-size: 14px; font-weight: 700; color: var(--danger);
+  transition: background .15s;
+}
+.danger-btn:hover { background: rgba(224,82,82,.08); }
+
+/* ── Toast ── */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(12px);
+  background: var(--text); color: var(--bg2);
+  padding: 10px 20px; border-radius: 24px;
+  font-size: 13px; font-weight: 700;
+  opacity: 0; pointer-events: none; transition: all .25s; white-space: nowrap; z-index: 999;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── Upload progress ── */
+.upload-progress {
+  font-size: 12px; color: var(--text-muted); text-align: center;
+  display: none;
+}
+
+/* ── Not logged in ── */
+.login-wall {
+  background: var(--card); border-radius: 20px; border: 1px solid var(--border);
+  padding: 2.5rem 1.5rem; text-align: center; display: flex;
+  flex-direction: column; align-items: center; gap: 1rem;
+}
+.login-wall svg { width: 48px; height: 48px; stroke: var(--peach-mid); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.login-wall h2 { font-size: 17px; font-weight: 800; }
+.login-wall p { font-size: 13px; color: var(--text-muted); }
+.login-wall-btn {
+  background: var(--peach); color: #fff; border: none;
+  border-radius: 12px; padding: 10px 28px;
+  font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 800;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <button class="back-btn" onclick="history.back()">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <div class="header-title">Hồ sơ của tôi</div>
+</header>
+
+<div class="container" id="main-container">
+  <div style="text-align:center;padding:3rem;color:var(--text-muted);font-size:14px">Đang tải...</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPABASE_URL = 'https://jnlqzqtavfptkfvnndxq.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ojRrfSwxK_B6-TGSXaYGxQ_DKERN0-f';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+/* ── theme ── */
+(function() {
+  const t = localStorage.getItem('plTheme') || 'light';
+  document.body.className = 'theme-' + t;
+})();
+
+let currentUser = null;
+let profile = null;
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function getInitials(email) {
+  return (email || 'U')[0].toUpperCase();
+}
+
+/* ── render login wall ── */
+function renderLoginWall() {
+  document.getElementById('main-container').innerHTML = `
+    <div class="login-wall">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <h2>Chưa đăng nhập</h2>
+      <p>Đăng nhập để xem và chỉnh sửa hồ sơ của bạn</p>
+      <button class="login-wall-btn" onclick="location.href='auth.html?next=profile.html'">Đăng nhập</button>
+    </div>`;
+}
+
+/* ── render profile UI ── */
+function renderProfile(stats) {
+  const avatarUrl = profile?.avatar_url;
+  const displayName = profile?.display_name || currentUser.email.split('@')[0];
+  const bio = profile?.bio || '';
+  const initials = getInitials(displayName);
+
+  document.getElementById('main-container').innerHTML = `
+    <!-- Avatar -->
+    <div class="avatar-section">
+      <div class="avatar-wrap">
+        <div class="avatar-img" id="avatar-display">
+          ${avatarUrl ? `<img src="${esc(avatarUrl)}" alt="avatar" id="avatar-img-el">` : initials}
+        </div>
+        <label class="avatar-edit-btn" for="avatar-file" title="Đổi ảnh đại diện">
+          <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </label>
+        <input type="file" id="avatar-file" accept="image/*" onchange="uploadAvatar(this)">
+      </div>
+      <div class="user-email">${esc(currentUser.email)}</div>
+      <div class="upload-progress" id="upload-progress">Đang tải ảnh lên...</div>
+    </div>
+
+    <!-- Thống kê -->
+    <div class="card">
+      <div class="card-title">Hoạt động</div>
+      <div class="stats-grid">
+        <div class="stat-box" onclick="location.href='library.html?tab=reading'">
+          <div class="stat-num" id="stat-bm">${stats.bookmarks}</div>
+          <div class="stat-label">Đang đọc</div>
+        </div>
+        <div class="stat-box" onclick="location.href='library.html?tab=follow'">
+          <div class="stat-num" id="stat-fl">${stats.follows}</div>
+          <div class="stat-label">Theo dõi</div>
+        </div>
+        <div class="stat-box" onclick="location.href='library.html?tab=history'">
+          <div class="stat-num" id="stat-hi">${stats.history}</div>
+          <div class="stat-label">Đã đọc</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chỉnh sửa thông tin -->
+    <div class="card">
+      <div class="card-title">Thông tin cá nhân</div>
+      <div class="field">
+        <label>Tên hiển thị</label>
+        <input type="text" id="field-name" value="${esc(displayName)}" maxlength="40" placeholder="Tên của bạn">
+      </div>
+      <div class="field">
+        <label>Giới thiệu bản thân</label>
+        <textarea id="field-bio" maxlength="200" placeholder="Vài dòng về bạn...">${esc(bio)}</textarea>
+      </div>
+      <button class="save-btn" id="save-btn" onclick="saveProfile()">💾 Lưu thay đổi</button>
+    </div>
+
+    <!-- Đổi mật khẩu -->
+    <div class="card">
+      <div class="card-title">Bảo mật</div>
+      <div class="field">
+        <label>Mật khẩu mới</label>
+        <input type="password" id="field-pw" placeholder="Để trống nếu không đổi" minlength="6">
+      </div>
+      <div class="field">
+        <label>Xác nhận mật khẩu mới</label>
+        <input type="password" id="field-pw2" placeholder="Nhập lại mật khẩu mới">
+      </div>
+      <button class="save-btn" id="pw-btn" onclick="changePassword()" style="background:var(--peach-dark)">🔑 Đổi mật khẩu</button>
+    </div>
+
+    <!-- Đăng xuất -->
+    <div class="card">
+      <div class="card-title">Tài khoản</div>
+      <button class="danger-btn" onclick="doLogout()">Đăng xuất</button>
+    </div>`;
+}
+
+/* ── load stats ── */
+async function loadStats() {
+  const uid = currentUser.id;
+  const [bm, fl, hi] = await Promise.all([
+    sb.from('bookmarks').select('id', { count: 'exact', head: true }).eq('user_id', uid),
+    sb.from('follows').select('id', { count: 'exact', head: true }).eq('user_id', uid),
+    sb.from('reading_history').select('id', { count: 'exact', head: true }).eq('user_id', uid),
+  ]);
+  return {
+    bookmarks: bm.count || 0,
+    follows: fl.count || 0,
+    history: hi.count || 0,
+  };
+}
+
+/* ── upload avatar ── */
+async function uploadAvatar(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 2 * 1024 * 1024) { showToast('Ảnh tối đa 2MB'); return; }
+
+  document.getElementById('upload-progress').style.display = 'block';
+
+  const ext = file.name.split('.').pop();
+  const path = `avatars/${currentUser.id}.${ext}`;
+
+  const { error: upErr } = await sb.storage.from('avatars').upload(path, file, {
+    contentType: file.type, upsert: true,
+  });
+
+  if (upErr) {
+    showToast('Lỗi upload: ' + upErr.message);
+    document.getElementById('upload-progress').style.display = 'none';
+    return;
+  }
+
+  const { data: urlData } = sb.storage.from('avatars').getPublicUrl(path);
+  const avatarUrl = urlData.publicUrl + '?t=' + Date.now();
+
+  await sb.from('profiles').upsert({ id: currentUser.id, avatar_url: avatarUrl });
+  profile = { ...profile, avatar_url: avatarUrl };
+
+  const display = document.getElementById('avatar-display');
+  display.innerHTML = `<img src="${avatarUrl}" alt="avatar">`;
+  document.getElementById('upload-progress').style.display = 'none';
+  showToast('Đã cập nhật ảnh đại diện 🐹');
+}
+
+/* ── save profile ── */
+async function saveProfile() {
+  const name = document.getElementById('field-name').value.trim();
+  const bio  = document.getElementById('field-bio').value.trim();
+  if (!name) { showToast('Tên không được để trống'); return; }
+
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true; btn.textContent = '⏳ Đang lưu...';
+
+  const { error } = await sb.from('profiles').upsert({
+    id: currentUser.id,
+    display_name: name,
+    bio: bio,
+    updated_at: new Date().toISOString(),
+  });
+
+  btn.disabled = false; btn.textContent = '💾 Lưu thay đổi';
+
+  if (error) { showToast('Lỗi: ' + error.message); return; }
+  profile = { ...profile, display_name: name, bio };
+  showToast('Đã lưu hồ sơ 🐹');
+}
+
+/* ── change password ── */
+async function changePassword() {
+  const pw  = document.getElementById('field-pw').value;
+  const pw2 = document.getElementById('field-pw2').value;
+  if (!pw) { showToast('Nhập mật khẩu mới'); return; }
+  if (pw.length < 6) { showToast('Mật khẩu tối thiểu 6 ký tự'); return; }
+  if (pw !== pw2) { showToast('Mật khẩu xác nhận không khớp'); return; }
+
+  const btn = document.getElementById('pw-btn');
+  btn.disabled = true; btn.textContent = '⏳ Đang đổi...';
+
+  const { error } = await sb.auth.updateUser({ password: pw });
+  btn.disabled = false; btn.textContent = '🔑 Đổi mật khẩu';
+
+  if (error) { showToast('Lỗi: ' + error.message); return; }
+  document.getElementById('field-pw').value = '';
+  document.getElementById('field-pw2').value = '';
+  showToast('Đã đổi mật khẩu thành công!');
+}
+
+/* ── logout ── */
+async function doLogout() {
+  await sb.auth.signOut();
+  location.href = 'index.html';
+}
+
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ── init ── */
+async function init() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { renderLoginWall(); return; }
+
+  currentUser = session.user;
+
+  const [{ data: prof }, stats] = await Promise.all([
+    sb.from('profiles').select('*').eq('id', currentUser.id).maybeSingle(),
+    loadStats(),
+  ]);
+  profile = prof;
+  renderProfile(stats);
+}
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Web đọc truyện chữ cute & thơm 🍑">
+<meta name="robots" content="index, follow">
+<meta property="og:site_name" content="Peach Luku">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Peach Luku">
+<meta property="og:description" content="Web đọc truyện chữ cute & thơm 🍑">
+<meta property="og:image" content="https://jnlqzqtavfptkfvnndxq.supabase.co/storage/v1/object/public/avatars/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Peach Luku">
+<meta name="twitter:description" content="Web đọc truyện chữ cute & thơm 🍑">
+<meta name="twitter:image" content="https://jnlqzqtavfptkfvnndxq.supabase.co/storage/v1/object/public/avatars/og-cover.png">
+<title>Peach Luku — Đọc truyện</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Nunito:wght@400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;600&family=Source+Code+Pro:wght@400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Themes ── */
+body.theme-light  { --bg:#fff8fb; --bg2:#ffffff; --text:#2c1a22; --border:#f4c0d1; --accent:#993556; --accent2:#d4537e; --panel:#ffffff; --sidebar:#fff0f6; --meta:#aaa; }
+body.theme-dark   { --bg:#1a1a1a; --bg2:#242424; --text:#e8d5dc; --border:#3a2a30; --accent:#f4a0bc; --accent2:#ed93b1; --panel:#242424; --sidebar:#1f1f1f; --meta:#666; }
+body.theme-sepia  { --bg:#f5f0e8; --bg2:#faf7f0; --text:#3d2b1f; --border:#d4c4a8; --accent:#8b5e3c; --accent2:#a67c52; --panel:#faf7f0; --sidebar:#f0e8d8; --meta:#9a8070; }
+body.theme-blue   { --bg:#e8f0fe; --bg2:#f4f7ff; --text:#1a2a4a; --border:#b8ccf4; --accent:#2a5bbf; --accent2:#4a7de0; --panel:#f4f7ff; --sidebar:#dce8fc; --meta:#7a9ac0; }
+body.theme-purple { --bg:#f0ebff; --bg2:#f9f6ff; --text:#2a1a4a; --border:#cdb8f4; --accent:#6a3bbf; --accent2:#8a5de0; --panel:#f9f6ff; --sidebar:#e8dcfc; --meta:#9a7ac0; }
+body.theme-pink   { --bg:#fff0f6; --bg2:#fff8fb; --text:#2c1a22; --border:#f4c0d1; --accent:#993556; --accent2:#d4537e; --panel:#fff8fb; --sidebar:#ffe6f2; --meta:#c09aaa; }
+body.theme-gray   { --bg:#f0f0f0; --bg2:#fafafa; --text:#222222; --border:#d0d0d0; --accent:#555555; --accent2:#777777; --panel:#fafafa; --sidebar:#e8e8e8; --meta:#999999; }
+body.theme-white  { --bg:#ffffff; --bg2:#ffffff; --text:#1a1a1a; --border:#e5e5e5; --accent:#333333; --accent2:#555555; --panel:#ffffff; --sidebar:#f7f7f7; --meta:#aaaaaa; }
+body.theme-wattpad{ --bg:#f5e6c8; --bg2:#fdf3e0; --text:#2c1f0e; --border:#d9c4a0; --accent:#8b5e1a; --accent2:#b07d2e; --panel:#fdf3e0; --sidebar:#f0ddb8; --meta:#a08050; }
+
+body {
+  font-family: var(--font-body, 'Nunito'), sans-serif;
+  background: var(--bg); color: var(--text);
+  min-height: 100vh;
+  transition: background .3s, color .3s;
+  font-size: var(--font-size, 17px);
+}
+
+/* ── Header ── */
+.site-header {
+  background: var(--bg2); border-bottom: 1px solid var(--border);
+  padding: 10px 16px; display: flex; align-items: center; gap: 12px;
+  position: sticky; top: 0; z-index: 100;
+}
+.header-logo { text-decoration: none; color: var(--accent); display: flex; align-items: center; }
+.header-logo svg { width: 22px; height: 22px; stroke: var(--accent); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.header-title { font-size: 13px; color: var(--meta); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.header-tools { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.tool-icon-btn {
+  background: none; border: 1.5px solid var(--border);
+  border-radius: 8px; padding: 5px 10px; cursor: pointer;
+  color: var(--text); transition: all .15s; display: flex; align-items: center;
+}
+.tool-icon-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.tool-icon-btn:hover { background: var(--sidebar); }
+.tool-icon-btn.active { background: var(--sidebar); border-color: var(--accent2); }
+
+/* ── Layout ── */
+.layout { display: flex; min-height: calc(100vh - 49px); }
+
+/* ── TOC Sidebar ── */
+.toc-sidebar {
+  width: 240px; background: var(--sidebar); border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  position: sticky; top: 49px; height: calc(100vh - 49px);
+  overflow-y: auto; transition: width .25s, opacity .25s; flex-shrink: 0;
+}
+.toc-sidebar.collapsed { width: 0; opacity: 0; overflow: hidden; }
+.toc-head {
+  padding: 14px 16px 10px; font-size: 13px; font-weight: 700;
+  color: var(--accent); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 6px;
+}
+.toc-head svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.toc-item {
+  display: block; padding: 10px 16px; font-size: 13px; color: var(--text);
+  text-decoration: none; border-bottom: 1px solid var(--border);
+  transition: background .15s; line-height: 1.4;
+}
+.toc-item:hover { background: var(--bg2); }
+.toc-item.active { background: var(--bg2); color: var(--accent); font-weight: 700; border-left: 3px solid var(--accent); }
+.toc-num { font-size: 11px; color: var(--meta); display: block; margin-bottom: 2px; }
+
+/* ── Story column ── */
+.story-col { flex: 1; padding: 32px 48px; max-width: 720px; margin: 0 auto; min-width: 0; }
+@media (max-width: 600px) {
+  .story-col { padding: 20px 18px; }
+  .chapter-stats { gap: 14px; padding: 10px 16px; font-size: 12px; }
+}
+.chapter-heading { font-size: 24px; font-weight: 700; color: var(--accent); margin-bottom: 6px; line-height: 1.3; }
+.chapter-meta { font-size: 13px; color: var(--meta); margin-bottom: 36px; }
+
+/* ── Paragraph + comment trigger ── */
+.para-wrap {
+  display: block; margin-bottom: 28px; border-radius: 8px;
+  padding: 6px; transition: background .2s; overflow: hidden;
+}
+.para-wrap.highlighted { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+.para-text {
+  line-height: 2; display: block;
+  font-weight: var(--font-weight, 400);
+  font-style: var(--font-style, normal);
+}
+.cmt-trigger {
+  float: right;
+  display: flex; align-items: center; gap: 4px;
+  white-space: nowrap;
+  background: color-mix(in srgb, var(--accent) 8%, var(--bg2));
+  border: 1.5px solid color-mix(in srgb, var(--accent) 30%, var(--border));
+  border-radius: 20px; padding: 3px 8px 3px 6px;
+  font-size: 11px; font-weight: 600;
+  color: color-mix(in srgb, var(--accent) 70%, var(--text));
+  cursor: pointer; transition: all .15s; line-height: 1.4;
+  font-family: 'Nunito', sans-serif; opacity: 0.75;
+  margin-left: 10px; margin-top: 6px;
+}
+.cmt-trigger svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.cmt-trigger:hover { opacity: 1; background: color-mix(in srgb, var(--accent) 15%, var(--bg2)); border-color: var(--accent2); color: var(--accent); }
+.cmt-trigger.active { opacity: 1; background: color-mix(in srgb, var(--accent) 15%, var(--bg2)); border-color: var(--accent); color: var(--accent); }
+.cmt-trigger.has-cmt { opacity: 1; background: color-mix(in srgb, var(--accent) 12%, var(--bg2)); border-color: var(--accent2); color: var(--accent); }
+.cmt-trigger .cnt { font-weight: 700; }
+
+/* ── Chapter stats bar ── */
+.ic { display:inline-block; vertical-align:-3px; margin-right:4px; width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+.chapter-stats {
+  display: flex; justify-content: center; align-items: center;
+  gap: 24px; padding: 12px 24px; background: var(--sidebar);
+  border: 1px solid var(--border); border-radius: 50px;
+  margin-bottom: 32px; font-size: 13px; color: var(--meta); flex-wrap: wrap;
+}
+.chapter-stats span { white-space: nowrap; }
+
+/* ── Chapter nav ── */
+.chapter-nav {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 48px; padding: 24px 0; border-top: 1px solid var(--border); gap: 12px;
+}
+.nav-btn {
+  text-decoration: none; background: var(--bg2); border: 1.5px solid var(--border);
+  border-radius: 20px; padding: 8px 20px; font-size: 14px;
+  color: var(--accent); font-weight: 600; transition: all .15s; white-space: nowrap;
+  display: flex; align-items: center; gap: 5px;
+}
+.nav-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.nav-btn:hover { background: var(--sidebar); }
+.nav-btn.disabled { opacity: 0.4; pointer-events: none; }
+.nav-chapter-title { font-size: 13px; color: var(--meta); text-align: center; flex: 1; }
+
+/* ── End section ── */
+.end-section { margin-top: 48px; display: flex; flex-direction: column; gap: 20px; }
+.chapter-stats-end {
+  display: flex; justify-content: center; align-items: center;
+  gap: 0; background: var(--sidebar); border: 1px solid var(--border);
+  border-radius: 50px; font-size: 13px; color: var(--meta); flex-wrap: wrap; overflow: hidden;
+}
+@media (max-width: 600px) {
+  .chapter-stats-end { gap: 0; border-radius: 50px; }
+  .chapter-stats-end .stat-btn { padding: 10px 14px; font-size: 12px; border-right: 1px solid var(--border); border-radius: 0; }
+  .chapter-stats-end .stat-btn:last-child { border-right: none; }
+  .chapter-nav { margin-top: 28px; }
+}
+.chapter-stats-end .stat-btn {
+  white-space: nowrap; background: none; border: none; font-family: inherit;
+  font-size: 13px; color: var(--meta); cursor: pointer;
+  padding: 12px 18px; transition: all .15s;
+  display: flex; align-items: center; gap: 5px;
+}
+.chapter-stats-end .stat-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.chapter-stats-end .stat-btn:hover { background: var(--bg2); color: var(--accent); }
+.chapter-stats-end .stat-btn.voted { color: var(--accent); font-weight: 700; }
+
+/* Audio */
+.audio-section { background: var(--sidebar); border: 1px solid var(--border); border-radius: 14px; padding: 16px 20px; }
+.audio-section h3 { font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+.audio-section h3 svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.audio-section audio { width: 100%; accent-color: var(--accent); }
+
+/* TOC inline */
+.toc-inline-section { border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+.toc-inline-head {
+  padding: 12px 16px; font-size: 14px; font-weight: 700; color: var(--accent);
+  border-bottom: 1px solid var(--border); background: var(--sidebar);
+  display: flex; align-items: center; gap: 6px;
+}
+.toc-inline-head svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.toc-inline-list { max-height: 260px; overflow-y: auto; }
+.toc-inline-item {
+  display: block; padding: 10px 16px; font-size: 13px; color: var(--text);
+  text-decoration: none; border-bottom: 1px solid var(--border);
+  transition: background .15s; line-height: 1.4;
+}
+.toc-inline-item:last-child { border-bottom: none; }
+.toc-inline-item:hover { background: var(--sidebar); }
+.toc-inline-item.active { color: var(--accent); font-weight: 700; border-left: 3px solid var(--accent); }
+.toc-empty { padding: 14px 16px; font-size: 13px; color: var(--meta); }
+
+/* Comment overview */
+.cmt-overview-section { border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: var(--bg2); }
+.cmt-overview-head {
+  padding: 10px 16px; font-size: 13px; font-weight: 700; color: var(--accent);
+  border-bottom: 1px solid var(--border); background: var(--sidebar);
+  display: flex; align-items: center; gap: 6px; font-family: 'Nunito', sans-serif;
+}
+.cmt-overview-head svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.cmt-overview-list { display: flex; flex-direction: column; }
+.cmt-overview-row {
+  display: flex; align-items: center; gap: 10px; padding: 10px 16px;
+  border-bottom: 1px solid var(--border); cursor: pointer; transition: background .15s;
+}
+.cmt-overview-row:last-child { border-bottom: none; }
+.cmt-overview-row:hover { background: var(--sidebar); }
+.cmt-overview-num { font-size: 10px; color: var(--meta); font-weight: 700; width: 22px; flex-shrink: 0; font-family: 'Nunito', sans-serif; opacity: 0.7; }
+.cmt-overview-excerpt { flex: 1; font-size: 13px; color: var(--text); line-height: 1.45; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; min-width: 0; }
+.cmt-overview-badge {
+  flex-shrink: 0; display: flex; align-items: center; gap: 3px;
+  color: var(--meta); font-size: 11px; font-family: 'Nunito', sans-serif; opacity: 0.8;
+}
+.cmt-overview-badge svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.cmt-overview-badge.has-cmt { color: var(--accent); font-weight: 700; opacity: 1; }
+
+/* ── Settings drawer ── */
+.settings-drawer {
+  position: fixed; top: 49px; left: 0; right: 0; background: var(--panel);
+  border-bottom: 1px solid var(--border); padding: 18px 16px 20px;
+  z-index: 200; display: none; flex-direction: column; gap: 18px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+}
+.settings-drawer.open { display: flex; }
+.setting-group label { font-size: 12px; color: var(--meta); display: block; margin-bottom: 10px; }
+.theme-swatches { display: flex; gap: 8px; flex-wrap: wrap; }
+.swatch { width: 38px; height: 38px; border-radius: 6px; border: 2.5px solid transparent; cursor: pointer; transition: border-color .15s; flex-shrink: 0; }
+.swatch.active { border-color: var(--accent) !important; }
+.swatch-light  { background:#ffffff; border-color:#ddd; }
+.swatch-dark   { background:#1a1a1a; }
+.swatch-sepia  { background:#f5f0e8; border-color:#ddd; }
+.swatch-blue   { background:#e8f0fe; border-color:#ddd; }
+.swatch-purple { background:#f0ebff; border-color:#ddd; }
+.swatch-pink   { background:#fff0f6; border-color:#ddd; }
+.swatch-gray   { background:#f0f0f0; border-color:#ddd; }
+.swatch-white  { background:#ffffff; border-color:#ccc; }
+.swatch-wattpad{ background:#f5e6c8; border-color:#d9c4a0; }
+.fontsize-row { display: flex; gap: 8px; }
+.fs-btn {
+  flex: 1; padding: 12px 0; background: var(--sidebar); border: 1px solid var(--border);
+  border-radius: 8px; font-size: 16px; font-weight: 600; color: var(--text);
+  cursor: pointer; font-family: inherit; transition: background .15s;
+}
+.fs-btn:hover { background: var(--bg2); }
+.font-accordion { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-top: 10px; }
+.font-accordion-trigger {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px; font-size: 16px; color: var(--accent); background: var(--bg2);
+  cursor: pointer; font-weight: 600; user-select: none;
+}
+.font-arrow { font-size: 12px; transition: transform .2s; display: flex; align-items: center; }
+.font-arrow svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform .2s; }
+.font-accordion-trigger.expanded .font-arrow svg { transform: rotate(180deg); }
+.font-accordion-body { display: none; flex-direction: column; border-top: 1px solid var(--border); }
+.font-accordion-body.open { display: flex; }
+.font-list { display: flex; flex-direction: column; }
+.font-list-item {
+  padding: 14px 16px; font-size: 16px; color: var(--text); background: var(--bg2);
+  border-bottom: 1px solid var(--border); cursor: pointer; transition: background .15s; text-align: center;
+}
+.font-list-item:last-child { border-bottom: none; }
+.font-list-item:hover { background: var(--sidebar); }
+.font-list-item.active { color: var(--accent); background: var(--sidebar); font-weight: 600; }
+.style-row { display: flex; gap: 10px; margin-top: 10px; }
+.style-btn {
+  flex: 1; padding: 14px 0; background: var(--sidebar); border: 1.5px solid var(--border);
+  border-radius: 8px; font-size: 20px; font-weight: 700; color: var(--text);
+  cursor: pointer; font-family: 'Crimson Text', serif; transition: all .15s;
+}
+.style-btn:hover { background: var(--bg2); }
+.style-btn.active { background: var(--bg2); border-color: var(--accent); color: var(--accent); }
+
+/* ── Comment bottom sheet ── */
+.cmt-sheet-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 299; }
+.cmt-sheet-overlay.open { display: block; }
+.cmt-sheet {
+  position: fixed; bottom: 0; left: 0; right: 0; background: var(--panel);
+  border-top: 1.5px solid var(--border); border-radius: 20px 20px 0 0;
+  box-shadow: 0 -4px 30px rgba(0,0,0,0.12); z-index: 300;
+  display: flex; flex-direction: column; max-height: 75vh;
+  transform: translateY(100%); transition: transform .3s cubic-bezier(.32,1,.4,1);
+}
+.cmt-sheet.open { transform: translateY(0); }
+.cmt-sheet-handle { width: 40px; height: 4px; background: var(--border); border-radius: 4px; margin: 12px auto 0; flex-shrink: 0; }
+.cmt-sheet-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px; flex-shrink: 0; border-bottom: 1px solid var(--border);
+}
+.cmt-sheet-title { font-size: 14px; font-weight: 700; color: var(--accent); }
+.cmt-sheet-close {
+  background: none; border: none; cursor: pointer; color: var(--meta);
+  padding: 2px 6px; border-radius: 8px; display: flex; align-items: center;
+}
+.cmt-sheet-close svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+.cmt-sheet-close:hover { background: var(--sidebar); }
+.cmt-para-quote {
+  padding: 12px 18px; background: color-mix(in srgb, var(--accent) 6%, var(--bg2));
+  border-left: 3px solid var(--accent); margin: 0 16px; border-radius: 0 8px 8px 0;
+  font-size: 13.5px; line-height: 1.7; color: var(--text); font-style: italic;
+  max-height: 90px; overflow: hidden;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+  flex-shrink: 0; display: none;
+}
+.cmt-para-quote.visible { display: -webkit-box; }
+
+/* Comment list */
+.cmt-sheet-list { flex: 1; overflow-y: auto; padding: 8px 16px; display: flex; flex-direction: column; gap: 0; }
+.cmt-bubble { display: flex; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.cmt-bubble:last-child { border-bottom: none; }
+.cmt-avatar { width: 38px; height: 38px; border-radius: 50%; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; flex-shrink: 0; font-family: 'Nunito', sans-serif; }
+.cmt-body { flex: 1; min-width: 0; }
+.cmt-user { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 2px; font-family: 'Nunito', sans-serif; }
+.cmt-content { font-size: 14px; line-height: 1.6; word-break: break-word; color: var(--text); font-family: 'Nunito', sans-serif; }
+.cmt-img { margin-top: 8px; max-width: 100%; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; display: block; }
+.cmt-footer { display: flex; align-items: center; gap: 12px; margin-top: 5px; }
+.cmt-time { font-size: 11px; color: var(--meta); font-family: 'Nunito', sans-serif; }
+.cmt-reply-btn { font-size: 12px; font-weight: 700; color: var(--accent); background: none; border: none; cursor: pointer; padding: 0; font-family: 'Nunito', sans-serif; }
+.cmt-like-btn {
+  margin-left: auto; background: none; border: none; cursor: pointer;
+  color: var(--meta); padding: 0 2px; line-height: 1; transition: color .15s;
+  display: flex; align-items: center;
+}
+.cmt-like-btn svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.cmt-like-btn.liked svg { fill: var(--accent); stroke: var(--accent); }
+.empty-msg { text-align: center; font-size: 13px; color: var(--meta); padding: 28px 12px; line-height: 1.8; font-family: 'Nunito', sans-serif; }
+
+/* Input bar */
+.cmt-sheet-input { padding: 10px 16px 20px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+.sheet-name-row { display: flex; align-items: center; gap: 6px; }
+.sheet-name { flex: 1; border: 1.5px solid var(--border); border-radius: 8px; padding: 6px 10px; font-size: 13px; color: var(--text); background: var(--bg); outline: none; font-family: 'Nunito', sans-serif; }
+.sheet-name:focus { border-color: var(--accent2); }
+.sheet-emoji-row { display: flex; align-items: center; gap: 6px; }
+.sheet-emoji-btn, .sheet-img-btn {
+  background: var(--sidebar); border: 1.5px solid var(--border);
+  border-radius: 8px; padding: 5px 9px; cursor: pointer; display: flex; align-items: center;
+}
+.sheet-emoji-btn svg, .sheet-img-btn svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.sheet-emoji-picker { display: none; flex-wrap: wrap; gap: 2px; padding: 8px; border: 1.5px solid var(--border); border-radius: 10px; background: var(--bg2); max-height: 130px; overflow-y: auto; }
+.sheet-emoji-picker.open { display: flex; }
+.ep-label { width: 100%; font-size: 10px; color: var(--meta); padding: 4px 2px 2px; font-weight: 700; text-transform: uppercase; }
+.ep-emoji { font-size: 19px; background: none; border: none; cursor: pointer; border-radius: 6px; padding: 3px 4px; line-height: 1; }
+.ep-emoji:hover { background: var(--sidebar); }
+.sheet-input-bar { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 30px; padding: 6px 6px 6px 14px; }
+.sheet-input-bar:focus-within { border-color: var(--accent); }
+.sheet-text-inline { flex: 1; border: none; background: transparent; font-size: 14px; color: var(--text); font-family: 'Nunito', sans-serif; outline: none; min-height: 20px; max-height: 80px; resize: none; }
+.sheet-send-inline {
+  background: var(--accent); border: none; border-radius: 50%; width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: opacity .15s;
+}
+.sheet-send-inline svg { width: 15px; height: 15px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.sheet-send-inline:disabled { opacity: .4; cursor: not-allowed; }
+.img-preview-wrap { position: relative; display: inline-block; margin-top: 2px; }
+.img-preview { max-height: 70px; max-width: 100%; border-radius: 8px; border: 1px solid var(--border); display: block; }
+.img-preview-remove {
+  position: absolute; top: -6px; right: -6px; background: var(--accent); color: #fff;
+  border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 11px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+
+/* ── Lightbox ── */
+.lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 999; align-items: center; justify-content: center; }
+.lightbox.open { display: flex; }
+.lightbox img { max-width: 90vw; max-height: 90vh; border-radius: 12px; }
+.lightbox-close {
+  position: absolute; top: 20px; right: 24px; color: white; cursor: pointer;
+  background: rgba(0,0,0,0.4); border: none; border-radius: 50%;
+  width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+}
+.lightbox-close svg { width: 18px; height: 18px; stroke: white; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+
+/* ── Loading skeleton ── */
+.para-skeleton { display: flex; flex-direction: column; gap: 24px; }
+.skel-para { display: flex; flex-direction: column; gap: 8px; }
+.skel-line { height: 14px; border-radius: 6px; background: linear-gradient(90deg, var(--border) 25%, color-mix(in srgb, var(--accent) 6%, var(--bg2)) 50%, var(--border) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; }
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+</style>
+</head>
+<body class="theme-light">
+
+<header class="site-header">
+  <a href="index.html" class="header-logo" title="Về trang chủ">
+    <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+  </a>
+  <span class="header-title" id="header-title">Đang tải...</span>
+  <div class="header-tools">
+    <a class="tool-icon-btn user-nav-btn-ch" id="nav-user-btn" href="profile.html" title="Hồ sơ"><svg viewBox="0 0 24 24" width="16" height="16" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
+    <button class="tool-icon-btn" onclick="toggleToc()" title="Mục lục">
+      <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="12" y2="15"/></svg>
+    </button>
+    <button class="tool-icon-btn" onclick="toggleSettings()" title="Cài đặt">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- Settings drawer -->
+<div class="settings-drawer" id="settings-drawer">
+  <div class="setting-group">
+    <label>Màu trang</label>
+    <div class="theme-swatches">
+      <div class="swatch swatch-light active" onclick="setTheme('light',this)" title="Trắng"></div>
+      <div class="swatch swatch-dark"         onclick="setTheme('dark',this)"   title="Đen"></div>
+      <div class="swatch swatch-sepia"        onclick="setTheme('sepia',this)"  title="Vàng"></div>
+      <div class="swatch swatch-blue"         onclick="setTheme('blue',this)"   title="Xanh"></div>
+      <div class="swatch swatch-purple"       onclick="setTheme('purple',this)" title="Tím"></div>
+      <div class="swatch swatch-pink"         onclick="setTheme('pink',this)"   title="Hồng"></div>
+      <div class="swatch swatch-gray"         onclick="setTheme('gray',this)"   title="Xám"></div>
+      <div class="swatch swatch-white"        onclick="setTheme('white',this)"  title="Trắng tinh"></div>
+      <div class="swatch swatch-wattpad"      onclick="setTheme('wattpad',this)" title="Warm"></div>
+    </div>
+  </div>
+  <div class="setting-group">
+    <label>Phông chữ</label>
+    <div class="fontsize-row">
+      <button class="fs-btn" onclick="changeFontSize(-1)">Aa−</button>
+      <button class="fs-btn" onclick="changeFontSize(1)">Aa+</button>
+    </div>
+    <div class="font-accordion" id="font-accordion">
+      <div class="font-accordion-trigger" id="font-accordion-trigger" onclick="toggleFontAccordion()">
+        <span id="font-trigger-label" style="font-family:'Crimson Text',serif">Serif</span>
+        <span class="font-arrow"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+      <div class="font-accordion-body" id="font-accordion-body">
+        <div class="font-list">
+          <div class="font-list-item active" style="font-family:'Crimson Text',serif"      onclick="setFont(0,this)">Serif</div>
+          <div class="font-list-item"        style="font-family:'Nunito',sans-serif"        onclick="setFont(1,this)">Sans Serif</div>
+          <div class="font-list-item"        style="font-family:'Lora',serif"               onclick="setFont(2,this)">Lora</div>
+          <div class="font-list-item"        style="font-family:'Playfair Display',serif"   onclick="setFont(3,this)">Playfair</div>
+          <div class="font-list-item"        style="font-family:'Source Sans 3',sans-serif" onclick="setFont(4,this)">Source Sans</div>
+          <div class="font-list-item"        style="font-family:'Source Code Pro',monospace"onclick="setFont(5,this)">Monospace</div>
+        </div>
+      </div>
+    </div>
+    <div class="style-row">
+      <button class="style-btn" id="btn-bold" onclick="toggleBold(this)"><b>B</b></button>
+      <button class="style-btn" id="btn-italic" onclick="toggleItalic(this)"><i>I</i></button>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+  <!-- TOC Sidebar -->
+  <aside class="toc-sidebar collapsed" id="toc-sidebar">
+    <div class="toc-head">
+      <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="12" y2="15"/></svg>
+      Mục lục
+    </div>
+    <div id="toc-list"><p style="padding:12px 16px;font-size:13px;color:var(--meta)">Đang tải...</p></div>
+  </aside>
+
+  <!-- Story column -->
+  <div class="story-col">
+    <h1 class="chapter-heading" id="chapter-heading">Đang tải...</h1>
+    <div class="chapter-meta" id="chapter-meta"></div>
+
+    <!-- Stats top -->
+    <div class="chapter-stats">
+      <span><svg class="ic" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span id="view-count">0</span> lượt đọc</span>
+      <span><svg class="ic" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span id="vote-count">0</span> vote</span>
+      <span><svg class="ic" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span id="total-cmt-count-top">0</span> bình luận</span>
+    </div>
+
+    <!-- Paragraphs (dynamic) -->
+    <div id="paragraphs-container">
+      <div class="para-skeleton">
+        <div class="skel-para"><div class="skel-line" style="width:100%"></div><div class="skel-line" style="width:90%"></div><div class="skel-line" style="width:95%"></div></div>
+        <div class="skel-para"><div class="skel-line" style="width:98%"></div><div class="skel-line" style="width:85%"></div></div>
+        <div class="skel-para"><div class="skel-line" style="width:100%"></div><div class="skel-line" style="width:92%"></div><div class="skel-line" style="width:70%"></div></div>
+      </div>
+    </div>
+
+    <!-- End section -->
+    <div class="end-section">
+      <div class="chapter-stats-end">
+        <button class="stat-btn" onclick="toggleAudioSection()">
+          <svg viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z"/><path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+          Audio
+        </button>
+        <button class="stat-btn" id="vote-btn" onclick="submitVote()">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <span id="vote-count-end">0</span> vote
+        </button>
+        <button class="stat-btn" onclick="toggleCmtOverview()">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span id="total-cmt-end">0</span> bình luận
+        </button>
+      </div>
+
+      <div class="audio-section" id="audio-section-end" style="display:none">
+        <h3><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg> Nghe truyện</h3>
+        <audio id="chapter-audio" controls>
+          <source id="audio-src" src="" type="audio/mpeg">
+          Trình duyệt không hỗ trợ audio.
+        </audio>
+      </div>
+
+      <div class="cmt-overview-section" id="cmt-overview-end" style="display:none">
+        <div class="cmt-overview-head">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Bình luận chương
+        </div>
+        <div class="cmt-overview-list" id="cmt-overview-list">
+          <p class="toc-empty">Đang tải...</p>
+        </div>
+      </div>
+
+      <!-- TOC inline -->
+      <div class="toc-inline-section">
+        <div class="toc-inline-head">
+          <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          Mục lục
+        </div>
+        <div class="toc-inline-list" id="toc-inline-list">
+          <p class="toc-empty">Đang tải...</p>
+        </div>
+      </div>
+
+      <!-- Nav -->
+      <nav class="chapter-nav">
+        <a href="#" class="nav-btn disabled" id="btn-prev">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+          Chương trước
+        </a>
+        <span class="nav-chapter-title" id="nav-title"></span>
+        <a href="#" class="nav-btn disabled" id="btn-next">
+          Chương sau
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<!-- Comment sheet overlay -->
+<div class="cmt-sheet-overlay" id="cmt-overlay" onclick="closeCmtSheet()"></div>
+
+<!-- Comment bottom sheet -->
+<div class="cmt-sheet" id="cmt-sheet">
+  <div class="cmt-sheet-handle"></div>
+  <div class="cmt-sheet-header">
+    <span class="cmt-sheet-title" id="sheet-pid-label">Bình luận đoạn 1</span>
+    <button class="cmt-sheet-close" onclick="closeCmtSheet()">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="cmt-para-quote" id="cmt-para-quote"></div>
+  <div class="cmt-sheet-list" id="sheet-cmt-list">
+    <p class="empty-msg">Đang tải...</p>
+  </div>
+  <div class="cmt-sheet-input">
+    <div class="sheet-name-row">
+      <input class="sheet-name" id="sheet-username" type="text" placeholder="Tên của bạn" maxlength="30">
+    </div>
+    <div class="sheet-emoji-row">
+      <button class="sheet-emoji-btn" onclick="toggleSheetPicker()">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+      </button>
+      <button class="sheet-img-btn" onclick="document.getElementById('sheet-img-input').click()" title="Thêm ảnh">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      </button>
+      <input type="file" id="sheet-img-input" accept="image/*" style="display:none" onchange="previewImg(this)">
+    </div>
+    <div class="sheet-emoji-picker" id="sheet-emoji-picker"></div>
+    <div id="img-preview-container"></div>
+    <div class="sheet-input-bar">
+      <textarea class="sheet-text-inline" id="sheet-cmt-input" placeholder="Viết bình luận..." rows="1"
+        oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+      <button class="sheet-send-inline" id="sheet-send-btn" onclick="submitSheetComment()">
+        <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">
+    <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+/* ═══════════════════════════════════
+   SUPABASE + URL PARAMS
+═══════════════════════════════════ */
+const SUPABASE_URL = 'https://jnlqzqtavfptkfvnndxq.supabase.co'
+const SUPABASE_KEY = 'sb_publishable_ojRrfSwxK_B6-TGSXaYGxQ_DKERN0-f'
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+
+const params      = new URLSearchParams(location.search)
+const STORY_ID    = params.get('story')
+const CHAPTER_UUID = params.get('chapter') || null  // UUID của chương
+// CHAPTER_UUID đã khai báo ở trên từ URL params
+
+if (!STORY_ID || !params.get('chapter')) {
+  document.body.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;text-align:center;padding:2rem;gap:12px">
+    <svg viewBox="0 0 24 24" width="52" height="52" style="stroke:#d4537e;fill:none;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <div style="font-size:17px;font-weight:800">Thiếu thông tin chương</div>
+    <div style="font-size:13px;color:#aaa">Vui lòng truy cập từ trang truyện</div>
+    <a href="index.html" style="margin-top:8px;padding:10px 24px;background:#d4537e;color:white;border-radius:24px;text-decoration:none;font-weight:700;font-size:13px">Về trang chủ</a>
+  </div>`
+}
+
+/* ═══════════════════════════════════
+   FONTS + THEME
+═══════════════════════════════════ */
+const FONTS = [
+  { key: 'Crimson Text',     label: 'Serif'       },
+  { key: 'Nunito',           label: 'Sans Serif'  },
+  { key: 'Lora',             label: 'Lora'        },
+  { key: 'Playfair Display', label: 'Playfair'    },
+  { key: 'Source Sans 3',    label: 'Source Sans' },
+  { key: 'Source Code Pro',  label: 'Monospace'   },
+]
+let fontIdx = 0, fontSize = 17
+
+function setTheme(t, el) {
+  document.body.className = 'theme-' + t
+  document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'))
+  el.classList.add('active')
+  localStorage.setItem('plChTheme', t)
+}
+function changeFontSize(delta) {
+  fontSize = Math.min(24, Math.max(13, fontSize + delta))
+  document.body.style.setProperty('--font-size', fontSize + 'px')
+  localStorage.setItem('plChFontSize', fontSize)
+}
+function setFont(idx, el) {
+  fontIdx = idx
+  document.body.style.setProperty('--font-body', FONTS[idx].key)
+  document.querySelectorAll('.font-list-item').forEach(b => b.classList.remove('active'))
+  el.classList.add('active')
+  localStorage.setItem('plChFontIdx', idx)
+  const label = document.getElementById('font-trigger-label')
+  if (label) { label.textContent = FONTS[idx].label; label.style.fontFamily = "'" + FONTS[idx].key + "'" }
+  document.getElementById('font-accordion-body')?.classList.remove('open')
+  document.getElementById('font-accordion-trigger')?.classList.remove('expanded')
+}
+function toggleFontAccordion() {
+  document.getElementById('font-accordion-body').classList.toggle('open')
+  document.getElementById('font-accordion-trigger').classList.toggle('expanded')
+}
+function toggleBold(btn) {
+  const on = btn.classList.toggle('active')
+  document.body.style.setProperty('--font-weight', on ? '700' : '400')
+  localStorage.setItem('plChBold', on ? '1' : '0')
+}
+function toggleItalic(btn) {
+  const on = btn.classList.toggle('active')
+  document.body.style.setProperty('--font-style', on ? 'italic' : 'normal')
+  localStorage.setItem('plChItalic', on ? '1' : '0')
+}
+function restoreSettings() {
+  const theme  = localStorage.getItem('plChTheme') || localStorage.getItem('plTheme') || 'light'
+  fontSize     = parseInt(localStorage.getItem('plChFontSize') || '17')
+  fontIdx      = parseInt(localStorage.getItem('plChFontIdx')  || '0')
+  const bold   = localStorage.getItem('plChBold')   === '1'
+  const italic = localStorage.getItem('plChItalic') === '1'
+  document.body.className = 'theme-' + theme
+  document.body.style.setProperty('--font-size',   fontSize + 'px')
+  document.body.style.setProperty('--font-body',   FONTS[fontIdx].key)
+  document.body.style.setProperty('--font-weight', bold   ? '700' : '400')
+  document.body.style.setProperty('--font-style',  italic ? 'italic' : 'normal')
+  if (bold)   document.getElementById('btn-bold')?.classList.add('active')
+  if (italic) document.getElementById('btn-italic')?.classList.add('active')
+  const items = document.querySelectorAll('.font-list-item')
+  items.forEach(b => b.classList.remove('active'))
+  if (items[fontIdx]) items[fontIdx].classList.add('active')
+  const label = document.getElementById('font-trigger-label')
+  if (label) { label.textContent = FONTS[fontIdx].label; label.style.fontFamily = "'" + FONTS[fontIdx].key + "'" }
+  const swatch = document.querySelector('.swatch-' + theme)
+  if (swatch) { document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active')); swatch.classList.add('active') }
+}
+restoreSettings()
+
+/* ═══════════════════════════════════
+   UI TOGGLES
+═══════════════════════════════════ */
+function toggleToc() { document.getElementById('toc-sidebar').classList.toggle('collapsed') }
+function toggleSettings() { document.getElementById('settings-drawer').classList.toggle('open') }
+document.addEventListener('click', e => {
+  const drawer = document.getElementById('settings-drawer')
+  if (drawer.classList.contains('open') && !drawer.contains(e.target) && !e.target.closest('[onclick="toggleSettings()"]'))
+    drawer.classList.remove('open')
+})
+function toggleAudioSection() {
+  const el = document.getElementById('audio-section-end')
+  const vis = el.style.display !== 'none'
+  el.style.display = vis ? 'none' : 'block'
+  if (!vis) el.scrollIntoView({ behavior:'smooth', block:'nearest' })
+}
+function toggleCmtOverview() {
+  const el = document.getElementById('cmt-overview-end')
+  const vis = el.style.display !== 'none'
+  el.style.display = vis ? 'none' : 'block'
+  if (!vis) { renderCmtOverview(); el.scrollIntoView({ behavior:'smooth', block:'nearest' }) }
+}
+
+/* ═══════════════════════════════════
+   HELPERS
+═══════════════════════════════════ */
+function escapeHtml(str) {
+  if (!str) return ''
+  const d = document.createElement('div'); d.textContent = str; return d.innerHTML
+}
+function formatTime(iso) {
+  const diff = Math.floor((Date.now() - new Date(iso)) / 1000)
+  if (diff < 60) return 'vừa xong'
+  if (diff < 3600) return Math.floor(diff/60) + ' phút trước'
+  if (diff < 86400) return Math.floor(diff/3600) + ' giờ trước'
+  return Math.floor(diff/86400) + ' ngày trước'
+}
+function formatViews(n) {
+  if (n >= 1e6) return (n/1e6).toFixed(1)+'M'
+  if (n >= 1000) return (n/1000).toFixed(1)+'K'
+  return String(n)
+}
+const CMT_ICON = `<svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`
+
+/* ═══════════════════════════════════
+   LOAD CHAPTER DATA
+═══════════════════════════════════ */
+let chapterData = null
+let allChaptersInStory = []
+
+async function loadChapter() {
+  const { data: ch, error } = await sb.from('chapters').select('*').eq('id', CHAPTER_UUID).single()
+  if (error || !ch) {
+    document.getElementById('chapter-heading').textContent = 'Không tìm thấy chương'
+    return
+  }
+  chapterData = ch
+  // CHAPTER_UUID đã có từ URL
+
+  document.title = `Chương ${ch.chapter_number} — ${ch.title || ''} · Peach Luku`
+  setChapterMeta(ch, null)
+  document.getElementById('header-title').textContent = `${ch.title || 'Chương ' + ch.chapter_number}`
+  document.getElementById('chapter-heading').textContent = ch.title || `Chương ${ch.chapter_number}`
+  document.getElementById('chapter-meta').textContent =
+    (ch.author_name || '') + (ch.created_at ? ' · Cập nhật ' + new Date(ch.created_at).toLocaleDateString('vi-VN') : '')
+
+  if (ch.audio_url) {
+    document.getElementById('audio-src').src = ch.audio_url
+    document.getElementById('chapter-audio').load()
+  }
+
+  renderParagraphs(ch.content || '')
+  await Promise.all([loadToc(), countView(), loadVotes(), loadAllCounts()])
+
+  // ── plLib integration ──
+  if (window.plLib) {
+    // push to history
+    plLib.pushHistory(STORY_ID, CHAPTER_UUID, ch.chapter_number, ch.title)
+    // update bookmark progress
+    const { count } = await sb.from('chapters').select('id', { count:'exact', head:true }).eq('story_id', STORY_ID)
+    plLib.updateBookmarkProgress(STORY_ID, CHAPTER_UUID, ch.chapter_number, count || 0)
+  }
+}
+
+/* ═══════════════════════════════════
+   RENDER PARAGRAPHS
+═══════════════════════════════════ */
+function renderParagraphs(content) {
+  const container = document.getElementById('paragraphs-container')
+  // Split by double-newline or single newline
+  const lines = content.split(/\n\n+|\n/).map(s => s.trim()).filter(Boolean)
+
+  if (!lines.length) {
+    container.innerHTML = '<p style="color:var(--meta);font-size:14px;text-align:center;padding:2rem">Chương này chưa có nội dung.</p>'
+    return
+  }
+
+  container.innerHTML = lines.map((line, i) => {
+    const pid = 'p' + (i + 1)
+    return `
+    <div class="para-wrap" data-pid="${pid}">
+      <button class="cmt-trigger" data-pid="${pid}">${CMT_ICON}<span class="cnt">0</span></button>
+      <p class="para-text">${escapeHtml(line)}</p>
+    </div>`
+  }).join('')
+
+  // Bind click events
+  document.querySelectorAll('.cmt-trigger').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation()
+      const pid = btn.dataset.pid
+      document.querySelectorAll('.para-wrap').forEach(el => el.classList.remove('highlighted'))
+      document.querySelectorAll('.cmt-trigger').forEach(b => b.classList.remove('active'))
+      document.querySelector(`.para-wrap[data-pid="${pid}"]`)?.classList.add('highlighted')
+      btn.classList.add('active')
+      openCmtSheet(pid)
+    })
+  })
+}
+
+/* ═══════════════════════════════════
+   TOC
+═══════════════════════════════════ */
+async function loadToc() {
+  const { data } = await sb.from('chapters')
+    .select('id, chapter_number, title')
+    .eq('story_id', STORY_ID)
+    .order('chapter_number')
+  if (!data || !data.length) {
+    document.getElementById('toc-list').innerHTML = '<p style="padding:12px 16px;font-size:13px;color:var(--meta)">Chưa có chương nào</p>'
+    document.getElementById('toc-inline-list').innerHTML = '<p class="toc-empty">Chưa có chương nào</p>'
+    return
+  }
+  allChaptersInStory = data
+  const cur = data.findIndex(c => c.id === CHAPTER_UUID)
+
+  const tocHTML = data.map(c => `
+    <a class="toc-item${c.id === CHAPTER_UUID ? ' active' : ''}" href="chapter.html?story=${STORY_ID}&chapter=${c.id}">
+      <span class="toc-num">Chương ${c.chapter_number}</span>
+      ${escapeHtml(c.title || '')}
+    </a>`).join('')
+
+  document.getElementById('toc-list').innerHTML = tocHTML
+  document.getElementById('toc-inline-list').innerHTML = data.map(c => `
+    <a class="toc-inline-item${c.id === CHAPTER_UUID ? ' active' : ''}" href="chapter.html?story=${STORY_ID}&chapter=${c.id}">
+      <span style="font-size:11px;color:var(--meta);display:block;margin-bottom:2px">Chương ${c.chapter_number}</span>
+      ${escapeHtml(c.title || '')}
+    </a>`).join('')
+
+  const prev = data[cur - 1], next = data[cur + 1]
+  document.getElementById('nav-title').textContent = `Chương ${chapterData?.chapter_number || ''} / ${data.length}`
+
+  const btnPrev = document.getElementById('btn-prev')
+  const btnNext = document.getElementById('btn-next')
+  if (prev) { btnPrev.href = `chapter.html?story=${STORY_ID}&chapter=${prev.id}`; btnPrev.classList.remove('disabled') }
+  if (next) { btnNext.href = `chapter.html?story=${STORY_ID}&chapter=${next.id}`; btnNext.classList.remove('disabled') }
+}
+
+/* ═══════════════════════════════════
+   VOTES + VIEWS
+═══════════════════════════════════ */
+async function loadVotes() {
+  const { data } = await sb.from('chapters').select('votes, views').eq('id', CHAPTER_UUID).single()
+  if (!data) return
+  const votes = data.votes || 0
+  document.getElementById('vote-count').textContent = votes
+  document.getElementById('vote-count-end').textContent = votes
+  document.getElementById('view-count').textContent = formatViews(data.views || 0)
+
+  const voted = localStorage.getItem(`voted_${STORY_ID}_ch${CHAPTER_UUID}`)
+  if (voted) {
+    const btn = document.getElementById('vote-btn')
+    btn.classList.add('voted')
+  }
+}
+
+async function submitVote() {
+  const btn = document.getElementById('vote-btn')
+  const voterId = localStorage.getItem('pl_voter_id') || (() => {
+    const id = Math.random().toString(36).slice(2)
+    localStorage.setItem('pl_voter_id', id); return id
+  })()
+  if (localStorage.getItem(`voted_${STORY_ID}_ch${CHAPTER_UUID}`)) {
+    btn.classList.add('voted'); return
+  }
+  if (!CHAPTER_UUID) return
+  const { error } = await sb.from('chapter_votes').insert({ chapter_id: CHAPTER_UUID, voter_ip: voterId })
+  if (!error) await sb.rpc('increment_votes', { chapter_id: CHAPTER_UUID })
+  localStorage.setItem(`voted_${STORY_ID}_ch${CHAPTER_UUID}`, '1')
+  btn.classList.add('voted')
+  loadVotes()
+}
+
+async function countView() {
+  const key = `viewed_${STORY_ID}_ch${CHAPTER_UUID}`
+  if (localStorage.getItem(key)) return
+  if (!CHAPTER_UUID) return
+  const { data } = await sb.from('chapters').select('views').eq('id', CHAPTER_UUID).single()
+  if (!data) return
+  await sb.from('chapters').update({ views: (data.views || 0) + 1 }).eq('id', CHAPTER_UUID)
+  localStorage.setItem(key, '1')
+}
+
+/* ═══════════════════════════════════
+   COMMENT COUNTS
+═══════════════════════════════════ */
+async function loadAllCounts() {
+  const { data } = await sb.from('comments').select('paragraph_id')
+    .eq('story_id', STORY_ID).eq('chapter_id', CHAPTER_UUID)
+  if (!data) return
+  const counts = {}
+  data.forEach(r => { counts[r.paragraph_id] = (counts[r.paragraph_id] || 0) + 1 })
+  document.querySelectorAll('.cmt-trigger').forEach(btn => {
+    const c = counts[btn.dataset.pid] || 0
+    btn.querySelector('.cnt').textContent = c
+    btn.classList.toggle('has-cmt', c > 0)
+  })
+  const total = data.length
+  const topEl = document.getElementById('total-cmt-count-top')
+  const endEl = document.getElementById('total-cmt-end')
+  if (topEl) topEl.textContent = total
+  if (endEl) endEl.textContent = total
+}
+
+/* ═══════════════════════════════════
+   COMMENT OVERVIEW
+═══════════════════════════════════ */
+async function renderCmtOverview() {
+  const list = document.getElementById('cmt-overview-list')
+  list.innerHTML = '<p class="toc-empty">Đang tải...</p>'
+  const { data } = await sb.from('comments').select('paragraph_id')
+    .eq('story_id', STORY_ID).eq('chapter_id', CHAPTER_UUID)
+  const counts = {}
+  if (data) data.forEach(r => { counts[r.paragraph_id] = (counts[r.paragraph_id] || 0) + 1 })
+  const paras = document.querySelectorAll('.para-wrap[data-pid]')
+  if (!paras.length) { list.innerHTML = '<p class="toc-empty">Không có đoạn nào.</p>'; return }
+  list.innerHTML = Array.from(paras).map((wrap, i) => {
+    const pid = wrap.dataset.pid
+    const excerpt = (wrap.querySelector('.para-text')?.textContent || '').trim().slice(0, 80)
+    const cnt = counts[pid] || 0
+    return `
+    <div class="cmt-overview-row" onclick="openCmtSheet('${pid}')">
+      <span class="cmt-overview-num">§${i+1}</span>
+      <span class="cmt-overview-excerpt">${escapeHtml(excerpt)}</span>
+      <span class="cmt-overview-badge ${cnt>0?'has-cmt':''}">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> ${cnt}
+      </span>
+    </div>`
+  }).join('')
+  const total = Object.values(counts).reduce((a,b)=>a+b,0)
+  const endEl = document.getElementById('total-cmt-end')
+  if (endEl) endEl.textContent = total
+}
+
+/* ═══════════════════════════════════
+   COMMENT SHEET
+═══════════════════════════════════ */
+let activePid = null
+
+function openCmtSheet(pid) {
+  activePid = pid
+  const num = pid.replace('p','')
+  document.getElementById('sheet-pid-label').textContent = `Bình luận đoạn ${num}`
+  const paraEl = document.querySelector(`.para-wrap[data-pid="${pid}"] .para-text`)
+  const quoteEl = document.getElementById('cmt-para-quote')
+  if (paraEl && quoteEl) { quoteEl.textContent = (paraEl.textContent||'').trim(); quoteEl.classList.add('visible') }
+  document.getElementById('sheet-emoji-picker').classList.remove('open')
+  document.getElementById('cmt-sheet').classList.add('open')
+  document.getElementById('cmt-overlay').classList.add('open')
+  document.body.style.overflow = 'hidden'
+  loadSheetComments(pid)
+}
+
+function closeCmtSheet() {
+  document.getElementById('cmt-sheet').classList.remove('open')
+  document.getElementById('cmt-overlay').classList.remove('open')
+  document.body.style.overflow = ''
+  document.querySelectorAll('.cmt-trigger').forEach(b => b.classList.remove('active'))
+  document.querySelectorAll('.para-wrap').forEach(el => el.classList.remove('highlighted'))
+  activePid = null
+}
+
+async function loadSheetComments(pid) {
+  const list = document.getElementById('sheet-cmt-list')
+  list.innerHTML = '<p class="empty-msg">Đang tải...</p>'
+  const { data, error } = await sb.from('comments').select('*')
+    .eq('story_id', STORY_ID).eq('chapter_id', CHAPTER_UUID).eq('paragraph_id', pid)
+    .order('created_at', { ascending: false })
+  if (error) { list.innerHTML = '<p class="empty-msg">Lỗi tải bình luận</p>'; return }
+  const btn = document.querySelector(`.cmt-trigger[data-pid="${pid}"] .cnt`)
+  if (btn) btn.textContent = data.length
+  if (!data.length) {
+    list.innerHTML = '<p class="empty-msg">Chưa có bình luận.<br>Hãy là người đầu tiên!</p>'
+    return
+  }
+  const avatarColors = ['#d4537e','#5b9bd5','#71c285','#e8a838','#9b7fe8','#e87878']
+  list.innerHTML = data.map((c, i) => {
+    const name = escapeHtml(c.username) || 'Ẩn danh'
+    const color = avatarColors[i % avatarColors.length]
+    const avatarHtml = c.avatar_url
+      ? `<img src="${escapeHtml(c.avatar_url)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+      : name.charAt(0).toUpperCase()
+    return `
+    <div class="cmt-bubble">
+      <div class="cmt-avatar" style="background:${color}">${avatarHtml}</div>
+      <div class="cmt-body">
+        <div class="cmt-user">${name}</div>
+        ${c.content ? `<div class="cmt-content">${escapeHtml(c.content)}</div>` : ''}
+        ${c.image_url ? `<img class="cmt-img" src="${c.image_url}" alt="" onclick="openLightbox('${c.image_url}')">` : ''}
+        <div class="cmt-footer">
+          <span class="cmt-time">${formatTime(c.created_at)}</span>
+          <button class="cmt-reply-btn" onclick="replyTo('${name}')">Trả lời</button>
+          <button class="cmt-like-btn" onclick="this.classList.toggle('liked')">
+            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>`
+  }).join('')
+}
+
+function replyTo(name) {
+  const ta = document.getElementById('sheet-cmt-input')
+  ta.value = `@${name} `; ta.focus()
+  ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 'px'
+}
+
+/* ═══════════════════════════════════
+   SUBMIT COMMENT + IMAGE
+═══════════════════════════════════ */
+let selectedImgFile = null
+
+function previewImg(input) {
+  const file = input.files[0]
+  if (!file) return
+  if (file.size > 5*1024*1024) { alert('Ảnh tối đa 5MB'); input.value=''; return }
+  selectedImgFile = file
+  const url = URL.createObjectURL(file)
+  document.getElementById('img-preview-container').innerHTML = `
+    <div class="img-preview-wrap">
+      <img class="img-preview" src="${url}" alt="">
+      <button class="img-preview-remove" onclick="removeImg()">✕</button>
+    </div>`
+}
+function removeImg() {
+  selectedImgFile = null
+  document.getElementById('img-preview-container').innerHTML = ''
+  document.getElementById('sheet-img-input').value = ''
+}
+async function uploadImg(file) {
+  const ext = file.name.split('.').pop()
+  const path = `comments/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`
+  const { error } = await sb.storage.from('comment-images').upload(path, file, { contentType: file.type })
+  if (error) return null
+  return sb.storage.from('comment-images').getPublicUrl(path).data.publicUrl
+}
+async function submitSheetComment() {
+  if (!activePid) return
+  const content  = document.getElementById('sheet-cmt-input').value.trim()
+  let username, user_id = null;
+  if (chCurrentUser) {
+    username = chUserProfile?.display_name || chCurrentUser.email.split('@')[0];
+    user_id = chCurrentUser.id;
+  } else {
+    username = document.getElementById('sheet-username')?.value.trim() || 'Ẩn danh';
+  }
+  if (!content && !selectedImgFile) return alert('Nhập nội dung hoặc chọn ảnh nhé!')
+  const btn = document.getElementById('sheet-send-btn')
+  btn.disabled = true
+  let image_url = null
+  if (selectedImgFile) {
+    image_url = await uploadImg(selectedImgFile)
+    if (!image_url) { alert('Upload ảnh thất bại'); btn.disabled = false; return }
+  }
+  const { error } = await sb.from('comments').insert({
+    story_id: STORY_ID, chapter_id: CHAPTER_UUID,
+    paragraph_id: activePid, username, user_id, content, image_url,
+  })
+  btn.disabled = false
+  if (error) { alert('Gửi thất bại: ' + error.message); return }
+  document.getElementById('sheet-cmt-input').value = ''
+  document.getElementById('sheet-emoji-picker').classList.remove('open')
+  removeImg()
+  loadSheetComments(activePid)
+  loadAllCounts()
+}
+
+/* ═══════════════════════════════════
+   EMOJI PICKER
+═══════════════════════════════════ */
+const EMOJIS = {
+  'Cảm xúc': ['😍','😭','😂','🥺','😱','🤩','😢','😆','🥰','🫠','😳','🤭','😬','😤','🙈'],
+  'Truyện':  ['📖','✨','💔','❤️','🔥','⚡','🌸','🌙','💫','🎭','🗡️','👑','🏹','🪄','🌊'],
+  'Hamster': ['🐹','🐱','🦊','🐰','🐻','🐼','🦁','🦋','🐸','🦄','🐺','🦔','🐨','🌺','🍑'],
+  'Tay':     ['👏','🙌','💪','👍','🫶','💅','🤌','👌','✌️','🤞','🤙','👋','🫂','🤝','💎'],
+}
+function buildSheetPicker() {
+  let html = ''
+  for (const [cat, emojis] of Object.entries(EMOJIS)) {
+    html += `<div class="ep-label">${cat}</div>`
+    emojis.forEach(e => { html += `<button class="ep-emoji" onclick="insertSheetEmoji('${e}')">${e}</button>` })
+  }
+  document.getElementById('sheet-emoji-picker').innerHTML = html
+}
+function toggleSheetPicker() { document.getElementById('sheet-emoji-picker').classList.toggle('open') }
+function insertSheetEmoji(emoji) {
+  const inp = document.getElementById('sheet-cmt-input')
+  const s = inp.selectionStart, e = inp.selectionEnd
+  inp.value = inp.value.slice(0,s) + emoji + inp.value.slice(e)
+  inp.selectionStart = inp.selectionEnd = s + emoji.length
+  inp.focus()
+}
+
+/* ═══════════════════════════════════
+   LIGHTBOX
+═══════════════════════════════════ */
+function openLightbox(src) {
+  document.getElementById('lightbox-img').src = src
+  document.getElementById('lightbox').classList.add('open')
+}
+function closeLightbox() { document.getElementById('lightbox').classList.remove('open') }
+
+/* ═══════════════════════════════════
+   INIT
+═══════════════════════════════════ */
+
+let chCurrentUser = null;
+let chUserProfile = null;
+
+async function initChapterUser() {
+  const { data: { session } } = await sb.auth.getSession();
+  chCurrentUser = session?.user || null;
+  if (!chCurrentUser) return;
+  const { data: prof } = await sb.from('profiles')
+    .select('display_name, avatar_url').eq('id', chCurrentUser.id).maybeSingle();
+  chUserProfile = prof;
+  // Ẩn ô nhập tên, hiển thị tên thật
+  const nameRow = document.querySelector('.sheet-name-row');
+  if (nameRow) {
+    const name = prof?.display_name || chCurrentUser.email.split('@')[0];
+    nameRow.innerHTML = '<div style="font-size:12px;font-weight:700;color:var(--accent);padding:2px 0">Bình luận với tư cách: <strong>' + name + '</strong></div>';
+  }
+}
+
+function setChapterMeta(ch, storyTitle) {
+  const title = 'Chương ' + ch.chapter_number + (ch.title ? ' — ' + ch.title : '') + ' · ' + (storyTitle || 'Peach Luku');
+  const desc = (ch.content || '').replace(/<[^>]+>/g,'').slice(0,160) || 'Web đọc truyện chữ cute & thơm';
+  document.title = title;
+  _setMeta('description', desc); _setMeta('og:title', title);
+  _setMeta('og:description', desc); _setMeta('og:url', location.href);
+  _setMeta('twitter:title', title); _setMeta('twitter:description', desc);
+}
+function _setMeta(k, v) {
+  const el = document.querySelector('[property="'+k+'"]') || document.querySelector('[name="'+k+'"]');
+  if (el) el.setAttribute('content', v);
+}
+buildSheetPicker()
+if (STORY_ID && params.get('chapter')) loadChapter()
+async function loadNavAvatar() {
+  const { data: { session } } = await sb.auth.getSession();
+  const btn = document.getElementById('nav-user-btn');
+  if (!btn) return;
+  if (!session) {
+    btn.href = 'auth.html?next=' + encodeURIComponent(location.pathname + location.search);
+    btn.title = 'Đăng nhập'; return;
+  }
+  btn.href = 'profile.html'; btn.title = 'Hồ sơ của tôi';
+  const { data: prof } = await sb.from('profiles').select('display_name, avatar_url').eq('id', session.user.id).maybeSingle();
+  if (prof?.avatar_url) {
+    btn.innerHTML = '<img src="' + prof.avatar_url + '" alt="avatar">';
+  } else {
+    btn.textContent = (prof?.display_name || session.user.email || 'U')[0].toUpperCase();
+  }
+}
+loadNavAvatar()
+initChapterUser()
+</script>
+</body>
+</html>

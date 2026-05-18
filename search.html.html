@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Web đọc truyện chữ cute & thơm 🍑">
+<meta name="robots" content="index, follow">
+<meta property="og:site_name" content="Peach Luku">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://peachluku.com">
+<meta property="og:title" content="Peach Luku">
+<meta property="og:description" content="Web đọc truyện chữ cute & thơm 🍑">
+<meta property="og:image" content="https://jnlqzqtavfptkfvnndxq.supabase.co/storage/v1/object/public/avatars/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Peach Luku">
+<meta name="twitter:description" content="Web đọc truyện chữ cute & thơm 🍑">
+<meta name="twitter:image" content="https://jnlqzqtavfptkfvnndxq.supabase.co/storage/v1/object/public/avatars/og-cover.png">
+<title>Khám phá — Peach Luku</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ─── THEMES ─────────────────────────────────── */
+:root, body.theme-light {
+  --peach: #E8835A; --peach-light: #FEF0E9; --peach-mid: #F2A882;
+  --peach-dark: #B85B30; --peach-darker: #7A3A1A;
+  --gold: #C9A84C; --gold-light: #FDF6E3;
+  --bg: #FDF6F2; --bg2: #ffffff;
+  --card: #ffffff; --text: #2C1A0E; --text-muted: #9A7A6A;
+  --border: rgba(232,131,90,0.18); --border-hover: #F2A882;
+}
+body.theme-dark {
+  --peach: #F2A882; --peach-light: #2A1A0E; --peach-mid: #C87050;
+  --peach-dark: #F2C0A0; --peach-darker: #FFE0CC;
+  --gold: #D4B86A; --gold-light: #1A1500;
+  --bg: #1a1a1a; --bg2: #242424;
+  --card: #242424; --text: #F0D8C8; --text-muted: #A08070;
+  --border: rgba(242,168,130,0.15); --border-hover: #C87050;
+}
+body.theme-sepia {
+  --peach: #8B5E3C; --peach-light: #F0E8D8; --peach-mid: #A67C52;
+  --peach-dark: #6B3E1C; --peach-darker: #4B2E0C;
+  --gold: #8B7040; --gold-light: #F5EDD8;
+  --bg: #f5f0e8; --bg2: #faf7f0;
+  --card: #faf7f0; --text: #3d2b1f; --text-muted: #9a8070;
+  --border: rgba(139,94,60,0.18); --border-hover: #A67C52;
+}
+body.theme-blue {
+  --peach: #2a5bbf; --peach-light: #dce8fc; --peach-mid: #4a7de0;
+  --peach-dark: #1a3b8f; --peach-darker: #0a1b4f;
+  --gold: #2a7bbf; --gold-light: #e0eeff;
+  --bg: #e8f0fe; --bg2: #f4f7ff;
+  --card: #f4f7ff; --text: #1a2a4a; --text-muted: #7a9ac0;
+  --border: rgba(42,91,191,0.18); --border-hover: #4a7de0;
+}
+body.theme-pink {
+  --peach: #d4537e; --peach-light: #ffe6f2; --peach-mid: #e876a0;
+  --peach-dark: #993556; --peach-darker: #721a3e;
+  --gold: #d46080; --gold-light: #fff0f8;
+  --bg: #fff0f6; --bg2: #fff8fb;
+  --card: #fff8fb; --text: #2c1a22; --text-muted: #c09aaa;
+  --border: rgba(212,83,126,0.18); --border-hover: #e876a0;
+}
+body.theme-purple {
+  --peach: #6a3bbf; --peach-light: #e8dcfc; --peach-mid: #8a5de0;
+  --peach-dark: #4a1b8f; --peach-darker: #2a0b5f;
+  --gold: #7a4bd0; --gold-light: #f2eeff;
+  --bg: #f0ebff; --bg2: #f9f6ff;
+  --card: #f9f6ff; --text: #2a1a4a; --text-muted: #9a7ac0;
+  --border: rgba(106,59,191,0.18); --border-hover: #8a5de0;
+}
+body.theme-gray {
+  --peach: #555555; --peach-light: #e8e8e8; --peach-mid: #777777;
+  --peach-dark: #333333; --peach-darker: #111111;
+  --gold: #666666; --gold-light: #f0f0f0;
+  --bg: #f0f0f0; --bg2: #fafafa;
+  --card: #fafafa; --text: #222222; --text-muted: #888888;
+  --border: rgba(85,85,85,0.18); --border-hover: #777777;
+}
+body.theme-wattpad {
+  --peach: #f26522; --peach-light: #fff3e0; --peach-mid: #f8863a;
+  --peach-dark: #c04a00; --peach-darker: #8a3000;
+  --gold: #e8821a; --gold-light: #fff8e0;
+  --bg: #faf5ee; --bg2: #fff9f2;
+  --card: #fff9f2; --text: #2c1f0e; --text-muted: #a08050;
+  --border: rgba(242,101,34,0.18); --border-hover: #f8863a;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  transition: background .3s, color .3s;
+}
+
+/* ─── TOPBAR ──────────────────────────────────── */
+.topbar {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 0 1.25rem;
+  display: flex; align-items: center;
+  justify-content: space-between; height: 56px;
+  position: sticky; top: 0; z-index: 100;
+  transition: background .3s;
+}
+.logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+.logo-text { font-family: 'Pacifico', cursive; font-size: 19px; color: var(--peach); }
+.back-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--text); padding: 6px; border-radius: 50%;
+  display: flex; align-items: center; transition: background .15s;
+}
+.back-btn:hover { background: var(--peach-light); }
+.back-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.topbar-right { display: flex; align-items: center; gap: 8px; }
+.theme-btn {
+  background: none; border: 1.5px solid var(--border-hover);
+  border-radius: 20px; width: 34px; height: 34px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all .15s; flex-shrink: 0; color: var(--peach);
+}
+.theme-btn:hover { background: var(--peach-light); }
+.theme-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+/* filter toggle btn */
+.filter-toggle-btn {
+  background: none; border: 1.5px solid var(--border-hover);
+  border-radius: 20px; height: 34px; padding: 0 12px;
+  cursor: pointer; display: flex; align-items: center; gap: 5px;
+  font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700;
+  color: var(--text-muted); transition: all .15s; flex-shrink: 0;
+}
+.filter-toggle-btn:hover { background: var(--peach-light); color: var(--peach-dark); }
+.filter-toggle-btn.has-active { background: var(--peach); color: white; border-color: var(--peach); }
+.filter-toggle-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.filter-badge {
+  background: white; color: var(--peach);
+  font-size: 10px; font-weight: 800;
+  width: 16px; height: 16px; border-radius: 50%;
+  display: none; align-items: center; justify-content: center;
+  line-height: 1;
+}
+.filter-toggle-btn.has-active .filter-badge { display: flex; }
+
+/* ─── THEME DRAWER ───────────────────────────── */
+.theme-drawer {
+  position: fixed; top: 58px; right: 1rem; z-index: 300;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 14px 16px; width: 220px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+  display: none;
+}
+.theme-drawer.open { display: block; }
+.theme-drawer-title { font-size: 12px; font-weight: 800; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: .5px; }
+.theme-swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.swatch { width: 38px; height: 38px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: all .15s; }
+.swatch.active { border-color: var(--peach); box-shadow: 0 0 0 2px var(--bg2), 0 0 0 4px var(--peach); }
+.swatch:hover { transform: scale(1.12); }
+.swatch-label { font-size: 10px; text-align: center; color: var(--text-muted); margin-top: 3px; font-weight: 700; }
+
+/* ─── SEARCH BAR ─────────────────────────────── */
+.search-wrap {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 0.85rem 1.25rem;
+  transition: background .3s;
+}
+.search-box { position: relative; max-width: 680px; margin: 0 auto; }
+.search-icon {
+  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  pointer-events: none; color: var(--text-muted); display: flex; align-items: center;
+}
+.search-icon svg { stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; width: 17px; height: 17px; }
+.search-input {
+  width: 100%;
+  padding: 12px 52px 12px 44px;
+  border: 1.5px solid var(--border-hover);
+  border-radius: 28px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Nunito', sans-serif;
+  font-size: 15px; font-weight: 600;
+  outline: none;
+  transition: border .15s, box-shadow .15s;
+}
+.search-input:focus { border-color: var(--peach); box-shadow: 0 0 0 3px rgba(232,131,90,0.12); }
+.search-input::placeholder { color: var(--text-muted); font-weight: 400; }
+.search-btn {
+  position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  background: var(--peach); border: none; border-radius: 50%;
+  width: 36px; height: 36px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.search-btn:hover { background: var(--peach-dark); }
+.search-btn svg { stroke: white; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; width: 16px; height: 16px; }
+.clear-btn {
+  position: absolute; right: 50px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer;
+  color: var(--text-muted); line-height: 1;
+  display: none; padding: 4px;
+}
+.clear-btn.visible { display: flex; align-items: center; }
+.clear-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+
+/* ─── FILTER PANEL (slide-down) ──────────────── */
+.filter-panel {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height .28s cubic-bezier(.4,0,.2,1), padding .28s;
+  padding: 0 1.25rem;
+}
+.filter-panel.open {
+  max-height: 320px;
+  padding: 1rem 1.25rem;
+}
+.filter-section { margin-bottom: 14px; }
+.filter-section:last-child { margin-bottom: 0; }
+.filter-section-label {
+  font-size: 10px; font-weight: 800; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .6px;
+  margin-bottom: 8px; display: flex; align-items: center; gap: 5px;
+}
+.chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  flex-shrink: 0;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border-hover);
+  background: var(--bg);
+  color: var(--text-muted);
+  font-family: 'Nunito', sans-serif;
+  font-size: 12px; font-weight: 700;
+  cursor: pointer; transition: all .12s;
+  white-space: nowrap;
+}
+.chip:hover { background: var(--peach-light); color: var(--peach-dark); border-color: var(--peach-mid); }
+.chip.active { background: var(--peach); color: white; border-color: var(--peach); }
+.filter-divider { height: 1px; background: var(--border); margin: 12px 0; }
+
+/* active filters summary bar */
+.active-filters-bar {
+  padding: 0.5rem 1.25rem;
+  display: none;
+  align-items: center; gap: 6px;
+  flex-wrap: wrap;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+}
+.active-filters-bar.visible { display: flex; }
+.active-tag {
+  display: flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 20px;
+  background: var(--peach-light); color: var(--peach-dark);
+  border: 1.5px solid var(--peach-mid);
+  font-size: 11px; font-weight: 700;
+}
+.active-tag button {
+  background: none; border: none; cursor: pointer;
+  color: var(--peach-dark); display: flex; align-items: center;
+  padding: 0; margin-left: 2px; opacity: .7;
+}
+.active-tag button:hover { opacity: 1; }
+.active-tag button svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+.clear-all-btn {
+  background: none; border: none; cursor: pointer;
+  font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 700;
+  color: var(--peach-dark); padding: 3px 8px;
+  text-decoration: underline; opacity: .7;
+}
+.clear-all-btn:hover { opacity: 1; }
+
+/* ─── CONTENT ────────────────────────────────── */
+.content { padding: 1.1rem 1.25rem; max-width: 940px; margin: 0 auto; }
+
+/* ─── STATUS LABEL ───────────────────────────── */
+.status-label {
+  font-size: 13px; color: var(--text-muted);
+  font-weight: 600; margin-bottom: 1rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.status-label span { color: var(--peach); font-weight: 800; }
+
+/* ─── SORT ROW ───────────────────────────────── */
+.sort-row {
+  display: flex; align-items: center; gap: 6px;
+  margin-bottom: 1rem;
+}
+.sort-label { font-size: 11px; font-weight: 700; color: var(--text-muted); white-space: nowrap; }
+.sort-btn {
+  padding: 4px 11px; border-radius: 20px;
+  border: 1.5px solid var(--border-hover);
+  background: var(--bg);
+  color: var(--text-muted);
+  font-family: 'Nunito', sans-serif;
+  font-size: 11px; font-weight: 700;
+  cursor: pointer; transition: all .12s;
+  white-space: nowrap;
+}
+.sort-btn:hover { background: var(--peach-light); color: var(--peach-dark); border-color: var(--peach-mid); }
+.sort-btn.active { background: var(--peach); color: white; border-color: var(--peach); }
+
+/* ─── STORY GRID ─────────────────────────────── */
+.story-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(138px, 1fr)); gap: 13px; }
+.story-card {
+  display: flex; flex-direction: column;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px; overflow: hidden;
+  text-decoration: none; color: inherit;
+  transition: all .15s;
+}
+.story-card:hover { border-color: var(--peach-mid); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+.story-cover { position: relative; width: 100%; padding-top: 140%; background: linear-gradient(145deg, var(--peach-light), var(--gold-light)); overflow: hidden; flex-shrink: 0; }
+.story-cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none; }
+.story-cover.has-img img { display: block; }
+.story-cover.has-img .cover-ph { display: none; }
+.cover-ph { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+.ch-badge { position: absolute; bottom: 7px; right: 7px; background: rgba(0,0,0,0.52); color: white; font-size: 10px; font-weight: 800; padding: 3px 7px; border-radius: 10px; backdrop-filter: blur(4px); }
+.status-badge {
+  position: absolute; top: 7px; left: 7px;
+  font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 8px;
+  text-transform: uppercase; letter-spacing: .3px;
+}
+.status-badge.done { background: rgba(76,175,125,0.85); color: white; }
+.status-badge.ongoing { background: rgba(232,131,90,0.85); color: white; }
+.story-info { padding: 9px 10px 11px; flex: 1; display: flex; flex-direction: column; gap: 3px; }
+.story-name { font-size: 12.5px; font-weight: 800; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.story-author { font-size: 11px; color: var(--text-muted); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.story-meta { display: flex; align-items: center; gap: 8px; margin-top: auto; }
+.story-views { font-size: 11px; color: var(--peach); font-weight: 700; display: flex; align-items: center; gap: 3px; }
+
+/* ─── SKELETON ───────────────────────────────── */
+.skeleton-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(138px, 1fr)); gap: 13px; }
+.skeleton-card { border-radius: 14px; overflow: hidden; background: var(--card); border: 1px solid var(--border); }
+.skeleton-cover { width: 100%; padding-top: 140%; background: linear-gradient(90deg, var(--border) 25%, var(--peach-light) 50%, var(--border) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; }
+.skeleton-info { padding: 9px 10px 11px; display: flex; flex-direction: column; gap: 6px; }
+.skeleton-line { height: 10px; border-radius: 6px; background: linear-gradient(90deg, var(--border) 25%, var(--peach-light) 50%, var(--border) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; }
+.skeleton-line.short { width: 60%; }
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* ─── EMPTY STATE ────────────────────────────── */
+.empty-state { text-align: center; padding: 3rem 1rem; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.empty-state-icon svg { width: 50px; height: 50px; stroke: var(--peach-mid); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.empty-state-title { font-size: 15px; font-weight: 800; }
+.empty-state-sub { font-size: 13px; color: var(--text-muted); max-width: 260px; line-height: 1.6; }
+
+/* ─── SUGGEST ────────────────────────────────── */
+.suggest-section { margin-top: 1.5rem; }
+.suggest-title { font-size: 12px; font-weight: 800; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: .4px; }
+.suggest-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.suggest-chip {
+  padding: 5px 14px; border-radius: 20px;
+  background: var(--peach-light); color: var(--peach-dark);
+  border: 1.5px solid var(--border-hover);
+  font-size: 12px; font-weight: 700; cursor: pointer; transition: all .15s;
+}
+.suggest-chip:hover { background: var(--peach); color: white; border-color: var(--peach); }
+
+@media (max-width: 480px) {
+  .topbar { padding: 0 1rem; }
+  .search-wrap { padding: 0.7rem 1rem; }
+  .filter-panel { padding: 0 1rem; }
+  .filter-panel.open { padding: 0.9rem 1rem; }
+  .active-filters-bar { padding: 0.45rem 1rem; }
+  .content { padding: 1rem; }
+  .story-grid, .skeleton-grid { grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 10px; }
+}
+</style>
+</head>
+<body class="theme-light">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div style="display:flex;align-items:center;gap:8px">
+    <button class="back-btn" onclick="history.back()" title="Quay lại">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <a class="logo" href="index.html">
+      <span class="logo-text">Peach Luku</span>
+    </a>
+  </div>
+  <div class="topbar-right">
+    <button class="filter-toggle-btn" id="filterToggleBtn" onclick="toggleFilterPanel()">
+      <svg viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+      Bộ lọc
+      <span class="filter-badge" id="filterBadge">0</span>
+    </button>
+    <a class="user-nav-btn" id="nav-user-btn" href="profile.html" title="Hồ sơ"><svg viewBox="0 0 24 24" width="17" height="17" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
+    <button class="theme-btn" onclick="toggleThemeDrawer()" title="Đổi theme">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- THEME DRAWER -->
+<div class="theme-drawer" id="theme-drawer">
+  <div class="theme-drawer-title">Chọn giao diện</div>
+  <div class="theme-swatches">
+    <div><div class="swatch" style="background:#FDF6F2;border:2px solid #F2A882" onclick="setTheme('light',this)"></div><div class="swatch-label">Sáng</div></div>
+    <div><div class="swatch" style="background:#1a1a1a" onclick="setTheme('dark',this)"></div><div class="swatch-label">Tối</div></div>
+    <div><div class="swatch" style="background:#f5f0e8;border:2px solid #A67C52" onclick="setTheme('sepia',this)"></div><div class="swatch-label">Sepia</div></div>
+    <div><div class="swatch" style="background:#e8f0fe;border:2px solid #4a7de0" onclick="setTheme('blue',this)"></div><div class="swatch-label">Xanh</div></div>
+    <div><div class="swatch" style="background:#fff0f6;border:2px solid #e876a0" onclick="setTheme('pink',this)"></div><div class="swatch-label">Hồng</div></div>
+    <div><div class="swatch" style="background:#f0ebff;border:2px solid #8a5de0" onclick="setTheme('purple',this)"></div><div class="swatch-label">Tím</div></div>
+    <div><div class="swatch" style="background:#f0f0f0;border:2px solid #777" onclick="setTheme('gray',this)"></div><div class="swatch-label">Xám</div></div>
+    <div><div class="swatch" style="background:#faf5ee;border:2px solid #f8863a" onclick="setTheme('wattpad',this)"></div><div class="swatch-label">Warm</div></div>
+  </div>
+</div>
+
+<!-- SEARCH BAR -->
+<div class="search-wrap">
+  <div class="search-box">
+    <span class="search-icon">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </span>
+    <input
+      id="searchInput"
+      class="search-input"
+      type="text"
+      placeholder="Tìm tên truyện, tác giả..."
+      autocomplete="off"
+      oninput="onInputChange()"
+      onkeydown="if(event.key==='Enter') doSearch()"
+    >
+    <button class="clear-btn" id="clearBtn" onclick="clearSearch()">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <button class="search-btn" onclick="doSearch()">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- FILTER PANEL (slide-down) -->
+<div class="filter-panel" id="filterPanel">
+  <!-- Genre -->
+  <div class="filter-section">
+    <div class="filter-section-label">
+      <svg viewBox="0 0 24 24" width="12" height="12" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Thể loại
+    </div>
+    <div class="chip-row" id="genreChips">
+      <div class="chip active" data-genre="all" onclick="setGenre('all',this)">Tất cả</div>
+      <!-- thêm động -->
+    </div>
+  </div>
+
+  <div class="filter-divider"></div>
+
+  <!-- Status -->
+  <div class="filter-section">
+    <div class="filter-section-label">
+      <svg viewBox="0 0 24 24" width="12" height="12" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Trạng thái
+    </div>
+    <div class="chip-row">
+      <div class="chip active" data-status="all" onclick="setStatus('all',this)">Tất cả</div>
+      <div class="chip" data-status="ongoing" onclick="setStatus('ongoing',this)">Đang ra</div>
+      <div class="chip" data-status="completed" onclick="setStatus('completed',this)">Hoàn thành</div>
+    </div>
+  </div>
+
+  <div class="filter-divider"></div>
+
+  <!-- Sort -->
+  <div class="filter-section">
+    <div class="filter-section-label">
+      <svg viewBox="0 0 24 24" width="12" height="12" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      Sắp xếp
+    </div>
+    <div class="chip-row">
+      <div class="chip active" data-sort="newest" onclick="setSort('newest',this)">Mới nhất</div>
+      <div class="chip" data-sort="views" onclick="setSort('views',this)">Lượt xem</div>
+      <div class="chip" data-sort="chapters" onclick="setSort('chapters',this)">Số chương</div>
+      <div class="chip" data-sort="title" onclick="setSort('title',this)">A → Z</div>
+    </div>
+  </div>
+</div>
+
+<!-- ACTIVE FILTERS SUMMARY BAR -->
+<div class="active-filters-bar" id="activeFiltersBar">
+  <div id="activeTagsRow" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex:1"></div>
+  <button class="clear-all-btn" onclick="clearAllFilters()">Xoá tất cả</button>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+  <div id="statusLabel" class="status-label" style="display:none"></div>
+  <div id="resultArea"></div>
+</div>
+
+<script>
+/* ── SUPABASE ── */
+const SUPABASE_URL = 'https://jnlqzqtavfptkfvnndxq.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ojRrfSwxK_B6-TGSXaYGxQ_DKERN0-f';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+/* ── STATE ── */
+let allStories = [];
+let chapterCounts = {};
+let searchQuery = '';
+let activeGenre = 'all';
+let activeStatus = 'all';
+let activeSort = 'newest';
+let filterPanelOpen = false;
+
+/* ── THEME ── */
+function setTheme(name, el) {
+  document.body.className = 'theme-' + name;
+  localStorage.setItem('plTheme', name);
+  document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+  if (el) el.classList.add('active');
+}
+function toggleThemeDrawer() {
+  document.getElementById('theme-drawer').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  const drawer = document.getElementById('theme-drawer');
+  if (!drawer.contains(e.target) && !e.target.closest('.theme-btn')) {
+    drawer.classList.remove('open');
+  }
+});
+(function() {
+  const saved = localStorage.getItem('plTheme') || 'light';
+  document.body.className = 'theme-' + saved;
+})();
+
+/* ── HELPERS ── */
+function escapeHtml(s) {
+  if (!s) return '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function formatViews(n) {
+  if (!n) return '0';
+  if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
+  if (n >= 1000) return (n/1000).toFixed(1) + 'K';
+  return n.toString();
+}
+
+/* ── SEARCH ── */
+function onInputChange() {
+  const val = document.getElementById('searchInput').value;
+  document.getElementById('clearBtn').classList.toggle('visible', val.length > 0);
+  // live search
+  searchQuery = val;
+  renderResults();
+}
+function clearSearch() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('clearBtn').classList.remove('visible');
+  searchQuery = '';
+  renderResults();
+}
+function doSearch() {
+  searchQuery = document.getElementById('searchInput').value.trim();
+  renderResults();
+}
+
+/* ── FILTER PANEL ── */
+function toggleFilterPanel() {
+  filterPanelOpen = !filterPanelOpen;
+  document.getElementById('filterPanel').classList.toggle('open', filterPanelOpen);
+}
+
+function setGenre(val, el) {
+  activeGenre = val;
+  document.querySelectorAll('[data-genre]').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  updateFilterUI();
+  renderResults();
+}
+function setStatus(val, el) {
+  activeStatus = val;
+  document.querySelectorAll('[data-status]').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  updateFilterUI();
+  renderResults();
+}
+function setSort(val, el) {
+  activeSort = val;
+  document.querySelectorAll('[data-sort]').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  updateFilterUI();
+  renderResults();
+}
+
+function clearAllFilters() {
+  activeGenre = 'all';
+  activeStatus = 'all';
+  activeSort = 'newest';
+  document.querySelector('[data-genre="all"]').classList.add('active');
+  document.querySelectorAll('[data-genre]:not([data-genre="all"])').forEach(c => c.classList.remove('active'));
+  document.querySelector('[data-status="all"]').classList.add('active');
+  document.querySelectorAll('[data-status]:not([data-status="all"])').forEach(c => c.classList.remove('active'));
+  document.querySelector('[data-sort="newest"]').classList.add('active');
+  document.querySelectorAll('[data-sort]:not([data-sort="newest"])').forEach(c => c.classList.remove('active'));
+  updateFilterUI();
+  renderResults();
+}
+
+function countActiveFilters() {
+  let n = 0;
+  if (activeGenre !== 'all') n++;
+  if (activeStatus !== 'all') n++;
+  if (activeSort !== 'newest') n++;
+  return n;
+}
+
+function updateFilterUI() {
+  const n = countActiveFilters();
+  const btn = document.getElementById('filterToggleBtn');
+  const badge = document.getElementById('filterBadge');
+  btn.classList.toggle('has-active', n > 0);
+  badge.textContent = n;
+
+  // Active filters bar
+  const bar = document.getElementById('activeFiltersBar');
+  const row = document.getElementById('activeTagsRow');
+  const tags = [];
+  if (activeGenre !== 'all') tags.push({ label: '📚 ' + activeGenre, key: 'genre' });
+  if (activeStatus !== 'all') tags.push({ label: '⏱ ' + (activeStatus === 'ongoing' ? 'Đang ra' : 'Hoàn thành'), key: 'status' });
+  if (activeSort !== 'newest') {
+    const sortLabels = { views: '👁 Lượt xem', chapters: '📖 Số chương', title: '🔤 A→Z' };
+    tags.push({ label: sortLabels[activeSort] || activeSort, key: 'sort' });
+  }
+  bar.classList.toggle('visible', tags.length > 0);
+  row.innerHTML = tags.map(t => `
+    <div class="active-tag">
+      ${escapeHtml(t.label)}
+      <button onclick="removeFilter('${t.key}')">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  `).join('');
+}
+
+function removeFilter(key) {
+  if (key === 'genre') {
+    activeGenre = 'all';
+    document.querySelectorAll('[data-genre]').forEach(c => c.classList.remove('active'));
+    const el = document.querySelector('[data-genre="all"]');
+    if (el) el.classList.add('active');
+  } else if (key === 'status') {
+    activeStatus = 'all';
+    document.querySelectorAll('[data-status]').forEach(c => c.classList.remove('active'));
+    const el = document.querySelector('[data-status="all"]');
+    if (el) el.classList.add('active');
+  } else if (key === 'sort') {
+    activeSort = 'newest';
+    document.querySelectorAll('[data-sort]').forEach(c => c.classList.remove('active'));
+    const el = document.querySelector('[data-sort="newest"]');
+    if (el) el.classList.add('active');
+  }
+  updateFilterUI();
+  renderResults();
+}
+
+/* ── RENDER ── */
+function renderResults() {
+  let stories = [...allStories];
+
+  // genre filter
+  if (activeGenre !== 'all') {
+    stories = stories.filter(s => {
+      const genres = (s.genre || '').split(',').map(g => g.trim());
+      return genres.includes(activeGenre);
+    });
+  }
+
+  // status filter
+  if (activeStatus !== 'all') {
+    stories = stories.filter(s => {
+      if (activeStatus === 'completed') return s.status === 'completed' || s.status === 'done' || s.completed === true;
+      if (activeStatus === 'ongoing') return !s.status || s.status === 'ongoing';
+      return true;
+    });
+  }
+
+  // search query
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    stories = stories.filter(s =>
+      (s.title || '').toLowerCase().includes(q) ||
+      (s.author || '').toLowerCase().includes(q) ||
+      (s.description || '').toLowerCase().includes(q)
+    );
+  }
+
+  // sort
+  if (activeSort === 'views') {
+    stories.sort((a, b) => (b.total_views || 0) - (a.total_views || 0));
+  } else if (activeSort === 'chapters') {
+    stories.sort((a, b) => (chapterCounts[b.id] || 0) - (chapterCounts[a.id] || 0));
+  } else if (activeSort === 'title') {
+    stories.sort((a, b) => (a.title || '').localeCompare(b.title || '', 'vi'));
+  } else {
+    // newest: already sorted by created_at desc from server
+  }
+
+  const statusEl = document.getElementById('statusLabel');
+  const resultEl = document.getElementById('resultArea');
+
+  const hasFilter = searchQuery || activeGenre !== 'all' || activeStatus !== 'all';
+  if (hasFilter) {
+    statusEl.style.display = '';
+    let label = '';
+    if (searchQuery) label = `Tìm thấy <span>${stories.length}</span> kết quả cho "<span>${escapeHtml(searchQuery)}</span>"`;
+    else label = `<span>${stories.length}</span> truyện`;
+    if (activeGenre !== 'all') label += ` · thể loại <span>${escapeHtml(activeGenre)}</span>`;
+    if (activeStatus === 'completed') label += ` · <span>hoàn thành</span>`;
+    if (activeStatus === 'ongoing') label += ` · <span>đang ra</span>`;
+    statusEl.innerHTML = label;
+  } else {
+    statusEl.style.display = 'none';
+  }
+
+  if (stories.length === 0) {
+    resultEl.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+        <div class="empty-state-title">Không tìm thấy truyện nào</div>
+        <div class="empty-state-sub">Thử thay đổi từ khoá hoặc bỏ bớt bộ lọc nhé 🐹</div>
+      </div>
+      <div class="suggest-section">
+        <div class="suggest-title">Gợi ý tìm kiếm</div>
+        <div class="suggest-chips" id="suggestChips"></div>
+      </div>`;
+    renderSuggestChips();
+    return;
+  }
+
+  resultEl.innerHTML = `<div class="story-grid">${stories.map(s => {
+    const hasCover = !!s.cover_url;
+    const ch = chapterCounts[s.id] || 0;
+    const isDone = s.status === 'completed' || s.status === 'done' || s.completed === true;
+    return `
+    <a class="story-card" href="story.html?story=${s.id}">
+      <div class="story-cover${hasCover ? ' has-img' : ''}">
+        <span class="cover-ph"><svg viewBox="0 0 24 24" width="34" height="34" style="stroke:var(--peach-mid);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="12" y1="7" x2="16" y2="7"/><line x1="12" y1="11" x2="16" y2="11"/></svg></span>
+        ${hasCover ? `<img src="${escapeHtml(s.cover_url)}" alt="${escapeHtml(s.title)}" loading="lazy">` : ''}
+        ${ch > 0 ? `<span class="ch-badge">${ch} ch.</span>` : ''}
+        <span class="status-badge ${isDone ? 'done' : 'ongoing'}">${isDone ? 'Full' : 'Đang ra'}</span>
+      </div>
+      <div class="story-info">
+        <div class="story-name">${escapeHtml(s.title)}</div>
+        <div class="story-author"><svg viewBox="0 0 24 24" width="10" height="10" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;display:inline-block;vertical-align:middle;margin-right:2px"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> ${escapeHtml(s.author || 'Ẩn danh')}</div>
+        <div class="story-meta">
+          <div class="story-views">
+            <svg viewBox="0 0 24 24" width="11" height="11" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+            ${formatViews(s.total_views || 0)}
+          </div>
+        </div>
+      </div>
+    </a>`;
+  }).join('')}</div>`;
+}
+
+function renderSuggestChips() {
+  const el = document.getElementById('suggestChips');
+  if (!el) return;
+  const samples = allStories.slice(0, 8).map(s => s.title);
+  el.innerHTML = samples.map(t =>
+    `<div class="suggest-chip" onclick="setSuggest('${escapeHtml(t).replace(/'/g,"&#39;")}')">${escapeHtml(t)}</div>`
+  ).join('');
+}
+function setSuggest(text) {
+  document.getElementById('searchInput').value = text;
+  document.getElementById('clearBtn').classList.add('visible');
+  searchQuery = text;
+  renderResults();
+}
+
+/* ── INIT ── */
+async function init() {
+  document.getElementById('resultArea').innerHTML = `
+    <div class="skeleton-grid">
+      ${Array(8).fill(`
+        <div class="skeleton-card">
+          <div class="skeleton-cover"></div>
+          <div class="skeleton-info">
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line short"></div>
+          </div>
+        </div>`).join('')}
+    </div>`;
+
+  const [{ data: stories }, { data: chapters }] = await Promise.all([
+    sb.from('stories').select('*').order('created_at', { ascending: false }),
+    sb.from('chapters').select('story_id')
+  ]);
+
+  allStories = stories || [];
+  chapterCounts = {};
+  if (chapters) chapters.forEach(c => { chapterCounts[c.story_id] = (chapterCounts[c.story_id] || 0) + 1; });
+
+  // Build genre chips
+  const genres = new Set();
+  allStories.forEach(s => {
+    if (s.genre) s.genre.split(',').forEach(g => { const t = g.trim(); if (t) genres.add(t); });
+  });
+  const genreChips = document.getElementById('genreChips');
+  genres.forEach(g => {
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.dataset.genre = g;
+    chip.textContent = g;
+    chip.onclick = () => setGenre(g, chip);
+    genreChips.appendChild(chip);
+  });
+
+  // Check URL params
+  const params = new URLSearchParams(window.location.search);
+  const q = params.get('q');
+  const genre = params.get('genre');
+  if (q) {
+    document.getElementById('searchInput').value = q;
+    document.getElementById('clearBtn').classList.add('visible');
+    searchQuery = q;
+  }
+  if (genre && genre !== 'all') {
+    activeGenre = genre;
+    const el = document.querySelector(`[data-genre="${genre}"]`);
+    if (el) {
+      document.querySelectorAll('[data-genre]').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+    }
+    // auto-open filter panel
+    filterPanelOpen = true;
+    document.getElementById('filterPanel').classList.add('open');
+  }
+
+  updateFilterUI();
+
+  if (!searchQuery && activeGenre === 'all' && activeStatus === 'all') {
+    document.getElementById('resultArea').innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+        <div class="empty-state-title">Tìm truyện bạn muốn đọc</div>
+        <div class="empty-state-sub">Nhập tên truyện, tác giả hoặc dùng bộ lọc 🐹</div>
+      </div>
+      <div class="suggest-section">
+        <div class="suggest-title">Truyện nổi bật</div>
+        <div class="suggest-chips" id="suggestChips"></div>
+      </div>`;
+    renderSuggestChips();
+  } else {
+    renderResults();
+  }
+
+  document.getElementById('searchInput').focus();
+}
+
+init();
+async function loadNavAvatar() {
+  const { data: { session } } = await sb.auth.getSession();
+  const btn = document.getElementById('nav-user-btn');
+  if (!btn) return;
+  if (!session) {
+    btn.href = 'auth.html?next=' + encodeURIComponent(location.pathname + location.search);
+    btn.title = 'Đăng nhập'; return;
+  }
+  btn.href = 'profile.html'; btn.title = 'Hồ sơ của tôi';
+  const { data: prof } = await sb.from('profiles').select('display_name, avatar_url').eq('id', session.user.id).maybeSingle();
+  if (prof?.avatar_url) {
+    btn.innerHTML = '<img src="' + prof.avatar_url + '" alt="avatar">';
+  } else {
+    btn.textContent = (prof?.display_name || session.user.email || 'U')[0].toUpperCase();
+  }
+}
+loadNavAvatar();
+</script>
+</body>
+</html>

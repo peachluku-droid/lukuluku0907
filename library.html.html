@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Web đọc truyện chữ cute & thơm 🍑">
+<meta name="robots" content="index, follow">
+<meta property="og:site_name" content="Peach Luku">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://peachluku.com">
+<meta property="og:title" content="Peach Luku">
+<meta property="og:description" content="Web đọc truyện chữ cute & thơm 🍑">
+<meta property="og:image" content="https://jnlqzqtavfptkfvnndxq.supabase.co/storage/v1/object/public/avatars/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Peach Luku">
+<meta name="twitter:description" content="Web đọc truyện chữ cute & thơm 🍑">
+<meta name="twitter:image" content="https://jnlqzqtavfptkfvnndxq.supabase.co/storage/v1/object/public/avatars/og-cover.png">
+<title>Thư viện — Peach Luku</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ─── THEMES ─────────────────────────────────── */
+:root, body.theme-light {
+  --peach: #E8835A; --peach-light: #FEF0E9; --peach-mid: #F2A882;
+  --peach-dark: #B85B30; --peach-darker: #7A3A1A;
+  --gold: #C9A84C; --gold-light: #FDF6E3;
+  --bg: #FDF6F2; --bg2: #ffffff;
+  --card: #ffffff; --text: #2C1A0E; --text-muted: #9A7A6A;
+  --border: rgba(232,131,90,0.18); --border-hover: #F2A882;
+  --green: #4caf7d; --green-light: #f0fff6;
+}
+body.theme-dark {
+  --peach: #F2A882; --peach-light: #2A1A0E; --peach-mid: #C87050;
+  --peach-dark: #F2C0A0; --peach-darker: #FFE0CC;
+  --gold: #D4B86A; --gold-light: #1A1500;
+  --bg: #1a1a1a; --bg2: #242424;
+  --card: #242424; --text: #F0D8C8; --text-muted: #A08070;
+  --border: rgba(242,168,130,0.15); --border-hover: #C87050;
+  --green: #6fcf97; --green-light: #0d2016;
+}
+body.theme-sepia {
+  --peach: #8B5E3C; --peach-light: #F0E8D8; --peach-mid: #A67C52;
+  --peach-dark: #6B3E1C; --peach-darker: #4B2E0C;
+  --gold: #8B7040; --gold-light: #F5EDD8;
+  --bg: #f5f0e8; --bg2: #faf7f0; --card: #faf7f0;
+  --text: #3d2b1f; --text-muted: #9a8070;
+  --border: rgba(139,94,60,0.18); --border-hover: #A67C52;
+  --green: #5a8a60; --green-light: #edf7ee;
+}
+body.theme-blue {
+  --peach: #2a5bbf; --peach-light: #dce8fc; --peach-mid: #4a7de0;
+  --peach-dark: #1a3b8f; --peach-darker: #0a1b4f;
+  --gold: #2a7bbf; --gold-light: #e0eeff;
+  --bg: #e8f0fe; --bg2: #f4f7ff; --card: #f4f7ff;
+  --text: #1a2a4a; --text-muted: #7a9ac0;
+  --border: rgba(42,91,191,0.18); --border-hover: #4a7de0;
+  --green: #2a9bbf; --green-light: #e0f7ff;
+}
+body.theme-pink {
+  --peach: #d4537e; --peach-light: #ffe6f2; --peach-mid: #e876a0;
+  --peach-dark: #993556; --peach-darker: #721a3e;
+  --gold: #d46080; --gold-light: #fff0f8;
+  --bg: #fff0f6; --bg2: #fff8fb; --card: #fff8fb;
+  --text: #2c1a22; --text-muted: #c09aaa;
+  --border: rgba(212,83,126,0.18); --border-hover: #e876a0;
+  --green: #c054a0; --green-light: #fff0fb;
+}
+body.theme-purple {
+  --peach: #6a3bbf; --peach-light: #e8dcfc; --peach-mid: #8a5de0;
+  --peach-dark: #4a1b8f; --peach-darker: #2a0b5f;
+  --gold: #7a4bd0; --gold-light: #f2eeff;
+  --bg: #f0ebff; --bg2: #f9f6ff; --card: #f9f6ff;
+  --text: #2a1a4a; --text-muted: #9a7ac0;
+  --border: rgba(106,59,191,0.18); --border-hover: #8a5de0;
+  --green: #5a3bbf; --green-light: #ede8ff;
+}
+body.theme-gray {
+  --peach: #555555; --peach-light: #e8e8e8; --peach-mid: #777777;
+  --peach-dark: #333333; --peach-darker: #111111;
+  --gold: #666666; --gold-light: #f0f0f0;
+  --bg: #f0f0f0; --bg2: #fafafa; --card: #fafafa;
+  --text: #222222; --text-muted: #888888;
+  --border: rgba(85,85,85,0.18); --border-hover: #777777;
+  --green: #4a7a4a; --green-light: #eef5ee;
+}
+body.theme-wattpad {
+  --peach: #f26522; --peach-light: #fff3e0; --peach-mid: #f8863a;
+  --peach-dark: #c04a00; --peach-darker: #8a3000;
+  --gold: #e8821a; --gold-light: #fff8e0;
+  --bg: #faf5ee; --bg2: #fff9f2; --card: #fff9f2;
+  --text: #2c1f0e; --text-muted: #a08050;
+  --border: rgba(242,101,34,0.18); --border-hover: #f8863a;
+  --green: #4caf7d; --green-light: #f0fff6;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg); color: var(--text);
+  transition: background .3s, color .3s;
+  min-height: 100vh;
+}
+
+/* ─── TOPBAR ──────────────────────────────────── */
+.topbar {
+  background: var(--bg2); border-bottom: 1px solid var(--border);
+  padding: 0 1.25rem; display: flex; align-items: center;
+  justify-content: space-between; height: 56px;
+  position: sticky; top: 0; z-index: 100; transition: background .3s;
+}
+.logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+.logo-text { font-family: 'Pacifico', cursive; font-size: 19px; color: var(--peach); }
+.topbar-right { display: flex; align-items: center; gap: 6px; }
+.icon-btn {
+  background: none; border: 1.5px solid var(--border-hover);
+  border-radius: 20px; width: 34px; height: 34px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all .15s; color: var(--peach);
+}
+.icon-btn:hover { background: var(--peach-light); }
+.icon-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ─── THEME DRAWER ───────────────────────────── */
+.theme-drawer {
+  position: fixed; top: 58px; right: 1rem; z-index: 300;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 14px 16px; width: 220px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.12); display: none;
+}
+.theme-drawer.open { display: block; }
+.theme-drawer-title { font-size: 12px; font-weight: 800; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: .5px; }
+.theme-swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.swatch { width: 38px; height: 38px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: all .15s; }
+.swatch.active { border-color: var(--peach); box-shadow: 0 0 0 2px var(--bg2), 0 0 0 4px var(--peach); }
+.swatch:hover { transform: scale(1.12); }
+.swatch-label { font-size: 10px; text-align: center; color: var(--text-muted); margin-top: 3px; font-weight: 700; }
+
+/* ─── PAGE HEADER ────────────────────────────── */
+.page-header {
+  padding: 1.1rem 1.25rem 0;
+}
+.page-title {
+  font-family: 'Pacifico', cursive;
+  font-size: 22px; color: var(--peach); margin-bottom: 2px;
+}
+.page-sub { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+
+/* ─── TAB BAR ────────────────────────────────── */
+.tab-bar {
+  display: flex; gap: 4px;
+  padding: 1rem 1.25rem 0;
+  border-bottom: 1.5px solid var(--border);
+  background: var(--bg2);
+  position: sticky; top: 56px; z-index: 90;
+  transition: background .3s;
+}
+.tab-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 9px 14px;
+  border: none; background: none; cursor: pointer;
+  font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700;
+  color: var(--text-muted);
+  border-bottom: 2.5px solid transparent;
+  margin-bottom: -1.5px;
+  transition: all .15s; white-space: nowrap;
+  border-radius: 10px 10px 0 0;
+}
+.tab-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.tab-btn:hover { color: var(--peach); background: var(--peach-light); }
+.tab-btn.active { color: var(--peach); border-bottom-color: var(--peach); }
+.tab-count {
+  background: var(--peach-light); color: var(--peach-dark);
+  font-size: 10px; font-weight: 800;
+  padding: 1px 6px; border-radius: 10px; min-width: 18px; text-align: center;
+}
+.tab-btn.active .tab-count { background: var(--peach); color: white; }
+
+/* ─── TAB CONTENT ────────────────────────────── */
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+/* ─── CONTENT WRAP ───────────────────────────── */
+.content { padding: 1rem 1.25rem; max-width: 860px; margin: 0 auto; }
+
+/* ─── SECTION CONTROLS ───────────────────────── */
+.pane-controls {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px; gap: 8px; flex-wrap: wrap;
+}
+.pane-info { font-size: 12px; color: var(--text-muted); font-weight: 700; }
+.pane-info span { color: var(--peach); font-weight: 800; }
+.ctrl-btn {
+  display: flex; align-items: center; gap: 4px;
+  padding: 5px 12px; border-radius: 20px;
+  border: 1.5px solid var(--border-hover); background: var(--bg);
+  font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 700;
+  color: var(--text-muted); cursor: pointer; transition: all .12s;
+}
+.ctrl-btn:hover { background: var(--peach-light); color: var(--peach-dark); border-color: var(--peach-mid); }
+.ctrl-btn.danger:hover { background: #fff0f0; color: #e05252; border-color: #e05252; }
+.ctrl-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ─── SORT CHIPS ─────────────────────────────── */
+.sort-chips { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 12px; }
+.sort-chip {
+  padding: 3px 10px; border-radius: 20px;
+  border: 1.5px solid var(--border-hover); background: var(--bg);
+  font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 700;
+  color: var(--text-muted); cursor: pointer; transition: all .12s;
+}
+.sort-chip:hover { background: var(--peach-light); color: var(--peach-dark); border-color: var(--peach-mid); }
+.sort-chip.active { background: var(--peach); color: white; border-color: var(--peach); }
+
+/* ─── STORY CARDS ────────────────────────────── */
+
+/* --- List row (đang đọc + lịch sử) --- */
+.story-list { display: flex; flex-direction: column; gap: 10px; }
+.story-row {
+  display: flex; gap: 12px; align-items: flex-start;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; overflow: hidden;
+  text-decoration: none; color: inherit;
+  transition: all .15s; position: relative;
+  padding: 10px;
+}
+.story-row:hover { border-color: var(--peach-mid); box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
+.row-cover {
+  width: 62px; height: 88px; flex-shrink: 0;
+  border-radius: 8px; overflow: hidden;
+  background: linear-gradient(145deg, var(--peach-light), var(--gold-light));
+  position: relative;
+}
+.row-cover img { width: 100%; height: 100%; object-fit: cover; display: none; }
+.row-cover.has-img img { display: block; }
+.row-cover.has-img .cover-ph-sm { display: none; }
+.cover-ph-sm {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.cover-ph-sm svg { width: 22px; height: 22px; stroke: var(--peach-mid); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.row-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; padding-top: 2px; }
+.row-title { font-size: 13px; font-weight: 800; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.row-author { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+.row-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 2px; }
+.row-badge {
+  font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 8px;
+  white-space: nowrap;
+}
+.badge-progress { background: var(--peach-light); color: var(--peach-dark); }
+.badge-done { background: var(--green-light); color: var(--green); }
+.badge-ongoing { background: var(--gold-light); color: var(--gold); }
+.row-time { font-size: 10px; color: var(--text-muted); font-weight: 600; }
+.row-chapter { font-size: 11px; color: var(--peach); font-weight: 700; }
+.row-actions {
+  display: flex; flex-direction: column; gap: 5px; align-items: flex-end; flex-shrink: 0;
+  padding-top: 2px;
+}
+.row-action-btn {
+  background: none; border: 1.5px solid var(--border-hover);
+  border-radius: 8px; width: 30px; height: 30px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all .12s; color: var(--text-muted);
+}
+.row-action-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.row-action-btn:hover { background: var(--peach-light); color: var(--peach-dark); border-color: var(--peach-mid); }
+.row-action-btn.danger:hover { background: #fff0f0; color: #e05252; border-color: #e05252; }
+
+/* progress bar */
+.read-progress-wrap { margin-top: 4px; }
+.read-progress-bar {
+  height: 4px; border-radius: 4px; background: var(--border);
+  overflow: hidden;
+}
+.read-progress-fill {
+  height: 100%; border-radius: 4px;
+  background: linear-gradient(90deg, var(--peach), var(--peach-mid));
+  transition: width .3s;
+}
+.read-progress-label { font-size: 10px; color: var(--text-muted); font-weight: 700; margin-top: 3px; }
+
+/* --- Grid (theo dõi) --- */
+.story-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+.story-card {
+  display: flex; flex-direction: column;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 13px; overflow: hidden;
+  text-decoration: none; color: inherit; position: relative;
+  transition: all .15s;
+}
+.story-card:hover { border-color: var(--peach-mid); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+.card-cover {
+  position: relative; width: 100%; padding-top: 140%;
+  background: linear-gradient(145deg, var(--peach-light), var(--gold-light));
+  overflow: hidden; flex-shrink: 0;
+}
+.card-cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none; }
+.card-cover.has-img img { display: block; }
+.card-cover.has-img .cover-ph-lg { display: none; }
+.cover-ph-lg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+.cover-ph-lg svg { width: 32px; height: 32px; stroke: var(--peach-mid); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.card-ch-badge { position: absolute; bottom: 7px; right: 7px; background: rgba(0,0,0,0.52); color: white; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 8px; backdrop-filter: blur(4px); }
+.card-new-badge {
+  position: absolute; top: 7px; left: 7px;
+  background: var(--peach); color: white;
+  font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 7px;
+  text-transform: uppercase; letter-spacing: .3px;
+}
+.card-unfollow-btn {
+  position: absolute; top: 7px; right: 7px;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: rgba(0,0,0,0.45); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: white; transition: background .12s; backdrop-filter: blur(4px);
+  opacity: 0; transition: opacity .15s;
+}
+.story-card:hover .card-unfollow-btn { opacity: 1; }
+.card-unfollow-btn:hover { background: rgba(224,82,82,0.85); }
+.card-unfollow-btn svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+.card-info { padding: 8px 9px 10px; flex: 1; display: flex; flex-direction: column; gap: 3px; }
+.card-title { font-size: 12px; font-weight: 800; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.card-author { font-size: 10.5px; color: var(--text-muted); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-views { font-size: 10.5px; color: var(--peach); font-weight: 700; display: flex; align-items: center; gap: 3px; margin-top: auto; }
+.card-views svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; }
+
+/* ─── EMPTY STATE ────────────────────────────── */
+.empty-state {
+  text-align: center; padding: 3.5rem 1rem;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.empty-icon { display: flex; align-items: center; justify-content: center; }
+.empty-icon svg { width: 52px; height: 52px; stroke: var(--peach-mid); fill: none; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+.empty-title { font-size: 15px; font-weight: 800; }
+.empty-sub { font-size: 13px; color: var(--text-muted); max-width: 260px; line-height: 1.6; }
+.empty-cta {
+  margin-top: 4px; display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 20px; border-radius: 22px;
+  background: var(--peach); color: white; text-decoration: none;
+  font-size: 13px; font-weight: 700; transition: background .15s;
+}
+.empty-cta svg { width: 14px; height: 14px; stroke: white; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.empty-cta:hover { background: var(--peach-dark); }
+
+/* ─── SKELETON ───────────────────────────────── */
+.skel { animation: shimmer 1.4s infinite; background: linear-gradient(90deg, var(--border) 25%, var(--peach-light) 50%, var(--border) 75%); background-size: 200% 100%; border-radius: 8px; }
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+.skel-row { display: flex; gap: 12px; padding: 10px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; }
+.skel-cover-sm { width: 62px; height: 88px; border-radius: 8px; flex-shrink: 0; }
+.skel-lines { flex: 1; display: flex; flex-direction: column; gap: 7px; padding-top: 4px; }
+.skel-line { height: 11px; border-radius: 6px; }
+.skel-line.w80 { width: 80%; }
+.skel-line.w50 { width: 50%; }
+.skel-line.w60 { width: 60%; }
+
+/* ─── TOAST ──────────────────────────────────── */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+  background: var(--text); color: var(--bg2);
+  padding: 10px 20px; border-radius: 22px;
+  font-size: 13px; font-weight: 700;
+  z-index: 999; opacity: 0;
+  transition: transform .25s, opacity .25s;
+  white-space: nowrap; pointer-events: none;
+}
+.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+@media (max-width: 480px) {
+  .tab-btn { padding: 8px 10px; font-size: 12px; gap: 4px; }
+  .tab-btn svg { display: none; }
+  .content { padding: 0.9rem 1rem; }
+  .story-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 9px; }
+}
+</style>
+</head>
+<body class="theme-light">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <a class="logo" href="index.html">
+    <span class="logo-text">Peach Luku</span>
+  </a>
+  <div class="topbar-right">
+    <a href="search.html" class="icon-btn" title="Tìm kiếm">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </a>
+    <a class="user-nav-btn" id="nav-user-btn" href="profile.html" title="Hồ sơ"><svg viewBox="0 0 24 24" width="17" height="17" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
+    <button class="icon-btn" onclick="toggleThemeDrawer()" title="Đổi theme">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- THEME DRAWER -->
+<div class="theme-drawer" id="theme-drawer">
+  <div class="theme-drawer-title">Chọn giao diện</div>
+  <div class="theme-swatches">
+    <div><div class="swatch" style="background:#FDF6F2;border:2px solid #F2A882" onclick="setTheme('light',this)"></div><div class="swatch-label">Sáng</div></div>
+    <div><div class="swatch" style="background:#1a1a1a" onclick="setTheme('dark',this)"></div><div class="swatch-label">Tối</div></div>
+    <div><div class="swatch" style="background:#f5f0e8;border:2px solid #A67C52" onclick="setTheme('sepia',this)"></div><div class="swatch-label">Sepia</div></div>
+    <div><div class="swatch" style="background:#e8f0fe;border:2px solid #4a7de0" onclick="setTheme('blue',this)"></div><div class="swatch-label">Xanh</div></div>
+    <div><div class="swatch" style="background:#fff0f6;border:2px solid #e876a0" onclick="setTheme('pink',this)"></div><div class="swatch-label">Hồng</div></div>
+    <div><div class="swatch" style="background:#f0ebff;border:2px solid #8a5de0" onclick="setTheme('purple',this)"></div><div class="swatch-label">Tím</div></div>
+    <div><div class="swatch" style="background:#f0f0f0;border:2px solid #777" onclick="setTheme('gray',this)"></div><div class="swatch-label">Xám</div></div>
+    <div><div class="swatch" style="background:#faf5ee;border:2px solid #f8863a" onclick="setTheme('wattpad',this)"></div><div class="swatch-label">Warm</div></div>
+  </div>
+</div>
+
+<!-- PAGE HEADER -->
+<div class="page-header" style="background:var(--bg2);padding:1rem 1.25rem 0;transition:background .3s">
+  <div class="page-title" style="display:flex;align-items:center;gap:8px">
+    <svg viewBox="0 0 24 24" width="22" height="22" style="stroke:var(--peach);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+    Thư viện
+  </div>
+  <div class="page-sub">Tất cả truyện bạn đã lưu &amp; theo dõi</div>
+</div>
+
+<!-- TAB BAR -->
+<div class="tab-bar" id="tabBar">
+  <button class="tab-btn active" onclick="switchTab('reading',this)">
+    <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+    Đang đọc
+    <span class="tab-count" id="cnt-reading">0</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('follow',this)">
+    <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+    Theo dõi
+    <span class="tab-count" id="cnt-follow">0</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('history',this)">
+    <svg viewBox="0 0 24 24"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"/></svg>
+    Lịch sử
+    <span class="tab-count" id="cnt-history">0</span>
+  </button>
+</div>
+
+<!-- ═══ TAB: ĐANG ĐỌC ═══ -->
+<div class="tab-pane active" id="pane-reading">
+  <div class="content">
+    <div class="pane-controls">
+      <div class="pane-info" id="info-reading">Đang tải...</div>
+      <div style="display:flex;gap:5px">
+        <button class="ctrl-btn danger" onclick="clearBookmarks()">
+          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+          Xoá tất cả
+        </button>
+      </div>
+    </div>
+    <div class="sort-chips">
+      <div class="sort-chip active" onclick="setSortReading('recent',this)">Gần đây nhất</div>
+      <div class="sort-chip" onclick="setSortReading('title',this)">A → Z</div>
+      <div class="sort-chip" onclick="setSortReading('progress',this)">Tiến độ</div>
+    </div>
+    <div class="story-list" id="list-reading">
+      <!-- skeleton -->
+      ${Array(3).fill(`<div class="skel-row"><div class="skel skel-cover-sm"></div><div class="skel-lines"><div class="skel skel-line w80"></div><div class="skel skel-line w50"></div><div class="skel skel-line w60"></div></div></div>`).join('')}
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TAB: THEO DÕI ═══ -->
+<div class="tab-pane" id="pane-follow">
+  <div class="content">
+    <div class="pane-controls">
+      <div class="pane-info" id="info-follow">Đang tải...</div>
+      <div style="display:flex;gap:5px">
+        <button class="ctrl-btn danger" onclick="clearFollows()">
+          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+          Xoá tất cả
+        </button>
+      </div>
+    </div>
+    <div class="sort-chips">
+      <div class="sort-chip active" onclick="setSortFollow('recent',this)">Mới theo dõi</div>
+      <div class="sort-chip" onclick="setSortFollow('title',this)">A → Z</div>
+      <div class="sort-chip" onclick="setSortFollow('views',this)">Lượt xem</div>
+    </div>
+    <div class="story-grid" id="grid-follow"></div>
+  </div>
+</div>
+
+<!-- ═══ TAB: LỊCH SỬ ═══ -->
+<div class="tab-pane" id="pane-history">
+  <div class="content">
+    <div class="pane-controls">
+      <div class="pane-info" id="info-history">Đang tải...</div>
+      <button class="ctrl-btn danger" onclick="clearHistory()">
+        <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>
+        Xoá lịch sử
+      </button>
+    </div>
+    <div class="sort-chips">
+      <div class="sort-chip active" onclick="setSortHistory('recent',this)">Gần đây nhất</div>
+      <div class="sort-chip" onclick="setSortHistory('title',this)">A → Z</div>
+    </div>
+    <div class="story-list" id="list-history"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ══════════════════════════════════════
+   SUPABASE
+══════════════════════════════════════ */
+const SUPABASE_URL = 'https://jnlqzqtavfptkfvnndxq.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ojRrfSwxK_B6-TGSXaYGxQ_DKERN0-f';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+/* ══════════════════════════════════════
+   THEME
+══════════════════════════════════════ */
+function setTheme(name, el) {
+  document.body.className = 'theme-' + name;
+  localStorage.setItem('plTheme', name);
+  document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+  if (el) el.classList.add('active');
+}
+function toggleThemeDrawer() {
+  document.getElementById('theme-drawer').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  const d = document.getElementById('theme-drawer');
+  if (!d.contains(e.target) && !e.target.closest('[onclick="toggleThemeDrawer()"]')) d.classList.remove('open');
+});
+(function() {
+  const t = localStorage.getItem('plTheme') || 'light';
+  document.body.className = 'theme-' + t;
+})();
+
+/* ══════════════════════════════════════
+   LOCAL STORAGE KEYS & HELPERS
+══════════════════════════════════════ */
+const KEY_BOOKMARKS = 'pl_bookmarks';
+const KEY_FOLLOWS   = 'pl_follows';
+const KEY_HISTORY   = 'pl_history';
+
+function getBookmarks() { try { return JSON.parse(localStorage.getItem(KEY_BOOKMARKS) || '{}'); } catch { return {}; } }
+function getFollows()   { try { return JSON.parse(localStorage.getItem(KEY_FOLLOWS)   || '{}'); } catch { return {}; } }
+function getHistory()   { try { return JSON.parse(localStorage.getItem(KEY_HISTORY)   || '[]'); } catch { return []; } }
+function saveBookmarks(obj) { localStorage.setItem(KEY_BOOKMARKS, JSON.stringify(obj)); }
+function saveFollows(obj)   { localStorage.setItem(KEY_FOLLOWS,   JSON.stringify(obj)); }
+function saveHistory(arr)   { localStorage.setItem(KEY_HISTORY,   JSON.stringify(arr)); }
+
+/* ── current user ── */
+let currentUser = null;
+async function initUser() {
+  const { data: { session } } = await sb.auth.getSession();
+  currentUser = session?.user || null;
+}
+
+/* ── cloud fetch helpers ── */
+async function cloudGetBookmarks() {
+  if (!currentUser) return getBookmarks();
+  const { data } = await sb.from('bookmarks').select('*').eq('user_id', currentUser.id);
+  if (!data) return getBookmarks();
+  const obj = {};
+  data.forEach(r => {
+    obj[r.story_id] = {
+      addedAt: new Date(r.added_at).getTime(),
+      lastChapterId: r.last_chapter_id,
+      lastChapterNum: r.last_chapter_num,
+      chapterTotal: r.chapter_total,
+    };
+  });
+  return obj;
+}
+async function cloudGetFollows() {
+  if (!currentUser) return getFollows();
+  const { data } = await sb.from('follows').select('*').eq('user_id', currentUser.id);
+  if (!data) return getFollows();
+  const obj = {};
+  data.forEach(r => { obj[r.story_id] = { addedAt: new Date(r.added_at).getTime() }; });
+  return obj;
+}
+async function cloudGetHistory() {
+  if (!currentUser) return getHistory();
+  const { data } = await sb.from('reading_history').select('*')
+    .eq('user_id', currentUser.id).order('read_at', { ascending: false });
+  if (!data) return getHistory();
+  return data.map(r => ({
+    storyId: r.story_id, chapterId: r.chapter_id,
+    chapterNum: r.chapter_num, chapterTitle: r.chapter_title,
+    readAt: new Date(r.read_at).getTime(),
+  }));
+}
+
+/* ── plLib — cloud-first, localStorage fallback ── */
+window.plLib = {
+  async addBookmark(storyId, data = {}) {
+    if (currentUser) {
+      await sb.from('bookmarks').upsert({
+        user_id: currentUser.id, story_id: storyId,
+        last_chapter_id: data.lastChapterId || null,
+        last_chapter_num: data.lastChapterNum || 0,
+        chapter_total: data.chapterTotal || 0,
+        added_at: new Date().toISOString(),
+      }, { onConflict: 'user_id,story_id' });
+    } else {
+      const bm = getBookmarks();
+      bm[storyId] = { addedAt: Date.now(), ...data };
+      saveBookmarks(bm);
+    }
+  },
+  async removeBookmark(storyId) {
+    if (currentUser) {
+      await sb.from('bookmarks').delete().eq('user_id', currentUser.id).eq('story_id', storyId);
+    } else {
+      const bm = getBookmarks(); delete bm[storyId]; saveBookmarks(bm);
+    }
+  },
+  async hasBookmark(storyId) {
+    if (currentUser) {
+      const { data } = await sb.from('bookmarks').select('story_id')
+        .eq('user_id', currentUser.id).eq('story_id', storyId).maybeSingle();
+      return !!data;
+    }
+    return !!getBookmarks()[storyId];
+  },
+  async updateBookmarkProgress(storyId, lastChapterId, lastChapterNum, chapterTotal) {
+    if (currentUser) {
+      await sb.from('bookmarks').upsert({
+        user_id: currentUser.id, story_id: storyId,
+        last_chapter_id: lastChapterId,
+        last_chapter_num: lastChapterNum,
+        chapter_total: chapterTotal,
+      }, { onConflict: 'user_id,story_id' });
+    } else {
+      const bm = getBookmarks();
+      if (bm[storyId]) Object.assign(bm[storyId], { lastChapterId, lastChapterNum, chapterTotal });
+      else bm[storyId] = { addedAt: Date.now(), lastChapterId, lastChapterNum, chapterTotal };
+      saveBookmarks(bm);
+    }
+  },
+  async addFollow(storyId) {
+    if (currentUser) {
+      await sb.from('follows').upsert(
+        { user_id: currentUser.id, story_id: storyId },
+        { onConflict: 'user_id,story_id' }
+      );
+    } else {
+      const f = getFollows(); f[storyId] = { addedAt: Date.now() }; saveFollows(f);
+    }
+  },
+  async removeFollow(storyId) {
+    if (currentUser) {
+      await sb.from('follows').delete().eq('user_id', currentUser.id).eq('story_id', storyId);
+    } else {
+      const f = getFollows(); delete f[storyId]; saveFollows(f);
+    }
+  },
+  async hasFollow(storyId) {
+    if (currentUser) {
+      const { data } = await sb.from('follows').select('story_id')
+        .eq('user_id', currentUser.id).eq('story_id', storyId).maybeSingle();
+      return !!data;
+    }
+    return !!getFollows()[storyId];
+  },
+  async pushHistory(storyId, chapterId, chapterNum, chapterTitle) {
+    if (currentUser) {
+      await sb.from('reading_history').upsert({
+        user_id: currentUser.id, story_id: storyId,
+        chapter_id: chapterId,
+        chapter_num: chapterNum || 0,
+        chapter_title: chapterTitle || '',
+        read_at: new Date().toISOString(),
+      }, { onConflict: 'user_id,story_id' });
+    } else {
+      let h = getHistory().filter(x => x.storyId !== storyId);
+      h.unshift({ storyId, chapterId, chapterNum: chapterNum || 0, chapterTitle: chapterTitle || '', readAt: Date.now() });
+      if (h.length > 200) h = h.slice(0, 200);
+      saveHistory(h);
+    }
+  },
+};
+
+/* ══════════════════════════════════════
+   STATE
+══════════════════════════════════════ */
+let storyCache = {};     // storyId → story obj from Supabase
+let chapterCounts = {};  // storyId → int
+let sortReading = 'recent';
+let sortFollow = 'recent';
+let sortHistory = 'recent';
+let activeTab = 'reading';
+
+/* ══════════════════════════════════════
+   TAB SWITCHING
+══════════════════════════════════════ */
+function switchTab(tab, btn) {
+  activeTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.getElementById('pane-' + tab).classList.add('active');
+}
+
+/* ══════════════════════════════════════
+   HELPERS
+══════════════════════════════════════ */
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function fmtViews(n) {
+  if (!n) return '0';
+  if (n >= 1000000) return (n/1e6).toFixed(1)+'M';
+  if (n >= 1000) return (n/1000).toFixed(1)+'K';
+  return String(n);
+}
+function timeAgo(ts) {
+  const diff = Date.now() - ts;
+  const m = Math.floor(diff/60000);
+  const h = Math.floor(diff/3600000);
+  const d = Math.floor(diff/86400000);
+  if (d > 30) return new Date(ts).toLocaleDateString('vi-VN', {day:'2-digit',month:'2-digit',year:'numeric'});
+  if (d > 0) return d + ' ngày trước';
+  if (h > 0) return h + ' giờ trước';
+  if (m > 0) return m + ' phút trước';
+  return 'Vừa xong';
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+function bookIcon() {
+  return `<svg viewBox="0 0 24 24" width="22" height="22" style="stroke:var(--peach-mid);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`;
+}
+
+/* ══════════════════════════════════════
+   FETCH MISSING STORIES FROM SUPABASE
+══════════════════════════════════════ */
+async function ensureStories(ids) {
+  const missing = ids.filter(id => !storyCache[id]);
+  if (!missing.length) return;
+  const { data } = await sb.from('stories').select('*').in('id', missing);
+  if (data) data.forEach(s => { storyCache[s.id] = s; });
+
+  // fetch chapter counts for newly loaded stories
+  const { data: chaps } = await sb.from('chapters').select('story_id').in('story_id', missing);
+  if (chaps) chaps.forEach(c => { chapterCounts[c.story_id] = (chapterCounts[c.story_id] || 0) + 1; });
+}
+
+/* ══════════════════════════════════════
+   RENDER: ĐANG ĐỌC
+══════════════════════════════════════ */
+function setSortReading(val, el) {
+  sortReading = val;
+  document.querySelectorAll('#pane-reading .sort-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderReading();
+}
+
+async function renderReading() {
+  const bm = await cloudGetBookmarks();
+  const ids = Object.keys(bm);
+  document.getElementById('cnt-reading').textContent = ids.length;
+
+  if (!ids.length) {
+    document.getElementById('info-reading').innerHTML = 'Chưa có truyện nào';
+    document.getElementById('list-reading').innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
+        <div class="empty-title">Chưa đánh dấu truyện nào</div>
+        <div class="empty-sub">Khi bạn đọc truyện, tiến độ sẽ được lưu tại đây</div>
+        <a class="empty-cta" href="search.html">Tìm truyện <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+      </div>`;
+    return;
+  }
+
+  await ensureStories(ids);
+
+  let entries = ids.map(id => ({ id, ...bm[id], story: storyCache[id] })).filter(e => e.story);
+
+  if (sortReading === 'recent') entries.sort((a,b) => (b.addedAt||0)-(a.addedAt||0));
+  else if (sortReading === 'title') entries.sort((a,b) => (a.story.title||'').localeCompare(b.story.title||'','vi'));
+  else if (sortReading === 'progress') entries.sort((a,b) => {
+    const pA = a.chapterTotal ? (a.lastChapterNum||0)/a.chapterTotal : 0;
+    const pB = b.chapterTotal ? (b.lastChapterNum||0)/b.chapterTotal : 0;
+    return pB - pA;
+  });
+
+  document.getElementById('info-reading').innerHTML = `<span>${entries.length}</span> truyện đang đọc`;
+
+  document.getElementById('list-reading').innerHTML = entries.map(e => {
+    const s = e.story;
+    const hasCover = !!s.cover_url;
+    const totalCh = e.chapterTotal || chapterCounts[e.id] || 0;
+    const lastCh = e.lastChapterNum || 0;
+    const pct = totalCh > 0 ? Math.round((lastCh / totalCh) * 100) : 0;
+    const isDone = s.status === 'completed' || s.status === 'done' || s.completed;
+    const resumeHref = e.lastChapterId
+      ? `chapter.html?story=${e.id}&chapter=${e.lastChapterId}`
+      : `story.html?story=${e.id}`;
+    return `
+    <div class="story-row" style="cursor:pointer" onclick="location.href='${resumeHref}'">
+      <div class="row-cover${hasCover?' has-img':''}">
+        <span class="cover-ph-sm">${bookIcon()}</span>
+        ${hasCover?`<img src="${esc(s.cover_url)}" alt="${esc(s.title)}" loading="lazy">`:''}
+      </div>
+      <div class="row-body">
+        <div class="row-title">${esc(s.title)}</div>
+        <div class="row-author">${esc(s.author||'Ẩn danh')}</div>
+        <div class="row-meta">
+          ${lastCh ? `<span class="row-chapter">Chương ${lastCh}${totalCh?' / '+totalCh:''}</span>` : ''}
+          <span class="row-badge ${isDone?'badge-done':'badge-ongoing'}">${isDone?'Hoàn thành':'Đang ra'}</span>
+          <span class="row-time">${timeAgo(e.addedAt||Date.now())}</span>
+        </div>
+        ${totalCh > 0 ? `
+        <div class="read-progress-wrap">
+          <div class="read-progress-bar"><div class="read-progress-fill" style="width:${pct}%"></div></div>
+          <div class="read-progress-label">${pct}% đã đọc</div>
+        </div>` : ''}
+      </div>
+      <div class="row-actions" onclick="event.stopPropagation()">
+        <button class="row-action-btn" title="Mở truyện" onclick="location.href='story.html?story=${e.id}'">
+          <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </button>
+        <button class="row-action-btn danger" title="Xoá" onclick="removeBookmark('${e.id}')">
+          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function removeBookmark(id) {
+  const bm = getBookmarks();
+  delete bm[id];
+  saveBookmarks(bm);
+  showToast('Đã xoá khỏi Đang đọc');
+  renderReading();
+  document.getElementById('cnt-reading').textContent = Object.keys(getBookmarks()).length;
+}
+
+function clearBookmarks() {
+  if (!confirm('Xoá tất cả truyện đang đọc?')) return;
+  saveBookmarks({});
+  showToast('Đã xoá tất cả');
+  renderReading();
+}
+
+/* ══════════════════════════════════════
+   RENDER: THEO DÕI
+══════════════════════════════════════ */
+function setSortFollow(val, el) {
+  sortFollow = val;
+  document.querySelectorAll('#pane-follow .sort-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderFollow();
+}
+
+async function renderFollow() {
+  const f = await cloudGetFollows();
+  const ids = Object.keys(f);
+  document.getElementById('cnt-follow').textContent = ids.length;
+
+  if (!ids.length) {
+    document.getElementById('info-follow').innerHTML = 'Chưa theo dõi truyện nào';
+    document.getElementById('grid-follow').innerHTML = `
+      <div class="empty-state" style="grid-column:1/-1">
+        <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+        <div class="empty-title">Chưa theo dõi truyện nào</div>
+        <div class="empty-sub">Nhấn theo dõi trên trang truyện để nhận thông báo chương mới</div>
+        <a class="empty-cta" href="search.html">Khám phá <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+      </div>`;
+    return;
+  }
+
+  await ensureStories(ids);
+
+  let entries = ids.map(id => ({ id, ...f[id], story: storyCache[id] })).filter(e => e.story);
+
+  if (sortFollow === 'recent') entries.sort((a,b) => (b.addedAt||0)-(a.addedAt||0));
+  else if (sortFollow === 'title') entries.sort((a,b) => (a.story.title||'').localeCompare(b.story.title||'','vi'));
+  else if (sortFollow === 'views') entries.sort((a,b) => (b.story.total_views||0)-(a.story.total_views||0));
+
+  document.getElementById('info-follow').innerHTML = `<span>${entries.length}</span> truyện đang theo dõi`;
+
+  document.getElementById('grid-follow').innerHTML = entries.map(e => {
+    const s = e.story;
+    const hasCover = !!s.cover_url;
+    const ch = chapterCounts[e.id] || 0;
+    // "mới" nếu story updated_at gần đây (< 7 ngày)
+    const isNew = s.updated_at && (Date.now() - new Date(s.updated_at).getTime()) < 7*24*3600*1000;
+    return `
+    <a class="story-card" href="story.html?story=${e.id}">
+      <div class="card-cover${hasCover?' has-img':''}">
+        <span class="cover-ph-lg">${bookIcon()}</span>
+        ${hasCover?`<img src="${esc(s.cover_url)}" alt="${esc(s.title)}" loading="lazy">`:''}
+        ${ch>0?`<span class="card-ch-badge">${ch} ch.</span>`:''}
+        ${isNew?`<span class="card-new-badge">Mới</span>`:''}
+        <button class="card-unfollow-btn" title="Bỏ theo dõi" onclick="event.preventDefault();removeFollow('${e.id}')">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="card-info">
+        <div class="card-title">${esc(s.title)}</div>
+        <div class="card-author">${esc(s.author||'Ẩn danh')}</div>
+        <div class="card-views">
+          <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          ${fmtViews(s.total_views||0)}
+        </div>
+      </div>
+    </a>`;
+  }).join('');
+}
+
+function removeFollow(id) {
+  const f = getFollows();
+  delete f[id];
+  saveFollows(f);
+  showToast('Đã bỏ theo dõi');
+  renderFollow();
+  document.getElementById('cnt-follow').textContent = Object.keys(getFollows()).length;
+}
+
+function clearFollows() {
+  if (!confirm('Bỏ theo dõi tất cả truyện?')) return;
+  saveFollows({});
+  showToast('Đã xoá tất cả');
+  renderFollow();
+}
+
+/* ══════════════════════════════════════
+   RENDER: LỊCH SỬ
+══════════════════════════════════════ */
+function setSortHistory(val, el) {
+  sortHistory = val;
+  document.querySelectorAll('#pane-history .sort-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderHistory();
+}
+
+async function renderHistory() {
+  let h = await cloudGetHistory();
+  document.getElementById('cnt-history').textContent = h.length;
+
+  if (!h.length) {
+    document.getElementById('info-history').innerHTML = 'Chưa có lịch sử';
+    document.getElementById('list-history').innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon"><svg viewBox="0 0 24 24"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"/></svg></div>
+        <div class="empty-title">Lịch sử trống</div>
+        <div class="empty-sub">Lịch sử đọc của bạn sẽ xuất hiện ở đây</div>
+        <a class="empty-cta" href="search.html">Bắt đầu đọc <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+      </div>`;
+    return;
+  }
+
+  const ids = [...new Set(h.map(x => x.storyId))];
+  await ensureStories(ids);
+
+  let entries = h.map(x => ({ ...x, story: storyCache[x.storyId] })).filter(e => e.story);
+
+  if (sortHistory === 'title') {
+    entries.sort((a,b) => (a.story.title||'').localeCompare(b.story.title||'','vi'));
+  }
+  // 'recent' = already newest first
+
+  document.getElementById('info-history').innerHTML = `<span>${entries.length}</span> truyện đã đọc`;
+
+  document.getElementById('list-history').innerHTML = entries.map(e => {
+    const s = e.story;
+    const hasCover = !!s.cover_url;
+    const resumeHref = e.chapterId
+      ? `chapter.html?story=${e.storyId}&chapter=${e.chapterId}`
+      : `story.html?story=${e.storyId}`;
+    return `
+    <div class="story-row" style="cursor:pointer" onclick="location.href='${resumeHref}'">
+      <div class="row-cover${hasCover?' has-img':''}">
+        <span class="cover-ph-sm">${bookIcon()}</span>
+        ${hasCover?`<img src="${esc(s.cover_url)}" alt="${esc(s.title)}" loading="lazy">`:''}
+      </div>
+      <div class="row-body">
+        <div class="row-title">${esc(s.title)}</div>
+        <div class="row-author">${esc(s.author||'Ẩn danh')}</div>
+        <div class="row-meta">
+          ${e.chapterNum ? `<span class="row-chapter">Chương ${e.chapterNum}${e.chapterTitle?' — '+esc(e.chapterTitle.substring(0,20)):''}</span>` : ''}
+          <span class="row-time">${timeAgo(e.readAt||Date.now())}</span>
+        </div>
+      </div>
+      <div class="row-actions" onclick="event.stopPropagation()">
+        <button class="row-action-btn" title="Trang truyện" onclick="location.href='story.html?story=${e.storyId}'">
+          <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </button>
+        <button class="row-action-btn danger" title="Xoá khỏi lịch sử" onclick="removeHistoryItem('${e.storyId}')">
+          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function removeHistoryItem(storyId) {
+  const h = getHistory().filter(x => x.storyId !== storyId);
+  saveHistory(h);
+  showToast('Đã xoá khỏi lịch sử');
+  renderHistory();
+  document.getElementById('cnt-history').textContent = getHistory().length;
+}
+
+function clearHistory() {
+  if (!confirm('Xoá toàn bộ lịch sử đọc?')) return;
+  saveHistory([]);
+  showToast('Đã xoá lịch sử');
+  renderHistory();
+}
+
+/* ══════════════════════════════════════
+   INIT
+══════════════════════════════════════ */
+async function init() {
+  await initUser();
+  // pre-load skeleton for reading tab
+  document.getElementById('list-reading').innerHTML = [1,2,3].map(() => `
+    <div class="skel-row">
+      <div class="skel skel-cover-sm"></div>
+      <div class="skel-lines">
+        <div class="skel skel-line w80"></div>
+        <div class="skel skel-line w50"></div>
+        <div class="skel skel-line w60"></div>
+      </div>
+    </div>`).join('');
+
+  await Promise.all([renderReading(), renderFollow(), renderHistory()]);
+
+  // check URL param for tab
+  const tab = new URLSearchParams(location.search).get('tab');
+  if (tab === 'follow' || tab === 'history') {
+    const btn = document.querySelector(`.tab-btn[onclick*="${tab}"]`);
+    if (btn) switchTab(tab, btn);
+  }
+}
+
+init();
+/* ── NAV AVATAR ── */
+async function loadNavAvatar() {
+  const { data: { session } } = await sb.auth.getSession();
+  const btn = document.getElementById('nav-user-btn');
+  if (!btn) return;
+  if (!session) {
+    btn.href = 'auth.html?next=' + encodeURIComponent(location.pathname + location.search);
+    btn.title = 'Đăng nhập';
+    return;
+  }
+  btn.href = 'profile.html';
+  btn.title = 'Hồ sơ của tôi';
+  const { data: prof } = await sb.from('profiles').select('display_name, avatar_url').eq('id', session.user.id).maybeSingle();
+  if (prof?.avatar_url) {
+    btn.innerHTML = '<img src="' + prof.avatar_url + '" alt="avatar">';
+  } else {
+    const initials = (prof?.display_name || session.user.email || 'U')[0].toUpperCase();
+    btn.textContent = initials;
+  }
+}
+loadNavAvatar();
+</script>
+</body>
+</html>
