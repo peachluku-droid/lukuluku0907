@@ -256,10 +256,23 @@ body {
   font-size: 10.5px; font-weight: 800; color: var(--text-muted);
   text-transform: uppercase; letter-spacing: .8px; margin-bottom: 5px;
 }
-.description-text { font-size: 13.5px; line-height: 1.78; color: var(--text); white-space: pre-wrap; }
+/* ── FIX: bỏ white-space:pre-wrap vì nội dung là HTML ── */
+.description-text { font-size: 13.5px; line-height: 1.78; color: var(--text); }
 .description-text.clamped {
   display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
 }
+/* Reset style từ Google Docs trong description */
+.description-text * {
+  font-family: inherit !important;
+  font-size: inherit !important;
+  color: inherit !important;
+  background: transparent !important;
+}
+.description-text p, .description-text div { margin-bottom: 0.3em; line-height: 1.78; }
+.description-text b, .description-text strong { font-weight: 700; }
+.description-text i, .description-text em { font-style: italic; }
+.description-text span { white-space: pre-wrap; }
+
 .read-more-btn {
   background: none; border: none; cursor: pointer;
   color: var(--peach); font-size: 12.5px; font-weight: 700;
@@ -650,14 +663,11 @@ body {
 
   <div class="chapter-list" id="chapter-list">
     <!-- skeleton -->
-    ${[...Array(5)].map(() => `
-    <div class="skel-ch">
-      <div class="skel skel-sq"></div>
-      <div class="skel-lines">
-        <div class="skel skel-line w70"></div>
-        <div class="skel skel-line w40"></div>
-      </div>
-    </div>`).join('')}
+    <div class="skel-ch"><div class="skel skel-sq"></div><div class="skel-lines"><div class="skel skel-line w70"></div><div class="skel skel-line w40"></div></div></div>
+    <div class="skel-ch"><div class="skel skel-sq"></div><div class="skel-lines"><div class="skel skel-line w70"></div><div class="skel skel-line w40"></div></div></div>
+    <div class="skel-ch"><div class="skel skel-sq"></div><div class="skel-lines"><div class="skel skel-line w70"></div><div class="skel skel-line w40"></div></div></div>
+    <div class="skel-ch"><div class="skel skel-sq"></div><div class="skel-lines"><div class="skel skel-line w70"></div><div class="skel skel-line w40"></div></div></div>
+    <div class="skel-ch"><div class="skel skel-sq"></div><div class="skel-lines"><div class="skel skel-line w70"></div><div class="skel skel-line w40"></div></div></div>
   </div>
 </div>
 
@@ -771,6 +781,21 @@ function showToast(msg) {
 }
 
 /* ═══════════════════════════════════════
+   ── FIX: Render description HTML đúng cách ──
+   Nếu content chứa HTML tags → dùng innerHTML,
+   ngược lại dùng textContent để tránh XSS
+═══════════════════════════════════════ */
+function setDescriptionContent(el, content) {
+  if (!content) { el.textContent = 'Chưa có mô tả.'; return; }
+  const isHtml = /<[a-z][\s\S]*>/i.test(content);
+  if (isHtml) {
+    el.innerHTML = content;
+  } else {
+    el.textContent = content;
+  }
+}
+
+/* ═══════════════════════════════════════
    DESCRIPTION TOGGLE
 ═══════════════════════════════════════ */
 let descExpanded = false;
@@ -795,13 +820,12 @@ function showTab(name, btn) {
 }
 
 /* ═══════════════════════════════════════
-   BOOKMARK & FOLLOW (localStorage via plLib or inline)
+   BOOKMARK & FOLLOW
 ═══════════════════════════════════════ */
 function getLib() { return window.plLib || null; }
 
 function updateBookmarkBtn(active) {
   const btn = document.getElementById('bookmark-btn');
-  const icon = document.getElementById('bookmark-icon');
   const txt = document.getElementById('bookmark-text');
   btn.classList.toggle('active', active);
   txt.textContent = active ? 'Đã lưu' : 'Lưu';
@@ -874,7 +898,13 @@ async function loadStory() {
     setStoryMeta(story);
     document.getElementById('story-title').textContent = story.title || 'Không có tiêu đề';
     document.getElementById('story-author').textContent = story.author || 'Ẩn danh';
-    document.getElementById('story-description').textContent = story.description || 'Chưa có mô tả.';
+
+    // ── FIX: dùng setDescriptionContent thay vì .textContent ──
+    setDescriptionContent(
+      document.getElementById('story-description'),
+      story.description
+    );
+
     document.getElementById('story-views').textContent = formatViews(story.total_views || 0);
     document.getElementById('story-votes').textContent = formatViews(story.total_votes || 0);
 
@@ -943,7 +973,7 @@ async function loadStory() {
    CHAPTERS
 ═══════════════════════════════════════ */
 async function loadChapters() {
-  const { data: chapters, error } = await sb.from('chapters').select('*').eq('story_id', storyId).order('chapter_number', { ascending: true });
+  const { data: chapters } = await sb.from('chapters').select('*').eq('story_id', storyId).order('chapter_number', { ascending: true });
   allChapters = chapters || [];
   const count = allChapters.length;
   document.getElementById('story-chapters').textContent = count;
@@ -953,9 +983,11 @@ async function loadChapters() {
   // read btn
   const readBtn = document.getElementById('read-btn');
   const readTxt = document.getElementById('read-btn-text');
-  const lib = getLib();
-  const bm = lib ? (() => { try { return JSON.parse(localStorage.getItem('pl_bookmarks') || '{}'); } catch { return {}; } })() : {};
-  const bmEntry = bm[storyId];
+  let bmEntry = null;
+  try {
+    const bm = JSON.parse(localStorage.getItem('pl_bookmarks') || '{}');
+    bmEntry = bm[storyId];
+  } catch {}
 
   if (bmEntry?.lastChapterId) {
     readBtn.href = `chapter.html?story=${storyId}&chapter=${bmEntry.lastChapterId}`;
@@ -985,7 +1017,6 @@ function renderChapters(filtered = null) {
     return currentSort === 'asc' ? nA - nB : nB - nA;
   });
 
-  // get read history for highlighting
   let readChapterIds = new Set();
   try {
     const h = JSON.parse(localStorage.getItem('pl_history') || '[]');
@@ -1175,13 +1206,11 @@ function loadMoreComments() { loadComments(true); }
 const ADMIN_EMAILS = ['peachluku@gmail.com'];
 
 async function init() {
-  // get current user
   const { data: { session } } = await sb.auth.getSession();
   currentUser = session?.user || null;
 
   if (storyId) await loadStory();
 
-  // hiện nút viết nếu là admin
   if (currentUser && ADMIN_EMAILS.includes(currentUser.email)) {
     const wb = document.getElementById('write-btn');
     if (wb) wb.style.display = 'flex';
@@ -1189,6 +1218,7 @@ async function init() {
 }
 
 init();
+
 /* ── NAV AVATAR ── */
 async function loadNavAvatar() {
   const { data: { session } } = await sb.auth.getSession();
@@ -1213,7 +1243,9 @@ loadNavAvatar();
 
 function setStoryMeta(story) {
   const title = (story.title || 'Truyện') + ' — Peach Luku';
-  const desc = story.description ? story.description.slice(0,160) : 'Web đọc truyện chữ cute & thơm 🍑';
+  const desc = story.description
+    ? story.description.replace(/<[^>]+>/g, '').slice(0, 160)
+    : 'Web đọc truyện chữ cute & thơm 🍑';
   const img = story.cover_url || 'https://jnlqzqtavfptkfvnndxq.supabase.co/storage/v1/object/public/avatars/og-cover.png';
   document.title = title;
   _setMeta('description', desc); _setMeta('og:title', title);
@@ -1225,6 +1257,139 @@ function _setMeta(k, v) {
   const el = document.querySelector('[property="'+k+'"]') || document.querySelector('[name="'+k+'"]');
   if (el) el.setAttribute('content', v);
 }
+
+/* ═══════════════════════════════════════════════════
+   🔒 PEACH LUKU — HỆ THỐNG CHỐNG COPY & CHỐNG EPUB
+   Mức độ: MẠNH
+═══════════════════════════════════════════════════ */
+(function() {
+  'use strict';
+
+  /* ── 1. CSS: chặn chọn text & kéo ảnh ── */
+  const protectCSS = document.createElement('style');
+  protectCSS.textContent = `
+    .story-body, .description-text, .story-title-main,
+    .author-name, .stat-val, .chapter-name {
+      -webkit-user-select: none !important;
+      -moz-user-select: none !important;
+      -ms-user-select: none !important;
+      user-select: none !important;
+      -webkit-touch-callout: none !important;
+    }
+    img { -webkit-user-drag: none !important; user-drag: none !important; pointer-events: none; }
+    ::selection { background: transparent !important; }
+    ::-moz-selection { background: transparent !important; }
+  `;
+  document.head.appendChild(protectCSS);
+
+  /* ── 2. Chặn chuột phải ── */
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    showWarning('🔒 Nội dung được bảo vệ bản quyền!');
+    return false;
+  });
+
+  /* ── 3. Chặn phím tắt copy, save, print, view-source ── */
+  document.addEventListener('keydown', function(e) {
+    const key = e.key.toLowerCase();
+    const ctrl = e.ctrlKey || e.metaKey;
+    if (ctrl && ['c','x','a','s','p','u'].includes(key)) {
+      e.preventDefault();
+      if (['c','x','a'].includes(key)) showWarning('🔒 Sao chép nội dung không được phép!');
+      if (key === 'p') showWarning('🔒 In trang không được phép!');
+      if (key === 's') showWarning('🔒 Lưu trang không được phép!');
+      if (key === 'u') showWarning('🔒 Xem mã nguồn không được phép!');
+      return false;
+    }
+    if (e.key === 'F12') { e.preventDefault(); showWarning('🔒 DevTools không được phép mở!'); return false; }
+    if (ctrl && e.shiftKey && ['i','j','c','k'].includes(key)) { e.preventDefault(); showWarning('🔒 DevTools không được phép mở!'); return false; }
+    if (ctrl && e.shiftKey && key === 'e') { e.preventDefault(); return false; }
+    if (e.key === 'PrintScreen') { e.preventDefault(); showWarning('🔒 Chụp màn hình không được phép!'); return false; }
+  });
+
+  /* ── 4. Chặn copy qua clipboard ── */
+  document.addEventListener('copy', function(e) {
+    e.preventDefault();
+    if (e.clipboardData) e.clipboardData.setData('text/plain', '© Peach Luku – Nội dung được bảo vệ bản quyền. peachluku.com');
+    showWarning('🔒 Sao chép nội dung không được phép!');
+    return false;
+  });
+  document.addEventListener('cut', function(e) { e.preventDefault(); return false; });
+
+  /* ── 5. Chặn kéo thả ── */
+  document.addEventListener('dragstart', function(e) { e.preventDefault(); return false; });
+
+  /* ── 6. Phát hiện DevTools (size trick) ── */
+  let devtoolsOpen = false;
+  const THRESHOLD = 160;
+  function checkDevTools() {
+    const isOpen = (window.outerWidth - window.innerWidth) > THRESHOLD || (window.outerHeight - window.innerHeight) > THRESHOLD;
+    if (isOpen && !devtoolsOpen) { devtoolsOpen = true; handleDevToolsOpen(); }
+    else if (!isOpen) { devtoolsOpen = false; }
+  }
+  setInterval(checkDevTools, 1000);
+
+  function handleDevToolsOpen() {
+    showWarning('🔒 DevTools bị chặn trên Peach Luku!');
+    const targets = document.querySelectorAll('.story-body, .description-text');
+    targets.forEach(el => { if (el) el.style.filter = 'blur(8px)'; });
+    const restore = setInterval(function() {
+      const w = window.outerWidth - window.innerWidth, h = window.outerHeight - window.innerHeight;
+      if (w <= THRESHOLD && h <= THRESHOLD) { targets.forEach(el => { if (el) el.style.filter = ''; }); devtoolsOpen = false; clearInterval(restore); }
+    }, 500);
+  }
+
+  /* ── 7. debugger loop ── */
+  setInterval(function() { if (devtoolsOpen) { (function(){})['constructor']('debugger')(); } }, 3000);
+
+  /* ── 8. Chặn print ── */
+  window.addEventListener('beforeprint', function(e) { e.preventDefault ? e.preventDefault() : (e.returnValue = false); showWarning('🔒 In trang không được phép!'); });
+  window.print = function() { showWarning('🔒 In trang không được phép!'); return false; };
+
+  /* ── 9. Chặn selectstart (trừ input/textarea) ── */
+  document.addEventListener('selectstart', function(e) {
+    const t = e.target;
+    if (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.closest('.comment-compose') || t.closest('.chapter-search-bar')) return true;
+    e.preventDefault(); return false;
+  });
+
+  /* ── 10. Watermark ── */
+  function injectWatermark() {
+    if (document.getElementById('__pl_wm')) return;
+    const wm = document.createElement('div');
+    wm.id = '__pl_wm';
+    wm.style.cssText = 'position:fixed;bottom:18px;right:18px;font-size:11px;color:var(--text-muted,#aaa);font-family:"Nunito",sans-serif;font-weight:700;pointer-events:none;z-index:9999;opacity:0.45;letter-spacing:.3px;';
+    wm.textContent = '© Peach Luku';
+    document.body.appendChild(wm);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', injectWatermark);
+  else injectWatermark();
+
+  /* ── 11. Toast cảnh báo ── */
+  let warnTimer = null;
+  function showWarning(msg) {
+    const existing = document.getElementById('toast');
+    if (existing) {
+      existing.textContent = msg; existing.classList.add('show');
+      clearTimeout(warnTimer); warnTimer = setTimeout(() => existing.classList.remove('show'), 2800);
+      return;
+    }
+    let toast = document.getElementById('__pl_warn_toast');
+    if (!toast) {
+      toast = document.createElement('div'); toast.id = '__pl_warn_toast';
+      toast.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:#2c1a0e;color:#fff;padding:10px 22px;border-radius:22px;font-size:13px;font-weight:700;z-index:99999;opacity:0;transition:transform .25s,opacity .25s;white-space:nowrap;pointer-events:none;font-family:"Nunito",sans-serif;box-shadow:0 4px 20px rgba(0,0,0,.25);';
+      document.body.appendChild(toast);
+    }
+    toast.textContent = msg; toast.style.opacity = '1'; toast.style.transform = 'translateX(-50%) translateY(0)';
+    clearTimeout(warnTimer); warnTimer = setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateX(-50%) translateY(80px)'; }, 2800);
+  }
+
+  /* ── 12. Chặn epub scraper (xoá meta dễ bị crawl) ── */
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('meta[name="description"],meta[property="og:description"]').forEach(m => m.removeAttribute('content'));
+  });
+
+})();
 </script>
 </body>
 </html>
