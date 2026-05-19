@@ -25,12 +25,13 @@ body {
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
+  /* ✅ SỬA: bỏ overflow:hidden, dùng overflow-y:auto để cuộn được */
+  overflow-y: auto;
   display: flex;
-  align-items: center;
+  align-items: flex-start; /* ✅ SỬA: flex-start thay vì center để không bị kẹt */
   justify-content: center;
-  padding: 1rem;
+  padding: 4rem 1rem 2rem; /* ✅ SỬA: thêm padding-top để tránh nút "Về trang chủ" */
   position: relative;
-  overflow: hidden;
 }
 
 /* ─── BG DECORATION ──────────────────────────── */
@@ -52,6 +53,7 @@ body {
   border: 1px solid var(--border);
   position: relative; z-index: 1;
   animation: cardIn .35s cubic-bezier(.22,1,.36,1) both;
+  margin-bottom: 2rem; /* ✅ thêm margin dưới */
 }
 @keyframes cardIn {
   from { opacity: 0; transform: translateY(20px) scale(0.97); }
