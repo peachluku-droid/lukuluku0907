@@ -419,6 +419,9 @@ function newChapter() {
 
 // ── SAVE / PUBLISH ──
 async function saveDraft() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { showToast('Phiên đăng nhập hết hạn, hãy tải lại trang!', 'err'); return; }
+
   const storyId = document.getElementById('story-select').value;
   if (!storyId) { showToast('Chọn truyện trước nhé!', 'err'); return; }
 
@@ -428,7 +431,7 @@ async function saveDraft() {
 
   if (currentChapterId) {
     const { error } = await sb.from('chapters').update({ title, content, updated_at: new Date().toISOString() }).eq('id', currentChapterId);
-    if (error) { showToast('Lưu thất bại!', 'err'); return; }
+    if (error) { console.error('[saveDraft update]', error); showToast('Lưu thất bại: ' + error.message, 'err'); return; }
   } else {
     // lấy số chương tiếp theo
     const { data: existing } = await sb.from('chapters').select('chapter_number').eq('story_id', storyId).order('chapter_number', { ascending: false }).limit(1);
@@ -436,9 +439,10 @@ async function saveDraft() {
 
     const { data, error } = await sb.from('chapters').insert({
       story_id: storyId, title, content,
-      chapter_number: nextNum, is_published: false
+      chapter_number: nextNum, is_published: false,
+      user_id: session.user.id
     }).select().single();
-    if (error) { showToast('Lưu thất bại!', 'err'); setSaveStatus(''); return; }
+    if (error) { console.error('[saveDraft insert]', error); showToast('Lưu thất bại: ' + error.message, 'err'); setSaveStatus(''); return; }
     currentChapterId = data.id;
   }
 
@@ -446,15 +450,16 @@ async function saveDraft() {
   setSaveStatus('Đã lưu ✓');
   showToast('Đã lưu bản thảo!', 'ok');
   loadChapters();
+  return true;
 }
 
 async function publishChapter() {
   if (!confirm('Đăng chương này lên? Độc giả sẽ thấy ngay.')) return;
-  await saveDraft();
-  if (!currentChapterId) return;
+  const saved = await saveDraft();
+  if (!saved || !currentChapterId) return; // dừng nếu lưu thất bại
 
   const { error } = await sb.from('chapters').update({ is_published: true }).eq('id', currentChapterId);
-  if (error) { showToast('Đăng thất bại!', 'err'); return; }
+  if (error) { console.error('[publishChapter]', error); showToast('Đăng thất bại: ' + error.message, 'err'); return; }
   showToast('Đã đăng chương! 🎉', 'ok');
   loadChapters();
 }
