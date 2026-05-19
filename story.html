@@ -1233,10 +1233,9 @@ async function loadNavAvatar() {
   btn.title = 'Hồ sơ của tôi';
   const { data: prof } = await sb.from('profiles').select('display_name, avatar_url').eq('id', session.user.id).maybeSingle();
   if (prof?.avatar_url) {
-    btn.innerHTML = '<img src="' + prof.avatar_url + '" alt="avatar">';
+    btn.innerHTML = '<img src="' + prof.avatar_url + '" alt="avatar" style="width:34px;height:34px;border-radius:50%;object-fit:cover;display:block;">';
   } else {
-    const initials = (prof?.display_name || session.user.email || 'U')[0].toUpperCase();
-    btn.textContent = initials;
+    btn.textContent = (prof?.display_name || session.user.email || 'U')[0].toUpperCase();
   }
 }
 loadNavAvatar();
