@@ -95,6 +95,26 @@ body.theme-wattpad {
   --green: #4caf7d; --green-light: #f0fff6;
 }
 
+/* ── Nav avatar fix ── */
+#nav-user-btn,
+.user-nav-btn,
+.user-nav-btn-ch {
+  width: 34px; height: 34px;
+  border-radius: 50%; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800;
+  color: var(--peach); text-decoration: none;
+  border: 1.5px solid var(--border-hover);
+  flex-shrink: 0; background: none; padding: 0;
+  cursor: pointer;
+}
+#nav-user-btn img,
+.user-nav-btn img,
+.user-nav-btn-ch img {
+  width: 34px; height: 34px;
+  border-radius: 50%; object-fit: cover; display: block;
+}
+
 body {
   font-family: 'Nunito', sans-serif;
   background: var(--bg); color: var(--text);
@@ -213,8 +233,6 @@ body {
 .sort-chip.active { background: var(--peach); color: white; border-color: var(--peach); }
 
 /* ─── STORY CARDS ────────────────────────────── */
-
-/* --- List row (đang đọc + lịch sử) --- */
 .story-list { display: flex; flex-direction: column; gap: 10px; }
 .story-row {
   display: flex; gap: 12px; align-items: flex-start;
@@ -266,12 +284,8 @@ body {
 .row-action-btn:hover { background: var(--peach-light); color: var(--peach-dark); border-color: var(--peach-mid); }
 .row-action-btn.danger:hover { background: #fff0f0; color: #e05252; border-color: #e05252; }
 
-/* progress bar */
 .read-progress-wrap { margin-top: 4px; }
-.read-progress-bar {
-  height: 4px; border-radius: 4px; background: var(--border);
-  overflow: hidden;
-}
+.read-progress-bar { height: 4px; border-radius: 4px; background: var(--border); overflow: hidden; }
 .read-progress-fill {
   height: 100%; border-radius: 4px;
   background: linear-gradient(90deg, var(--peach), var(--peach-mid));
@@ -311,7 +325,7 @@ body {
   width: 24px; height: 24px; border-radius: 50%;
   background: rgba(0,0,0,0.45); border: none; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  color: white; transition: background .12s; backdrop-filter: blur(4px);
+  color: white; backdrop-filter: blur(4px);
   opacity: 0; transition: opacity .15s;
 }
 .story-card:hover .card-unfollow-btn { opacity: 1; }
@@ -386,7 +400,9 @@ body {
     <a href="write.html" class="icon-btn" title="Viết truyện">
       <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
     </a>
-    <a class="user-nav-btn" id="nav-user-btn" href="profile.html" title="Hồ sơ"><svg viewBox="0 0 24 24" width="17" height="17" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
+    <a class="user-nav-btn" id="nav-user-btn" href="profile.html" title="Hồ sơ">
+      <svg viewBox="0 0 24 24" width="17" height="17" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </a>
     <button class="icon-btn" onclick="toggleThemeDrawer()" title="Đổi theme">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
     </button>
@@ -454,8 +470,9 @@ body {
       <div class="sort-chip" onclick="setSortReading('progress',this)">Tiến độ</div>
     </div>
     <div class="story-list" id="list-reading">
-      <!-- skeleton -->
-      ${Array(3).fill(`<div class="skel-row"><div class="skel skel-cover-sm"></div><div class="skel-lines"><div class="skel skel-line w80"></div><div class="skel skel-line w50"></div><div class="skel skel-line w60"></div></div></div>`).join('')}
+      <div class="skel-row"><div class="skel skel-cover-sm"></div><div class="skel-lines"><div class="skel skel-line w80"></div><div class="skel skel-line w50"></div><div class="skel skel-line w60"></div></div></div>
+      <div class="skel-row"><div class="skel skel-cover-sm"></div><div class="skel-lines"><div class="skel skel-line w80"></div><div class="skel skel-line w50"></div><div class="skel skel-line w60"></div></div></div>
+      <div class="skel-row"><div class="skel skel-cover-sm"></div><div class="skel-lines"><div class="skel skel-line w80"></div><div class="skel skel-line w50"></div><div class="skel skel-line w60"></div></div></div>
     </div>
   </div>
 </div>
@@ -503,16 +520,10 @@ body {
 <div class="toast" id="toast"></div>
 
 <script>
-/* ══════════════════════════════════════
-   SUPABASE
-══════════════════════════════════════ */
 const SUPABASE_URL = 'https://jnlqzqtavfptkfvnndxq.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ojRrfSwxK_B6-TGSXaYGxQ_DKERN0-f';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-/* ══════════════════════════════════════
-   THEME
-══════════════════════════════════════ */
 function setTheme(name, el) {
   document.body.className = 'theme-' + name;
   localStorage.setItem('plTheme', name);
@@ -531,9 +542,6 @@ document.addEventListener('click', e => {
   document.body.className = 'theme-' + t;
 })();
 
-/* ══════════════════════════════════════
-   LOCAL STORAGE KEYS & HELPERS
-══════════════════════════════════════ */
 const KEY_BOOKMARKS = 'pl_bookmarks';
 const KEY_FOLLOWS   = 'pl_follows';
 const KEY_HISTORY   = 'pl_history';
@@ -545,14 +553,12 @@ function saveBookmarks(obj) { localStorage.setItem(KEY_BOOKMARKS, JSON.stringify
 function saveFollows(obj)   { localStorage.setItem(KEY_FOLLOWS,   JSON.stringify(obj)); }
 function saveHistory(arr)   { localStorage.setItem(KEY_HISTORY,   JSON.stringify(arr)); }
 
-/* ── current user ── */
 let currentUser = null;
 async function initUser() {
   const { data: { session } } = await sb.auth.getSession();
   currentUser = session?.user || null;
 }
 
-/* ── cloud fetch helpers ── */
 async function cloudGetBookmarks() {
   if (!currentUser) return getBookmarks();
   const { data } = await sb.from('bookmarks').select('*').eq('user_id', currentUser.id);
@@ -588,7 +594,6 @@ async function cloudGetHistory() {
   }));
 }
 
-/* ── plLib — cloud-first, localStorage fallback ── */
 window.plLib = {
   async addBookmark(storyId, data = {}) {
     if (currentUser) {
@@ -678,19 +683,13 @@ window.plLib = {
   },
 };
 
-/* ══════════════════════════════════════
-   STATE
-══════════════════════════════════════ */
-let storyCache = {};     // storyId → story obj from Supabase
-let chapterCounts = {};  // storyId → int
+let storyCache = {};
+let chapterCounts = {};
 let sortReading = 'recent';
 let sortFollow = 'recent';
 let sortHistory = 'recent';
 let activeTab = 'reading';
 
-/* ══════════════════════════════════════
-   TAB SWITCHING
-══════════════════════════════════════ */
 function switchTab(tab, btn) {
   activeTab = tab;
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -699,9 +698,6 @@ function switchTab(tab, btn) {
   document.getElementById('pane-' + tab).classList.add('active');
 }
 
-/* ══════════════════════════════════════
-   HELPERS
-══════════════════════════════════════ */
 function esc(s) {
   if (!s) return '';
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -733,23 +729,15 @@ function bookIcon() {
   return `<svg viewBox="0 0 24 24" width="22" height="22" style="stroke:var(--peach-mid);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`;
 }
 
-/* ══════════════════════════════════════
-   FETCH MISSING STORIES FROM SUPABASE
-══════════════════════════════════════ */
 async function ensureStories(ids) {
   const missing = ids.filter(id => !storyCache[id]);
   if (!missing.length) return;
   const { data } = await sb.from('stories').select('*').in('id', missing);
   if (data) data.forEach(s => { storyCache[s.id] = s; });
-
-  // fetch chapter counts for newly loaded stories
   const { data: chaps } = await sb.from('chapters').select('story_id').in('story_id', missing);
   if (chaps) chaps.forEach(c => { chapterCounts[c.story_id] = (chapterCounts[c.story_id] || 0) + 1; });
 }
 
-/* ══════════════════════════════════════
-   RENDER: ĐANG ĐỌC
-══════════════════════════════════════ */
 function setSortReading(val, el) {
   sortReading = val;
   document.querySelectorAll('#pane-reading .sort-chip').forEach(c => c.classList.remove('active'));
@@ -775,7 +763,6 @@ async function renderReading() {
   }
 
   await ensureStories(ids);
-
   let entries = ids.map(id => ({ id, ...bm[id], story: storyCache[id] })).filter(e => e.story);
 
   if (sortReading === 'recent') entries.sort((a,b) => (b.addedAt||0)-(a.addedAt||0));
@@ -831,14 +818,11 @@ async function renderReading() {
 }
 
 function removeBookmark(id) {
-  const bm = getBookmarks();
-  delete bm[id];
-  saveBookmarks(bm);
+  const bm = getBookmarks(); delete bm[id]; saveBookmarks(bm);
   showToast('Đã xoá khỏi Đang đọc');
   renderReading();
   document.getElementById('cnt-reading').textContent = Object.keys(getBookmarks()).length;
 }
-
 function clearBookmarks() {
   if (!confirm('Xoá tất cả truyện đang đọc?')) return;
   saveBookmarks({});
@@ -846,9 +830,6 @@ function clearBookmarks() {
   renderReading();
 }
 
-/* ══════════════════════════════════════
-   RENDER: THEO DÕI
-══════════════════════════════════════ */
 function setSortFollow(val, el) {
   sortFollow = val;
   document.querySelectorAll('#pane-follow .sort-chip').forEach(c => c.classList.remove('active'));
@@ -874,7 +855,6 @@ async function renderFollow() {
   }
 
   await ensureStories(ids);
-
   let entries = ids.map(id => ({ id, ...f[id], story: storyCache[id] })).filter(e => e.story);
 
   if (sortFollow === 'recent') entries.sort((a,b) => (b.addedAt||0)-(a.addedAt||0));
@@ -887,7 +867,6 @@ async function renderFollow() {
     const s = e.story;
     const hasCover = !!s.cover_url;
     const ch = chapterCounts[e.id] || 0;
-    // "mới" nếu story updated_at gần đây (< 7 ngày)
     const isNew = s.updated_at && (Date.now() - new Date(s.updated_at).getTime()) < 7*24*3600*1000;
     return `
     <a class="story-card" href="story.html?story=${e.id}">
@@ -913,14 +892,11 @@ async function renderFollow() {
 }
 
 function removeFollow(id) {
-  const f = getFollows();
-  delete f[id];
-  saveFollows(f);
+  const f = getFollows(); delete f[id]; saveFollows(f);
   showToast('Đã bỏ theo dõi');
   renderFollow();
   document.getElementById('cnt-follow').textContent = Object.keys(getFollows()).length;
 }
-
 function clearFollows() {
   if (!confirm('Bỏ theo dõi tất cả truyện?')) return;
   saveFollows({});
@@ -928,9 +904,6 @@ function clearFollows() {
   renderFollow();
 }
 
-/* ══════════════════════════════════════
-   RENDER: LỊCH SỬ
-══════════════════════════════════════ */
 function setSortHistory(val, el) {
   sortHistory = val;
   document.querySelectorAll('#pane-history .sort-chip').forEach(c => c.classList.remove('active'));
@@ -956,13 +929,8 @@ async function renderHistory() {
 
   const ids = [...new Set(h.map(x => x.storyId))];
   await ensureStories(ids);
-
   let entries = h.map(x => ({ ...x, story: storyCache[x.storyId] })).filter(e => e.story);
-
-  if (sortHistory === 'title') {
-    entries.sort((a,b) => (a.story.title||'').localeCompare(b.story.title||'','vi'));
-  }
-  // 'recent' = already newest first
+  if (sortHistory === 'title') entries.sort((a,b) => (a.story.title||'').localeCompare(b.story.title||'','vi'));
 
   document.getElementById('info-history').innerHTML = `<span>${entries.length}</span> truyện đã đọc`;
 
@@ -1005,7 +973,6 @@ function removeHistoryItem(storyId) {
   renderHistory();
   document.getElementById('cnt-history').textContent = getHistory().length;
 }
-
 function clearHistory() {
   if (!confirm('Xoá toàn bộ lịch sử đọc?')) return;
   saveHistory([]);
@@ -1013,12 +980,8 @@ function clearHistory() {
   renderHistory();
 }
 
-/* ══════════════════════════════════════
-   INIT
-══════════════════════════════════════ */
 async function init() {
   await initUser();
-  // pre-load skeleton for reading tab
   document.getElementById('list-reading').innerHTML = [1,2,3].map(() => `
     <div class="skel-row">
       <div class="skel skel-cover-sm"></div>
@@ -1031,7 +994,6 @@ async function init() {
 
   await Promise.all([renderReading(), renderFollow(), renderHistory()]);
 
-  // check URL param for tab
   const tab = new URLSearchParams(location.search).get('tab');
   if (tab === 'follow' || tab === 'history') {
     const btn = document.querySelector(`.tab-btn[onclick*="${tab}"]`);
@@ -1040,7 +1002,7 @@ async function init() {
 }
 
 init();
-/* ── NAV AVATAR ── */
+
 async function loadNavAvatar() {
   const { data: { session } } = await sb.auth.getSession();
   const btn = document.getElementById('nav-user-btn');
@@ -1054,10 +1016,9 @@ async function loadNavAvatar() {
   btn.title = 'Hồ sơ của tôi';
   const { data: prof } = await sb.from('profiles').select('display_name, avatar_url').eq('id', session.user.id).maybeSingle();
   if (prof?.avatar_url) {
-    btn.innerHTML = '<img src="' + prof.avatar_url + '" alt="avatar">';
+    btn.innerHTML = `<img src="${prof.avatar_url}" alt="avatar">`;
   } else {
-    const initials = (prof?.display_name || session.user.email || 'U')[0].toUpperCase();
-    btn.textContent = initials;
+    btn.textContent = (prof?.display_name || session.user.email || 'U')[0].toUpperCase();
   }
 }
 loadNavAvatar();
