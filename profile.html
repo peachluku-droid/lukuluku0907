@@ -41,7 +41,6 @@ body {
   min-height: 100vh;
 }
 
-/* ── Header ── */
 .site-header {
   background: var(--bg2); border-bottom: 1px solid var(--border);
   padding: 0 1rem; height: 52px;
@@ -57,10 +56,8 @@ body {
 .back-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .header-title { font-size: 15px; font-weight: 800; color: var(--peach-dark); flex: 1; }
 
-/* ── Layout ── */
 .container { max-width: 560px; margin: 0 auto; padding: 1.5rem 1rem 3rem; display: flex; flex-direction: column; gap: 1.25rem; }
 
-/* ── Avatar section ── */
 .avatar-section {
   background: var(--card); border-radius: 20px;
   border: 1px solid var(--border); padding: 1.5rem;
@@ -87,7 +84,6 @@ body {
 #avatar-file { display: none; }
 .user-email { font-size: 13px; color: var(--text-muted); font-weight: 600; }
 
-/* ── Card ── */
 .card {
   background: var(--card); border-radius: 16px;
   border: 1px solid var(--border); padding: 1.25rem;
@@ -97,7 +93,6 @@ body {
   text-transform: uppercase; letter-spacing: .5px; margin-bottom: 1rem;
 }
 
-/* ── Form ── */
 .field { display: flex; flex-direction: column; gap: 5px; margin-bottom: .9rem; }
 .field:last-of-type { margin-bottom: 0; }
 .field label { font-size: 12px; font-weight: 700; color: var(--text-muted); }
@@ -119,7 +114,6 @@ body {
 .save-btn:hover { opacity: .88; }
 .save-btn:disabled { opacity: .5; cursor: not-allowed; }
 
-/* ── Stats ── */
 .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .stat-box {
   background: var(--peach-light); border-radius: 12px;
@@ -130,7 +124,6 @@ body {
 .stat-num { font-size: 20px; font-weight: 800; color: var(--peach-dark); }
 .stat-label { font-size: 11px; font-weight: 700; color: var(--text-muted); margin-top: 2px; }
 
-/* ── Danger zone ── */
 .danger-btn {
   width: 100%; padding: 10px; border-radius: 12px;
   background: none; border: 1.5px solid var(--danger);
@@ -140,7 +133,6 @@ body {
 }
 .danger-btn:hover { background: rgba(224,82,82,.08); }
 
-/* ── Toast ── */
 .toast {
   position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(12px);
   background: var(--text); color: var(--bg2);
@@ -150,13 +142,11 @@ body {
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* ── Upload progress ── */
 .upload-progress {
   font-size: 12px; color: var(--text-muted); text-align: center;
   display: none;
 }
 
-/* ── Not logged in ── */
 .login-wall {
   background: var(--card); border-radius: 20px; border: 1px solid var(--border);
   padding: 2.5rem 1.5rem; text-align: center; display: flex;
@@ -196,7 +186,6 @@ const SUPABASE_URL = 'https://jnlqzqtavfptkfvnndxq.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ojRrfSwxK_B6-TGSXaYGxQ_DKERN0-f';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-/* ── theme ── */
 (function() {
   const t = localStorage.getItem('plTheme') || 'light';
   document.body.className = 'theme-' + t;
@@ -216,7 +205,25 @@ function getInitials(email) {
   return (email || 'U')[0].toUpperCase();
 }
 
-/* ── render login wall ── */
+// Map MIME type → extension (hỗ trợ tất cả định dạng ảnh phổ biến)
+function mimeToExt(mimeType) {
+  const map = {
+    'image/jpeg':    'jpg',
+    'image/jpg':     'jpg',
+    'image/png':     'png',
+    'image/gif':     'gif',
+    'image/webp':    'webp',
+    'image/avif':    'avif',
+    'image/svg+xml': 'svg',
+    'image/bmp':     'bmp',
+    'image/tiff':    'tiff',
+    'image/heic':    'heic',
+    'image/heif':    'heif',
+    'image/x-icon':  'ico',
+  };
+  return map[mimeType] || 'jpg'; // fallback về jpg nếu không nhận ra
+}
+
 function renderLoginWall() {
   document.getElementById('main-container').innerHTML = `
     <div class="login-wall">
@@ -227,7 +234,6 @@ function renderLoginWall() {
     </div>`;
 }
 
-/* ── render profile UI ── */
 function renderProfile(stats) {
   const avatarUrl = profile?.avatar_url;
   const displayName = profile?.display_name || currentUser.email.split('@')[0];
@@ -235,7 +241,6 @@ function renderProfile(stats) {
   const initials = getInitials(displayName);
 
   document.getElementById('main-container').innerHTML = `
-    <!-- Avatar -->
     <div class="avatar-section">
       <div class="avatar-wrap">
         <div class="avatar-img" id="avatar-display">
@@ -250,7 +255,6 @@ function renderProfile(stats) {
       <div class="upload-progress" id="upload-progress">Đang tải ảnh lên...</div>
     </div>
 
-    <!-- Thống kê -->
     <div class="card">
       <div class="card-title">Hoạt động</div>
       <div class="stats-grid">
@@ -269,7 +273,6 @@ function renderProfile(stats) {
       </div>
     </div>
 
-    <!-- Chỉnh sửa thông tin -->
     <div class="card">
       <div class="card-title">Thông tin cá nhân</div>
       <div class="field">
@@ -283,7 +286,6 @@ function renderProfile(stats) {
       <button class="save-btn" id="save-btn" onclick="saveProfile()">💾 Lưu thay đổi</button>
     </div>
 
-    <!-- Đổi mật khẩu -->
     <div class="card">
       <div class="card-title">Bảo mật</div>
       <div class="field">
@@ -297,14 +299,12 @@ function renderProfile(stats) {
       <button class="save-btn" id="pw-btn" onclick="changePassword()" style="background:var(--peach-dark)">🔑 Đổi mật khẩu</button>
     </div>
 
-    <!-- Đăng xuất -->
     <div class="card">
       <div class="card-title">Tài khoản</div>
       <button class="danger-btn" onclick="doLogout()">Đăng xuất</button>
     </div>`;
 }
 
-/* ── load stats ── */
 async function loadStats() {
   const uid = currentUser.id;
   const [bm, fl, hi] = await Promise.all([
@@ -319,40 +319,67 @@ async function loadStats() {
   };
 }
 
-/* ── upload avatar ── */
 async function uploadAvatar(input) {
   const file = input.files[0];
   if (!file) return;
-  if (file.size > 2 * 1024 * 1024) { showToast('Ảnh tối đa 2MB'); return; }
+
+  // Kiểm tra là file ảnh (dùng MIME type, không dùng đuôi file)
+  if (!file.type.startsWith('image/')) {
+    showToast('Vui lòng chọn file ảnh');
+    input.value = '';
+    return;
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    showToast('Ảnh tối đa 5MB');
+    input.value = '';
+    return;
+  }
 
   document.getElementById('upload-progress').style.display = 'block';
 
-  const ext = file.name.split('.').pop();
+  // Dùng MIME type để xác định extension — không phụ thuộc tên file
+  const ext = mimeToExt(file.type);
   const path = `avatars/${currentUser.id}.${ext}`;
 
+  // Upload với contentType từ file.type (chính xác 100%)
   const { error: upErr } = await sb.storage.from('avatars').upload(path, file, {
-    contentType: file.type, upsert: true,
+    contentType: file.type,
+    upsert: true,
+    cacheControl: '3600',
   });
 
   if (upErr) {
     showToast('Lỗi upload: ' + upErr.message);
     document.getElementById('upload-progress').style.display = 'none';
+    input.value = '';
     return;
   }
 
   const { data: urlData } = sb.storage.from('avatars').getPublicUrl(path);
   const avatarUrl = urlData.publicUrl + '?t=' + Date.now();
 
-  await sb.from('profiles').upsert({ id: currentUser.id, avatar_url: avatarUrl });
+  const { error: dbErr } = await sb.from('profiles').upsert({
+    id: currentUser.id,
+    avatar_url: avatarUrl,
+    updated_at: new Date().toISOString(),
+  });
+
+  if (dbErr) {
+    showToast('Lỗi lưu profile: ' + dbErr.message);
+    document.getElementById('upload-progress').style.display = 'none';
+    return;
+  }
+
   profile = { ...profile, avatar_url: avatarUrl };
 
   const display = document.getElementById('avatar-display');
   display.innerHTML = `<img src="${avatarUrl}" alt="avatar">`;
   document.getElementById('upload-progress').style.display = 'none';
+  input.value = ''; // reset để có thể chọn lại cùng file
   showToast('Đã cập nhật ảnh đại diện 🐹');
 }
 
-/* ── save profile ── */
 async function saveProfile() {
   const name = document.getElementById('field-name').value.trim();
   const bio  = document.getElementById('field-bio').value.trim();
@@ -375,7 +402,6 @@ async function saveProfile() {
   showToast('Đã lưu hồ sơ 🐹');
 }
 
-/* ── change password ── */
 async function changePassword() {
   const pw  = document.getElementById('field-pw').value;
   const pw2 = document.getElementById('field-pw2').value;
@@ -395,7 +421,6 @@ async function changePassword() {
   showToast('Đã đổi mật khẩu thành công!');
 }
 
-/* ── logout ── */
 async function doLogout() {
   await sb.auth.signOut();
   location.href = 'index.html';
@@ -406,7 +431,6 @@ function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-/* ── init ── */
 async function init() {
   const { data: { session } } = await sb.auth.getSession();
   if (!session) { renderLoginWall(); return; }
