@@ -465,10 +465,13 @@ function timeAgo(ts) { const diff = Date.now() - new Date(ts).getTime(); const m
 function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2300); }
 function setDescriptionContent(el, content) {
   if (!content) { el.textContent = 'Chưa có mô tả.'; return; }
-  const isHtml = /<[a-z][\s\S]*>/i.test(content);
+  // Chỉ coi là HTML nếu có tag thực sự: <p>, <br>, <div>, <span>, <b>, <i>...
+  // Không phải ký tự < đơn lẻ trong text thuần
+  const isHtml = /<(p|br|div|span|b|i|em|strong|ul|ol|li|h[1-6])(\s|>|\/)/i.test(content);
   if (isHtml) {
     el.innerHTML = content;
   } else {
+    // Plain text: giữ xuống dòng
     el.innerHTML = content
       .split('\n')
       .map(line => '<span>' + line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</span>')
