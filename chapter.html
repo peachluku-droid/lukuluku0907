@@ -104,6 +104,20 @@ body {
   font-weight: var(--font-weight, 400);
   font-style: var(--font-style, normal);
 }
+
+/* ── FIX: Reset style từ Google Docs trong nội dung chương ── */
+.para-text * {
+  font-family: inherit !important;
+  font-size: inherit !important;
+  color: inherit !important;
+  background: transparent !important;
+}
+.para-text p, .para-text div { margin-bottom: 0.5em; line-height: 2; }
+.para-text b, .para-text strong { font-weight: 700; }
+.para-text i, .para-text em { font-style: italic; }
+.para-text span { white-space: pre-wrap; }
+.para-text br { display: block; content: ''; margin-top: 0.3em; }
+
 .cmt-trigger {
   float: right;
   display: flex; align-items: center; gap: 4px;
@@ -598,10 +612,9 @@ const SUPABASE_URL = 'https://jnlqzqtavfptkfvnndxq.supabase.co'
 const SUPABASE_KEY = 'sb_publishable_ojRrfSwxK_B6-TGSXaYGxQ_DKERN0-f'
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
 
-const params      = new URLSearchParams(location.search)
-const STORY_ID    = params.get('story')
-const CHAPTER_UUID = params.get('chapter') || null  // UUID của chương
-// CHAPTER_UUID đã khai báo ở trên từ URL params
+const params       = new URLSearchParams(location.search)
+const STORY_ID     = params.get('story')
+const CHAPTER_UUID = params.get('chapter') || null
 
 if (!STORY_ID || !params.get('chapter')) {
   document.body.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;text-align:center;padding:2rem;gap:12px">
@@ -741,7 +754,6 @@ async function loadChapter() {
     return
   }
   chapterData = ch
-  // CHAPTER_UUID đã có từ URL
 
   document.title = `Chương ${ch.chapter_number} — ${ch.title || ''} · Peach Luku`
   setChapterMeta(ch, null)
@@ -758,35 +770,79 @@ async function loadChapter() {
   renderParagraphs(ch.content || '')
   await Promise.all([loadToc(), countView(), loadVotes(), loadAllCounts()])
 
-  // ── plLib integration ──
   if (window.plLib) {
-    // push to history
     plLib.pushHistory(STORY_ID, CHAPTER_UUID, ch.chapter_number, ch.title)
-    // update bookmark progress
     const { count } = await sb.from('chapters').select('id', { count:'exact', head:true }).eq('story_id', STORY_ID)
     plLib.updateBookmarkProgress(STORY_ID, CHAPTER_UUID, ch.chapter_number, count || 0)
   }
 }
 
 /* ═══════════════════════════════════
-   RENDER PARAGRAPHS
+   ── FIX: RENDER PARAGRAPHS ──
+   Xử lý đúng cả plain text lẫn HTML
+   từ Google Docs / rich text editor
 ═══════════════════════════════════ */
 function renderParagraphs(content) {
   const container = document.getElementById('paragraphs-container')
-  // Split by double-newline or single newline
-  const lines = content.split(/\n\n+|\n/).map(s => s.trim()).filter(Boolean)
 
-  if (!lines.length) {
+  if (!content || !content.trim()) {
     container.innerHTML = '<p style="color:var(--meta);font-size:14px;text-align:center;padding:2rem">Chương này chưa có nội dung.</p>'
     return
   }
 
-  container.innerHTML = lines.map((line, i) => {
+  // Kiểm tra xem content có chứa HTML tags không
+  const isHtml = /<[a-z][\s\S]*>/i.test(content)
+
+  let paragraphs = []
+
+  if (isHtml) {
+    // Parse HTML thành DOM để lấy các block
+    const tmp = document.createElement('div')
+    tmp.innerHTML = content
+
+    // Lấy tất cả children có nội dung thực
+    const children = Array.from(tmp.childNodes)
+    const blocks = []
+
+    children.forEach(node => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        // Text node thuần
+        const text = node.textContent.trim()
+        if (text) blocks.push({ type: 'text', content: text })
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        const html = node.outerHTML
+        // Bỏ qua các block hoàn toàn rỗng (chỉ có <br> hoặc &nbsp;)
+        const plainText = node.textContent.replace(/\u00a0/g, '').trim()
+        if (plainText || node.tagName === 'IMG') {
+          blocks.push({ type: 'html', content: html })
+        }
+      }
+    })
+
+    // Nếu không parse được children có nghĩa, dùng cả content làm 1 khối
+    if (!blocks.length) {
+      blocks.push({ type: 'html', content })
+    }
+
+    paragraphs = blocks
+  } else {
+    // Plain text: tách theo dòng
+    const lines = content.split(/\n\n+|\n/).map(s => s.trim()).filter(Boolean)
+    paragraphs = lines.map(l => ({ type: 'text', content: l }))
+  }
+
+  if (!paragraphs.length) {
+    container.innerHTML = '<p style="color:var(--meta);font-size:14px;text-align:center;padding:2rem">Chương này chưa có nội dung.</p>'
+    return
+  }
+
+  container.innerHTML = paragraphs.map((block, i) => {
     const pid = 'p' + (i + 1)
+    const rendered = block.type === 'html' ? block.content : escapeHtml(block.content)
     return `
     <div class="para-wrap" data-pid="${pid}">
       <button class="cmt-trigger" data-pid="${pid}">${CMT_ICON}<span class="cnt">0</span></button>
-      <p class="para-text">${escapeHtml(line)}</p>
+      <div class="para-text">${rendered}</div>
     </div>`
   }).join('')
 
@@ -854,10 +910,7 @@ async function loadVotes() {
   document.getElementById('view-count').textContent = formatViews(data.views || 0)
 
   const voted = localStorage.getItem(`voted_${STORY_ID}_ch${CHAPTER_UUID}`)
-  if (voted) {
-    const btn = document.getElementById('vote-btn')
-    btn.classList.add('voted')
-  }
+  if (voted) document.getElementById('vote-btn').classList.add('voted')
 }
 
 async function submitVote() {
@@ -922,6 +975,7 @@ async function renderCmtOverview() {
   if (!paras.length) { list.innerHTML = '<p class="toc-empty">Không có đoạn nào.</p>'; return }
   list.innerHTML = Array.from(paras).map((wrap, i) => {
     const pid = wrap.dataset.pid
+    // Lấy text thuần (không lấy HTML tags) để hiển thị excerpt
     const excerpt = (wrap.querySelector('.para-text')?.textContent || '').trim().slice(0, 80)
     const cnt = counts[pid] || 0
     return `
@@ -949,7 +1003,11 @@ function openCmtSheet(pid) {
   document.getElementById('sheet-pid-label').textContent = `Bình luận đoạn ${num}`
   const paraEl = document.querySelector(`.para-wrap[data-pid="${pid}"] .para-text`)
   const quoteEl = document.getElementById('cmt-para-quote')
-  if (paraEl && quoteEl) { quoteEl.textContent = (paraEl.textContent||'').trim(); quoteEl.classList.add('visible') }
+  if (paraEl && quoteEl) {
+    // Lấy text thuần cho quote (không lấy HTML)
+    quoteEl.textContent = (paraEl.textContent || '').trim()
+    quoteEl.classList.add('visible')
+  }
   document.getElementById('sheet-emoji-picker').classList.remove('open')
   document.getElementById('cmt-sheet').classList.add('open')
   document.getElementById('cmt-overlay').classList.add('open')
@@ -1042,13 +1100,13 @@ async function uploadImg(file) {
 }
 async function submitSheetComment() {
   if (!activePid) return
-  const content  = document.getElementById('sheet-cmt-input').value.trim()
-  let username, user_id = null;
+  const content = document.getElementById('sheet-cmt-input').value.trim()
+  let username, user_id = null
   if (chCurrentUser) {
-    username = chUserProfile?.display_name || chCurrentUser.email.split('@')[0];
-    user_id = chCurrentUser.id;
+    username = chUserProfile?.display_name || chCurrentUser.email.split('@')[0]
+    user_id = chCurrentUser.id
   } else {
-    username = document.getElementById('sheet-username')?.value.trim() || 'Ẩn danh';
+    username = document.getElementById('sheet-username')?.value.trim() || 'Ẩn danh'
   }
   if (!content && !selectedImgFile) return alert('Nhập nội dung hoặc chọn ảnh nhé!')
   const btn = document.getElementById('sheet-send-btn')
@@ -1109,57 +1167,233 @@ function closeLightbox() { document.getElementById('lightbox').classList.remove(
 /* ═══════════════════════════════════
    INIT
 ═══════════════════════════════════ */
-
-let chCurrentUser = null;
-let chUserProfile = null;
+let chCurrentUser = null
+let chUserProfile = null
 
 async function initChapterUser() {
-  const { data: { session } } = await sb.auth.getSession();
-  chCurrentUser = session?.user || null;
-  if (!chCurrentUser) return;
+  const { data: { session } } = await sb.auth.getSession()
+  chCurrentUser = session?.user || null
+  if (!chCurrentUser) return
   const { data: prof } = await sb.from('profiles')
-    .select('display_name, avatar_url').eq('id', chCurrentUser.id).maybeSingle();
-  chUserProfile = prof;
-  // Ẩn ô nhập tên, hiển thị tên thật
-  const nameRow = document.querySelector('.sheet-name-row');
+    .select('display_name, avatar_url').eq('id', chCurrentUser.id).maybeSingle()
+  chUserProfile = prof
+  const nameRow = document.querySelector('.sheet-name-row')
   if (nameRow) {
-    const name = prof?.display_name || chCurrentUser.email.split('@')[0];
-    nameRow.innerHTML = '<div style="font-size:12px;font-weight:700;color:var(--accent);padding:2px 0">Bình luận với tư cách: <strong>' + name + '</strong></div>';
+    const name = prof?.display_name || chCurrentUser.email.split('@')[0]
+    nameRow.innerHTML = '<div style="font-size:12px;font-weight:700;color:var(--accent);padding:2px 0">Bình luận với tư cách: <strong>' + name + '</strong></div>'
   }
 }
 
 function setChapterMeta(ch, storyTitle) {
-  const title = 'Chương ' + ch.chapter_number + (ch.title ? ' — ' + ch.title : '') + ' · ' + (storyTitle || 'Peach Luku');
-  const desc = (ch.content || '').replace(/<[^>]+>/g,'').slice(0,160) || 'Web đọc truyện chữ cute & thơm';
-  document.title = title;
-  _setMeta('description', desc); _setMeta('og:title', title);
-  _setMeta('og:description', desc); _setMeta('og:url', location.href);
-  _setMeta('twitter:title', title); _setMeta('twitter:description', desc);
+  const title = 'Chương ' + ch.chapter_number + (ch.title ? ' — ' + ch.title : '') + ' · ' + (storyTitle || 'Peach Luku')
+  // Lấy text thuần từ content HTML để dùng làm meta description
+  const tmp = document.createElement('div')
+  tmp.innerHTML = ch.content || ''
+  const desc = (tmp.textContent || '').replace(/\s+/g,' ').trim().slice(0, 160) || 'Web đọc truyện chữ cute & thơm'
+  document.title = title
+  _setMeta('description', desc); _setMeta('og:title', title)
+  _setMeta('og:description', desc); _setMeta('og:url', location.href)
+  _setMeta('twitter:title', title); _setMeta('twitter:description', desc)
 }
 function _setMeta(k, v) {
-  const el = document.querySelector('[property="'+k+'"]') || document.querySelector('[name="'+k+'"]');
-  if (el) el.setAttribute('content', v);
+  const el = document.querySelector('[property="'+k+'"]') || document.querySelector('[name="'+k+'"]')
+  if (el) el.setAttribute('content', v)
 }
+
 buildSheetPicker()
 if (STORY_ID && params.get('chapter')) loadChapter()
+
 async function loadNavAvatar() {
-  const { data: { session } } = await sb.auth.getSession();
-  const btn = document.getElementById('nav-user-btn');
-  if (!btn) return;
+  const { data: { session } } = await sb.auth.getSession()
+  const btn = document.getElementById('nav-user-btn')
+  if (!btn) return
   if (!session) {
-    btn.href = 'auth.html?next=' + encodeURIComponent(location.pathname + location.search);
-    btn.title = 'Đăng nhập'; return;
+    btn.href = 'auth.html?next=' + encodeURIComponent(location.pathname + location.search)
+    btn.title = 'Đăng nhập'; return
   }
-  btn.href = 'profile.html'; btn.title = 'Hồ sơ của tôi';
-  const { data: prof } = await sb.from('profiles').select('display_name, avatar_url').eq('id', session.user.id).maybeSingle();
+  btn.href = 'profile.html'; btn.title = 'Hồ sơ của tôi'
+  const { data: prof } = await sb.from('profiles').select('display_name, avatar_url').eq('id', session.user.id).maybeSingle()
   if (prof?.avatar_url) {
-    btn.innerHTML = '<img src="' + prof.avatar_url + '" alt="avatar">';
+    btn.innerHTML = '<img src="' + prof.avatar_url + '" alt="avatar">'
   } else {
-    btn.textContent = (prof?.display_name || session.user.email || 'U')[0].toUpperCase();
+    btn.textContent = (prof?.display_name || session.user.email || 'U')[0].toUpperCase()
   }
 }
 loadNavAvatar()
 initChapterUser()
+
+/* ═══════════════════════════════════════════════════
+   🔒 PEACH LUKU — HỆ THỐNG CHỐNG COPY & CHỐNG EPUB
+   Mức độ: MẠNH
+═══════════════════════════════════════════════════ */
+(function() {
+  'use strict';
+
+  /* ── 1. CSS: chặn chọn text & kéo ảnh ── */
+  const protectCSS = document.createElement('style');
+  protectCSS.textContent = `
+    .story-col, #paragraphs-container, .para-text,
+    .chapter-heading, .chapter-meta {
+      -webkit-user-select: none !important;
+      -moz-user-select: none !important;
+      -ms-user-select: none !important;
+      user-select: none !important;
+      -webkit-touch-callout: none !important;
+    }
+    img { -webkit-user-drag: none !important; user-drag: none !important; pointer-events: none; }
+    ::selection { background: transparent !important; }
+    ::-moz-selection { background: transparent !important; }
+  `;
+  document.head.appendChild(protectCSS);
+
+  /* ── 2. Chặn chuột phải ── */
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    showWarning('🔒 Nội dung được bảo vệ bản quyền!');
+    return false;
+  });
+
+  /* ── 3. Chặn phím tắt copy, save, print, view-source ── */
+  document.addEventListener('keydown', function(e) {
+    const key = e.key.toLowerCase();
+    const ctrl = e.ctrlKey || e.metaKey;
+    if (ctrl && ['c','x','a','s','p','u'].includes(key)) {
+      e.preventDefault();
+      if (['c','x','a'].includes(key)) showWarning('🔒 Sao chép nội dung không được phép!');
+      if (key === 'p') showWarning('🔒 In trang không được phép!');
+      if (key === 's') showWarning('🔒 Lưu trang không được phép!');
+      if (key === 'u') showWarning('🔒 Xem mã nguồn không được phép!');
+      return false;
+    }
+    if (e.key === 'F12') { e.preventDefault(); showWarning('🔒 DevTools không được phép mở!'); return false; }
+    if (ctrl && e.shiftKey && ['i','j','c','k'].includes(key)) { e.preventDefault(); showWarning('🔒 DevTools không được phép mở!'); return false; }
+    if (ctrl && e.shiftKey && key === 'e') { e.preventDefault(); return false; }
+    if (e.key === 'PrintScreen') { e.preventDefault(); showWarning('🔒 Chụp màn hình không được phép!'); return false; }
+  });
+
+  /* ── 4. Chặn copy qua clipboard ── */
+  document.addEventListener('copy', function(e) {
+    e.preventDefault();
+    if (e.clipboardData) e.clipboardData.setData('text/plain', '© Peach Luku – Nội dung được bảo vệ bản quyền. peachluku.com');
+    showWarning('🔒 Sao chép nội dung không được phép!');
+    return false;
+  });
+  document.addEventListener('cut', function(e) { e.preventDefault(); return false; });
+
+  /* ── 5. Chặn kéo thả ── */
+  document.addEventListener('dragstart', function(e) { e.preventDefault(); return false; });
+
+  /* ── 6. Phát hiện DevTools (size trick) ── */
+  let devtoolsOpen = false;
+  const THRESHOLD = 160;
+  function checkDevTools() {
+    const isOpen = (window.outerWidth - window.innerWidth) > THRESHOLD || (window.outerHeight - window.innerHeight) > THRESHOLD;
+    if (isOpen && !devtoolsOpen) { devtoolsOpen = true; handleDevToolsOpen(); }
+    else if (!isOpen) { devtoolsOpen = false; }
+  }
+  setInterval(checkDevTools, 1000);
+
+  function handleDevToolsOpen() {
+    showWarning('🔒 DevTools bị chặn trên Peach Luku!');
+    const targets = document.querySelectorAll('#paragraphs-container, .story-col');
+    targets.forEach(el => { if (el) el.style.filter = 'blur(8px)'; });
+    const restore = setInterval(function() {
+      const w = window.outerWidth - window.innerWidth, h = window.outerHeight - window.innerHeight;
+      if (w <= THRESHOLD && h <= THRESHOLD) { targets.forEach(el => { if (el) el.style.filter = ''; }); devtoolsOpen = false; clearInterval(restore); }
+    }, 500);
+  }
+
+  /* ── 7. debugger loop ── */
+  setInterval(function() { if (devtoolsOpen) { (function(){})['constructor']('debugger')(); } }, 3000);
+
+  /* ── 8. Chặn print ── */
+  window.addEventListener('beforeprint', function(e) { e.preventDefault ? e.preventDefault() : (e.returnValue = false); showWarning('🔒 In trang không được phép!'); });
+  window.print = function() { showWarning('🔒 In trang không được phép!'); return false; };
+
+  /* ── 9. Chặn selectstart (trừ input/textarea/comment) ── */
+  document.addEventListener('selectstart', function(e) {
+    const t = e.target;
+    if (
+      t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' ||
+      t.closest('.cmt-sheet-input') || t.closest('.sheet-input-bar') ||
+      t.closest('.sheet-name') || t.closest('#sheet-cmt-input')
+    ) return true;
+    e.preventDefault(); return false;
+  });
+
+  /* ── 10. Watermark góc màn hình ── */
+  function injectWatermark() {
+    if (document.getElementById('__pl_wm')) return;
+    const wm = document.createElement('div');
+    wm.id = '__pl_wm';
+    wm.style.cssText = 'position:fixed;bottom:18px;right:18px;font-size:11px;color:var(--meta,#aaa);font-family:"Nunito",sans-serif;font-weight:700;pointer-events:none;z-index:9999;opacity:0.45;letter-spacing:.3px;';
+    wm.textContent = '© Peach Luku';
+    document.body.appendChild(wm);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', injectWatermark);
+  else injectWatermark();
+
+  /* ── 11. Watermark ẩn trong nội dung (anti-screenshot scrape) ── */
+  function injectInlineWatermarks() {
+    const paras = document.querySelectorAll('.para-wrap');
+    paras.forEach((wrap, i) => {
+      // Cứ mỗi 5 đoạn thêm 1 watermark ẩn (opacity 0, trong DOM)
+      if (i % 5 === 4) {
+        const wm = document.createElement('span');
+        wm.style.cssText = 'opacity:0;font-size:0;position:absolute;pointer-events:none;user-select:none;';
+        wm.setAttribute('aria-hidden', 'true');
+        wm.textContent = ' [©PeachLuku] ';
+        wrap.appendChild(wm);
+      }
+    });
+  }
+  // Chạy sau khi paragraphs được render
+  const _origRender = window.renderParagraphs;
+  if (typeof renderParagraphs === 'function') {
+    const origFn = renderParagraphs;
+    window.renderParagraphs = function(content) {
+      origFn(content);
+      setTimeout(injectInlineWatermarks, 200);
+    };
+  }
+
+  /* ── 12. Toast cảnh báo ── */
+  let warnTimer = null;
+  function showWarning(msg) {
+    const existing = document.getElementById('toast') || document.getElementById('__pl_warn_toast');
+    if (existing && existing.id === 'toast') {
+      existing.textContent = msg; existing.classList.add('show');
+      clearTimeout(warnTimer); warnTimer = setTimeout(() => existing.classList.remove('show'), 2800);
+      return;
+    }
+    let toast = document.getElementById('__pl_warn_toast');
+    if (!toast) {
+      toast = document.createElement('div'); toast.id = '__pl_warn_toast';
+      toast.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:#2c1a0e;color:#fff;padding:10px 22px;border-radius:22px;font-size:13px;font-weight:700;z-index:99999;opacity:0;transition:transform .25s,opacity .25s;white-space:nowrap;pointer-events:none;font-family:"Nunito",sans-serif;box-shadow:0 4px 20px rgba(0,0,0,.25);';
+      document.body.appendChild(toast);
+    }
+    toast.textContent = msg; toast.style.opacity = '1'; toast.style.transform = 'translateX(-50%) translateY(0)';
+    clearTimeout(warnTimer); warnTimer = setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateX(-50%) translateY(80px)'; }, 2800);
+  }
+
+  /* ── 13. Chặn epub scraper (xoá meta dễ bị crawl) ── */
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('meta[name="description"],meta[property="og:description"]').forEach(m => m.removeAttribute('content'));
+  });
+
+  /* ── 14. Chặn fetch/XHR clone nội dung (monkey-patch) ── */
+  // Ngăn extension tự fetch lại trang để extract text
+  const _origFetch = window.fetch;
+  window.fetch = function(input, init) {
+    const url = typeof input === 'string' ? input : input?.url || '';
+    // Nếu fetch chính trang hiện tại → chặn
+    if (url && (url === location.href || url === location.pathname)) {
+      return Promise.reject(new Error('Blocked by Peach Luku protection'));
+    }
+    return _origFetch.apply(this, arguments);
+  };
+
+})();
 </script>
 </body>
 </html>
