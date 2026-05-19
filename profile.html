@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hồ sơ — Peach Luku</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Pacifico&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -12,11 +12,12 @@
 :root, body.theme-light {
   --peach: #E8835A; --peach-light: #FEF0E9; --peach-mid: #F2A882;
   --peach-dark: #B85B30; --peach-darker: #7A3A1A;
-  --gold: #C9A84C; --gold-light: #FDF6E3;
-  --bg: #FDF6F2; --bg2: #ffffff;
-  --card: #ffffff; --text: #2C1A0E; --text-muted: #9A7A6A;
+  --bg: #FDF6F2; --bg2: #ffffff; --card: #ffffff;
+  --text: #2C1A0E; --text-muted: #9A7A6A;
   --border: rgba(232,131,90,0.18); --border-hover: #F2A882;
   --danger: #e05252; --success: #4caf7d;
+  --header-bg: #2C1A0E;
+  --header-text: #ffffff;
 }
 body.theme-dark {
   --peach: #F2A882; --peach-light: #2A1A0E; --peach-mid: #C87050;
@@ -25,76 +26,163 @@ body.theme-dark {
   --text: #F0D8C8; --text-muted: #A08070;
   --border: rgba(242,168,130,0.15); --border-hover: #C87050;
   --danger: #e07070; --success: #6fcf97;
+  --header-bg: #111111;
+  --header-text: #ffffff;
 }
 body.theme-sepia {
   --peach: #8B5E3C; --peach-light: #F0E8D8; --peach-mid: #A67C52;
-  --peach-dark: #6B3E1C;
-  --bg: #f5f0e8; --bg2: #faf7f0; --card: #faf7f0;
+  --peach-dark: #6B3E1C; --bg: #f5f0e8; --bg2: #faf7f0; --card: #faf7f0;
   --text: #3d2b1f; --text-muted: #9a8070;
   --border: rgba(139,94,60,0.18); --border-hover: #A67C52;
   --danger: #c05050; --success: #5a8a60;
+  --header-bg: #3d2b1f; --header-text: #fff;
 }
 
 body {
   font-family: 'Nunito', sans-serif;
   background: var(--bg); color: var(--text);
   min-height: 100vh;
+  transition: background .3s, color .3s;
 }
 
-.site-header {
-  background: var(--bg2); border-bottom: 1px solid var(--border);
-  padding: 0 1rem; height: 52px;
-  display: flex; align-items: center; gap: 10px;
-  position: sticky; top: 0; z-index: 100;
+/* ── TOPBAR ── */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: 52px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1rem;
+  background: transparent;
+  transition: background .3s;
 }
-.back-btn {
-  background: none; border: none; cursor: pointer;
-  color: var(--text-muted); padding: 6px; border-radius: 8px;
-  display: flex; align-items: center;
-}
-.back-btn:hover { background: var(--peach-light); color: var(--peach); }
-.back-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.header-title { font-size: 15px; font-weight: 800; color: var(--peach-dark); flex: 1; }
-
-.container { max-width: 560px; margin: 0 auto; padding: 1.5rem 1rem 3rem; display: flex; flex-direction: column; gap: 1.25rem; }
-
-.avatar-section {
-  background: var(--card); border-radius: 20px;
-  border: 1px solid var(--border); padding: 1.5rem;
-  display: flex; flex-direction: column; align-items: center; gap: 1rem;
-}
-.avatar-wrap { position: relative; width: 88px; height: 88px; }
-.avatar-img {
-  width: 88px; height: 88px; border-radius: 50%;
-  object-fit: cover; border: 3px solid var(--peach-mid);
-  background: var(--peach-light);
+.topbar.scrolled { background: var(--bg2); border-bottom: 1px solid var(--border); box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+.topbar-btn {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: rgba(0,0,0,0.35); border: none; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  font-size: 32px; font-weight: 800; color: var(--peach-dark);
+  color: white; backdrop-filter: blur(6px); transition: background .15s;
+}
+.topbar.scrolled .topbar-btn { background: var(--peach-light); color: var(--peach-dark); }
+.topbar-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.topbar-right { display: flex; gap: 8px; }
+
+/* ── PROFILE HEADER ── */
+.profile-header {
+  background: var(--header-bg);
+  padding: 0 0 0;
+  position: relative;
   overflow: hidden;
 }
-.avatar-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.avatar-edit-btn {
-  position: absolute; bottom: 0; right: 0;
-  width: 28px; height: 28px; border-radius: 50%;
-  background: var(--peach); border: 2px solid var(--bg2);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
+.header-bg-blur {
+  position: absolute; inset: 0;
+  background: linear-gradient(160deg, rgba(232,131,90,0.25) 0%, rgba(44,26,14,0.95) 60%);
+  z-index: 0;
 }
-.avatar-edit-btn svg { width: 14px; height: 14px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-#avatar-file { display: none; }
-.user-email { font-size: 13px; color: var(--text-muted); font-weight: 600; }
+.header-content {
+  position: relative; z-index: 1;
+  padding: 80px 1.25rem 0;
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+}
 
-.card {
+/* Avatar */
+.avatar-ring {
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  border: 3.5px solid var(--peach-mid);
+  padding: 3px;
+  background: var(--header-bg);
+  margin-bottom: 12px;
+  position: relative;
+}
+.avatar-img {
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--peach-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px; font-weight: 900;
+  color: var(--peach-dark);
+  overflow: hidden;
+}
+.avatar-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
+.avatar-edit-label {
+  position: absolute; bottom: 2px; right: 2px;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--peach); border: 2px solid var(--header-bg);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background .15s;
+}
+.avatar-edit-label:hover { background: var(--peach-dark); }
+.avatar-edit-label svg { width: 13px; height: 13px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+#avatar-file { display: none; }
+
+.profile-name {
+  font-family: 'Pacifico', cursive;
+  font-size: 24px; color: #fff;
+  margin-bottom: 3px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+.profile-username { font-size: 13px; color: rgba(255,255,255,0.65); font-weight: 600; margin-bottom: 10px; }
+.profile-bio-preview {
+  font-size: 13px; color: rgba(255,255,255,0.75);
+  max-width: 280px; line-height: 1.55;
+  margin-bottom: 14px;
+}
+
+/* Stats row */
+.stats-row {
+  display: flex; justify-content: center; gap: 0;
+  width: 100%; margin-bottom: 0;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+.stat-item {
+  flex: 1; padding: 14px 8px 12px;
+  text-align: center; cursor: pointer;
+  transition: background .15s;
+  border-right: 1px solid rgba(255,255,255,0.1);
+}
+.stat-item:last-child { border-right: none; }
+.stat-item:hover { background: rgba(255,255,255,0.06); }
+.stat-num { font-size: 20px; font-weight: 900; color: #fff; line-height: 1; }
+.stat-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: .5px; margin-top: 3px; }
+
+/* ── TAB BAR ── */
+.tab-bar {
+  background: var(--bg2);
+  display: flex;
+  border-bottom: 1.5px solid var(--border);
+  position: sticky; top: 52px; z-index: 100;
+  transition: background .3s;
+}
+.tab-btn {
+  flex: 1; padding: 13px 8px;
+  background: none; border: none; cursor: pointer;
+  font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 800;
+  color: var(--text-muted);
+  border-bottom: 2.5px solid transparent;
+  margin-bottom: -1.5px;
+  transition: all .15s;
+}
+.tab-btn:hover { color: var(--peach); }
+.tab-btn.active { color: var(--peach); border-bottom-color: var(--peach); }
+
+/* ── PANES ── */
+.pane { display: none; padding: 1.25rem; max-width: 600px; margin: 0 auto; }
+.pane.active { display: block; }
+
+/* ── GIỚI THIỆU ── */
+.section-card {
   background: var(--card); border-radius: 16px;
   border: 1px solid var(--border); padding: 1.25rem;
+  margin-bottom: 1rem;
 }
-.card-title {
-  font-size: 13px; font-weight: 800; color: var(--text-muted);
-  text-transform: uppercase; letter-spacing: .5px; margin-bottom: 1rem;
+.section-title {
+  font-size: 11px; font-weight: 800; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .6px;
+  margin-bottom: 1rem;
 }
-
 .field { display: flex; flex-direction: column; gap: 5px; margin-bottom: .9rem; }
-.field:last-of-type { margin-bottom: 0; }
+.field:last-child { margin-bottom: 0; }
 .field label { font-size: 12px; font-weight: 700; color: var(--text-muted); }
 .field input, .field textarea {
   background: var(--bg); border: 1.5px solid var(--border);
@@ -109,21 +197,26 @@ body {
   width: 100%; padding: 11px; border-radius: 12px;
   background: var(--peach); border: none; cursor: pointer;
   font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 800;
-  color: #fff; margin-top: 1rem; transition: opacity .15s;
+  color: #fff; margin-top: .75rem; transition: opacity .15s;
 }
 .save-btn:hover { opacity: .88; }
 .save-btn:disabled { opacity: .5; cursor: not-allowed; }
 
-.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.stat-box {
-  background: var(--peach-light); border-radius: 12px;
-  padding: .75rem .5rem; text-align: center; cursor: pointer;
-  border: 1px solid var(--border); transition: border-color .15s;
+/* password */
+.pw-section { margin-top: 1rem; }
+.pw-toggle {
+  background: none; border: 1.5px solid var(--border-hover);
+  border-radius: 10px; padding: 8px 14px;
+  font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700;
+  color: var(--text-muted); cursor: pointer; transition: all .15s;
+  display: flex; align-items: center; gap: 6px; width: 100%; justify-content: center;
 }
-.stat-box:hover { border-color: var(--peach-mid); }
-.stat-num { font-size: 20px; font-weight: 800; color: var(--peach-dark); }
-.stat-label { font-size: 11px; font-weight: 700; color: var(--text-muted); margin-top: 2px; }
+.pw-toggle:hover { background: var(--peach-light); color: var(--peach-dark); border-color: var(--peach-mid); }
+.pw-toggle svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.pw-fields { display: none; margin-top: .75rem; }
+.pw-fields.open { display: block; }
 
+/* danger */
 .danger-btn {
   width: 100%; padding: 10px; border-radius: 12px;
   background: none; border: 1.5px solid var(--danger);
@@ -133,50 +226,185 @@ body {
 }
 .danger-btn:hover { background: rgba(224,82,82,.08); }
 
-.toast {
-  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(12px);
-  background: var(--text); color: var(--bg2);
-  padding: 10px 20px; border-radius: 24px;
-  font-size: 13px; font-weight: 700;
-  opacity: 0; pointer-events: none; transition: all .25s; white-space: nowrap; z-index: 999;
+/* ── TÁC PHẨM ── */
+.story-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
 }
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-.upload-progress {
-  font-size: 12px; color: var(--text-muted); text-align: center;
-  display: none;
+.story-card {
+  background: var(--card); border-radius: 12px;
+  border: 1px solid var(--border); overflow: hidden;
+  text-decoration: none; color: var(--text);
+  display: flex; flex-direction: column;
+  transition: all .15s;
 }
+.story-card:hover { border-color: var(--peach-mid); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+.story-cover {
+  position: relative; width: 100%; padding-top: 140%;
+  background: linear-gradient(145deg, var(--peach-light), #FDF6E3);
+  overflow: hidden;
+}
+.story-cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none; }
+.story-cover.has-img img { display: block; }
+.story-cover-ph { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 36px; }
+.story-cover.has-img .story-cover-ph { display: none; }
+.story-ch-badge {
+  position: absolute; bottom: 6px; right: 6px;
+  background: rgba(0,0,0,0.52); color: #fff;
+  font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 8px;
+  backdrop-filter: blur(4px);
+}
+.story-info { padding: 8px 10px 10px; flex: 1; display: flex; flex-direction: column; gap: 3px; }
+.story-title { font-size: 12px; font-weight: 800; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.story-meta { font-size: 10px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; margin-top: 2px; }
+.story-meta svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2; }
 
+.empty-pane {
+  text-align: center; padding: 3rem 1rem;
+  color: var(--text-muted); font-size: 13px;
+}
+.empty-pane .empty-icon { font-size: 42px; margin-bottom: 10px; }
+
+/* ── UPLOAD PROGRESS ── */
+.upload-hint { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 4px; display: none; }
+
+/* ── LOGIN WALL ── */
 .login-wall {
   background: var(--card); border-radius: 20px; border: 1px solid var(--border);
-  padding: 2.5rem 1.5rem; text-align: center; display: flex;
-  flex-direction: column; align-items: center; gap: 1rem;
+  padding: 2.5rem 1.5rem; text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 1rem;
+  margin: 2rem 1.25rem;
 }
-.login-wall svg { width: 48px; height: 48px; stroke: var(--peach-mid); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 .login-wall h2 { font-size: 17px; font-weight: 800; }
 .login-wall p { font-size: 13px; color: var(--text-muted); }
 .login-wall-btn {
   background: var(--peach); color: #fff; border: none;
   border-radius: 12px; padding: 10px 28px;
-  font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 800;
-  cursor: pointer;
+  font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 800; cursor: pointer;
 }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(16px);
+  background: var(--text); color: var(--bg2);
+  padding: 10px 20px; border-radius: 24px;
+  font-size: 13px; font-weight: 700;
+  opacity: 0; pointer-events: none;
+  transition: all .25s; white-space: nowrap; z-index: 999;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── SKELETON ── */
+.skel-card { border-radius: 12px; overflow: hidden; background: var(--card); border: 1px solid var(--border); }
+.skel { background: linear-gradient(90deg, var(--peach-light) 25%, #FDF6E3 50%, var(--peach-light) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 6px; }
+.skel-cover-sq { padding-top: 140%; }
+.skel-line { height: 11px; margin: 8px 10px 4px; }
+.skel-line.short { width: 55%; }
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+/* ── THEME DRAWER ── */
+.theme-drawer {
+  position: fixed; top: 60px; right: 1rem; z-index: 300;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 14px 16px; width: 210px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.15); display: none;
+}
+.theme-drawer.open { display: block; }
+.theme-drawer-title { font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: .5px; }
+.theme-swatches { display: grid; grid-template-columns: repeat(4,1fr); gap: 7px; }
+.swatch { width: 36px; height: 36px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: all .15s; }
+.swatch.active { border-color: var(--peach); box-shadow: 0 0 0 2px var(--bg2), 0 0 0 4px var(--peach); }
+.swatch:hover { transform: scale(1.1); }
+.swatch-lbl { font-size: 9px; text-align: center; color: var(--text-muted); margin-top: 3px; font-weight: 700; }
 </style>
 </head>
-<body>
+<body class="theme-light">
 
-<header class="site-header">
-  <button class="back-btn" onclick="history.back()">
+<!-- TOPBAR -->
+<div class="topbar" id="topbar">
+  <button class="topbar-btn" onclick="history.back()">
     <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
   </button>
-  <div class="header-title">Hồ sơ của tôi</div>
-  <a href="write.html" class="back-btn" title="Viết truyện" style="margin-left:auto">
-    <svg viewBox="0 0 24 24" width="18" height="18" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-  </a>
-</header>
+  <div class="topbar-right">
+    <button class="topbar-btn" onclick="toggleThemeDrawer()" id="theme-toggle-btn" title="Đổi theme">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+  </div>
+</div>
 
-<div class="container" id="main-container">
-  <div style="text-align:center;padding:3rem;color:var(--text-muted);font-size:14px">Đang tải...</div>
+<!-- THEME DRAWER -->
+<div class="theme-drawer" id="theme-drawer">
+  <div class="theme-drawer-title">🎨 Giao diện</div>
+  <div class="theme-swatches">
+    <div><div class="swatch" style="background:#FDF6F2;border:2px solid #F2A882" onclick="setTheme('light',this)"></div><div class="swatch-lbl">Sáng</div></div>
+    <div><div class="swatch" style="background:#1a1a1a" onclick="setTheme('dark',this)"></div><div class="swatch-lbl">Tối</div></div>
+    <div><div class="swatch" style="background:#f5f0e8;border:2px solid #A67C52" onclick="setTheme('sepia',this)"></div><div class="swatch-lbl">Sepia</div></div>
+    <div><div class="swatch" style="background:#e8f0fe;border:2px solid #4a7de0" onclick="setTheme('blue',this)"></div><div class="swatch-lbl">Xanh</div></div>
+    <div><div class="swatch" style="background:#fff0f6;border:2px solid #e876a0" onclick="setTheme('pink',this)"></div><div class="swatch-lbl">Hồng</div></div>
+    <div><div class="swatch" style="background:#f0ebff;border:2px solid #8a5de0" onclick="setTheme('purple',this)"></div><div class="swatch-lbl">Tím</div></div>
+    <div><div class="swatch" style="background:#f0f0f0;border:2px solid #777" onclick="setTheme('gray',this)"></div><div class="swatch-lbl">Xám</div></div>
+    <div><div class="swatch" style="background:#faf5ee;border:2px solid #f26522" onclick="setTheme('wattpad',this)"></div><div class="swatch-lbl">Warm</div></div>
+  </div>
+</div>
+
+<!-- PROFILE HEADER -->
+<div class="profile-header" id="profile-header">
+  <div class="header-bg-blur"></div>
+  <div class="header-content" id="header-content">
+    <div class="avatar-ring">
+      <div class="avatar-img" id="avatar-display">🐹</div>
+      <label class="avatar-edit-label" for="avatar-file" title="Đổi ảnh">
+        <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </label>
+      <input type="file" id="avatar-file" accept="image/*">
+    </div>
+    <div class="upload-hint" id="upload-hint">Đang tải ảnh lên...</div>
+    <div class="profile-name" id="display-name-header">...</div>
+    <div class="profile-username" id="username-header">@...</div>
+    <div class="profile-bio-preview" id="bio-header"></div>
+    <div class="stats-row">
+      <div class="stat-item" onclick="switchTab('works')">
+        <div class="stat-num" id="stat-works">0</div>
+        <div class="stat-label">Tác phẩm</div>
+      </div>
+      <div class="stat-item" onclick="location.href='library.html?tab=reading'">
+        <div class="stat-num" id="stat-reading">0</div>
+        <div class="stat-label">Đang đọc</div>
+      </div>
+      <div class="stat-item" onclick="location.href='library.html?tab=follow'">
+        <div class="stat-num" id="stat-follow">0</div>
+        <div class="stat-label">Theo dõi</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB BAR -->
+<div class="tab-bar">
+  <button class="tab-btn active" id="tab-intro" onclick="switchTab('intro')">Giới thiệu</button>
+  <button class="tab-btn" id="tab-works" onclick="switchTab('works')">Tác phẩm</button>
+  <button class="tab-btn" id="tab-settings" onclick="switchTab('settings')">Cài đặt</button>
+</div>
+
+<!-- PANE: GIỚI THIỆU -->
+<div class="pane active" id="pane-intro">
+  <div id="intro-content" style="color:var(--text-muted);font-size:13px;text-align:center;padding:2rem">Đang tải...</div>
+</div>
+
+<!-- PANE: TÁC PHẨM -->
+<div class="pane" id="pane-works">
+  <div class="story-grid" id="works-grid">
+    <div class="skel-card"><div class="skel skel-cover-sq"></div><div class="skel skel-line"></div><div class="skel skel-line short"></div></div>
+    <div class="skel-card"><div class="skel skel-cover-sq"></div><div class="skel skel-line"></div><div class="skel skel-line short"></div></div>
+    <div class="skel-card"><div class="skel skel-cover-sq"></div><div class="skel skel-line"></div><div class="skel skel-line short"></div></div>
+  </div>
+</div>
+
+<!-- PANE: CÀI ĐẶT -->
+<div class="pane" id="pane-settings">
+  <div id="settings-content" style="color:var(--text-muted);font-size:13px;text-align:center;padding:2rem">Đang tải...</div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -186,266 +414,64 @@ const SUPABASE_URL = 'https://jnlqzqtavfptkfvnndxq.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ojRrfSwxK_B6-TGSXaYGxQ_DKERN0-f';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-(function() {
+/* ── theme ── */
+(function(){
   const t = localStorage.getItem('plTheme') || 'light';
   document.body.className = 'theme-' + t;
 })();
+function setTheme(name, el) {
+  document.body.className = 'theme-' + name;
+  localStorage.setItem('plTheme', name);
+  document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+  if (el) el.classList.add('active');
+}
+function toggleThemeDrawer() {
+  document.getElementById('theme-drawer').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  const d = document.getElementById('theme-drawer');
+  if (!d.contains(e.target) && !e.target.closest('#theme-toggle-btn')) d.classList.remove('open');
+});
 
-let currentUser = null;
-let profile = null;
+/* topbar scroll */
+window.addEventListener('scroll', () => {
+  document.getElementById('topbar').classList.toggle('scrolled', window.scrollY > 60);
+});
 
+/* ── toast ── */
 function showToast(msg) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
+  t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2200);
-}
-
-function getInitials(email) {
-  return (email || 'U')[0].toUpperCase();
-}
-
-// Map MIME type → extension (hỗ trợ tất cả định dạng ảnh phổ biến)
-function mimeToExt(mimeType) {
-  const map = {
-    'image/jpeg':    'jpg',
-    'image/jpg':     'jpg',
-    'image/png':     'png',
-    'image/gif':     'gif',
-    'image/webp':    'webp',
-    'image/avif':    'avif',
-    'image/svg+xml': 'svg',
-    'image/bmp':     'bmp',
-    'image/tiff':    'tiff',
-    'image/heic':    'heic',
-    'image/heif':    'heif',
-    'image/x-icon':  'ico',
-  };
-  return map[mimeType] || 'jpg'; // fallback về jpg nếu không nhận ra
-}
-
-function renderLoginWall() {
-  document.getElementById('main-container').innerHTML = `
-    <div class="login-wall">
-      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      <h2>Chưa đăng nhập</h2>
-      <p>Đăng nhập để xem và chỉnh sửa hồ sơ của bạn</p>
-      <button class="login-wall-btn" onclick="location.href='auth.html?next=profile.html'">Đăng nhập</button>
-    </div>`;
-}
-
-function renderProfile(stats) {
-  const avatarUrl = profile?.avatar_url;
-  const displayName = profile?.display_name || currentUser.email.split('@')[0];
-  const bio = profile?.bio || '';
-  const initials = getInitials(displayName);
-
-  document.getElementById('main-container').innerHTML = `
-    <div class="avatar-section">
-      <div class="avatar-wrap">
-        <div class="avatar-img" id="avatar-display">
-          ${avatarUrl ? `<img src="${esc(avatarUrl)}" alt="avatar" id="avatar-img-el">` : initials}
-        </div>
-        <label class="avatar-edit-btn" for="avatar-file" title="Đổi ảnh đại diện">
-          <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        </label>
-        <input type="file" id="avatar-file" accept="image/*" onchange="uploadAvatar(this)">
-      </div>
-      <div class="user-email">${esc(currentUser.email)}</div>
-      <div class="upload-progress" id="upload-progress">Đang tải ảnh lên...</div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Hoạt động</div>
-      <div class="stats-grid">
-        <div class="stat-box" onclick="location.href='library.html?tab=reading'">
-          <div class="stat-num" id="stat-bm">${stats.bookmarks}</div>
-          <div class="stat-label">Đang đọc</div>
-        </div>
-        <div class="stat-box" onclick="location.href='library.html?tab=follow'">
-          <div class="stat-num" id="stat-fl">${stats.follows}</div>
-          <div class="stat-label">Theo dõi</div>
-        </div>
-        <div class="stat-box" onclick="location.href='library.html?tab=history'">
-          <div class="stat-num" id="stat-hi">${stats.history}</div>
-          <div class="stat-label">Đã đọc</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Thông tin cá nhân</div>
-      <div class="field">
-        <label>Tên hiển thị</label>
-        <input type="text" id="field-name" value="${esc(displayName)}" maxlength="40" placeholder="Tên của bạn">
-      </div>
-      <div class="field">
-        <label>Giới thiệu bản thân</label>
-        <textarea id="field-bio" maxlength="200" placeholder="Vài dòng về bạn...">${esc(bio)}</textarea>
-      </div>
-      <button class="save-btn" id="save-btn" onclick="saveProfile()">💾 Lưu thay đổi</button>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Bảo mật</div>
-      <div class="field">
-        <label>Mật khẩu mới</label>
-        <input type="password" id="field-pw" placeholder="Để trống nếu không đổi" minlength="6">
-      </div>
-      <div class="field">
-        <label>Xác nhận mật khẩu mới</label>
-        <input type="password" id="field-pw2" placeholder="Nhập lại mật khẩu mới">
-      </div>
-      <button class="save-btn" id="pw-btn" onclick="changePassword()" style="background:var(--peach-dark)">🔑 Đổi mật khẩu</button>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Tài khoản</div>
-      <button class="danger-btn" onclick="doLogout()">Đăng xuất</button>
-    </div>`;
-}
-
-async function loadStats() {
-  const uid = currentUser.id;
-  const [bm, fl, hi] = await Promise.all([
-    sb.from('bookmarks').select('id', { count: 'exact', head: true }).eq('user_id', uid),
-    sb.from('follows').select('id', { count: 'exact', head: true }).eq('user_id', uid),
-    sb.from('reading_history').select('id', { count: 'exact', head: true }).eq('user_id', uid),
-  ]);
-  return {
-    bookmarks: bm.count || 0,
-    follows: fl.count || 0,
-    history: hi.count || 0,
-  };
-}
-
-async function uploadAvatar(input) {
-  const file = input.files[0];
-  if (!file) return;
-
-  // Kiểm tra là file ảnh (dùng MIME type, không dùng đuôi file)
-  if (!file.type.startsWith('image/')) {
-    showToast('Vui lòng chọn file ảnh');
-    input.value = '';
-    return;
-  }
-
-  if (file.size > 5 * 1024 * 1024) {
-    showToast('Ảnh tối đa 5MB');
-    input.value = '';
-    return;
-  }
-
-  document.getElementById('upload-progress').style.display = 'block';
-
-  // Dùng MIME type để xác định extension — không phụ thuộc tên file
-  const ext = mimeToExt(file.type);
-  const path = `avatars/${currentUser.id}.${ext}`;
-
-  // Upload với contentType từ file.type (chính xác 100%)
-  const { error: upErr } = await sb.storage.from('avatars').upload(path, file, {
-    contentType: file.type,
-    upsert: true,
-    cacheControl: '3600',
-  });
-
-  if (upErr) {
-    showToast('Lỗi upload: ' + upErr.message);
-    document.getElementById('upload-progress').style.display = 'none';
-    input.value = '';
-    return;
-  }
-
-  const { data: urlData } = sb.storage.from('avatars').getPublicUrl(path);
-  const avatarUrl = urlData.publicUrl + '?t=' + Date.now();
-
-  const { error: dbErr } = await sb.from('profiles').upsert({
-    id: currentUser.id,
-    avatar_url: avatarUrl,
-    updated_at: new Date().toISOString(),
-  });
-
-  if (dbErr) {
-    showToast('Lỗi lưu profile: ' + dbErr.message);
-    document.getElementById('upload-progress').style.display = 'none';
-    return;
-  }
-
-  profile = { ...profile, avatar_url: avatarUrl };
-
-  const display = document.getElementById('avatar-display');
-  display.innerHTML = `<img src="${avatarUrl}" alt="avatar">`;
-  document.getElementById('upload-progress').style.display = 'none';
-  input.value = ''; // reset để có thể chọn lại cùng file
-  showToast('Đã cập nhật ảnh đại diện 🐹');
-}
-
-async function saveProfile() {
-  const name = document.getElementById('field-name').value.trim();
-  const bio  = document.getElementById('field-bio').value.trim();
-  if (!name) { showToast('Tên không được để trống'); return; }
-
-  const btn = document.getElementById('save-btn');
-  btn.disabled = true; btn.textContent = '⏳ Đang lưu...';
-
-  const { error } = await sb.from('profiles').upsert({
-    id: currentUser.id,
-    display_name: name,
-    bio: bio,
-    updated_at: new Date().toISOString(),
-  });
-
-  btn.disabled = false; btn.textContent = '💾 Lưu thay đổi';
-
-  if (error) { showToast('Lỗi: ' + error.message); return; }
-  profile = { ...profile, display_name: name, bio };
-  showToast('Đã lưu hồ sơ 🐹');
-}
-
-async function changePassword() {
-  const pw  = document.getElementById('field-pw').value;
-  const pw2 = document.getElementById('field-pw2').value;
-  if (!pw) { showToast('Nhập mật khẩu mới'); return; }
-  if (pw.length < 6) { showToast('Mật khẩu tối thiểu 6 ký tự'); return; }
-  if (pw !== pw2) { showToast('Mật khẩu xác nhận không khớp'); return; }
-
-  const btn = document.getElementById('pw-btn');
-  btn.disabled = true; btn.textContent = '⏳ Đang đổi...';
-
-  const { error } = await sb.auth.updateUser({ password: pw });
-  btn.disabled = false; btn.textContent = '🔑 Đổi mật khẩu';
-
-  if (error) { showToast('Lỗi: ' + error.message); return; }
-  document.getElementById('field-pw').value = '';
-  document.getElementById('field-pw2').value = '';
-  showToast('Đã đổi mật khẩu thành công!');
-}
-
-async function doLogout() {
-  await sb.auth.signOut();
-  location.href = 'index.html';
 }
 
 function esc(s) {
   if (!s) return '';
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function fmtNum(n) {
+  if (!n) return '0';
+  if (n >= 1000000) return (n/1e6).toFixed(1)+'M';
+  if (n >= 1000) return (n/1000).toFixed(1)+'K';
+  return String(n);
 }
 
-async function init() {
-  const { data: { session } } = await sb.auth.getSession();
-  if (!session) { renderLoginWall(); return; }
-
-  currentUser = session.user;
-
-  const [{ data: prof }, stats] = await Promise.all([
-    sb.from('profiles').select('*').eq('id', currentUser.id).maybeSingle(),
-    loadStats(),
-  ]);
-  profile = prof;
-  renderProfile(stats);
+/* ── tab ── */
+function switchTab(name) {
+  ['intro','works','settings'].forEach(t => {
+    document.getElementById('tab-'+t)?.classList.toggle('active', t === name);
+    document.getElementById('pane-'+t)?.classList.toggle('active', t === name);
+  });
 }
 
-init();
-</script>
-</body>
-</html>
+/* ── state ── */
+let currentUser = null;
+let profile = null;
+
+/* ── login wall ── */
+function renderLoginWall() {
+  document.getElementById('header-content').innerHTML = `
+    <div style="padding:80px 0 20px;color:#fff;text-align:center">
+      <div style="font-size:48px;margin-bottom:12px">🐹</div>
+      <div style="font-size:18px;font-weight:800;margin-bottom:6px">Peach Luku</div>
+      <
