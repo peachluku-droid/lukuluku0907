@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+ <!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
@@ -231,10 +232,10 @@ body {
 .suggest-title { font-size: 14px; font-weight: 800; }
 .suggest-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
 }
-@media (max-width: 600px) { .suggest-grid { grid-template-columns: 1fr 1fr; gap: 8px; } }
+@media (max-width: 600px) { .suggest-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; } }
 .suggest-card {
   background: var(--card); border: 1px solid var(--border); border-radius: 12px;
   overflow: hidden; cursor: pointer; transition: all .2s;
@@ -482,26 +483,26 @@ footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
 <div class="divider"></div>
 
 <!-- TRUYỆN MỚI – WATTPAD GRID -->
-<div class="section">
-  <div class="sec-head">
-    <div class="sec-title">
+<div class="suggest-section">
+  <div class="suggest-head">
+    <div class="suggest-title">
       <span class="ico">
-        <svg viewBox="0 0 24 24" width="15" height="15" style="margin-right:5px;vertical-align:-2px">
-          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        <svg viewBox="0 0 24 24" width="15" height="15" style="margin-right:5px;vertical-align:-2px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
         </svg>
       </span>Truyện mới thêm
     </div>
     <button class="see-all" onclick="location.href='library.html'">Xem tất cả →</button>
   </div>
 
-  <div class="story-grid" id="story-grid-skeleton">
+  <div class="suggest-grid" id="story-grid-skeleton">
     <div class="skel-card"><div class="skel-cover"></div><div class="skel-line"></div><div class="skel-line short"></div></div>
     <div class="skel-card"><div class="skel-cover"></div><div class="skel-line"></div><div class="skel-line short"></div></div>
     <div class="skel-card"><div class="skel-cover"></div><div class="skel-line"></div><div class="skel-line short"></div></div>
     <div class="skel-card"><div class="skel-cover"></div><div class="skel-line"></div><div class="skel-line short"></div></div>
     <div class="skel-card"><div class="skel-cover"></div><div class="skel-line"></div><div class="skel-line short"></div></div>
   </div>
-  <div class="story-grid" id="new-list" style="display:none"></div>
+  <div class="suggest-grid" id="new-list" style="display:none"></div>
 </div>
 
 <div class="divider"></div>
@@ -650,23 +651,18 @@ async function loadStories() {
   // ── Wattpad grid (tất cả truyện) ──
   document.getElementById('new-list').innerHTML = stories.map(s => {
     const ch = chCounts[s.id] || 0;
-    if (!s.cover_url) return ''; // không hiện card nếu chưa có ảnh
+    if (!s.cover_url) return '';
+    const tags = (s.genre || '').split(',').map(g => g.trim()).filter(Boolean).slice(0, 2);
     return `
-    <a class="story-card" href="story.html?story=${s.id}">
-      <div class="story-cover has-img">
+    <a class="suggest-card" href="story.html?story=${s.id}">
+      <div class="suggest-cover has-img">
         <img src="${escapeHtml(s.cover_url)}" alt="${escapeHtml(s.title)}" loading="lazy">
-        ${ch > 0 ? `<span class="ch-badge">${ch} ch.</span>` : ''}
+        ${ch > 0 ? `<span class="suggest-status">${ch} ch.</span>` : ''}
       </div>
-      <div class="story-info">
-        <div class="story-name">${escapeHtml(s.title)}</div>
-        <div class="story-author">✍️ ${escapeHtml(s.author || 'Ẩn danh')}</div>
-        <div class="story-views">
-          <svg viewBox="0 0 24 24" width="11" height="11" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0">
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-          </svg>
-          ${formatViews(s.total_views || 0)} lượt đọc
-        </div>
-        ${s.genre ? `<div class="story-tags">${s.genre.split(',').map(g => g.trim()).filter(Boolean).slice(0,2).map(g => `<a class="story-tag" href="search.html?genre=${encodeURIComponent(g)}" onclick="event.stopPropagation()">#${escapeHtml(g)}</a>`).join('')}</div>` : ''}
+      <div class="suggest-info">
+        <div class="suggest-name">${escapeHtml(s.title)}</div>
+        <div class="suggest-meta">✍️ ${escapeHtml(s.author || 'Ẩn danh')}</div>
+        ${tags.length ? `<div class="suggest-tags">${tags.map(g => `<span class="suggest-tag">#${escapeHtml(g)}</span>`).join('')}</div>` : ''}
       </div>
     </a>`;
   }).join('');
