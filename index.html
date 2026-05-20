@@ -15,6 +15,8 @@
 <meta name="twitter:title" content="Peach Luku">
 <meta name="twitter:description" content="Web đọc truyện chữ cute & thơm 🍑">
 <meta name="twitter:image" content="https://jnlqzqtavfptkfvnndxq.supabase.co/storage/v1/object/public/avatars/og-cover.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#E8835A">
 <title>Peach Luku — Web Đọc Truyện</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&family=Pacifico&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -299,6 +301,7 @@ body {
   display: flex; align-items: center; justify-content: center;
   font-size: 12px; font-weight: 900; flex-shrink: 0;
 }
+.rank-hidden { display: none; }
 .rank-1 { background: #FDF6E3; color: #B85B30; }
 .rank-2 { background: var(--peach-light); color: var(--text-muted); }
 .rank-3 { background: var(--peach-light); color: var(--peach-dark); }
@@ -569,9 +572,6 @@ footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
   <div class="notice-scroll-wrap">
     <span class="notice-scroll-text" id="noticeScrollText">...</span>
   </div>
-  <button class="notice-close" onclick="document.getElementById('noticeBanner').style.display='none'" title="Đóng">
-    <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-  </button>
 </div>
 
 <!-- SECTION: TRUYỆN NUÔI DƯỠNG TÂM HỒN (gộp Top rank + Mới thêm) -->
@@ -581,13 +581,13 @@ footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
       <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
       Truyện nuôi dưỡng tâm hồn
     </div>
-    <button class="see-all" onclick="location.href='library.html'">
+    <button class="see-all" id="topRankBtn" onclick="toggleTopRank(this)">
       Xem tất cả
       <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
     </button>
   </div>
 
-  <!-- Top rank cards (4 truyện xếp hạng view) -->
+  <!-- Top rank cards (top 3 hiện, còn lại ẩn) -->
   <div class="top-rank-grid" id="top-rank-grid">
     <div class="skel-card" style="height:78px;border-radius:14px"></div>
     <div class="skel-card" style="height:78px;border-radius:14px"></div>
@@ -603,10 +603,6 @@ footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
       <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
       Mới cập nhật
     </div>
-    <button class="see-all" onclick="location.href='library.html'">
-      Xem tất cả
-      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-    </button>
   </div>
 
   <!-- Story grid (vertical cards, 6 cols laptop, 2 cols mobile) -->
@@ -719,13 +715,14 @@ async function loadStories() {
     }
   });
 
-  // ── TOP RANK (4 truyện xếp hạng lượt xem) ──
+  // ── TOP RANK (tất cả truyện xếp hạng lượt xem, hiện 3 đầu) ──
   const rankClasses = ['rank-1','rank-2','rank-3','rank-n'];
-  const top4 = [...stories].sort((a,b) => (b.total_views||0)-(a.total_views||0)).slice(0,4);
-  document.getElementById('top-rank-grid').innerHTML = top4.map((s,i) => {
+  const allRanked = [...stories].sort((a,b) => (b.total_views||0)-(a.total_views||0));
+  document.getElementById('top-rank-grid').innerHTML = allRanked.map((s,i) => {
     const ch = chCounts[s.id] || 0;
+    const hiddenClass = i >= 3 ? 'rank-hidden' : '';
     return `
-    <a class="top-rank-card" href="story.html?story=${s.id}">
+    <a class="top-rank-card ${hiddenClass}" href="story.html?story=${s.id}">
       <div class="rank-badge ${rankClasses[i]||'rank-n'}">${i+1}</div>
       <div class="rank-cover-wrap">
         ${s.cover_url ? `<img src="${escapeHtml(s.cover_url)}" alt="${escapeHtml(s.title)}" loading="lazy">` : ''}
@@ -909,6 +906,79 @@ async function loadNoticeText() {
   }
 }
 loadNoticeText();
+
+/* ── TOGGLE TOP RANK ── */
+function toggleTopRank(btn) {
+  const hidden = document.querySelectorAll('.rank-hidden');
+  const expanded = hidden.length === 0;
+  if (!expanded) {
+    // Mở ra hết
+    hidden.forEach(c => c.classList.remove('rank-hidden'));
+    btn.innerHTML = 'Thu gọn <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2"><polyline points="15 18 9 12 15 6"/></svg>';
+  } else {
+    // Thu gọn lại, ẩn từ thứ 4 trở đi
+    const all = document.querySelectorAll('.top-rank-card');
+    all.forEach((c, i) => { if (i >= 3) c.classList.add('rank-hidden'); });
+    btn.innerHTML = 'Xem tất cả <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2"><polyline points="9 18 15 12 9 6"/></svg>';
+  }
+}
+</script>
+<!-- ── FIREBASE PUSH NOTIFICATION ── -->
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-messaging-compat.js"></script>
+<script>
+// ── ĐIỀN FIREBASE CONFIG CỦA BẠN VÀO ĐÂY ──
+const firebaseConfig = {
+  apiKey:            "YOUR_API_KEY",
+  authDomain:        "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId:         "YOUR_PROJECT_ID",
+  storageBucket:     "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId:             "YOUR_APP_ID"
+};
+
+// VAPID key từ Firebase Console → Cloud Messaging → Web Push certificates
+const VAPID_KEY = "YOUR_VAPID_KEY";
+
+async function initPushNotification() {
+  if (!('Notification' in window) || !('serviceWorker' in navigator)) return;
+
+  try {
+    const app = firebase.initializeApp(firebaseConfig);
+    const messaging = firebase.messaging(app);
+
+    // Đăng ký service worker
+    const swReg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+
+    // Xin quyền thông báo
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') return;
+
+    // Lấy token FCM
+    const token = await messaging.getToken({ vapidKey: VAPID_KEY, serviceWorkerRegistration: swReg });
+    if (!token) return;
+
+    // Lưu token vào Supabase (upsert để không bị trùng)
+    await sb.from('push_tokens').upsert({ token }, { onConflict: 'token' });
+
+    // Nhận thông báo khi đang mở web
+    messaging.onMessage((payload) => {
+      const title = payload.notification?.title || 'Peach Luku';
+      const body  = payload.notification?.body  || 'Có chương mới!';
+      const url   = payload.data?.url || '/';
+      if (Notification.permission === 'granted') {
+        const notif = new Notification(title, { body, icon: '/icon-192.png' });
+        notif.onclick = () => { window.open(url, '_blank'); notif.close(); };
+      }
+    });
+
+  } catch (err) {
+    console.warn('Push notification:', err);
+  }
+}
+
+// Gọi sau khi trang load xong
+window.addEventListener('load', () => setTimeout(initPushNotification, 2000));
 </script>
 </body>
 </html>
