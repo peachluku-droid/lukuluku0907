@@ -6,6 +6,8 @@
 <title>Hồ sơ — Peach Luku</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Pacifico&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="navbar.js" data-page="profile"></script>
+</head>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -44,26 +46,6 @@ body {
   min-height: 100vh;
   transition: background .3s, color .3s;
 }
-
-/* ── TOPBAR ── */
-.topbar {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-  height: 52px;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 1rem;
-  background: transparent;
-  transition: background .3s;
-}
-.topbar.scrolled { background: var(--bg2); border-bottom: 1px solid var(--border); box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
-.topbar-btn {
-  width: 38px; height: 38px; border-radius: 50%;
-  background: rgba(0,0,0,0.35); border: none; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  color: white; backdrop-filter: blur(6px); transition: background .15s;
-}
-.topbar.scrolled .topbar-btn { background: var(--peach-light); color: var(--peach-dark); }
-.topbar-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-.topbar-right { display: flex; gap: 8px; }
 
 /* ── PROFILE HEADER ── */
 .profile-header {
@@ -304,40 +286,12 @@ body {
 .skel-line.short { width: 55%; }
 @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
-/* ── THEME DRAWER ── */
-.theme-drawer {
-  position: fixed; top: 60px; right: 1rem; z-index: 300;
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 16px; padding: 14px 16px; width: 210px;
-  box-shadow: 0 8px 28px rgba(0,0,0,0.15); display: none !important;
-}
-.theme-drawer.open { display: block !important; }
-.theme-drawer-title { font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: .5px; }
-.theme-swatches { display: grid; grid-template-columns: repeat(4,1fr); gap: 7px; }
-.swatch { width: 36px; height: 36px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: all .15s; }
-.swatch.active { border-color: var(--peach); box-shadow: 0 0 0 2px var(--bg2), 0 0 0 4px var(--peach); }
-.swatch:hover { transform: scale(1.1); }
-.swatch-lbl { font-size: 9px; text-align: center; color: var(--text-muted); margin-top: 3px; font-weight: 700; }
 </style>
 </head>
 <body class="theme-light">
 
 <!-- TOPBAR -->
-<div class="topbar" id="topbar">
-  <button class="topbar-btn" onclick="history.back()">
-    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-  </button>
-  <div class="topbar-right">
-    <button class="topbar-btn" onclick="toggleThemeDrawer()" id="theme-toggle-btn" title="Đổi theme">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-    </button>
-  </div>
-</div>
-
-<!-- THEME DRAWER -->
-<div class="theme-drawer" id="theme-drawer">
-  <div class="theme-drawer-title">🎨 Giao diện</div>
-  <div class="theme-swatches">
+<div class="theme-swatches">
     <div><div class="swatch" style="background:#FDF6F2;border:2px solid #F2A882" onclick="setTheme('light',this)"></div><div class="swatch-lbl">Sáng</div></div>
     <div><div class="swatch" style="background:#1a1a1a" onclick="setTheme('dark',this)"></div><div class="swatch-lbl">Tối</div></div>
     <div><div class="swatch" style="background:#f5f0e8;border:2px solid #A67C52" onclick="setTheme('sepia',this)"></div><div class="swatch-lbl">Sepia</div></div>
@@ -419,15 +373,7 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   const t = localStorage.getItem('plTheme') || 'light';
   document.body.className = 'theme-' + t;
 })();
-function setTheme(name, el) {
-  document.body.className = 'theme-' + name;
-  localStorage.setItem('plTheme', name);
-  document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
-  if (el) el.classList.add('active');
-}
-function toggleThemeDrawer() {
-  document.getElementById('theme-drawer').classList.toggle('open');
-}
+
 document.addEventListener('click', e => {
   const d = document.getElementById('theme-drawer');
   if (!d.contains(e.target) && !e.target.closest('#theme-toggle-btn')) d.classList.remove('open');

@@ -16,6 +16,8 @@
 <meta name="twitter:image" content="https://jnlqzqtavfptkfvnndxq.supabase.co/storage/v1/object/public/avatars/og-cover.png">
 <title>Peach Luku — Đọc truyện</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="navbar.js" data-page="chapter"></script>
+</head>
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Nunito:wght@400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;600&family=Source+Code+Pro:wght@400&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -615,12 +617,7 @@ const FONTS = [
 ]
 let fontIdx = 0, fontSize = 17
 
-function setTheme(t, el) {
-  document.body.className = 'theme-' + t
-  document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'))
-  el.classList.add('active')
-  localStorage.setItem('plChTheme', t)
-}
+
 function changeFontSize(delta) {
   fontSize = Math.min(24, Math.max(13, fontSize + delta))
   document.body.style.setProperty('--font-size', fontSize + 'px')
@@ -1100,22 +1097,7 @@ buildSheetPicker()
 if (STORY_ID && params.get('chapter')) loadChapter()
 
 /* ── FIX: loadNavAvatar với ảnh constrained ── */
-async function loadNavAvatar() {
-  const { data: { session } } = await sb.auth.getSession()
-  const btn = document.getElementById('nav-user-btn')
-  if (!btn) return
-  if (!session) {
-    btn.href = 'auth.html?next=' + encodeURIComponent(location.pathname + location.search)
-    btn.title = 'Đăng nhập'; return
-  }
-  btn.href = 'profile.html'; btn.title = 'Hồ sơ của tôi'
-  const { data: prof } = await sb.from('profiles').select('display_name, avatar_url').eq('id', session.user.id).maybeSingle()
-  if (prof?.avatar_url) {
-    btn.innerHTML = '<img src="' + prof.avatar_url + '" alt="avatar" style="width:34px;height:34px;border-radius:50%;object-fit:cover;display:block;">'
-  } else {
-    btn.textContent = (prof?.display_name || session.user.email || 'U')[0].toUpperCase()
-  }
-}
+
 loadNavAvatar()
 initChapterUser()
 
