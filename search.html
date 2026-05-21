@@ -77,6 +77,14 @@ body.theme-gray {
   --card: #fafafa; --text: #222222; --text-muted: #888888;
   --border: rgba(85,85,85,0.18); --border-hover: #777777;
 }
+body.theme-green {
+  --peach: #5a9e6f; --peach-light: #e8f5ee; --peach-mid: #7dbb93;
+  --peach-dark: #3a7a52; --peach-darker: #1e5235;
+  --gold: #6aaa7a; --gold-light: #f0faf4;
+  --bg: #f0faf4; --bg2: #fafffe;
+  --card: #fafffe; --text: #1a3326; --text-muted: #6a9a7a;
+  --border: rgba(90,158,111,0.18); --border-hover: #7dbb93;
+}
 body.theme-wattpad {
   --peach: #f26522; --peach-light: #fff3e0; --peach-mid: #f8863a;
   --peach-dark: #c04a00; --peach-darker: #8a3000;
@@ -115,7 +123,7 @@ body {
   transition: background .3s;
 }
 .logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
-.logo-text { font-family: 'Pacifico', cursive; font-size: 19px; color: var(--peach); }
+.logo-text { font-family: 'Nunito', sans-serif; font-size: 19px; font-weight: 800; color: var(--peach); }
 .back-btn {
   background: none; border: none; cursor: pointer;
   color: var(--text); padding: 6px; border-radius: 50%;
@@ -356,36 +364,62 @@ body {
   .content { padding: 1rem; }
   .story-grid, .skeleton-grid { grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 10px; }
 }
+
+.profile-menu-wrap { position: relative; }
+.profile-dropdown {
+  position: absolute; top: calc(100% + 8px); right: 0; z-index: 300;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 8px; width: 200px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+  display: none; flex-direction: column; gap: 2px;
+}
+.profile-dropdown.open { display: flex; }
+.profile-dropdown-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 9px 12px; border-radius: 10px;
+  font-size: 13px; font-weight: 700; color: var(--text);
+  text-decoration: none; transition: all .15s;
+}
+.profile-dropdown-item:hover { background: var(--peach-light); color: var(--peach); }
+.profile-dropdown-item svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; opacity: .7; }
+.profile-dropdown-divider { height: 1px; background: var(--border); margin: 4px 8px; }
+
+
+.dd-auth-row {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 10px; margin: 2px 0;
+}
+.dd-auth-btn {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 5px;
+  padding: 7px 6px; border-radius: 9px;
+  font-size: 12px; font-weight: 800; color: var(--peach);
+  text-decoration: none; background: var(--peach-light);
+  transition: background .15s, color .15s;
+}
+.dd-auth-btn:hover { background: var(--peach); color: #fff; }
+.dd-auth-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; opacity:1; }
+.dd-auth-sep { color: var(--text-muted); font-size: 13px; flex-shrink: 0; }
+
+
+/* Profile button tròn */
+.profile-menu-btn {
+  border-radius: 50% !important;
+  width: 34px !important; height: 34px !important;
+  border: 2px solid var(--border-hover) !important;
+  background: var(--peach-light) !important;
+  color: var(--peach-dark) !important;
+  font-weight: 800; font-size: 14px;
+  overflow: hidden; padding: 0 !important;
+  flex-shrink: 0;
+}
+.profile-menu-btn:hover { border-color: var(--peach) !important; background: var(--peach-light) !important; }
+.profile-menu-btn svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
 </style>
 </head>
 <body class="theme-light">
 
-<div class="topbar">
-  <div style="display:flex;align-items:center;gap:8px">
-    <button class="back-btn" onclick="history.back()" title="Quay lại">
-      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-    </button>
-    <a class="logo" href="index.html">
-      <span class="logo-text">Peach Luku</span>
-    </a>
-  </div>
-  <div class="topbar-right">
-    <button class="filter-toggle-btn" id="filterToggleBtn" onclick="toggleFilterPanel()">
-      <svg viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
-      Bộ lọc
-      <span class="filter-badge" id="filterBadge">0</span>
-    </button>
-    <a href="write.html" class="icon-btn" title="Viết truyện">
-      <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-    </a>
-    <a class="icon-btn" id="nav-user-btn" href="profile.html" title="Hồ sơ">
-      <svg viewBox="0 0 24 24" width="17" height="17" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-    </a>
-    <button class="theme-btn" onclick="toggleThemeDrawer()" title="Đổi theme">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-    </button>
-  </div>
-</div>
+
 
 <div class="theme-drawer" id="theme-drawer">
   <div class="theme-drawer-title">Chọn giao diện</div>
@@ -475,6 +509,7 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let allStories = [];
 let chapterCounts = {};
 let searchQuery = '';
+let authorFilter = '';
 let activeGenre = 'all';
 let activeStatus = 'all';
 let activeSort = 'newest';
@@ -636,7 +671,10 @@ function renderResults() {
       return true;
     });
   }
-  if (searchQuery) {
+  if (authorFilter) {
+    filtered = filtered.filter(s => (s.author || '').toLowerCase() === authorFilter.toLowerCase());
+  }
+  if (searchQuery && !authorFilter) {
     const q = searchQuery.toLowerCase();
     stories = stories.filter(s =>
       (s.title || '').toLowerCase().includes(q) ||
@@ -774,6 +812,18 @@ async function init() {
     filterPanelOpen = true;
     document.getElementById('filterPanel').classList.add('open');
   }
+  const authorParam = params.get('author');
+  if (authorParam) {
+    authorFilter = authorParam;
+    document.getElementById('searchInput').value = authorParam;
+    document.getElementById('clearBtn').classList.add('visible');
+    searchQuery = authorParam;
+    // Hiện banner tác giả
+    const banner = document.createElement('div');
+    banner.style.cssText = 'background:var(--peach-light);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin-bottom:12px;font-size:13px;font-weight:700;color:var(--peach-dark);display:flex;align-items:center;gap:8px';
+    banner.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Truyện của tác giả: <span style="color:var(--peach)">' + escapeHtml(authorParam) + '</span>';
+    document.getElementById('resultArea').before(banner);
+  }
 
   updateFilterUI();
 
@@ -818,6 +868,75 @@ async function loadNavAvatar() {
   }
 }
 loadNavAvatar();
+
+/* ── PROFILE DROPDOWN ── */
+function toggleProfileMenu(e) {
+  e.preventDefault(); e.stopPropagation();
+  const dd = document.getElementById('profileDropdown');
+  dd.classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  const wrap = document.getElementById('profileMenuWrap');
+  if (wrap && !wrap.contains(e.target)) {
+    const dd = document.getElementById('profileDropdown');
+    if (dd) dd.classList.remove('open');
+  }
+});
+
+async function loadNavAvatar() {
+  const { data: { session } } = await sb.auth.getSession();
+  const btn = document.getElementById('nav-user-btn');
+  if (!btn) return;
+  const loggedIn = document.querySelectorAll('.dd-logged-in');
+  const loggedOut = document.querySelectorAll('.dd-logged-out');
+  if (!session) {
+    loggedIn.forEach(el => el.style.display = 'none');
+    loggedOut.forEach(el => el.style.display = 'flex');
+    btn.title = 'Đăng nhập';
+    return;
+  }
+  loggedIn.forEach(el => el.style.display = 'flex');
+  loggedOut.forEach(el => el.style.display = 'none');
+  btn.title = 'Hồ sơ của tôi';
+  const { data: prof } = await sb.from('profiles')
+    .select('display_name, avatar_url')
+    .eq('id', session.user.id)
+    .maybeSingle();
+  if (prof?.avatar_url) {
+    btn.innerHTML = '';
+    const img = document.createElement('img');
+    img.src = prof.avatar_url;
+    img.alt = 'avatar';
+    img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;display:block';
+    btn.appendChild(img);
+    btn.classList.add('has-avatar');
+  } else {
+    const initials = (prof?.display_name || session.user.email || 'U')[0].toUpperCase();
+    btn.innerHTML = initials;
+    btn.style.fontSize = '14px';
+    btn.style.fontWeight = '800';
+  }
+}
+
+async function signOut(e) {
+  e.preventDefault();
+  await sb.auth.signOut();
+  location.href = 'index.html';
+}
+
+loadNavAvatar();
+
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// Tạo instance supabase dùng chung cho navbar.js
+if (typeof supabase === 'undefined') {
+  window.supabase = window.supabase || supabasejs.createClient(
+    'https://jnlqzqtavfptkfvnndxq.supabase.co',
+    'sb_publishable_ojRrfSwxK_B6-TGSXaYGxQ_DKERN0-f'
+  );
+}
+</script>
+<script src="navbar.js" defer></script>
 </body>
 </html>

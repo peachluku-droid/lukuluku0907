@@ -174,6 +174,90 @@
   .theme-drawer { right: 0.5rem; }
   .notif-panel { right: 0.5rem; width: calc(100vw - 1rem); }
 }
+.profile-dropdown-divider { height: 1px; background: var(--border, #eee); margin: 4px 8px; }
+.dd-auth-row {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 10px; margin: 2px 0;
+}
+.dd-auth-btn {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 5px;
+  padding: 7px 6px; border-radius: 9px;
+  font-size: 12px; font-weight: 800; color: var(--peach, #e8835a);
+  text-decoration: none; background: var(--peach-light, #fdf0ea);
+  transition: background .15s, color .15s;
+}
+.dd-auth-btn:hover { background: var(--peach, #e8835a); color: #fff; }
+.dd-auth-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.dd-auth-sep { color: var(--text-muted, #aaa); font-size: 13px; flex-shrink: 0; }
+
+/* Modal gợi ý truyện */
+.suggest-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+  display: none; align-items: center; justify-content: center; padding: 20px;
+}
+.suggest-overlay.open { display: flex; }
+.suggest-modal {
+  background: var(--bg2, #fff); border-radius: 20px;
+  width: 100%; max-width: 440px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  overflow: hidden; animation: suggestIn .2s ease;
+}
+@keyframes suggestIn { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+.suggest-head {
+  background: var(--peach, #e8835a); padding: 16px 20px;
+  display: flex; align-items: center; gap: 10px;
+}
+.suggest-head-title {
+  flex: 1; font-size: 14px; font-weight: 900; color: #fff;
+  display: flex; align-items: center; gap: 7px;
+}
+.suggest-head-title svg { width: 16px; height: 16px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.suggest-close {
+  background: rgba(255,255,255,.2); border: none; cursor: pointer;
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; color: #fff;
+  transition: background .15s;
+}
+.suggest-close:hover { background: rgba(255,255,255,.35); }
+.suggest-close svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.suggest-body { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+.suggest-field label {
+  display: block; font-size: 11px; font-weight: 800;
+  color: var(--text-muted, #aaa); text-transform: uppercase;
+  letter-spacing: .5px; margin-bottom: 6px;
+}
+.suggest-input, .suggest-select, .suggest-textarea {
+  width: 100%; padding: 10px 14px; border: 1.5px solid var(--border, #eee);
+  border-radius: 12px; font-family: 'Nunito', sans-serif;
+  font-size: 13px; color: var(--text, #222);
+  background: var(--bg, #fafafa); outline: none;
+  transition: border .15s; box-sizing: border-box;
+}
+.suggest-input:focus, .suggest-select:focus, .suggest-textarea:focus {
+  border-color: var(--peach, #e8835a);
+}
+.suggest-textarea { resize: vertical; min-height: 80px; }
+.suggest-footer { padding: 0 20px 20px; display: flex; gap: 10px; }
+.suggest-submit {
+  flex: 1; padding: 12px; border: none; border-radius: 12px;
+  background: var(--peach, #e8835a); color: #fff;
+  font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 800;
+  cursor: pointer; transition: background .15s;
+}
+.suggest-submit:hover { background: var(--peach-dark, #c96b3f); }
+.suggest-submit:disabled { opacity: .6; cursor: not-allowed; }
+.suggest-cancel {
+  padding: 12px 20px; border: 1.5px solid var(--border, #eee); border-radius: 12px;
+  background: none; font-family: 'Nunito', sans-serif; font-size: 13px;
+  font-weight: 700; color: var(--text-muted, #aaa); cursor: pointer;
+}
+.suggest-success {
+  text-align: center; padding: 20px;
+  font-size: 14px; font-weight: 700; color: var(--peach, #e8835a);
+  display: none;
+}
+
 `;
 
   // ── 2. Inject CSS vào <head> ───────────────────────────────────────────────
@@ -226,29 +310,45 @@
         <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       </button>
       <div class="profile-dropdown" id="profileDropdown">
-        <a class="profile-dropdown-item" href="profile.html">
-          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          Hồ sơ của tôi
-        </a>
         <a class="profile-dropdown-item" href="search.html">
           <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           Tìm kiếm
         </a>
-        <a class="profile-dropdown-item" href="library.html">
-          <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-          Bảng xếp hạng
-        </a>
-        <a class="profile-dropdown-item" href="profile.html">
+        <a class="profile-dropdown-item dd-logged-in" href="profile.html" style="display:none">
           <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           Theo dõi
         </a>
-        <a class="profile-dropdown-item" href="profile.html">
-          <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-          Lịch sử đọc
-        </a>
-        <a class="profile-dropdown-item" href="profile.html">
+        <a class="profile-dropdown-item dd-logged-in" href="profile.html" style="display:none">
           <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
           Bookmark
+        </a>
+        <div class="dd-auth-row dd-logged-out">
+          <a class="dd-auth-btn" href="auth.html">
+            <svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Đăng nhập
+          </a>
+          <span class="dd-auth-sep">/</span>
+          <a class="dd-auth-btn" href="auth.html?tab=register">
+            <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+            Đăng ký
+          </a>
+        </div>
+        <a class="profile-dropdown-item dd-logged-in" href="#" id="dd-signout" style="display:none">
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Đăng xuất
+        </a>
+        <a class="profile-dropdown-item" href="https://www.google.com/search?q=dich+truyen+QT" target="_blank">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Dịch QT
+        </a>
+        <a class="profile-dropdown-item" href="#" onclick="openSuggestForm(event)">
+          <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          Gợi ý truyện
+        </a>
+        <div class="profile-dropdown-divider dd-logged-in" style="display:none"></div>
+        <a class="profile-dropdown-item dd-logged-in" href="profile.html" style="display:none">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Hồ sơ của tôi
         </a>
       </div>
     </div>
@@ -283,6 +383,51 @@
   </div>
   <div class="notif-list" id="notifList">
     <div class="notif-empty">Đang tải thông báo...</div>
+  </div>
+</div>
+
+<!-- MODAL GỢI Ý TRUYỆN -->
+<div class="suggest-overlay" id="suggestOverlay">
+  <div class="suggest-modal">
+    <div class="suggest-head">
+      <div class="suggest-head-title">
+        <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        Gợi ý truyện cho Peach Luku
+      </div>
+      <button class="suggest-close" onclick="closeSuggestForm()">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div id="suggestFormWrap">
+      <div class="suggest-body">
+        <div class="suggest-field">
+          <label>📖 Tên truyện *</label>
+          <input class="suggest-input" id="sg-title" type="text" placeholder="Tên bộ truyện bạn muốn gợi ý..." maxlength="200">
+        </div>
+        <div class="suggest-field">
+          <label>🏷️ Thể loại</label>
+          <input class="suggest-input" id="sg-genre" type="text" placeholder="BL, GL, dị giới, hài, ngôn tình..." maxlength="100">
+        </div>
+        <div class="suggest-field">
+          <label>🔗 Link file raw (nếu có)</label>
+          <input class="suggest-input" id="sg-link" type="url" placeholder="https://drive.google.com/... hoặc link khác">
+        </div>
+        <div class="suggest-field">
+          <label>💬 Review ngắn *</label>
+          <textarea class="suggest-textarea" id="sg-review" placeholder="Bạn thấy truyện này thế nào? Tại sao muốn recommend cho mọi người đọc?..." maxlength="500"></textarea>
+        </div>
+      </div>
+      <div class="suggest-footer">
+        <button class="suggest-cancel" onclick="closeSuggestForm()">Huỷ</button>
+        <button class="suggest-submit" id="sg-submit-btn" onclick="submitSuggest()">
+          Gửi gợi ý 🐹
+        </button>
+      </div>
+    </div>
+    <div class="suggest-success" id="suggestSuccess">
+      🎉 Cảm ơn bạn đã gợi ý!<br>
+      <span style="font-size:12px;font-weight:400;color:var(--text-muted,#aaa)">Peach Luku sẽ xem xét và edit sớm nhé 🍑</span>
+    </div>
   </div>
 </div>
 `;
@@ -359,6 +504,8 @@
 
     // Cập nhật avatar nếu đã đăng nhập (Supabase)
     updateNavAvatar();
+    // Cập nhật auth state dropdown
+    updateDropdownAuthState();
   }
 
   // ── 7. Hàm theme ──────────────────────────────────────────────────────────
@@ -395,11 +542,12 @@
   // ── 8. Load avatar từ Supabase session ────────────────────────────────────
   async function updateNavAvatar() {
     try {
-      if (typeof supabase === 'undefined') return;
-      const { data: { session } } = await supabase.auth.getSession();
+      const _sb = window.sb || window.supabase; if (!_sb) return;
+      const { data: { session } } = await _sb.auth.getSession();
       if (!session) return;
       const userId = session.user.id;
-      const { data: profile } = await supabase.from('profiles').select('avatar_url, display_name').eq('id', userId).single();
+      const _sb3 = window.sb || window.supabase; if (!_sb3) return;
+      const { data: profile } = await _sb3.from('profiles').select('avatar_url, display_name').eq('id', userId).single();
       if (!profile) return;
       const btn = document.getElementById('profileMenuBtn');
       if (!btn) return;
@@ -421,11 +569,8 @@
     const listEl = document.getElementById('notifList');
     if (!listEl) return;
     try {
-      if (typeof supabase === 'undefined') {
-        listEl.innerHTML = '<div class="notif-empty">Chưa kết nối dữ liệu 🐹</div>';
-        return;
-      }
-      const { data: chapters } = await supabase.from('chapters')
+      const _sb2 = window.sb || window.supabase; if (!_sb2) { listEl.innerHTML = '<div class="notif-empty">Chưa kết nối dữ liệu 🐹</div>'; return; }
+      const { data: chapters } = await _sb2.from('chapters')
         .select('id, title, story_id, created_at, stories(title, cover_url)')
         .order('created_at', { ascending: false })
         .limit(20);
@@ -452,6 +597,79 @@
       listEl.innerHTML = '<div class="notif-empty">Không tải được thông báo 🐹</div>';
     }
   }
+
+
+  // ── Auth state: ẩn/hiện dd-logged-in / dd-logged-out ──────────────────────
+  async function updateDropdownAuthState() {
+    try {
+      const _sb = window.sb || window.supabase; if (!_sb) return;
+      const { data: { session } } = await _sb.auth.getSession();
+      const loggedIn = document.querySelectorAll('.dd-logged-in');
+      const loggedOut = document.querySelectorAll('.dd-logged-out');
+      if (session) {
+        loggedIn.forEach(el => el.style.display = 'flex');
+        loggedOut.forEach(el => el.style.display = 'none');
+        const signoutBtn = document.getElementById('dd-signout');
+        if (signoutBtn) signoutBtn.onclick = async (e) => {
+          e.preventDefault();
+          await (window.sb || window.supabase).auth.signOut();
+          location.reload();
+        };
+      } else {
+        loggedIn.forEach(el => el.style.display = 'none');
+        loggedOut.forEach(el => el.style.display = 'flex');
+      }
+    } catch(e) {}
+  }
+
+  // ── Modal gợi ý truyện ────────────────────────────────────────────────────
+  window.openSuggestForm = function(e) {
+    if (e) e.preventDefault();
+    document.getElementById('profileDropdown').classList.remove('open');
+    document.getElementById('suggestOverlay').classList.add('open');
+    document.getElementById('suggestSuccess').style.display = 'none';
+    document.getElementById('suggestFormWrap').style.display = '';
+  };
+  window.closeSuggestForm = function() {
+    document.getElementById('suggestOverlay').classList.remove('open');
+    // Reset form
+    ['sg-title','sg-genre','sg-link','sg-review'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+  };
+  window.submitSuggest = async function() {
+    const title  = document.getElementById('sg-title').value.trim();
+    const genre  = document.getElementById('sg-genre').value.trim();
+    const link   = document.getElementById('sg-link').value.trim();
+    const review = document.getElementById('sg-review').value.trim();
+    if (!title)  { alert('Vui lòng nhập tên truyện!'); return; }
+    if (!review) { alert('Vui lòng viết review ngắn!'); return; }
+    const btn = document.getElementById('sg-submit-btn');
+    btn.disabled = true; btn.textContent = 'Đang gửi...';
+    try {
+      const _sbs = window.sb || window.supabase;
+      if (_sbs) {
+        const { data: { session } } = await _sbs.auth.getSession();
+        await _sbs.from('story_suggestions').insert({
+          title, genre, raw_link: link || null, review,
+          user_id: session?.user?.id || null,
+          submitted_at: new Date().toISOString()
+        });
+      }
+      document.getElementById('suggestFormWrap').style.display = 'none';
+      document.getElementById('suggestSuccess').style.display = 'block';
+      setTimeout(closeSuggestForm, 2500);
+    } catch(err) {
+      alert('Gửi thất bại, thử lại nhé!');
+    }
+    btn.disabled = false; btn.textContent = 'Gửi gợi ý 🐹';
+  };
+  // Đóng khi click ngoài
+  document.addEventListener('click', function(e) {
+    const overlay = document.getElementById('suggestOverlay');
+    if (overlay && e.target === overlay) closeSuggestForm();
+  });
 
   // ── 10. Áp dụng theme ngay khi script load (tránh flash) ──────────────────
   (function applyThemeImmediately() {
