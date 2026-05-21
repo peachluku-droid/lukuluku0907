@@ -80,6 +80,14 @@ body.theme-gray {
   --card: #fafafa; --text: #222222; --text-muted: #888888;
   --border: rgba(85,85,85,0.18); --border-hover: #777777;
 }
+body.theme-green {
+  --peach: #5a9e6f; --peach-light: #e8f5ee; --peach-mid: #7dbb93;
+  --peach-dark: #3a7a52; --peach-darker: #1e5235;
+  --gold: #6aaa7a; --gold-light: #f0faf4;
+  --bg: #f0faf4; --bg2: #fafffe;
+  --card: #fafffe; --text: #1a3326; --text-muted: #6a9a7a;
+  --border: rgba(90,158,111,0.18); --border-hover: #7dbb93;
+}
 body.theme-wattpad {
   --peach: #f26522; --peach-light: #fff3e0; --peach-mid: #f8863a;
   --peach-dark: #c04a00; --peach-darker: #8a3000;
@@ -484,70 +492,35 @@ footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
 
 
 
-/* ─── FLOATING CHAT ─────────────────────────── */
-.chat-fab {
-  position: fixed; bottom: 24px; right: 20px; z-index: 400;
-  width: 52px; height: 52px; border-radius: 50%;
-  background: var(--peach); border: none; cursor: pointer;
-  box-shadow: 0 4px 18px rgba(232,131,90,0.45);
-  display: flex; align-items: center; justify-content: center;
-  transition: transform .2s, box-shadow .2s;
-}
-.chat-fab:hover { transform: scale(1.08); box-shadow: 0 6px 24px rgba(232,131,90,0.55); }
-.chat-fab svg { width: 22px; height: 22px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.chat-fab-badge {
-  position: absolute; top: -2px; right: -2px;
-  background: #e84040; color: #fff;
-  font-size: 10px; font-weight: 800;
-  min-width: 18px; height: 18px; border-radius: 10px;
-  display: none; align-items: center; justify-content: center;
-  border: 2px solid var(--bg2); padding: 0 3px;
-}
 
-.chat-panel {
-  position: fixed; bottom: 86px; right: 16px; z-index: 400;
-  width: min(360px, calc(100vw - 32px));
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 20px; overflow: hidden;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.18);
-  display: none; flex-direction: column;
-  max-height: 70vh;
-  animation: chatSlideUp .2s ease;
-}
-.chat-panel.open { display: flex; }
-@keyframes chatSlideUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
 
+/* ─── CHAT INLINE ─────────────────────────── */
+.chat-section { padding: 0 2rem 1rem; }
+@media (max-width: 600px) { .chat-section { padding: 0 0.8rem 1rem; } }
+
+.chat-box {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; overflow: hidden;
+}
 .chat-panel-head {
   background: var(--peach);
-  padding: 14px 16px 12px;
+  padding: 12px 16px;
   display: flex; align-items: center; gap: 10px;
-  flex-shrink: 0;
 }
 .chat-panel-title {
   flex: 1; font-size: 13px; font-weight: 900;
   color: #fff; letter-spacing: .3px;
   display: flex; align-items: center; gap: 7px;
 }
-.chat-panel-title svg { width: 16px; height: 16px; stroke: #fff; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.chat-panel-title svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 .chat-online-count {
-  font-size: 10px; font-weight: 700; color: rgba(255,255,255,.8);
-  background: rgba(255,255,255,.18); padding: 2px 8px; border-radius: 10px;
+  font-size: 10px; font-weight: 700; color: rgba(255,255,255,.85);
+  background: rgba(255,255,255,.2); padding: 2px 8px; border-radius: 10px;
 }
-.chat-close-btn {
-  background: none; border: none; cursor: pointer;
-  color: rgba(255,255,255,.85); display: flex; align-items: center;
-  padding: 2px; border-radius: 6px; transition: color .15s;
-}
-.chat-close-btn:hover { color: #fff; }
-.chat-close-btn svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-
 .chat-list {
-  flex: 1; overflow-y: auto; padding: 10px 0;
-  display: flex; flex-direction: column; gap: 0;
-  scroll-behavior: smooth; min-height: 200px;
+  max-height: 300px; overflow-y: auto; padding: 8px 0;
+  display: flex; flex-direction: column;
+  scroll-behavior: smooth;
 }
 .chat-list::-webkit-scrollbar { width: 4px; }
 .chat-list::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 4px; }
@@ -577,7 +550,6 @@ footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
   background: none; border: none; cursor: pointer;
   color: var(--text-muted); padding: 2px 4px; border-radius: 6px;
   flex-shrink: 0; align-self: center; transition: color .15s;
-  font-size: 11px; gap: 3px;
 }
 .chat-recall-btn:hover { color: #e84040; }
 .chat-recall-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
@@ -585,7 +557,7 @@ footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
 .chat-input-row {
   display: flex; gap: 8px; align-items: center;
   padding: 10px 12px; border-top: 1px solid var(--border);
-  background: var(--bg); flex-shrink: 0;
+  background: var(--bg);
 }
 .chat-input {
   flex: 1; background: var(--bg2); border: 1.5px solid var(--border);
@@ -605,10 +577,83 @@ footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
 .chat-send-btn svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 .chat-login-hint {
   font-size: 12px; color: var(--text-muted); text-align: center;
-  padding: 10px 14px; border-top: 1px solid var(--border); flex-shrink: 0;
+  padding: 10px 14px; border-top: 1px solid var(--border);
 }
 .chat-login-hint a { color: var(--peach); font-weight: 700; text-decoration: none; }
 .chat-empty { text-align: center; padding: 2rem 1rem; font-size: 13px; color: var(--text-muted); }
+
+
+/* ─── MODAL BẢNG XẾP HẠNG ─────────────────── */
+.rank-modal-overlay {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(0,0,0,0.45); backdrop-filter: blur(3px);
+  display: none; align-items: flex-end; justify-content: center;
+}
+.rank-modal-overlay.open { display: flex; }
+.rank-modal {
+  background: var(--bg2); border-radius: 24px 24px 0 0;
+  width: 100%; max-width: 700px; max-height: 90vh;
+  display: flex; flex-direction: column;
+  animation: rankSlideUp .25s ease;
+  overflow: hidden;
+}
+@keyframes rankSlideUp {
+  from { transform: translateY(60px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+.rank-modal-head {
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+}
+.rank-modal-title {
+  flex: 1; font-size: 15px; font-weight: 900; color: var(--text);
+  display: flex; align-items: center; gap: 7px;
+}
+.rank-modal-title svg { width: 17px; height: 17px; stroke: var(--peach); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.rank-modal-close {
+  background: var(--peach-light); border: none; cursor: pointer;
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--peach-dark); transition: background .15s;
+}
+.rank-modal-close:hover { background: var(--peach-mid); color: white; }
+.rank-modal-close svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.rank-modal-body {
+  overflow-y: auto; padding: 12px 16px 24px; flex: 1;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.rank-modal-body::-webkit-scrollbar { width: 4px; }
+.rank-modal-body::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 4px; }
+
+.rank-modal-card {
+  display: flex; gap: 12px; align-items: center;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 10px 14px;
+  text-decoration: none; color: var(--text);
+  transition: all .15s;
+}
+.rank-modal-card:hover { border-color: var(--peach-mid); transform: translateX(3px); box-shadow: 0 3px 14px rgba(0,0,0,0.07); }
+.rank-modal-num {
+  width: 32px; height: 32px; border-radius: 10px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 900;
+}
+.rank-modal-num.top1 { background: #FDF6E3; color: #B85B30; }
+.rank-modal-num.top2 { background: #F0F0F8; color: #7a7aaa; }
+.rank-modal-num.top3 { background: #FEF0E9; color: var(--peach-dark); }
+.rank-modal-num.topn { background: var(--peach-light); color: var(--text-muted); }
+.rank-modal-cover {
+  width: 44px; height: 62px; border-radius: 8px;
+  overflow: hidden; flex-shrink: 0; background: var(--peach-light);
+}
+.rank-modal-cover img { width: 100%; height: 100%; object-fit: cover; }
+.rank-modal-info { flex: 1; min-width: 0; }
+.rank-modal-title-text { font-size: 13px; font-weight: 800; line-height: 1.35; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.rank-modal-meta { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 10px; }
+.rank-modal-meta span { display: flex; align-items: center; gap: 3px; }
+.rank-modal-meta svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.rank-modal-views { font-size: 12px; font-weight: 800; color: var(--peach); white-space: nowrap; }
 
 </style>
 </head>
@@ -700,6 +745,7 @@ footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
     <div><div class="swatch" style="background:#f0ebff;border:2px solid #8a5de0" onclick="setTheme('purple',this)" title="Purple"></div><div class="swatch-label">Purple</div></div>
     <div><div class="swatch" style="background:#f0f0f0;border:2px solid #777" onclick="setTheme('gray',this)" title="Gray"></div><div class="swatch-label">Gray</div></div>
     <div><div class="swatch" style="background:#faf5ee;border:2px solid #f26522" onclick="setTheme('wattpad',this)" title="Wattpad"></div><div class="swatch-label">Wattpad</div></div>
+    <div><div class="swatch" style="background:#f0faf4;border:2px solid #7dbb93" onclick="setTheme('green',this)" title="Green"></div><div class="swatch-label">Green</div></div>
   </div>
 </div>
 
@@ -747,6 +793,24 @@ footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
   </div>
 </div>
 
+
+<!-- CHAT INLINE -->
+<div class="chat-section">
+  <div class="chat-box">
+    <div class="chat-panel-head">
+      <div class="chat-panel-title">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        NÓI GÌ ĐI MẤY BÀ
+      </div>
+      <span class="chat-online-count" id="chatOnlineCount"></span>
+    </div>
+    <div class="chat-list" id="chatList">
+      <div class="chat-empty">Đang tải... 🐹</div>
+    </div>
+    <div id="chatInputArea"></div>
+  </div>
+</div>
+
 <!-- SECTION: TRUYỆN NUÔI DƯỠNG TÂM HỒN (gộp Top rank + Mới thêm) -->
 <div class="section">
   <div class="sec-head">
@@ -754,7 +818,7 @@ footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
       <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
       Truyện nuôi dưỡng tâm hồn
     </div>
-    <button class="see-all" id="topRankBtn" onclick="toggleTopRank(this)">
+    <button class="see-all" id="topRankBtn" onclick="openRankModal()">
       Xem tất cả
       <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
     </button>
@@ -1167,30 +1231,17 @@ window.addEventListener('load', () => setTimeout(initPushNotification, 2000));
 
 
 
-/* ── FLOATING CHAT ── */
+
+
+/* ── CHAT INLINE ── */
 let chatUser = null;
 let chatProfile = null;
 let chatChannel = null;
-let chatUnread = 0;
-let chatOpen = false;
-
-function toggleChatPanel() {
-  chatOpen = !chatOpen;
-  document.getElementById('chatPanel').classList.toggle('open', chatOpen);
-  if (chatOpen) {
-    chatUnread = 0;
-    const badge = document.getElementById('chatFabBadge');
-    badge.style.display = 'none';
-    const list = document.getElementById('chatList');
-    setTimeout(() => list.scrollTop = list.scrollHeight, 50);
-  }
-}
 
 function chatEsc(s) {
   if (!s) return '';
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
-
 function chatTimeAgo(ts) {
   const diff = Math.floor((Date.now() - new Date(ts)) / 1000);
   if (diff < 60) return 'Vừa xong';
@@ -1198,32 +1249,25 @@ function chatTimeAgo(ts) {
   if (diff < 86400) return Math.floor(diff/3600) + ' giờ trước';
   return Math.floor(diff/86400) + ' ngày trước';
 }
-
 function canRecall(createdAt, userId) {
   if (!chatUser || chatUser.id !== userId) return false;
-  return (Date.now() - new Date(createdAt)) < 5 * 60 * 1000; // 5 phút
+  return (Date.now() - new Date(createdAt)) < 5 * 60 * 1000;
 }
-
 function renderChatMsg(msg) {
   const prof = msg.profiles || {};
   const name = chatEsc(prof.display_name || 'Ẩn danh');
   const avatar = prof.avatar_url
     ? `<img src="${chatEsc(prof.avatar_url)}" alt="">`
     : `<span>${(prof.display_name||'?')[0].toUpperCase()}</span>`;
-
   const isRecalled = msg.recalled === true;
   const textHtml = isRecalled
     ? `<div class="chat-text recalled">Tin nhắn đã được thu hồi</div>`
     : `<div class="chat-text">${chatEsc(msg.content)}</div>`;
-
   const recallBtn = (!isRecalled && canRecall(msg.created_at, msg.user_id))
     ? `<button class="chat-recall-btn" onclick="recallMsg(${msg.id})" title="Thu hồi">
         <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg>
-       </button>`
-    : '';
-
-  return `
-    <div class="chat-msg" id="cmsg-${msg.id}">
+       </button>` : '';
+  return `<div class="chat-msg" id="cmsg-${msg.id}">
       <div class="chat-avatar">${avatar}</div>
       <div class="chat-body">
         <div class="chat-name-row">
@@ -1235,24 +1279,16 @@ function renderChatMsg(msg) {
       ${recallBtn}
     </div>`;
 }
-
 async function recallMsg(id) {
   if (!chatUser) return;
   if (!confirm('Thu hồi tin nhắn này?')) return;
-  await sb.from('chat_messages')
-    .update({ recalled: true, content: '' })
-    .eq('id', id)
-    .eq('user_id', chatUser.id);
+  await sb.from('chat_messages').update({ recalled: true, content: '' }).eq('id', id).eq('user_id', chatUser.id);
 }
-
 async function initChat() {
   const { data: { session } } = await sb.auth.getSession();
   if (session) {
     chatUser = session.user;
-    const { data: prof } = await sb.from('profiles')
-      .select('display_name, avatar_url')
-      .eq('id', session.user.id)
-      .maybeSingle();
+    const { data: prof } = await sb.from('profiles').select('display_name, avatar_url').eq('id', session.user.id).maybeSingle();
     chatProfile = prof;
     document.getElementById('chatInputArea').innerHTML = `
       <div class="chat-input-row">
@@ -1264,21 +1300,17 @@ async function initChat() {
       </div>`;
   } else {
     document.getElementById('chatInputArea').innerHTML = `
-      <div class="chat-login-hint">
-        <a href="auth.html">Đăng nhập</a> để tham gia chat 🍑
-      </div>`;
+      <div class="chat-login-hint"><a href="auth.html">Đăng nhập</a> để tham gia chat 🍑</div>`;
   }
   await loadChatMessages();
   subscribeChatRealtime();
 }
-
 async function loadChatMessages() {
   const list = document.getElementById('chatList');
   try {
     const { data } = await sb.from('chat_messages')
       .select('id, content, created_at, user_id, recalled, profiles(display_name, avatar_url)')
-      .order('created_at', { ascending: true })
-      .limit(60);
+      .order('created_at', { ascending: true }).limit(60);
     if (!data || data.length === 0) {
       list.innerHTML = '<div class="chat-empty">Chưa có tin nhắn nào 🐹<br>Hãy là người đầu tiên!</div>';
       return;
@@ -1289,82 +1321,107 @@ async function loadChatMessages() {
     list.innerHTML = '<div class="chat-empty">Không thể tải chat 🐹</div>';
   }
 }
-
 function subscribeChatRealtime() {
   chatChannel = sb.channel('public:chat_messages')
-    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages' },
-      async (payload) => {
-        const msg = payload.new;
-        const { data: prof } = await sb.from('profiles')
-          .select('display_name, avatar_url').eq('id', msg.user_id).maybeSingle();
-        msg.profiles = prof;
-        const list = document.getElementById('chatList');
-        list.querySelector('.chat-empty')?.remove();
-        list.insertAdjacentHTML('beforeend', renderChatMsg(msg));
-        list.scrollTop = list.scrollHeight;
-        if (!chatOpen) {
-          chatUnread++;
-          const badge = document.getElementById('chatFabBadge');
-          badge.textContent = chatUnread > 9 ? '9+' : chatUnread;
-          badge.style.display = 'flex';
-        }
-      })
-    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'chat_messages' },
-      (payload) => {
-        const msg = payload.new;
-        const el = document.getElementById('cmsg-' + msg.id);
-        if (el) {
-          const textEl = el.querySelector('.chat-text');
-          if (textEl) {
-            textEl.className = 'chat-text recalled';
-            textEl.textContent = 'Tin nhắn đã được thu hồi';
-          }
-          const recallBtn = el.querySelector('.chat-recall-btn');
-          if (recallBtn) recallBtn.remove();
-        }
-      })
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages' }, async (payload) => {
+      const msg = payload.new;
+      const { data: prof } = await sb.from('profiles').select('display_name, avatar_url').eq('id', msg.user_id).maybeSingle();
+      msg.profiles = prof;
+      const list = document.getElementById('chatList');
+      list.querySelector('.chat-empty')?.remove();
+      list.insertAdjacentHTML('beforeend', renderChatMsg(msg));
+      list.scrollTop = list.scrollHeight;
+    })
+    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'chat_messages' }, (payload) => {
+      const msg = payload.new;
+      const el = document.getElementById('cmsg-' + msg.id);
+      if (el) {
+        const textEl = el.querySelector('.chat-text');
+        if (textEl) { textEl.className = 'chat-text recalled'; textEl.textContent = 'Tin nhắn đã được thu hồi'; }
+        el.querySelector('.chat-recall-btn')?.remove();
+      }
+    })
     .subscribe();
 }
-
 async function sendChatMsg() {
   if (!chatUser) return;
   const input = document.getElementById('chatInput');
   const text = input.value.trim();
   if (!text) return;
-  input.value = '';
-  input.disabled = true;
-  try {
-    await sb.from('chat_messages').insert({ user_id: chatUser.id, content: text, recalled: false });
-  } catch(e) { input.value = text; }
-  input.disabled = false;
-  input.focus();
+  input.value = ''; input.disabled = true;
+  try { await sb.from('chat_messages').insert({ user_id: chatUser.id, content: text, recalled: false }); }
+  catch(e) { input.value = text; }
+  input.disabled = false; input.focus();
 }
-
 initChat();
+
+
+/* ── MODAL BẢNG XẾP HẠNG ── */
+function openRankModal() {
+  document.getElementById('rankModalOverlay').classList.add('open');
+  renderRankModal();
+}
+function closeRankModal(e) {
+  if (e.target === document.getElementById('rankModalOverlay')) {
+    document.getElementById('rankModalOverlay').classList.remove('open');
+  }
+}
+async function renderRankModal() {
+  const body = document.getElementById('rankModalBody');
+  try {
+    const { data: stories } = await sb.from('stories')
+      .select('id, title, author, cover_url, total_views, tags')
+      .order('total_views', { ascending: false });
+    if (!stories || stories.length === 0) {
+      body.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:13px">Chưa có truyện nào 🐹</div>';
+      return;
+    }
+    const numClass = (i) => i===0?'top1':i===1?'top2':i===2?'top3':'topn';
+    body.innerHTML = stories.map((s,i) => `
+      <a class="rank-modal-card" href="story.html?story=${s.id}">
+        <div class="rank-modal-num ${numClass(i)}">${i+1}</div>
+        <div class="rank-modal-cover">
+          ${s.cover_url ? `<img src="${escapeHtml(s.cover_url)}" alt="" loading="lazy">` : ''}
+        </div>
+        <div class="rank-modal-info">
+          <div class="rank-modal-title-text">${escapeHtml(s.title)}</div>
+          <div class="rank-modal-meta">
+            <span>
+              <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              ${escapeHtml(s.author || 'Ẩn danh')}
+            </span>
+          </div>
+        </div>
+        <div class="rank-modal-views">
+          <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          ${formatViews(s.total_views||0)}
+        </div>
+      </a>`).join('');
+  } catch(e) {
+    body.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:13px">Không thể tải 🐹</div>';
+  }
+}
 
 </script>
 
-<!-- FLOATING CHAT -->
-<button class="chat-fab" id="chatFab" onclick="toggleChatPanel()" title="Trò chuyện">
-  <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-  <span class="chat-fab-badge" id="chatFabBadge"></span>
-</button>
 
-<div class="chat-panel" id="chatPanel">
-  <div class="chat-panel-head">
-    <div class="chat-panel-title">
-      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      NÓI GÌ ĐI MẤY BÀ
+
+<!-- MODAL BẢNG XẾP HẠNG -->
+<div class="rank-modal-overlay" id="rankModalOverlay" onclick="closeRankModal(event)">
+  <div class="rank-modal">
+    <div class="rank-modal-head">
+      <div class="rank-modal-title">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Bảng xếp hạng toàn bộ
+      </div>
+      <button class="rank-modal-close" onclick="document.getElementById('rankModalOverlay').classList.remove('open')">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
     </div>
-    <span class="chat-online-count" id="chatOnlineCount"></span>
-    <button class="chat-close-btn" onclick="toggleChatPanel()">
-      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
+    <div class="rank-modal-body" id="rankModalBody">
+      <div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:13px">Đang tải...</div>
+    </div>
   </div>
-  <div class="chat-list" id="chatList">
-    <div class="chat-empty">Đang tải... 🐹</div>
-  </div>
-  <div id="chatInputArea"></div>
 </div>
 
 </body>
