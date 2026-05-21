@@ -115,7 +115,7 @@
 
 /* Theme drawer */
 .theme-drawer {
-  display: none; position: absolute; right: 6rem; top: 56px;
+  display: none; position: fixed; right: 1rem; top: 60px;
   background: var(--bg2); border: 1px solid var(--border);
   border-radius: 14px; padding: 14px; min-width: 200px;
   box-shadow: 0 8px 32px rgba(0,0,0,.12); z-index: 200;
