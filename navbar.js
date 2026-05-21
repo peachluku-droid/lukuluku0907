@@ -10,6 +10,15 @@
  */
 
 (function () {
+
+  // ── 0. Inject Google Fonts nếu chưa có ──────────────────────────────────
+  if (!document.querySelector('link[href*="Nunito"]')) {
+    const fontLink = document.createElement('link');
+    fontLink.rel = 'stylesheet';
+    fontLink.href = 'https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap';
+    document.head.appendChild(fontLink);
+  }
+
   // ── 1. Inject CSS ──────────────────────────────────────────────────────────
   const CSS = `
 /* ─── TOPBAR ─────────────────────────────────────────────── */
@@ -24,7 +33,7 @@
 }
 .logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
 .logo img { width: 36px; height: 36px; object-fit: contain; border-radius: 50%; }
-.logo-text { font-family: 'Nunito', sans-serif; font-size: 18px; font-weight: 800; color: var(--peach); }
+.logo-text { font-family: 'Nunito', sans-serif; font-size: 18px; font-weight: 800; color: var(--peach); letter-spacing: -0.3px; }
 
 .nav-center { display: flex; gap: 2px; align-items: center; }
 .nav-center a {

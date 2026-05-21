@@ -117,7 +117,6 @@ body {
   transition: background .3s;
 }
 .logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
-.logo-text { font-family: 'Pacifico', cursive; font-size: 19px; color: var(--peach); }
 .back-btn {
   background: none; border: none; cursor: pointer;
   color: var(--text); padding: 6px; border-radius: 50%;
@@ -482,15 +481,6 @@ let activeStatus = 'all';
 let activeSort = 'newest';
 let filterPanelOpen = false;
 
-function setTheme(name, el) {
-  document.body.className = 'theme-' + name;
-  localStorage.setItem('plTheme', name);
-  document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
-  if (el) el.classList.add('active');
-}
-function toggleThemeDrawer() {
-  document.getElementById('theme-drawer').classList.toggle('open');
-}
 document.addEventListener('click', e => {
   const drawer = document.getElementById('theme-drawer');
   if (!drawer.contains(e.target) && !e.target.closest('.theme-btn')) {
@@ -801,25 +791,7 @@ async function init() {
 init();
 
 /* ── FIX: loadNavAvatar với ảnh constrained ── */
-async function loadNavAvatar() {
-  const { data: { session } } = await sb.auth.getSession();
-  const btn = document.getElementById('nav-user-btn');
-  if (!btn) return;
-  if (!session) {
-    btn.href = 'auth.html?next=' + encodeURIComponent(location.pathname + location.search);
-    btn.title = 'Đăng nhập';
-    return;
-  }
-  btn.href = 'profile.html';
-  btn.title = 'Hồ sơ của tôi';
-  const { data: prof } = await sb.from('profiles').select('display_name, avatar_url').eq('id', session.user.id).maybeSingle();
-  if (prof?.avatar_url) {
-    btn.innerHTML = '<img src="' + prof.avatar_url + '" alt="avatar" style="width:34px;height:34px;border-radius:50%;object-fit:cover;display:block;">';
-  } else {
-    btn.textContent = (prof?.display_name || session.user.email || 'U')[0].toUpperCase();
-  }
-}
-loadNavAvatar();
+
 </script>
 </body>
 </html>

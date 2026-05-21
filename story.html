@@ -125,7 +125,6 @@ body {
 .back-btn:hover { background: var(--peach-light); }
 .back-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 .logo { display: flex; align-items: center; gap: 6px; text-decoration: none; }
-.logo-text { font-family: 'Pacifico', cursive; font-size: 18px; color: var(--peach); }
 .topbar-right { display: flex; align-items: center; gap: 2px; }
 .icon-btn { background: none; border: none; cursor: pointer; color: var(--text); padding: 8px; border-radius: 50%; display: flex; align-items: center; transition: background .15s; }
 .icon-btn:hover { background: var(--peach-light); }
@@ -456,31 +455,6 @@ let comments = [], commentsPage = 0;
 const COMMENTS_PER_PAGE = 15;
 let commentTotal = 0;
 
-function setTheme(name, el) { document.body.className = 'theme-' + name; localStorage.setItem('plTheme', name); document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active')); if (el) el.classList.add('active'); }
-function toggleThemeDrawer() { document.getElementById('theme-drawer').classList.toggle('open'); }
-document.addEventListener('click', e => { const d = document.getElementById('theme-drawer'); if (!d.contains(e.target) && !e.target.closest('[onclick="toggleThemeDrawer()"]')) d.classList.remove('open'); });
-(function() { const t = localStorage.getItem('plTheme') || 'light'; document.body.className = 'theme-' + t; })();
-
-function escapeHtml(str) { if (!str) return ''; const d = document.createElement('div'); d.textContent = str; return d.innerHTML; }
-function formatViews(n) { if (!n) return '0'; if (n >= 1e6) return (n/1e6).toFixed(1)+'M'; if (n >= 1000) return (n/1000).toFixed(1)+'K'; return String(n); }
-function timeAgo(ts) { const diff = Date.now() - new Date(ts).getTime(); const m = Math.floor(diff/60000), h = Math.floor(diff/3600000), d = Math.floor(diff/86400000); if (d > 30) return new Date(ts).toLocaleDateString('vi-VN', {day:'2-digit',month:'2-digit',year:'numeric'}); if (d > 0) return d + ' ngày trước'; if (h > 0) return h + ' giờ trước'; if (m > 0) return m + ' phút trước'; return 'Vừa xong'; }
-function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2300); }
-function setDescriptionContent(el, content) {
-  if (!content) { el.textContent = 'Chưa có mô tả.'; return; }
-  // Chỉ coi là HTML nếu có tag thực sự: <p>, <br>, <div>, <span>, <b>, <i>...
-  // Không phải ký tự < đơn lẻ trong text thuần
-  const isHtml = /<(p|br|div|span|b|i|em|strong|ul|ol|li|h[1-6])(\s|>|\/)/i.test(content);
-  if (isHtml) {
-    el.innerHTML = content;
-  } else {
-    // Plain text: giữ xuống dòng
-    el.innerHTML = content
-      .split('\n')
-      .map(line => '<span>' + line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</span>')
-      .join('<br>');
-  }
-}
-
 let descExpanded = false;
 function toggleDesc() { descExpanded = !descExpanded; const el = document.getElementById('story-description'); const btn = document.getElementById('desc-toggle'); el.classList.toggle('clamped', !descExpanded); btn.classList.toggle('expanded', descExpanded); btn.childNodes[0].textContent = descExpanded ? 'Thu gọn' : 'Đọc thêm'; }
 function showTab(name, btn) { document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); btn.classList.add('active'); document.getElementById('tab-' + name).classList.add('active'); if (name === 'comments' && comments.length === 0) loadComments(); }
@@ -641,25 +615,7 @@ async function init() {
 init();
 
 /* ── FIX: img constrained bằng inline style, không tràn layout ── */
-async function loadNavAvatar() {
-  const { data: { session } } = await sb.auth.getSession();
-  const btn = document.getElementById('nav-user-btn');
-  if (!btn) return;
-  if (!session) {
-    btn.href = 'auth.html?next=' + encodeURIComponent(location.pathname + location.search);
-    btn.title = 'Đăng nhập';
-    return;
-  }
-  btn.href = 'profile.html';
-  btn.title = 'Hồ sơ của tôi';
-  const { data: prof } = await sb.from('profiles').select('display_name, avatar_url').eq('id', session.user.id).maybeSingle();
-  if (prof?.avatar_url) {
-    btn.innerHTML = '<img src="' + prof.avatar_url + '" alt="avatar" style="width:34px;height:34px;border-radius:50%;object-fit:cover;display:block;">';
-  } else {
-    btn.textContent = (prof?.display_name || session.user.email || 'U')[0].toUpperCase();
-  }
-}
-loadNavAvatar();
+
 
 function setStoryMeta(story) {
   const title = (story.title || 'Truyện') + ' — Peach Luku';

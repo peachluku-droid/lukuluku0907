@@ -617,12 +617,7 @@ const FONTS = [
 ]
 let fontIdx = 0, fontSize = 17
 
-function setTheme(t, el) {
-  document.body.className = 'theme-' + t
-  document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'))
-  el.classList.add('active')
-  localStorage.setItem('plChTheme', t)
-}
+
 function changeFontSize(delta) {
   fontSize = Math.min(24, Math.max(13, fontSize + delta))
   document.body.style.setProperty('--font-size', fontSize + 'px')
@@ -1102,22 +1097,7 @@ buildSheetPicker()
 if (STORY_ID && params.get('chapter')) loadChapter()
 
 /* ── FIX: loadNavAvatar với ảnh constrained ── */
-async function loadNavAvatar() {
-  const { data: { session } } = await sb.auth.getSession()
-  const btn = document.getElementById('nav-user-btn')
-  if (!btn) return
-  if (!session) {
-    btn.href = 'auth.html?next=' + encodeURIComponent(location.pathname + location.search)
-    btn.title = 'Đăng nhập'; return
-  }
-  btn.href = 'profile.html'; btn.title = 'Hồ sơ của tôi'
-  const { data: prof } = await sb.from('profiles').select('display_name, avatar_url').eq('id', session.user.id).maybeSingle()
-  if (prof?.avatar_url) {
-    btn.innerHTML = '<img src="' + prof.avatar_url + '" alt="avatar" style="width:34px;height:34px;border-radius:50%;object-fit:cover;display:block;">'
-  } else {
-    btn.textContent = (prof?.display_name || session.user.email || 'U')[0].toUpperCase()
-  }
-}
+
 loadNavAvatar()
 initChapterUser()
 

@@ -123,40 +123,6 @@ body {
   min-height: 100vh;
 }
 
-/* ─── TOPBAR ──────────────────────────────────── */
-.topbar {
-  background: var(--bg2); border-bottom: 1px solid var(--border);
-  padding: 0 1.25rem; display: flex; align-items: center;
-  justify-content: space-between; height: 56px;
-  position: sticky; top: 0; z-index: 100; transition: background .3s;
-}
-.logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
-.logo-text { font-family: 'Pacifico', cursive; font-size: 19px; color: var(--peach); }
-.topbar-right { display: flex; align-items: center; gap: 6px; }
-.icon-btn {
-  background: none; border: 1.5px solid var(--border-hover);
-  border-radius: 20px; width: 34px; height: 34px;
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  transition: all .15s; color: var(--peach);
-}
-.icon-btn:hover { background: var(--peach-light); }
-.icon-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
-/* ─── THEME DRAWER ───────────────────────────── */
-.theme-drawer {
-  position: fixed; top: 58px; right: 1rem; z-index: 300;
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 16px; padding: 14px 16px; width: 220px;
-  box-shadow: 0 8px 28px rgba(0,0,0,0.12); display: none;
-}
-.theme-drawer.open { display: block; }
-.theme-drawer-title { font-size: 12px; font-weight: 800; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: .5px; }
-.theme-swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-.swatch { width: 38px; height: 38px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: all .15s; }
-.swatch.active { border-color: var(--peach); box-shadow: 0 0 0 2px var(--bg2), 0 0 0 4px var(--peach); }
-.swatch:hover { transform: scale(1.12); }
-.swatch-label { font-size: 10px; text-align: center; color: var(--text-muted); margin-top: 3px; font-weight: 700; }
-
 /* ─── PAGE HEADER ────────────────────────────── */
 .page-header {
   padding: 1.1rem 1.25rem 0;
@@ -410,10 +376,7 @@ body {
   </div>
 </div>
 
-<!-- THEME DRAWER -->
-<div class="theme-drawer" id="theme-drawer">
-  <div class="theme-drawer-title">Chọn giao diện</div>
-  <div class="theme-swatches">
+<div class="theme-swatches">
     <div><div class="swatch" style="background:#FDF6F2;border:2px solid #F2A882" onclick="setTheme('light',this)"></div><div class="swatch-label">Sáng</div></div>
     <div><div class="swatch" style="background:#1a1a1a" onclick="setTheme('dark',this)"></div><div class="swatch-label">Tối</div></div>
     <div><div class="swatch" style="background:#f5f0e8;border:2px solid #A67C52" onclick="setTheme('sepia',this)"></div><div class="swatch-label">Sepia</div></div>
@@ -525,15 +488,6 @@ const SUPABASE_URL = 'https://jnlqzqtavfptkfvnndxq.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ojRrfSwxK_B6-TGSXaYGxQ_DKERN0-f';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-function setTheme(name, el) {
-  document.body.className = 'theme-' + name;
-  localStorage.setItem('plTheme', name);
-  document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
-  if (el) el.classList.add('active');
-}
-function toggleThemeDrawer() {
-  document.getElementById('theme-drawer').classList.toggle('open');
-}
 document.addEventListener('click', e => {
   const d = document.getElementById('theme-drawer');
   if (!d.contains(e.target) && !e.target.closest('[onclick="toggleThemeDrawer()"]')) d.classList.remove('open');
@@ -1004,25 +958,7 @@ async function init() {
 
 init();
 
-async function loadNavAvatar() {
-  const { data: { session } } = await sb.auth.getSession();
-  const btn = document.getElementById('nav-user-btn');
-  if (!btn) return;
-  if (!session) {
-    btn.href = 'auth.html?next=' + encodeURIComponent(location.pathname + location.search);
-    btn.title = 'Đăng nhập';
-    return;
-  }
-  btn.href = 'profile.html';
-  btn.title = 'Hồ sơ của tôi';
-  const { data: prof } = await sb.from('profiles').select('display_name, avatar_url').eq('id', session.user.id).maybeSingle();
-  if (prof?.avatar_url) {
-    btn.innerHTML = `<img src="${prof.avatar_url}" alt="avatar">`;
-  } else {
-    btn.textContent = (prof?.display_name || session.user.email || 'U')[0].toUpperCase();
-  }
-}
-loadNavAvatar();
+
 </script>
 </body>
 </html>
