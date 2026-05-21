@@ -6,8 +6,6 @@
 <title>Viết Truyện — Peach Luku</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="navbar.js" data-page="write"></script>
-</head>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -27,6 +25,28 @@ body.dark {
 }
 
 body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* ── TOPBAR ── */
+.topbar {
+  background: var(--bg2); border-bottom: 1px solid var(--border);
+  padding: 0 1.25rem; height: 56px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+}
+.logo { font-family: 'Pacifico', cursive; font-size: 18px; color: var(--peach); text-decoration: none; }
+.topbar-right { display: flex; align-items: center; gap: 8px; }
+.btn {
+  font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 13px;
+  padding: 7px 16px; border-radius: 20px; border: none; cursor: pointer;
+  transition: all .15s; display: inline-flex; align-items: center; gap: 6px;
+}
+.btn-ghost { background: transparent; color: var(--text-muted); border: 1.5px solid var(--border-hover); }
+.btn-ghost:hover { background: var(--peach-light); color: var(--peach-dark); }
+.btn-primary { background: var(--peach); color: white; }
+.btn-primary:hover { background: var(--peach-dark); }
+.btn-success { background: var(--success); color: white; }
+.btn-success:hover { filter: brightness(0.9); }
+.btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 
 /* ── AUTH GATE ── */
 #auth-gate {
@@ -170,6 +190,27 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 </style>
 </head>
 <body>
+
+<!-- TOPBAR -->
+<nav class="topbar">
+  <div style="display:flex;align-items:center;gap:10px">
+    <button class="btn btn-ghost menu-btn" id="menuBtn" style="padding:7px 10px" onclick="toggleSidebar()">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a class="logo" href="index.html">Peach Luku</a>
+  </div>
+  <div class="topbar-right" id="topbar-actions" style="display:none">
+    <span id="save-status" style="font-size:11px;color:var(--text-muted);font-weight:600"></span>
+    <button class="btn btn-ghost" onclick="saveDraft()">
+      <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      Lưu bản thảo
+    </button>
+    <button class="btn btn-success" onclick="publishChapter()">
+      <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      Đăng chương
+    </button>
+  </div>
+</nav>
 
 <!-- AUTH GATE -->
 <div id="auth-gate">

@@ -20,8 +20,6 @@
 <title>Peach Luku — Web Đọc Truyện</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&family=Pacifico&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="navbar.js" data-page="home"></script>
-</head>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -102,6 +100,48 @@ body {
   transition: background .3s, color .3s;
 }
 
+/* ─── TOPBAR ────────────────────────────────── */
+.topbar {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  display: flex; align-items: center;
+  justify-content: space-between; height: 56px;
+  position: sticky; top: 0; z-index: 100;
+  transition: background .3s;
+}
+.logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+.logo img { width: 36px; height: 36px; object-fit: contain; border-radius: 50%; }
+.logo-text { font-family: 'Nunito', sans-serif; font-size: 18px; font-weight: 800; color: var(--peach); }
+
+
+.nav-center { display: flex; gap: 2px; align-items: center; }
+.nav-center a {
+  font-size: 13px; font-weight: 700; padding: 7px 14px;
+  border-radius: 8px; color: var(--text-muted); text-decoration: none;
+  transition: all .15s; display: flex; align-items: center; gap: 5px;
+  position: relative;
+}
+.nav-center a:hover { color: var(--peach); }
+.nav-center a.active { color: var(--peach); font-weight: 800; }
+.nav-center a.active::after {
+  content: ''; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
+  width: 20px; height: 2px; background: var(--peach); border-radius: 2px;
+}
+.nav-center a svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+.nav-right { display: flex; gap: 6px; align-items: center; }
+
+/* Icon buttons ngay nav */
+.icon-btn {
+  background: none; border: none; cursor: pointer;
+  width: 34px; height: 34px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted); transition: all .15s;
+}
+.icon-btn:hover { background: var(--peach-light); color: var(--peach); }
+.icon-btn svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
 /* ─── MOBILE TOPBAR FIX ─────────────────────── */
 @media (max-width: 600px) {
   .topbar { padding: 0 0.6rem; }
@@ -128,6 +168,18 @@ body {
 .user-nav-btn:hover { border-color: var(--peach) !important; }
 .user-nav-btn img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 50%; }
 
+/* Fix profile-menu-btn avatar display */
+.profile-menu-btn.has-avatar {
+  border-radius: 50% !important;
+  overflow: hidden;
+  padding: 0 !important;
+  border: 2px solid var(--border-hover) !important;
+  background: var(--peach-light);
+}
+.profile-menu-btn.has-avatar:hover { border-color: var(--peach) !important; }
+.profile-menu-btn.has-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 50%; }
+.profile-menu-btn svg { pointer-events: none; }
+
 /* ─── THEME TOGGLE BTN ──────────────────────── */
 .theme-btn {
   background: none; border: none;
@@ -137,6 +189,22 @@ body {
 }
 .theme-btn:hover { background: var(--peach-light); color: var(--peach); }
 .theme-btn svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ─── THEME DRAWER ─────────────────────────── */
+.theme-drawer {
+  position: fixed; top: 60px; right: 1rem; z-index: 200;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 14px 16px; width: 220px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+  display: none;
+}
+.theme-drawer.open { display: block; }
+.theme-drawer-title { font-size: 12px; font-weight: 800; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: .5px; }
+.theme-swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.swatch { width: 38px; height: 38px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: all .15s; }
+.swatch.active { border-color: var(--peach); box-shadow: 0 0 0 2px var(--bg2), 0 0 0 4px var(--peach); }
+.swatch:hover { transform: scale(1.12); }
+.swatch-label { font-size: 10px; text-align: center; color: var(--text-muted); margin-top: 3px; font-weight: 700; }
 
 /* ─── THÔNG BÁO BANNER ──────────────────────── */
 .notice-banner {
@@ -308,6 +376,66 @@ body {
 .divider { height: 0.5px; background: var(--border); margin: 0 2rem; }
 
 /* ─── FOOTER ───────────────────────────────── */
+/* ─── PROFILE DROPDOWN ───────────────────── */
+.profile-menu-wrap { position: relative; }
+.profile-menu-btn { position: relative; }
+.profile-dropdown {
+  position: absolute; top: calc(100% + 8px); right: 0; z-index: 300;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 8px; width: 200px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+  display: none; flex-direction: column; gap: 2px;
+}
+.profile-dropdown.open { display: flex; }
+.profile-dropdown-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 9px 12px; border-radius: 10px;
+  font-size: 13px; font-weight: 700; color: var(--text);
+  text-decoration: none; transition: all .15s;
+}
+.profile-dropdown-item:hover { background: var(--peach-light); color: var(--peach); }
+.profile-dropdown-item svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; opacity: .7; }
+
+/* ─── NOTIF BELL DOT ──────────────────── */
+.nav-notif-btn { position: relative; }
+.notif-dot {
+  position: absolute; top: 4px; right: 4px;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #e84040; border: 1.5px solid var(--bg2);
+}
+
+/* ─── NOTIF PANEL (chương mới) ──────────── */
+.notif-panel {
+  position: fixed; top: 60px; left: 50%; transform: translateX(-50%);
+  z-index: 300; background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 0; width: min(420px, 95vw);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.13);
+  display: none; flex-direction: column; overflow: hidden;
+}
+.notif-panel.open { display: flex; }
+.notif-panel-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid var(--border);
+}
+.notif-panel-title { font-size: 13px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
+.notif-panel-title svg { width: 15px; height: 15px; stroke: var(--peach); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.notif-close-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); display: flex; align-items: center; }
+.notif-close-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.notif-list { max-height: 340px; overflow-y: auto; }
+.notif-item {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 11px 16px; border-bottom: 0.5px solid var(--border);
+  cursor: pointer; transition: background .12s; text-decoration: none; color: var(--text);
+}
+.notif-item:hover { background: var(--peach-light); }
+.notif-cover { width: 40px; height: 56px; border-radius: 7px; overflow: hidden; flex-shrink: 0; background: var(--peach-light); }
+.notif-cover img { width: 100%; height: 100%; object-fit: cover; }
+.notif-body { flex: 1; min-width: 0; }
+.notif-story-name { font-size: 12px; font-weight: 800; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.notif-ch-name { font-size: 11px; color: var(--peach); font-weight: 700; margin-top: 3px; }
+.notif-time { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+.notif-empty { padding: 28px 16px; text-align: center; font-size: 13px; color: var(--text-muted); }
 
 /* ─── HERO MỚI (không có mascot, không có hình vẽ) ───── */
 .hero {
@@ -325,7 +453,72 @@ footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
 </head>
 <body class="theme-light">
 
-<div class="theme-swatches">
+<!-- TOPBAR -->
+<nav class="topbar">
+  <a class="logo" href="index.html">
+    <span class="logo-text">Peach Luku</span>
+  </a>
+
+  <div class="nav-center">
+    <a href="index.html" class="active">
+      <svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><polyline points="9 21 9 12 15 12 15 21"/></svg>
+      Trang chủ
+    </a>
+    <a href="library.html">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+      Thể loại
+    </a>
+    <!-- Thông báo chương mới -->
+    <a href="#" class="nav-notif-btn" id="navNotifBtn" onclick="toggleNotifPanel(event)" title="Thông báo chương mới">
+      <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span class="notif-dot" id="notifDot" style="display:none"></span>
+      Thông báo
+    </a>
+  </div>
+
+  <div class="nav-right">
+    <button class="theme-btn" onclick="toggleThemeDrawer()" title="Đổi theme">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+    <!-- Profile + dropdown gộp -->
+    <div class="profile-menu-wrap" id="profileMenuWrap">
+      <button class="icon-btn profile-menu-btn" onclick="toggleProfileMenu(event)" title="Hồ sơ &amp; Tùy chọn">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </button>
+      <div class="profile-dropdown" id="profileDropdown">
+        <a class="profile-dropdown-item" href="profile.html">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Hồ sơ của tôi
+        </a>
+        <a class="profile-dropdown-item" href="search.html">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Tìm kiếm
+        </a>
+        <a class="profile-dropdown-item" href="library.html">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          Bảng xếp hạng
+        </a>
+        <a class="profile-dropdown-item" href="profile.html">
+          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          Theo dõi
+        </a>
+        <a class="profile-dropdown-item" href="profile.html">
+          <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          Lịch sử đọc
+        </a>
+        <a class="profile-dropdown-item" href="profile.html">
+          <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          Bookmark
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- THEME DRAWER -->
+<div class="theme-drawer" id="theme-drawer">
+  <div class="theme-drawer-title">🎨 Đổi nền</div>
+  <div class="theme-swatches">
     <div><div class="swatch active" style="background:#FDF6F2;border:2px solid #F2A882" onclick="setTheme('light',this)" title="Light"></div><div class="swatch-label">Light</div></div>
     <div><div class="swatch" style="background:#1a1a1a" onclick="setTheme('dark',this)" title="Dark"></div><div class="swatch-label">Dark</div></div>
     <div><div class="swatch" style="background:#f5f0e8;border:2px solid #A67C52" onclick="setTheme('sepia',this)" title="Sepia"></div><div class="swatch-label">Sepia</div></div>
@@ -337,7 +530,14 @@ footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
   </div>
 </div>
 
-<button class="notif-close-btn" onclick="closeNotifPanel()">
+<!-- NOTIF PANEL: Chương mới -->
+<div class="notif-panel" id="notifPanel">
+  <div class="notif-panel-head">
+    <div class="notif-panel-title">
+      <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      Thông báo chương mới
+    </div>
+    <button class="notif-close-btn" onclick="closeNotifPanel()">
       <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
   </div>
@@ -436,6 +636,16 @@ if (li) li.src = logoSrc;
 document.getElementById('heroImg').src = logoSrc;
 
 /* ── THEME ── */
+function setTheme(name, el) {
+  document.body.className = 'theme-' + name;
+  localStorage.setItem('plTheme', name);
+  document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+  if (el) el.classList.add('active');
+}
+
+function toggleThemeDrawer() {
+  document.getElementById('theme-drawer').classList.toggle('open');
+}
 
 document.addEventListener('click', e => {
   const drawer = document.getElementById('theme-drawer');
@@ -564,9 +774,119 @@ async function loadStories() {
 
 loadStories();
 
+/* ── PROFILE DROPDOWN ── */
+function toggleProfileMenu(e) {
+  e.preventDefault(); e.stopPropagation();
+  const dd = document.getElementById('profileDropdown');
+  dd.classList.toggle('open');
+  document.getElementById('notifPanel').classList.remove('open');
+}
+document.addEventListener('click', e => {
+  const wrap = document.getElementById('profileMenuWrap');
+  if (wrap && !wrap.contains(e.target)) {
+    const dd = document.getElementById('profileDropdown');
+    if (dd) dd.classList.remove('open');
+  }
+});
 
+/* ── NOTIF PANEL: Chương mới ── */
+function toggleNotifPanel(e) {
+  e.preventDefault(); e.stopPropagation();
+  const panel = document.getElementById('notifPanel');
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open')) {
+    loadNotifications();
+    const dd = document.getElementById('profileDropdown');
+    if (dd) dd.classList.remove('open');
+  }
+}
+function closeNotifPanel() {
+  document.getElementById('notifPanel').classList.remove('open');
+}
+document.addEventListener('click', e => {
+  const panel = document.getElementById('notifPanel');
+  const btn = document.getElementById('navNotifBtn');
+  if (panel && btn && !panel.contains(e.target) && !btn.contains(e.target)) {
+    panel.classList.remove('open');
+  }
+});
+
+async function loadNotifications() {
+  const listEl = document.getElementById('notifList');
+  try {
+    const { data: chapters } = await sb.from('chapters')
+      .select('id, title, story_id, created_at, stories(title, cover_url)')
+      .order('created_at', { ascending: false })
+      .limit(20);
+    if (!chapters || chapters.length === 0) {
+      listEl.innerHTML = '<div class="notif-empty">Chưa có chương mới nào 🐹</div>';
+      return;
+    }
+    document.getElementById('notifDot').style.display = 'block';
+    listEl.innerHTML = chapters.map(ch => {
+      const story = ch.stories || {};
+      const ts = ch.created_at ? new Date(ch.created_at) : null;
+      const timeStr = ts ? ts.toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric' }) : '';
+      return `
+      <a class="notif-item" href="chapter.html?chapter=${ch.id}">
+        <div class="notif-cover">
+          ${story.cover_url ? `<img src="${escapeHtml(story.cover_url)}" alt="" loading="lazy">` : ''}
+        </div>
+        <div class="notif-body">
+          <div class="notif-story-name">${escapeHtml(story.title || 'Truyện')}</div>
+          <div class="notif-ch-name">${escapeHtml(ch.title || 'Chương mới')}</div>
+          <div class="notif-time">${timeStr}</div>
+        </div>
+      </a>`;
+    }).join('');
+  } catch(err) {
+    listEl.innerHTML = '<div class="notif-empty">Không thể tải thông báo 🐹</div>';
+  }
+}
 
 /* ── NAV AVATAR — load avatar đúng kích thước, không phá layout ── */
+async function loadNavAvatar() {
+  const { data: { session } } = await sb.auth.getSession();
+  const btn = document.querySelector('.profile-menu-btn');
+  if (!btn) return;
+
+  if (!session) {
+    if (btn) btn.setAttribute('data-href', 'auth.html?next=' + encodeURIComponent(location.pathname + location.search));
+    btn.title = 'Đăng nhập';
+    return;
+  }
+
+
+  btn.title = 'Hồ sơ của tôi';
+
+  const { data: prof } = await sb.from('profiles')
+    .select('display_name, avatar_url')
+    .eq('id', session.user.id)
+    .maybeSingle();
+
+  if (prof?.avatar_url) {
+    // Xóa nội dung cũ, chèn ảnh với kích thước đúng
+    btn.innerHTML = '';
+    const img = document.createElement('img');
+    img.src = prof.avatar_url;
+    img.alt = 'avatar';
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.objectFit = 'cover';
+    img.style.borderRadius = '50%';
+    img.style.display = 'block';
+    btn.appendChild(img);
+    btn.classList.add('has-avatar');
+  } else {
+    // Hiển thị chữ cái đầu
+    const initials = (prof?.display_name || session.user.email || 'U')[0].toUpperCase();
+    btn.innerHTML = initials;
+    btn.style.fontSize = '14px';
+    btn.style.fontWeight = '800';
+  }
+}
+
+loadNavAvatar();
 
 /* ── NOTICE TEXT — load từ Supabase site_settings ── */
 async function loadNoticeText() {
