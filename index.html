@@ -482,55 +482,110 @@ footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
 .profile-menu-btn svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
 
-/* ─── CHAT SECTION ─────────────────────── */
-.chat-section { padding: 1.1rem 2rem 0.5rem; }
-.chat-box {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 16px; overflow: hidden;
+
+
+/* ─── FLOATING CHAT ─────────────────────────── */
+.chat-fab {
+  position: fixed; bottom: 24px; right: 20px; z-index: 400;
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--peach); border: none; cursor: pointer;
+  box-shadow: 0 4px 18px rgba(232,131,90,0.45);
+  display: flex; align-items: center; justify-content: center;
+  transition: transform .2s, box-shadow .2s;
 }
-.chat-header {
-  display: flex; align-items: center; gap: 8px;
-  padding: 12px 16px 10px;
-  border-bottom: 1px solid var(--border);
+.chat-fab:hover { transform: scale(1.08); box-shadow: 0 6px 24px rgba(232,131,90,0.55); }
+.chat-fab svg { width: 22px; height: 22px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.chat-fab-badge {
+  position: absolute; top: -2px; right: -2px;
+  background: #e84040; color: #fff;
+  font-size: 10px; font-weight: 800;
+  min-width: 18px; height: 18px; border-radius: 10px;
+  display: none; align-items: center; justify-content: center;
+  border: 2px solid var(--bg2); padding: 0 3px;
 }
-.chat-header-title {
-  font-size: 13px; font-weight: 800; color: var(--text);
-  display: flex; align-items: center; gap: 6px; flex: 1;
+
+.chat-panel {
+  position: fixed; bottom: 86px; right: 16px; z-index: 400;
+  width: min(360px, calc(100vw - 32px));
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 20px; overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+  display: none; flex-direction: column;
+  max-height: 70vh;
+  animation: chatSlideUp .2s ease;
 }
-.chat-header-title svg { width: 15px; height: 15px; stroke: var(--peach); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.chat-online-dot {
-  width: 7px; height: 7px; border-radius: 50%; background: #4caf50;
-  display: inline-block; margin-left: 2px;
-  box-shadow: 0 0 0 2px rgba(76,175,80,0.25);
+.chat-panel.open { display: flex; }
+@keyframes chatSlideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
+
+.chat-panel-head {
+  background: var(--peach);
+  padding: 14px 16px 12px;
+  display: flex; align-items: center; gap: 10px;
+  flex-shrink: 0;
+}
+.chat-panel-title {
+  flex: 1; font-size: 13px; font-weight: 900;
+  color: #fff; letter-spacing: .3px;
+  display: flex; align-items: center; gap: 7px;
+}
+.chat-panel-title svg { width: 16px; height: 16px; stroke: #fff; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.chat-online-count {
+  font-size: 10px; font-weight: 700; color: rgba(255,255,255,.8);
+  background: rgba(255,255,255,.18); padding: 2px 8px; border-radius: 10px;
+}
+.chat-close-btn {
+  background: none; border: none; cursor: pointer;
+  color: rgba(255,255,255,.85); display: flex; align-items: center;
+  padding: 2px; border-radius: 6px; transition: color .15s;
+}
+.chat-close-btn:hover { color: #fff; }
+.chat-close-btn svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
 .chat-list {
-  max-height: 320px; overflow-y: auto; padding: 8px 0;
+  flex: 1; overflow-y: auto; padding: 10px 0;
   display: flex; flex-direction: column; gap: 0;
-  scroll-behavior: smooth;
+  scroll-behavior: smooth; min-height: 200px;
 }
 .chat-list::-webkit-scrollbar { width: 4px; }
 .chat-list::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 4px; }
+
 .chat-msg {
   display: flex; gap: 9px; align-items: flex-start;
-  padding: 7px 14px; transition: background .12s;
+  padding: 6px 14px; transition: background .12s; position: relative;
 }
 .chat-msg:hover { background: var(--peach-light); }
+.chat-msg:hover .chat-recall-btn { display: flex; }
 .chat-avatar {
-  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
   background: var(--peach-light); border: 1.5px solid var(--border-hover);
   overflow: hidden; display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 800; color: var(--peach-dark);
+  font-size: 12px; font-weight: 800; color: var(--peach-dark);
 }
 .chat-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .chat-body { flex: 1; min-width: 0; }
-.chat-name-row { display: flex; align-items: baseline; gap: 6px; margin-bottom: 2px; }
-.chat-name { font-size: 12px; font-weight: 800; color: var(--peach); }
+.chat-name-row { display: flex; align-items: baseline; gap: 6px; margin-bottom: 1px; }
+.chat-name { font-size: 11px; font-weight: 800; color: var(--peach); }
 .chat-time { font-size: 10px; color: var(--text-muted); white-space: nowrap; }
 .chat-text { font-size: 13px; color: var(--text); line-height: 1.45; word-break: break-word; }
+.chat-text.recalled { font-style: italic; color: var(--text-muted); font-size: 12px; }
+
+.chat-recall-btn {
+  display: none; align-items: center; justify-content: center;
+  background: none; border: none; cursor: pointer;
+  color: var(--text-muted); padding: 2px 4px; border-radius: 6px;
+  flex-shrink: 0; align-self: center; transition: color .15s;
+  font-size: 11px; gap: 3px;
+}
+.chat-recall-btn:hover { color: #e84040; }
+.chat-recall-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
 .chat-input-row {
   display: flex; gap: 8px; align-items: center;
   padding: 10px 12px; border-top: 1px solid var(--border);
-  background: var(--bg);
+  background: var(--bg); flex-shrink: 0;
 }
 .chat-input {
   flex: 1; background: var(--bg2); border: 1.5px solid var(--border);
@@ -547,10 +602,10 @@ footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
   transition: background .15s;
 }
 .chat-send-btn:hover { background: var(--peach-dark); }
-.chat-send-btn svg { width: 15px; height: 15px; stroke: white; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.chat-send-btn svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 .chat-login-hint {
   font-size: 12px; color: var(--text-muted); text-align: center;
-  padding: 10px; border-top: 1px solid var(--border);
+  padding: 10px 14px; border-top: 1px solid var(--border); flex-shrink: 0;
 }
 .chat-login-hint a { color: var(--peach); font-weight: 700; text-decoration: none; }
 .chat-empty { text-align: center; padding: 2rem 1rem; font-size: 13px; color: var(--text-muted); }
@@ -736,22 +791,6 @@ footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
 </div>
 
 
-<div class="divider"></div>
-<div class="chat-section">
-  <div class="sec-head">
-    <div class="sec-title">
-      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      Trò chuyện
-      <span class="chat-online-dot" id="chatOnlineDot" style="display:none"></span>
-    </div>
-  </div>
-  <div class="chat-box">
-    <div class="chat-list" id="chatList">
-      <div class="chat-empty">Đang tải tin nhắn... 🐹</div>
-    </div>
-    <div id="chatInputArea"></div>
-  </div>
-</div>
 
 <footer>
   <p>Đọc truyện vui vẻ nhé! 📱 Biển cả và sẽ gầy ♡</p>
@@ -1126,40 +1165,28 @@ async function initPushNotification() {
 // Gọi sau khi trang load xong
 window.addEventListener('load', () => setTimeout(initPushNotification, 2000));
 
-/* ── CHAT ── */
+
+
+/* ── FLOATING CHAT ── */
 let chatUser = null;
 let chatProfile = null;
 let chatChannel = null;
+let chatUnread = 0;
+let chatOpen = false;
 
-async function initChat() {
-  const { data: { session } } = await sb.auth.getSession();
-  if (session) {
-    chatUser = session.user;
-    const { data: prof } = await sb.from('profiles')
-      .select('display_name, avatar_url')
-      .eq('id', session.user.id)
-      .maybeSingle();
-    chatProfile = prof;
-    document.getElementById('chatInputArea').innerHTML = `
-      <div class="chat-input-row">
-        <input class="chat-input" id="chatInput" placeholder="Nhắn gì đó..." maxlength="300"
-          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatMsg();}"/>
-        <button class="chat-send-btn" onclick="sendChatMsg()" title="Gửi">
-          <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        </button>
-      </div>`;
-    document.getElementById('chatOnlineDot').style.display = 'inline-block';
-  } else {
-    document.getElementById('chatInputArea').innerHTML = `
-      <div class="chat-login-hint">
-        <a href="auth.html">Đăng nhập</a> để tham gia trò chuyện 🍑
-      </div>`;
+function toggleChatPanel() {
+  chatOpen = !chatOpen;
+  document.getElementById('chatPanel').classList.toggle('open', chatOpen);
+  if (chatOpen) {
+    chatUnread = 0;
+    const badge = document.getElementById('chatFabBadge');
+    badge.style.display = 'none';
+    const list = document.getElementById('chatList');
+    setTimeout(() => list.scrollTop = list.scrollHeight, 50);
   }
-  await loadChatMessages();
-  subscribeChatRealtime();
 }
 
-function escapeHtml(s) {
+function chatEsc(s) {
   if (!s) return '';
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
@@ -1172,12 +1199,29 @@ function chatTimeAgo(ts) {
   return Math.floor(diff/86400) + ' ngày trước';
 }
 
+function canRecall(createdAt, userId) {
+  if (!chatUser || chatUser.id !== userId) return false;
+  return (Date.now() - new Date(createdAt)) < 5 * 60 * 1000; // 5 phút
+}
+
 function renderChatMsg(msg) {
   const prof = msg.profiles || {};
-  const name = escapeHtml(prof.display_name || 'Ẩn danh');
+  const name = chatEsc(prof.display_name || 'Ẩn danh');
   const avatar = prof.avatar_url
-    ? `<img src="${escapeHtml(prof.avatar_url)}" alt="">`
-    : `<span>${name[0]?.toUpperCase() || '?'}</span>`;
+    ? `<img src="${chatEsc(prof.avatar_url)}" alt="">`
+    : `<span>${(prof.display_name||'?')[0].toUpperCase()}</span>`;
+
+  const isRecalled = msg.recalled === true;
+  const textHtml = isRecalled
+    ? `<div class="chat-text recalled">Tin nhắn đã được thu hồi</div>`
+    : `<div class="chat-text">${chatEsc(msg.content)}</div>`;
+
+  const recallBtn = (!isRecalled && canRecall(msg.created_at, msg.user_id))
+    ? `<button class="chat-recall-btn" onclick="recallMsg(${msg.id})" title="Thu hồi">
+        <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg>
+       </button>`
+    : '';
+
   return `
     <div class="chat-msg" id="cmsg-${msg.id}">
       <div class="chat-avatar">${avatar}</div>
@@ -1186,20 +1230,57 @@ function renderChatMsg(msg) {
           <span class="chat-name">${name}</span>
           <span class="chat-time">${chatTimeAgo(msg.created_at)}</span>
         </div>
-        <div class="chat-text">${escapeHtml(msg.content)}</div>
+        ${textHtml}
       </div>
+      ${recallBtn}
     </div>`;
+}
+
+async function recallMsg(id) {
+  if (!chatUser) return;
+  if (!confirm('Thu hồi tin nhắn này?')) return;
+  await sb.from('chat_messages')
+    .update({ recalled: true, content: '' })
+    .eq('id', id)
+    .eq('user_id', chatUser.id);
+}
+
+async function initChat() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    chatUser = session.user;
+    const { data: prof } = await sb.from('profiles')
+      .select('display_name, avatar_url')
+      .eq('id', session.user.id)
+      .maybeSingle();
+    chatProfile = prof;
+    document.getElementById('chatInputArea').innerHTML = `
+      <div class="chat-input-row">
+        <input class="chat-input" id="chatInput" placeholder="Nói gì đi..." maxlength="300"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatMsg();}"/>
+        <button class="chat-send-btn" onclick="sendChatMsg()">
+          <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>`;
+  } else {
+    document.getElementById('chatInputArea').innerHTML = `
+      <div class="chat-login-hint">
+        <a href="auth.html">Đăng nhập</a> để tham gia chat 🍑
+      </div>`;
+  }
+  await loadChatMessages();
+  subscribeChatRealtime();
 }
 
 async function loadChatMessages() {
   const list = document.getElementById('chatList');
   try {
-    const { data, error } = await sb.from('chat_messages')
-      .select('id, content, created_at, user_id, profiles(display_name, avatar_url)')
+    const { data } = await sb.from('chat_messages')
+      .select('id, content, created_at, user_id, recalled, profiles(display_name, avatar_url)')
       .order('created_at', { ascending: true })
-      .limit(50);
-    if (error || !data || data.length === 0) {
-      list.innerHTML = '<div class="chat-empty">Chưa có tin nhắn nào 🐹 Hãy là người đầu tiên!</div>';
+      .limit(60);
+    if (!data || data.length === 0) {
+      list.innerHTML = '<div class="chat-empty">Chưa có tin nhắn nào 🐹<br>Hãy là người đầu tiên!</div>';
       return;
     }
     list.innerHTML = data.map(renderChatMsg).join('');
@@ -1210,23 +1291,38 @@ async function loadChatMessages() {
 }
 
 function subscribeChatRealtime() {
-  chatChannel = sb.channel('chat_messages')
-    .on('postgres_changes', {
-      event: 'INSERT', schema: 'public', table: 'chat_messages'
-    }, async (payload) => {
-      const msg = payload.new;
-      // Lấy thêm profile
-      const { data: prof } = await sb.from('profiles')
-        .select('display_name, avatar_url')
-        .eq('id', msg.user_id)
-        .maybeSingle();
-      msg.profiles = prof;
-      const list = document.getElementById('chatList');
-      const empty = list.querySelector('.chat-empty');
-      if (empty) empty.remove();
-      list.insertAdjacentHTML('beforeend', renderChatMsg(msg));
-      list.scrollTop = list.scrollHeight;
-    })
+  chatChannel = sb.channel('public:chat_messages')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages' },
+      async (payload) => {
+        const msg = payload.new;
+        const { data: prof } = await sb.from('profiles')
+          .select('display_name, avatar_url').eq('id', msg.user_id).maybeSingle();
+        msg.profiles = prof;
+        const list = document.getElementById('chatList');
+        list.querySelector('.chat-empty')?.remove();
+        list.insertAdjacentHTML('beforeend', renderChatMsg(msg));
+        list.scrollTop = list.scrollHeight;
+        if (!chatOpen) {
+          chatUnread++;
+          const badge = document.getElementById('chatFabBadge');
+          badge.textContent = chatUnread > 9 ? '9+' : chatUnread;
+          badge.style.display = 'flex';
+        }
+      })
+    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'chat_messages' },
+      (payload) => {
+        const msg = payload.new;
+        const el = document.getElementById('cmsg-' + msg.id);
+        if (el) {
+          const textEl = el.querySelector('.chat-text');
+          if (textEl) {
+            textEl.className = 'chat-text recalled';
+            textEl.textContent = 'Tin nhắn đã được thu hồi';
+          }
+          const recallBtn = el.querySelector('.chat-recall-btn');
+          if (recallBtn) recallBtn.remove();
+        }
+      })
     .subscribe();
 }
 
@@ -1238,13 +1334,8 @@ async function sendChatMsg() {
   input.value = '';
   input.disabled = true;
   try {
-    await sb.from('chat_messages').insert({
-      user_id: chatUser.id,
-      content: text
-    });
-  } catch(e) {
-    input.value = text;
-  }
+    await sb.from('chat_messages').insert({ user_id: chatUser.id, content: text, recalled: false });
+  } catch(e) { input.value = text; }
   input.disabled = false;
   input.focus();
 }
@@ -1252,5 +1343,29 @@ async function sendChatMsg() {
 initChat();
 
 </script>
+
+<!-- FLOATING CHAT -->
+<button class="chat-fab" id="chatFab" onclick="toggleChatPanel()" title="Trò chuyện">
+  <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  <span class="chat-fab-badge" id="chatFabBadge"></span>
+</button>
+
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-panel-head">
+    <div class="chat-panel-title">
+      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      NÓI GÌ ĐI MẤY BÀ
+    </div>
+    <span class="chat-online-count" id="chatOnlineCount"></span>
+    <button class="chat-close-btn" onclick="toggleChatPanel()">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="chat-list" id="chatList">
+    <div class="chat-empty">Đang tải... 🐹</div>
+  </div>
+  <div id="chatInputArea"></div>
+</div>
+
 </body>
 </html>
