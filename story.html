@@ -18,8 +18,6 @@
 <title>Đang tải... — Peach Luku</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="navbar.js" data-page="story"></script>
-</head>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -98,13 +96,46 @@ body.theme-wattpad {
 }
 
 /* ── Nav avatar fix ── */
+.user-nav-btn, #nav-user-btn {
+  width: 34px; height: 34px; border-radius: 50%; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800; color: var(--peach);
+  text-decoration: none; flex-shrink: 0; padding: 0;
+  background: none; border: none; cursor: pointer;
+}
+.user-nav-btn img, #nav-user-btn img {
+  width: 34px; height: 34px; border-radius: 50%; object-fit: cover; display: block;
+}
 
 body {
   font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text);
   transition: background .3s, color .3s; line-height: 1.6;
   max-width: 680px; margin: 0 auto; min-height: 100vh;
 }
-
+.topbar {
+  background: var(--bg2); border-bottom: 1px solid var(--border);
+  padding: 0 1rem; display: flex; align-items: center;
+  justify-content: space-between; height: 56px;
+  position: sticky; top: 0; z-index: 100; transition: background .3s;
+}
+.topbar-left { display: flex; align-items: center; gap: 8px; }
+.back-btn { background: none; border: none; cursor: pointer; color: var(--text); padding: 7px; border-radius: 50%; display: flex; align-items: center; transition: background .15s; }
+.back-btn:hover { background: var(--peach-light); }
+.back-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.logo { display: flex; align-items: center; gap: 6px; text-decoration: none; }
+.logo-text { font-family: 'Pacifico', cursive; font-size: 18px; color: var(--peach); }
+.topbar-right { display: flex; align-items: center; gap: 2px; }
+.icon-btn { background: none; border: none; cursor: pointer; color: var(--text); padding: 8px; border-radius: 50%; display: flex; align-items: center; transition: background .15s; }
+.icon-btn:hover { background: var(--peach-light); }
+.icon-btn svg { width: 19px; height: 19px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.theme-drawer { position: fixed; top: 58px; right: .75rem; z-index: 300; background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 12px 14px; width: 210px; box-shadow: 0 8px 28px rgba(0,0,0,0.12); display: none; }
+.theme-drawer.open { display: block; }
+.theme-drawer-title { font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 9px; text-transform: uppercase; letter-spacing: .5px; }
+.theme-swatches { display: grid; grid-template-columns: repeat(4,1fr); gap: 7px; }
+.swatch { width: 36px; height: 36px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: all .15s; }
+.swatch.active { border-color: var(--peach); box-shadow: 0 0 0 2px var(--bg2), 0 0 0 4px var(--peach); }
+.swatch:hover { transform: scale(1.12); }
+.swatch-label { font-size: 9px; text-align: center; color: var(--text-muted); margin-top: 3px; font-weight: 700; }
 .cover-hero { position: relative; width: 100%; background: var(--peach-light); display: flex; justify-content: center; padding: 2rem 1.5rem 2.5rem; overflow: hidden; }
 .cover-hero-blur { position: absolute; inset: 0; filter: blur(22px) saturate(1.4); opacity: 0.32; background-size: cover; background-position: center; transform: scale(1.1); }
 .cover-book { position: relative; width: 154px; height: 230px; border-radius: 10px; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.28); background: var(--peach-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -249,7 +280,32 @@ body {
 </head>
 <body class="theme-light">
 
-<div class="theme-swatches">
+<div class="topbar">
+  <div class="topbar-left">
+    <button class="back-btn" onclick="history.back()" title="Quay lại">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <a href="index.html" class="logo"><span class="logo-text">Peach Luku</span></a>
+  </div>
+  <div class="topbar-right">
+    <button class="icon-btn" onclick="shareStory()" title="Chia sẻ">
+      <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+    </button>
+    <a class="icon-btn" href="write.html" title="Viết truyện" id="write-btn" style="display:none">
+      <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    </a>
+    <a class="user-nav-btn" id="nav-user-btn" href="profile.html" title="Hồ sơ">
+      <svg viewBox="0 0 24 24" width="17" height="17" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </a>
+    <button class="icon-btn" onclick="toggleThemeDrawer()" title="Đổi giao diện">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+  </div>
+</div>
+
+<div class="theme-drawer" id="theme-drawer">
+  <div class="theme-drawer-title">Giao diện</div>
+  <div class="theme-swatches">
     <div><div class="swatch" style="background:#FDF6F2;border:2px solid #F2A882" onclick="setTheme('light',this)"></div><div class="swatch-label">Sáng</div></div>
     <div><div class="swatch" style="background:#1a1a1a" onclick="setTheme('dark',this)"></div><div class="swatch-label">Tối</div></div>
     <div><div class="swatch" style="background:#f5f0e8;border:2px solid #A67C52" onclick="setTheme('sepia',this)"></div><div class="swatch-label">Sepia</div></div>
@@ -397,6 +453,31 @@ let allChapters = [], currentSort = 'asc', storyData = null, currentUser = null;
 let comments = [], commentsPage = 0;
 const COMMENTS_PER_PAGE = 15;
 let commentTotal = 0;
+
+function setTheme(name, el) { document.body.className = 'theme-' + name; localStorage.setItem('plTheme', name); document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active')); if (el) el.classList.add('active'); }
+function toggleThemeDrawer() { document.getElementById('theme-drawer').classList.toggle('open'); }
+document.addEventListener('click', e => { const d = document.getElementById('theme-drawer'); if (!d.contains(e.target) && !e.target.closest('[onclick="toggleThemeDrawer()"]')) d.classList.remove('open'); });
+(function() { const t = localStorage.getItem('plTheme') || 'light'; document.body.className = 'theme-' + t; })();
+
+function escapeHtml(str) { if (!str) return ''; const d = document.createElement('div'); d.textContent = str; return d.innerHTML; }
+function formatViews(n) { if (!n) return '0'; if (n >= 1e6) return (n/1e6).toFixed(1)+'M'; if (n >= 1000) return (n/1000).toFixed(1)+'K'; return String(n); }
+function timeAgo(ts) { const diff = Date.now() - new Date(ts).getTime(); const m = Math.floor(diff/60000), h = Math.floor(diff/3600000), d = Math.floor(diff/86400000); if (d > 30) return new Date(ts).toLocaleDateString('vi-VN', {day:'2-digit',month:'2-digit',year:'numeric'}); if (d > 0) return d + ' ngày trước'; if (h > 0) return h + ' giờ trước'; if (m > 0) return m + ' phút trước'; return 'Vừa xong'; }
+function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2300); }
+function setDescriptionContent(el, content) {
+  if (!content) { el.textContent = 'Chưa có mô tả.'; return; }
+  // Chỉ coi là HTML nếu có tag thực sự: <p>, <br>, <div>, <span>, <b>, <i>...
+  // Không phải ký tự < đơn lẻ trong text thuần
+  const isHtml = /<(p|br|div|span|b|i|em|strong|ul|ol|li|h[1-6])(\s|>|\/)/i.test(content);
+  if (isHtml) {
+    el.innerHTML = content;
+  } else {
+    // Plain text: giữ xuống dòng
+    el.innerHTML = content
+      .split('\n')
+      .map(line => '<span>' + line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</span>')
+      .join('<br>');
+  }
+}
 
 let descExpanded = false;
 function toggleDesc() { descExpanded = !descExpanded; const el = document.getElementById('story-description'); const btn = document.getElementById('desc-toggle'); el.classList.toggle('clamped', !descExpanded); btn.classList.toggle('expanded', descExpanded); btn.childNodes[0].textContent = descExpanded ? 'Thu gọn' : 'Đọc thêm'; }
@@ -558,6 +639,25 @@ async function init() {
 init();
 
 /* ── FIX: img constrained bằng inline style, không tràn layout ── */
+async function loadNavAvatar() {
+  const { data: { session } } = await sb.auth.getSession();
+  const btn = document.getElementById('nav-user-btn');
+  if (!btn) return;
+  if (!session) {
+    btn.href = 'auth.html?next=' + encodeURIComponent(location.pathname + location.search);
+    btn.title = 'Đăng nhập';
+    return;
+  }
+  btn.href = 'profile.html';
+  btn.title = 'Hồ sơ của tôi';
+  const { data: prof } = await sb.from('profiles').select('display_name, avatar_url').eq('id', session.user.id).maybeSingle();
+  if (prof?.avatar_url) {
+    btn.innerHTML = '<img src="' + prof.avatar_url + '" alt="avatar" style="width:34px;height:34px;border-radius:50%;object-fit:cover;display:block;">';
+  } else {
+    btn.textContent = (prof?.display_name || session.user.email || 'U')[0].toUpperCase();
+  }
+}
+loadNavAvatar();
 
 function setStoryMeta(story) {
   const title = (story.title || 'Truyện') + ' — Peach Luku';
