@@ -196,9 +196,9 @@ body {
   background: var(--bg2); border: 1px solid var(--border);
   border-radius: 16px; padding: 14px 16px; width: 220px;
   box-shadow: 0 8px 28px rgba(0,0,0,0.12);
-  display: none;
+  display: none !important;
 }
-.theme-drawer.open { display: block; }
+.theme-drawer.open { display: block !important; }
 .theme-drawer-title { font-size: 12px; font-weight: 800; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: .5px; }
 .theme-swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .swatch { width: 38px; height: 38px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: all .15s; }
@@ -519,14 +519,14 @@ footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
 <div class="theme-drawer" id="theme-drawer">
   <div class="theme-drawer-title">🎨 Đổi nền</div>
   <div class="theme-swatches">
-    <div><div class="swatch active" style="background:#FDF6F2;border:2px solid #F2A882" onclick="setTheme('light',this)" title="Light"></div><div class="swatch-label">Light</div></div>
-    <div><div class="swatch" style="background:#1a1a1a" onclick="setTheme('dark',this)" title="Dark"></div><div class="swatch-label">Dark</div></div>
+    <div><div class="swatch active" style="background:#FDF6F2;border:2px solid #F2A882" onclick="setTheme('light',this)" title="Sáng"></div><div class="swatch-label">Sáng</div></div>
+    <div><div class="swatch" style="background:#1a1a1a" onclick="setTheme('dark',this)" title="Tối"></div><div class="swatch-label">Tối</div></div>
     <div><div class="swatch" style="background:#f5f0e8;border:2px solid #A67C52" onclick="setTheme('sepia',this)" title="Sepia"></div><div class="swatch-label">Sepia</div></div>
-    <div><div class="swatch" style="background:#e8f0fe;border:2px solid #4a7de0" onclick="setTheme('blue',this)" title="Blue"></div><div class="swatch-label">Blue</div></div>
-    <div><div class="swatch" style="background:#fff0f6;border:2px solid #e876a0" onclick="setTheme('pink',this)" title="Pink"></div><div class="swatch-label">Pink</div></div>
-    <div><div class="swatch" style="background:#f0ebff;border:2px solid #8a5de0" onclick="setTheme('purple',this)" title="Purple"></div><div class="swatch-label">Purple</div></div>
-    <div><div class="swatch" style="background:#f0f0f0;border:2px solid #777" onclick="setTheme('gray',this)" title="Gray"></div><div class="swatch-label">Gray</div></div>
-    <div><div class="swatch" style="background:#faf5ee;border:2px solid #f26522" onclick="setTheme('wattpad',this)" title="Wattpad"></div><div class="swatch-label">Wattpad</div></div>
+    <div><div class="swatch" style="background:#e8f0fe;border:2px solid #4a7de0" onclick="setTheme('blue',this)" title="Xanh"></div><div class="swatch-label">Xanh</div></div>
+    <div><div class="swatch" style="background:#fff0f6;border:2px solid #e876a0" onclick="setTheme('pink',this)" title="Hồng"></div><div class="swatch-label">Hồng</div></div>
+    <div><div class="swatch" style="background:#f0ebff;border:2px solid #8a5de0" onclick="setTheme('purple',this)" title="Tím"></div><div class="swatch-label">Tím</div></div>
+    <div><div class="swatch" style="background:#f0f0f0;border:2px solid #777" onclick="setTheme('gray',this)" title="Xám"></div><div class="swatch-label">Xám</div></div>
+    <div><div class="swatch" style="background:#faf5ee;border:2px solid #f26522" onclick="setTheme('wattpad',this)" title="Warm"></div><div class="swatch-label">Warm</div></div>
   </div>
 </div>
 
