@@ -190,10 +190,84 @@
 .dd-auth-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 .dd-auth-sep { color: var(--text-muted, #aaa); font-size: 13px; flex-shrink: 0; }
 
+/* Auth modal */
+.nb-auth-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,0.45); backdrop-filter: blur(4px);
+  display: none; align-items: center; justify-content: center; padding: 16px;
+}
+.nb-auth-overlay.open { display: flex; }
+.nb-auth-modal {
+  background: var(--bg2, #fff); border-radius: 24px;
+  width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto;
+  padding: 28px 28px 24px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.22);
+  position: relative; animation: nbAuthIn .2s ease;
+}
+@keyframes nbAuthIn { from { opacity:0; transform:scale(0.96) translateY(8px); } to { opacity:1; transform:none; } }
+.nb-auth-close {
+  position: absolute; top: 16px; right: 16px;
+  background: var(--bg, #f5f5f5); border: none; border-radius: 50%; width: 32px; height: 32px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted, #999);
+  transition: background .15s;
+}
+.nb-auth-close:hover { background: var(--border, #eee); }
+.nb-auth-close svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+.nb-auth-logo { font-family: 'Nunito',sans-serif; font-size: 20px; font-weight: 900; color: var(--peach, #e8835a); text-align: center; margin-bottom: 16px; letter-spacing: -0.3px; }
+.nb-tab-bar { display: flex; gap: 6px; background: var(--bg, #f5f5f5); border-radius: 12px; padding: 4px; margin-bottom: 20px; }
+.nb-tab {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 5px;
+  padding: 8px 10px; border: none; border-radius: 9px; cursor: pointer;
+  font-family: 'Nunito',sans-serif; font-size: 13px; font-weight: 700;
+  background: transparent; color: var(--text-muted, #999); transition: all .15s;
+}
+.nb-tab svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.nb-tab.active { background: var(--bg2, #fff); color: var(--peach, #e8835a); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.nb-pane { display: none; }
+.nb-pane.active { display: block; }
+.nb-pane-sub { font-size: 13px; color: var(--text-muted, #999); margin-bottom: 16px; text-align: center; }
+.nb-alert { border-radius: 10px; padding: 10px 14px; font-size: 13px; font-weight: 600; margin-bottom: 14px; }
+.nb-alert-err { background: #fff0f0; color: #d04040; border: 1px solid #fcc; }
+.nb-alert-ok  { background: #f0fff6; color: #3a9a60; border: 1px solid #b2eac9; }
+.nb-field { margin-bottom: 14px; }
+.nb-field label { display: block; font-size: 12px; font-weight: 700; color: var(--text-muted, #999); margin-bottom: 5px; }
+.nb-input-wrap { position: relative; }
+.nb-input {
+  width: 100%; padding: 10px 14px; border: 1.5px solid var(--border, #e8e8e8);
+  border-radius: 10px; font-family: 'Nunito',sans-serif; font-size: 14px; font-weight: 600;
+  background: var(--bg, #fafafa); color: var(--text, #222);
+  outline: none; transition: border .15s; box-sizing: border-box;
+}
+.nb-input:focus { border-color: var(--peach, #e8835a); background: var(--bg2, #fff); }
+.nb-input-wrap .nb-input { padding-right: 40px; }
+.nb-eye {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer; color: var(--text-muted, #aaa); padding: 4px;
+}
+.nb-eye svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.nb-username-hint { font-size: 11px; font-weight: 700; min-height: 16px; margin-top: 3px; }
+.nb-check-row { display: flex; align-items: center; gap: 8px; font-size: 13px; margin-bottom: 16px; cursor: pointer; }
+.nb-check-row input { accent-color: var(--peach, #e8835a); width: 15px; height: 15px; }
+.nb-submit {
+  width: 100%; padding: 12px; border: none; border-radius: 12px;
+  background: var(--peach, #e8835a); color: #fff;
+  font-family: 'Nunito',sans-serif; font-size: 15px; font-weight: 800;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: background .15s; margin-bottom: 14px;
+}
+.nb-submit:hover { background: var(--peach-dark, #c06030); }
+.nb-submit:disabled { opacity: .6; cursor: not-allowed; }
+.nb-spinner {
+  width: 16px; height: 16px; border: 2.5px solid rgba(255,255,255,0.4);
+  border-top-color: #fff; border-radius: 50%; animation: nbSpin .7s linear infinite;
+}
+@keyframes nbSpin { to { transform: rotate(360deg); } }
+.nb-footer { font-size: 13px; color: var(--text-muted, #999); text-align: center; }
+.nb-link { color: var(--peach, #e8835a); font-weight: 700; cursor: pointer; text-decoration: none; }
+.nb-link:hover { text-decoration: underline; }
+
 /* Modal gợi ý truyện */
 .suggest-overlay {
-  position: fixed; inset: 0; z-index: 9999;
-  background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
   display: none; align-items: center; justify-content: center; padding: 20px;
 }
 .suggest-overlay.open { display: flex; }
@@ -323,12 +397,12 @@
           Bookmark
         </a>
         <div class="dd-auth-row dd-logged-out">
-          <a class="dd-auth-btn" href="auth.html">
+          <a class="dd-auth-btn" href="#" onclick="openAuthModal('login');return false;">
             <svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
             Đăng nhập
           </a>
           <span class="dd-auth-sep">/</span>
-          <a class="dd-auth-btn" href="auth.html?tab=register">
+          <a class="dd-auth-btn" href="#" onclick="openAuthModal('signup');return false;">
             <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
             Đăng ký
           </a>
@@ -427,6 +501,115 @@
     <div class="suggest-success" id="suggestSuccess">
       🎉 Cảm ơn bạn đã gợi ý!<br>
       <span style="font-size:12px;font-weight:400;color:var(--text-muted,#aaa)">Peach Luku sẽ xem xét và edit sớm nhé 🍑</span>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ĐĂNG NHẬP / ĐĂNG KÝ -->
+<div class="nb-auth-overlay" id="nbAuthOverlay" onclick="closeAuthModal(event)">
+  <div class="nb-auth-modal">
+    <button class="nb-auth-close" onclick="closeAuthModal()">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+
+    <div class="nb-auth-logo">🍑 Peach Luku</div>
+
+    <!-- TAB BAR -->
+    <div class="nb-tab-bar">
+      <button class="nb-tab active" id="nb-tab-login" onclick="nbSwitchTab('login')">
+        <svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+        Đăng nhập
+      </button>
+      <button class="nb-tab" id="nb-tab-signup" onclick="nbSwitchTab('signup')">
+        <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+        Đăng ký
+      </button>
+    </div>
+
+    <!-- PANE: LOGIN -->
+    <div class="nb-pane active" id="nb-pane-login">
+      <div class="nb-pane-sub">Đăng nhập để tiếp tục đọc truyện</div>
+      <div class="nb-alert nb-alert-err" id="nb-login-err" style="display:none"></div>
+      <div class="nb-field">
+        <label>Email</label>
+        <input class="nb-input" id="nb-login-email" type="email" placeholder="you@email.com" autocomplete="email" onkeydown="if(event.key==='Enter')nbDoLogin()">
+      </div>
+      <div class="nb-field">
+        <label>Mật khẩu</label>
+        <div class="nb-input-wrap">
+          <input class="nb-input" id="nb-login-pw" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')nbDoLogin()">
+          <button class="nb-eye" type="button" onclick="nbToggleEye('nb-login-pw',this)">
+            <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <div style="text-align:right;margin:-4px 0 12px">
+        <a class="nb-link" onclick="nbSwitchTab('reset')">Quên mật khẩu?</a>
+      </div>
+      <button class="nb-submit" id="nb-login-btn" onclick="nbDoLogin()">
+        <span class="nb-spinner" id="nb-login-spinner" style="display:none"></span>
+        <span id="nb-login-btn-text">Đăng nhập</span>
+      </button>
+      <div class="nb-footer">Chưa có tài khoản? <a class="nb-link" onclick="nbSwitchTab('signup')">Đăng ký ngay</a></div>
+    </div>
+
+    <!-- PANE: SIGNUP -->
+    <div class="nb-pane" id="nb-pane-signup">
+      <div class="nb-pane-sub">Tạo tài khoản để lưu tiến độ đọc</div>
+      <div class="nb-alert nb-alert-err" id="nb-signup-err" style="display:none"></div>
+      <div class="nb-alert nb-alert-ok" id="nb-signup-ok" style="display:none">🎉 Đăng ký thành công! Kiểm tra email để xác nhận tài khoản.</div>
+      <div class="nb-field">
+        <label>Username</label>
+        <input class="nb-input" id="nb-signup-name" type="text" placeholder="vd: hamster_doc_truyen" oninput="nbCheckUsername(this.value)" autocomplete="name" onkeydown="if(event.key==='Enter')nbDoSignup()">
+        <div class="nb-username-hint" id="nb-username-hint"></div>
+      </div>
+      <div class="nb-field">
+        <label>Email</label>
+        <input class="nb-input" id="nb-signup-email" type="email" placeholder="you@email.com" autocomplete="email" onkeydown="if(event.key==='Enter')nbDoSignup()">
+      </div>
+      <div class="nb-field">
+        <label>Mật khẩu</label>
+        <div class="nb-input-wrap">
+          <input class="nb-input" id="nb-signup-pw" type="password" placeholder="Tối thiểu 6 ký tự" autocomplete="new-password" onkeydown="if(event.key==='Enter')nbDoSignup()">
+          <button class="nb-eye" type="button" onclick="nbToggleEye('nb-signup-pw',this)">
+            <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="nb-field">
+        <label>Xác nhận mật khẩu</label>
+        <div class="nb-input-wrap">
+          <input class="nb-input" id="nb-signup-pw2" type="password" placeholder="Nhập lại mật khẩu" autocomplete="new-password" onkeydown="if(event.key==='Enter')nbDoSignup()">
+          <button class="nb-eye" type="button" onclick="nbToggleEye('nb-signup-pw2',this)">
+            <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <label class="nb-check-row">
+        <input type="checkbox" id="nb-signup-agree">
+        <span>Tôi đồng ý với <a class="nb-link" href="#">điều khoản sử dụng</a></span>
+      </label>
+      <button class="nb-submit" id="nb-signup-btn" onclick="nbDoSignup()">
+        <span class="nb-spinner" id="nb-signup-spinner" style="display:none"></span>
+        <span id="nb-signup-btn-text">Tạo tài khoản</span>
+      </button>
+      <div class="nb-footer">Đã có tài khoản? <a class="nb-link" onclick="nbSwitchTab('login')">Đăng nhập</a></div>
+    </div>
+
+    <!-- PANE: RESET -->
+    <div class="nb-pane" id="nb-pane-reset">
+      <div class="nb-pane-sub">Nhập email để nhận link đặt lại mật khẩu</div>
+      <div class="nb-alert nb-alert-err" id="nb-reset-err" style="display:none"></div>
+      <div class="nb-alert nb-alert-ok" id="nb-reset-ok" style="display:none">📧 Đã gửi link! Kiểm tra hộp thư của bạn.</div>
+      <div class="nb-field">
+        <label>Email</label>
+        <input class="nb-input" id="nb-reset-email" type="email" placeholder="you@email.com" autocomplete="email" onkeydown="if(event.key==='Enter')nbDoReset()">
+      </div>
+      <button class="nb-submit" id="nb-reset-btn" onclick="nbDoReset()">
+        <span class="nb-spinner" id="nb-reset-spinner" style="display:none"></span>
+        <span id="nb-reset-btn-text">Gửi link đặt lại</span>
+      </button>
+      <div class="nb-footer"><a class="nb-link" onclick="nbSwitchTab('login')">← Quay lại đăng nhập</a></div>
     </div>
   </div>
 </div>
@@ -677,5 +860,153 @@
     document.documentElement.classList.add('theme-' + t);
     // Sẽ được set lại vào body sau khi DOMContentLoaded
   })();
+
+  // ── 11. Auth Modal ──────────────────────────────────────────────────────────
+  window.openAuthModal = function(tab) {
+    document.getElementById('profileDropdown').classList.remove('open');
+    document.getElementById('nbAuthOverlay').classList.add('open');
+    nbSwitchTab(tab || 'login');
+    // Clear fields
+    ['nb-login-email','nb-login-pw','nb-signup-name','nb-signup-email','nb-signup-pw','nb-signup-pw2','nb-reset-email'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.value = '';
+    });
+    ['nb-login-err','nb-signup-err','nb-signup-ok','nb-reset-err','nb-reset-ok'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.style.display = 'none';
+    });
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.closeAuthModal = function(e) {
+    if (e && e.target !== document.getElementById('nbAuthOverlay')) return;
+    document.getElementById('nbAuthOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  };
+
+  window.nbSwitchTab = function(tab) {
+    ['login','signup','reset'].forEach(t => {
+      document.getElementById('nb-tab-' + t) && document.getElementById('nb-tab-' + t).classList.toggle('active', t === tab);
+      document.getElementById('nb-pane-' + t).classList.toggle('active', t === tab);
+    });
+  };
+
+  window.nbToggleEye = function(inputId, btn) {
+    const inp = document.getElementById(inputId);
+    const isHidden = inp.type === 'password';
+    inp.type = isHidden ? 'text' : 'password';
+    btn.innerHTML = isHidden
+      ? '<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'
+      : '<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+  };
+
+  let nbUsernameTimer;
+  window.nbCheckUsername = function(val) {
+    const hint = document.getElementById('nb-username-hint');
+    clearTimeout(nbUsernameTimer);
+    if (!val || val.length < 2) { hint.textContent = ''; return; }
+    hint.style.color = 'var(--text-muted,#aaa)'; hint.textContent = 'Đang kiểm tra...';
+    nbUsernameTimer = setTimeout(async () => {
+      try {
+        const _sb = window.sb || window.supabase; if (!_sb) return;
+        const { data } = await _sb.from('profiles').select('id').eq('display_name', val).maybeSingle();
+        if (data) { hint.style.color = '#d04040'; hint.textContent = '✗ Username đã tồn tại'; }
+        else       { hint.style.color = '#3a9a60'; hint.textContent = '✓ Username có thể dùng'; }
+      } catch(e) { hint.textContent = ''; }
+    }, 500);
+  };
+
+  window.nbDoLogin = async function() {
+    const errEl = document.getElementById('nb-login-err');
+    errEl.style.display = 'none';
+    const email = document.getElementById('nb-login-email').value.trim();
+    const pw    = document.getElementById('nb-login-pw').value;
+    if (!email || !pw) { errEl.textContent = 'Vui lòng điền đầy đủ email và mật khẩu'; errEl.style.display = 'block'; return; }
+    const btn = document.getElementById('nb-login-btn');
+    const spinner = document.getElementById('nb-login-spinner');
+    const txt = document.getElementById('nb-login-btn-text');
+    btn.disabled = true; spinner.style.display = 'inline-block'; txt.textContent = 'Đang đăng nhập...';
+    const _sb = window.sb || window.supabase;
+    const { error } = await _sb.auth.signInWithPassword({ email, password: pw });
+    btn.disabled = false; spinner.style.display = 'none'; txt.textContent = 'Đăng nhập';
+    if (error) {
+      const msg = error.message.includes('Invalid') ? 'Email hoặc mật khẩu không đúng'
+                : error.message.includes('confirm') ? 'Vui lòng xác nhận email trước khi đăng nhập'
+                : error.message;
+      errEl.textContent = msg; errEl.style.display = 'block'; return;
+    }
+    // Kiểm tra display_name
+    const { data: { user } } = await _sb.auth.getUser();
+    const { data: prof } = await _sb.from('profiles').select('display_name').eq('id', user.id).maybeSingle();
+    if (!prof?.display_name) {
+      // Chuyển sang auth.html để đặt username
+      location.href = 'auth.html';
+      return;
+    }
+    document.getElementById('nbAuthOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+    location.reload();
+  };
+
+  window.nbDoSignup = async function() {
+    const errEl = document.getElementById('nb-signup-err');
+    const okEl  = document.getElementById('nb-signup-ok');
+    errEl.style.display = 'none'; okEl.style.display = 'none';
+    const name  = document.getElementById('nb-signup-name').value.trim();
+    const email = document.getElementById('nb-signup-email').value.trim();
+    const pw    = document.getElementById('nb-signup-pw').value;
+    const pw2   = document.getElementById('nb-signup-pw2').value;
+    const agree = document.getElementById('nb-signup-agree').checked;
+    if (!name)  { errEl.textContent = 'Vui lòng nhập username'; errEl.style.display = 'block'; return; }
+    if (!email) { errEl.textContent = 'Vui lòng nhập email'; errEl.style.display = 'block'; return; }
+    if (pw.length < 6) { errEl.textContent = 'Mật khẩu phải có ít nhất 6 ký tự'; errEl.style.display = 'block'; return; }
+    if (pw !== pw2)    { errEl.textContent = 'Mật khẩu xác nhận không khớp'; errEl.style.display = 'block'; return; }
+    if (!agree)        { errEl.textContent = 'Bạn cần đồng ý với điều khoản sử dụng'; errEl.style.display = 'block'; return; }
+    const btn = document.getElementById('nb-signup-btn');
+    const spinner = document.getElementById('nb-signup-spinner');
+    const txt = document.getElementById('nb-signup-btn-text');
+    btn.disabled = true; spinner.style.display = 'inline-block'; txt.textContent = 'Đang tạo tài khoản...';
+    const _sb = window.sb || window.supabase;
+    // Kiểm tra username
+    const { data: existing } = await _sb.from('profiles').select('id').eq('display_name', name).maybeSingle();
+    if (existing) {
+      btn.disabled = false; spinner.style.display = 'none'; txt.textContent = 'Tạo tài khoản';
+      errEl.textContent = 'Username đã có người dùng, chọn tên khác nhé!'; errEl.style.display = 'block'; return;
+    }
+    const { data: signUpData, error } = await _sb.auth.signUp({ email, password: pw, options: { data: { display_name: name } } });
+    btn.disabled = false; spinner.style.display = 'none'; txt.textContent = 'Tạo tài khoản';
+    if (error) {
+      const msg = error.message.includes('already') ? 'Email này đã được đăng ký. Thử đăng nhập?' : error.message;
+      errEl.textContent = msg; errEl.style.display = 'block'; return;
+    }
+    if (signUpData?.user) {
+      await _sb.from('profiles').upsert({ id: signUpData.user.id, display_name: name, updated_at: new Date().toISOString() }, { onConflict: 'id' });
+    }
+    okEl.style.display = 'block';
+    ['nb-signup-name','nb-signup-email','nb-signup-pw','nb-signup-pw2'].forEach(id => { document.getElementById(id).value = ''; });
+  };
+
+  window.nbDoReset = async function() {
+    const errEl = document.getElementById('nb-reset-err');
+    const okEl  = document.getElementById('nb-reset-ok');
+    errEl.style.display = 'none'; okEl.style.display = 'none';
+    const email = document.getElementById('nb-reset-email').value.trim();
+    if (!email) { errEl.textContent = 'Vui lòng nhập email'; errEl.style.display = 'block'; return; }
+    const btn = document.getElementById('nb-reset-btn');
+    const spinner = document.getElementById('nb-reset-spinner');
+    const txt = document.getElementById('nb-reset-btn-text');
+    btn.disabled = true; spinner.style.display = 'inline-block'; txt.textContent = 'Đang gửi...';
+    const _sb = window.sb || window.supabase;
+    const { error } = await _sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + '/auth.html?tab=newpw' });
+    btn.disabled = false; spinner.style.display = 'none'; txt.textContent = 'Gửi link đặt lại';
+    if (error) { errEl.textContent = error.message; errEl.style.display = 'block'; return; }
+    okEl.style.display = 'block';
+  };
+
+  // Đóng auth modal khi bấm Escape
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && document.getElementById('nbAuthOverlay').classList.contains('open')) {
+      document.getElementById('nbAuthOverlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  });
 
 })();
