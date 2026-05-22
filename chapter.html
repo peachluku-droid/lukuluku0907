@@ -816,6 +816,15 @@ async function loadChapter() {
     session = data.session;
   } catch(e) {}
 
+  // Nếu chưa có session, thử đợi thêm 1 giây rồi check lại
+  if (!session) {
+    await new Promise(r => setTimeout(r, 1000));
+    try {
+      const { data } = await sb.auth.getSession();
+      session = data.session;
+    } catch(e) {}
+  }
+
   if (!session) {
     const nextUrl = encodeURIComponent(location.pathname + location.search);
     document.getElementById('chapter-heading').textContent = '';
