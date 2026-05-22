@@ -809,8 +809,22 @@ let chapterData = null
 let allChaptersInStory = []
 
 async function loadChapter() {
-  // Kiểm tra đăng nhập
-  const { data: { session } } = await sb.auth.getSession();
+  // Đợi session restore (quan trọng với GitHub Pages / SSO)
+  let session = null;
+  try {
+    const { data } = await sb.auth.getSession();
+    session = data.session;
+  } catch(e) {}
+
+  // Nếu chưa có session, thử đợi thêm 1 giây rồi check lại
+  if (!session) {
+    await new Promise(r => setTimeout(r, 1000));
+    try {
+      const { data } = await sb.auth.getSession();
+      session = data.session;
+    } catch(e) {}
+  }
+
   if (!session) {
     const nextUrl = encodeURIComponent(location.pathname + location.search);
     document.getElementById('chapter-heading').textContent = '';
