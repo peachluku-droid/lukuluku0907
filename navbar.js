@@ -925,24 +925,15 @@
     const txt = document.getElementById('nb-login-btn-text');
     btn.disabled = true; spinner.style.display = 'inline-block'; txt.textContent = 'Đang đăng nhập...';
     const _sb = window.sb || window.supabase;
-    const { error } = await _sb.auth.signInWithPassword({ email, password: pw });
-    btn.disabled = false; spinner.style.display = 'none'; txt.textContent = 'Đăng nhập';
+    const { data, error } = await _sb.auth.signInWithPassword({ email, password: pw });
     if (error) {
+      btn.disabled = false; spinner.style.display = 'none'; txt.textContent = 'Đăng nhập';
       const msg = error.message.includes('Invalid') ? 'Email hoặc mật khẩu không đúng'
                 : error.message.includes('confirm') ? 'Vui lòng xác nhận email trước khi đăng nhập'
                 : error.message;
       errEl.textContent = msg; errEl.style.display = 'block'; return;
     }
-    // Kiểm tra display_name
-    const { data: { user } } = await _sb.auth.getUser();
-    const { data: prof } = await _sb.from('profiles').select('display_name').eq('id', user.id).maybeSingle();
-    if (!prof?.display_name) {
-      // Chuyển sang auth.html để đặt username
-      location.href = 'auth.html';
-      return;
-    }
-    document.getElementById('nbAuthOverlay').classList.remove('open');
-    document.body.style.overflow = '';
+    // Đăng nhập thành công — reload ngay, không cần query thêm
     location.reload();
   };
 
