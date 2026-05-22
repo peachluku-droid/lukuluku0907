@@ -499,11 +499,11 @@ let coverFile = null;
 // ── AUTH ──
 async function init() {
   const { data: { session } } = await sb.auth.getSession();
-  if (session && (ADMIN_EMAILS.includes(session.user.email) || await isStoryOwner(session.user.id))) {
+  if (session && ADMIN_EMAILS.includes(session.user.email)) {
     currentUser = session.user;
     showApp();
   } else {
-    // Chưa đăng nhập: hiển thị cổng redirect về auth.html
+    // Chưa đăng nhập hoặc không phải admin
     const nextUrl = encodeURIComponent(location.pathname + location.search);
     document.getElementById('authGateLink').href = 'auth.html?next=' + nextUrl;
     document.getElementById('authGate').style.display = 'flex';
