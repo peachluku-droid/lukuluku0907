@@ -277,15 +277,12 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 <body>
 
 <!-- AUTH GATE -->
-<div class="auth-gate" id="authGate">
+<div class="auth-gate" id="authGate" style="display:none">
   <div class="auth-box">
     <div style="font-size:40px">🐹</div>
-    <h2>Đăng nhập để viết</h2>
+    <h2>Bạn chưa đăng nhập</h2>
     <p>Chỉ tác giả mới có thể chỉnh sửa truyện</p>
-    <div class="auth-err" id="authErr"></div>
-    <input class="inp" type="email" id="emailInp" placeholder="Email" autocomplete="email">
-    <input class="inp" type="password" id="passInp" placeholder="Mật khẩu" autocomplete="current-password">
-    <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="doLogin()">Đăng nhập</button>
+    <a class="btn btn-primary" style="width:100%;justify-content:center;text-decoration:none" id="authGateLink" href="auth.html">Đăng nhập</a>
   </div>
 </div>
 
@@ -505,6 +502,11 @@ async function init() {
   if (session && (ADMIN_EMAILS.includes(session.user.email) || await isStoryOwner(session.user.id))) {
     currentUser = session.user;
     showApp();
+  } else {
+    // Chưa đăng nhập: hiển thị cổng redirect về auth.html
+    const nextUrl = encodeURIComponent(location.pathname + location.search);
+    document.getElementById('authGateLink').href = 'auth.html?next=' + nextUrl;
+    document.getElementById('authGate').style.display = 'flex';
   }
   // Kiểm tra ?story= param
   const params = new URLSearchParams(location.search);
@@ -519,18 +521,6 @@ async function init() {
 async function isStoryOwner(userId) {
   const { data } = await sb.from('stories').select('id').eq('user_id', userId).limit(1);
   return data && data.length > 0;
-}
-
-async function doLogin() {
-  const email = document.getElementById('emailInp').value.trim();
-  const pass = document.getElementById('passInp').value;
-  const err = document.getElementById('authErr');
-  err.textContent = '';
-  if (!email || !pass) { err.textContent = 'Vui lòng điền đầy đủ'; return; }
-  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
-  if (error) { err.textContent = 'Email hoặc mật khẩu không đúng'; return; }
-  currentUser = data.user;
-  showApp();
 }
 
 function showApp() {
