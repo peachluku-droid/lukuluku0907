@@ -610,7 +610,7 @@ async function loadStory() {
 }
 
 async function loadChapters() {
-  const { data: chapters } = await sb.from('chapters').select('*').eq('story_id', storyId).order('chapter_number', { ascending: true });
+  const { data: chapters } = await sb.from('chapters').select('*').eq('story_id', storyId).eq('is_published', true).order('chapter_number', { ascending: true });
   allChapters = chapters || [];
   const count = allChapters.length;
   document.getElementById('story-chapters').textContent = count;
