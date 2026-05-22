@@ -187,6 +187,7 @@ body {
 .chapter-stats-end .stat-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .chapter-stats-end .stat-btn:hover { background: var(--bg2); color: var(--accent); }
 .chapter-stats-end .stat-btn.voted { color: var(--accent); font-weight: 700; }
+.chapter-stats-end .stat-btn.voted svg { stroke: var(--accent); fill: var(--accent); }
 
 .audio-section { background: var(--sidebar); border: 1px solid var(--border); border-radius: 14px; padding: 16px 20px; }
 .audio-section h3 { font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
@@ -342,9 +343,7 @@ body {
 .empty-msg { text-align: center; font-size: 13px; color: var(--meta); padding: 28px 12px; line-height: 1.8; font-family: 'Nunito', sans-serif; }
 
 .cmt-sheet-input { padding: 10px 16px 20px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
-.sheet-name-row { display: flex; align-items: center; gap: 6px; }
-.sheet-name { flex: 1; border: 1.5px solid var(--border); border-radius: 8px; padding: 6px 10px; font-size: 13px; color: var(--text); background: var(--bg); outline: none; font-family: 'Nunito', sans-serif; }
-.sheet-name:focus { border-color: var(--accent2); }
+/* sheet-name removed */
 .sheet-emoji-row { display: flex; align-items: center; gap: 6px; }
 .sheet-emoji-btn, .sheet-img-btn {
   background: var(--sidebar); border: 1.5px solid var(--border);
@@ -387,6 +386,38 @@ body {
 .skel-para { display: flex; flex-direction: column; gap: 8px; }
 .skel-line { height: 14px; border-radius: 6px; background: linear-gradient(90deg, var(--border) 25%, color-mix(in srgb, var(--accent) 6%, var(--bg2)) 50%, var(--border) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; }
 @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+/* ── AUDIO PLAYER IN SETTINGS ── */
+.audio-player-wrap {
+  background: var(--sidebar); border: 1px solid var(--border);
+  border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px;
+}
+.audio-player-title { font-size: 12px; font-weight: 800; color: var(--meta); display: flex; align-items: center; gap: 6px; }
+.audio-player-title svg { width: 14px; height: 14px; stroke: var(--accent); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.audio-no-file { font-size: 12px; color: var(--meta); text-align: center; padding: 8px 0; font-style: italic; }
+.audio-controls { display: flex; align-items: center; gap: 10px; }
+.audio-play-btn {
+  width: 38px; height: 38px; border-radius: 50%; border: none; cursor: pointer;
+  background: var(--accent); color: white; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: background .15s;
+}
+.audio-play-btn:hover { background: var(--accent2); }
+.audio-play-btn svg { width: 16px; height: 16px; stroke: white; fill: white; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.audio-progress-wrap { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.audio-progress {
+  width: 100%; height: 4px; border-radius: 4px;
+  background: var(--border); cursor: pointer; appearance: none; outline: none;
+  accent-color: var(--accent);
+}
+.audio-time { font-size: 10px; color: var(--meta); font-weight: 700; display: flex; justify-content: space-between; }
+.audio-speed-row { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--meta); font-weight: 700; }
+.audio-speed-btn {
+  padding: 3px 8px; border-radius: 8px; border: 1px solid var(--border);
+  background: none; font-family: inherit; font-size: 11px; font-weight: 800;
+  color: var(--text); cursor: pointer; transition: all .12s;
+}
+.audio-speed-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+
 </style>
 </head>
 <body class="theme-light">
@@ -398,9 +429,31 @@ body {
   <span class="header-title" id="header-title">Đang tải...</span>
   <div class="header-tools">
     <a class="tool-icon-btn user-nav-btn-ch" id="nav-user-btn" href="profile.html" title="Hồ sơ"><svg viewBox="0 0 24 24" width="16" height="16" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
-    <a class="tool-icon-btn" href="write.html" title="Viết truyện">
+    <a class="tool-icon-btn" id="write-story-btn" href="write.html" title="Chỉnh sửa" style="display:none">
       <svg viewBox="0 0 24 24" width="16" height="16"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
     </a>
+    <div style="position:relative" id="ownerMenuWrap">
+      <button class="tool-icon-btn" id="ownerMenuBtn" onclick="toggleOwnerMenu()" style="display:none" title="Tùy chọn">
+        <svg viewBox="0 0 24 24" width="16" height="16" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+      </button>
+      <div id="ownerMenu" style="display:none;position:absolute;right:0;top:calc(100% + 4px);background:var(--bg2);border:1px solid var(--border);border-radius:12px;min-width:160px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:300;overflow:hidden">
+        <button onclick="goToWrite()" style="width:100%;padding:11px 16px;text-align:left;background:none;border:none;border-bottom:1px solid var(--border);font-family:inherit;font-size:13px;font-weight:700;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px">
+          <svg viewBox="0 0 24 24" width="14" height="14" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Chỉnh sửa
+        </button>
+        <button onclick="togglePublish()" id="publish-toggle-btn" style="width:100%;padding:11px 16px;text-align:left;background:none;border:none;border-bottom:1px solid var(--border);font-family:inherit;font-size:13px;font-weight:700;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px">
+          <svg viewBox="0 0 24 24" width="14" height="14" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Đăng chương
+        </button>
+        <button onclick="deleteChapter()" style="width:100%;padding:11px 16px;text-align:left;background:none;border:none;font-family:inherit;font-size:13px;font-weight:700;color:#e84040;cursor:pointer;display:flex;align-items:center;gap:8px">
+          <svg viewBox="0 0 24 24" width="14" height="14" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+          Xóa chương
+        </button>
+      </div>
+    </div>
+    <button class="tool-icon-btn" onclick="shareChapter()" title="Chia sẻ">
+      <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+    </button>
     <button class="tool-icon-btn" onclick="toggleToc()" title="Mục lục">
       <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="12" y2="15"/></svg>
     </button>
@@ -451,6 +504,39 @@ body {
     <div class="style-row">
       <button class="style-btn" id="btn-bold" onclick="toggleBold(this)"><b>B</b></button>
       <button class="style-btn" id="btn-italic" onclick="toggleItalic(this)"><i>I</i></button>
+    </div>
+  </div>
+  <div class="setting-group">
+    <label>🎧 Audio</label>
+    <div class="audio-player-wrap" id="settings-audio-wrap">
+      <div class="audio-player-title">
+        <svg viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z"/><path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+        Nghe truyện
+      </div>
+      <div id="settings-audio-body">
+        <div class="audio-no-file" id="audio-no-file">Chương này chưa có audio</div>
+        <div id="audio-player-ui" style="display:none">
+          <div class="audio-controls">
+            <button class="audio-play-btn" id="audio-play-btn" onclick="toggleAudioPlay()">
+              <svg id="audio-play-icon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </button>
+            <div class="audio-progress-wrap">
+              <input class="audio-progress" id="audio-seek" type="range" value="0" min="0" step="0.1" oninput="seekAudio(this.value)">
+              <div class="audio-time">
+                <span id="audio-cur">0:00</span>
+                <span id="audio-dur">0:00</span>
+              </div>
+            </div>
+          </div>
+          <div class="audio-speed-row">
+            Tốc độ:
+            <button class="audio-speed-btn active" onclick="setAudioSpeed(1,this)">1x</button>
+            <button class="audio-speed-btn" onclick="setAudioSpeed(1.25,this)">1.25x</button>
+            <button class="audio-speed-btn" onclick="setAudioSpeed(1.5,this)">1.5x</button>
+            <button class="audio-speed-btn" onclick="setAudioSpeed(2,this)">2x</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -556,9 +642,6 @@ body {
     <p class="empty-msg">Đang tải...</p>
   </div>
   <div class="cmt-sheet-input">
-    <div class="sheet-name-row">
-      <input class="sheet-name" id="sheet-username" type="text" placeholder="Tên của bạn" maxlength="30">
-    </div>
     <div class="sheet-emoji-row">
       <button class="sheet-emoji-btn" onclick="toggleSheetPicker()">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
@@ -675,6 +758,16 @@ function restoreSettings() {
 restoreSettings()
 
 function toggleToc() { document.getElementById('toc-sidebar').classList.toggle('collapsed') }
+function shareChapter() {
+  const title = chapterData?.title || document.title;
+  const url = location.href;
+  if (navigator.share) {
+    navigator.share({ title, url }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(url).then(() => showToast('Đã sao chép link!'));
+  }
+}
+
 function toggleSettings() { document.getElementById('settings-drawer').classList.toggle('open') }
 document.addEventListener('click', e => {
   const drawer = document.getElementById('settings-drawer')
@@ -716,6 +809,20 @@ let chapterData = null
 let allChaptersInStory = []
 
 async function loadChapter() {
+  // Kiểm tra đăng nhập
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) {
+    const nextUrl = encodeURIComponent(location.pathname + location.search);
+    document.getElementById('chapter-heading').textContent = '';
+    document.getElementById('paragraphs-container').innerHTML = `
+      <div style="text-align:center;padding:3rem 1.5rem;display:flex;flex-direction:column;align-items:center;gap:14px">
+        <svg viewBox="0 0 24 24" width="48" height="48" style="stroke:var(--accent);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <div style="font-size:17px;font-weight:800;color:var(--text)">Đăng nhập để đọc truyện</div>
+        <div style="font-size:13px;color:var(--meta)">Bạn cần đăng nhập để đọc nội dung chương này</div>
+        <a href="auth.html?next=${nextUrl}" style="padding:11px 28px;background:var(--accent);color:white;border-radius:24px;text-decoration:none;font-weight:800;font-size:14px;margin-top:4px">Đăng nhập / Đăng ký</a>
+      </div>`;
+    return;
+  }
   const { data: ch, error } = await sb.from('chapters').select('*').eq('id', CHAPTER_UUID).single()
   if (error || !ch) {
     document.getElementById('chapter-heading').textContent = 'Không tìm thấy chương'
@@ -732,6 +839,7 @@ async function loadChapter() {
     document.getElementById('audio-src').src = ch.audio_url
     document.getElementById('chapter-audio').load()
   }
+  initSettingsAudio(ch.audio_url || null)
   renderParagraphs(ch.content || '')
   await Promise.all([loadToc(), countView(), loadVotes(), loadAllCounts()])
   if (window.plLib) {
@@ -854,13 +962,39 @@ async function submitVote() {
 }
 
 async function countView() {
-  const key = `viewed_${STORY_ID}_ch${CHAPTER_UUID}`
-  if (localStorage.getItem(key)) return
-  if (!CHAPTER_UUID) return
-  const { data } = await sb.from('chapters').select('views').eq('id', CHAPTER_UUID).single()
-  if (!data) return
-  await sb.from('chapters').update({ views: (data.views || 0) + 1 }).eq('id', CHAPTER_UUID)
-  localStorage.setItem(key, '1')
+  if (!CHAPTER_UUID) return;
+  // Chỉ tính view khi chương đã được đăng (is_published = true)
+  const { data: chCheck } = await sb.from('chapters').select('is_published').eq('id', CHAPTER_UUID).single();
+  if (!chCheck?.is_published) return;
+  const key = `viewed_${STORY_ID}_ch${CHAPTER_UUID}`;
+  const lastViewed = parseInt(localStorage.getItem(key) || '0');
+  const COOLDOWN = 10 * 60 * 1000; // 10 phút
+  if (Date.now() - lastViewed < COOLDOWN) return; // Còn trong cooldown
+
+  let hasScrolled = false;
+  let readTimer = null;
+  let viewCounted = false;
+
+  function onScroll() {
+    if (window.scrollY > 100) hasScrolled = true;
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Sau 10 giây, kiểm tra đã scroll chưa
+  readTimer = setTimeout(async () => {
+    window.removeEventListener('scroll', onScroll);
+    if (!hasScrolled || viewCounted) return;
+    viewCounted = true;
+
+    const { data } = await sb.from('chapters').select('views').eq('id', CHAPTER_UUID).single();
+    if (!data) return;
+    await sb.from('chapters').update({ views: (data.views || 0) + 1 }).eq('id', CHAPTER_UUID);
+    localStorage.setItem(key, Date.now().toString());
+
+    // Cập nhật hiển thị
+    const el = document.getElementById('view-count');
+    if (el) el.textContent = formatViews((data.views || 0) + 1);
+  }, 10000); // 10 giây
 }
 
 async function loadAllCounts() {
@@ -936,9 +1070,10 @@ function closeCmtSheet() {
 async function loadSheetComments(pid) {
   const list = document.getElementById('sheet-cmt-list')
   list.innerHTML = '<p class="empty-msg">Đang tải...</p>'
-  const { data, error } = await sb.from('comments').select('*')
+  const { data, error } = await sb.from('comments')
+    .select('*, profiles(display_name, avatar_url)')
     .eq('story_id', STORY_ID).eq('chapter_id', CHAPTER_UUID).eq('paragraph_id', pid)
-    .order('created_at', { ascending: false })
+    .order('created_at', { ascending: true })
   if (error) { list.innerHTML = '<p class="empty-msg">Lỗi tải bình luận</p>'; return }
   const btn = document.querySelector(`.cmt-trigger[data-pid="${pid}"] .cnt`)
   if (btn) btn.textContent = data.length
@@ -948,13 +1083,16 @@ async function loadSheetComments(pid) {
   }
   const avatarColors = ['#d4537e','#5b9bd5','#71c285','#e8a838','#9b7fe8','#e87878']
   list.innerHTML = data.map((c, i) => {
-    const name = escapeHtml(c.username) || 'Ẩn danh'
+    const prof = c.profiles || {}
+    const name = escapeHtml(prof.display_name || c.username || 'Ẩn danh')
     const color = avatarColors[i % avatarColors.length]
-    const avatarHtml = c.avatar_url
-      ? `<img src="${escapeHtml(c.avatar_url)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+    const avatarSrc = prof.avatar_url || c.avatar_url
+    const avatarHtml = avatarSrc
+      ? `<img src="${escapeHtml(avatarSrc)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
       : name.charAt(0).toUpperCase()
+    const isOwn = chCurrentUser && c.user_id === chCurrentUser.id
     return `
-    <div class="cmt-bubble">
+    <div class="cmt-bubble" id="cmt-${c.id}">
       <div class="cmt-avatar" style="background:${color}">${avatarHtml}</div>
       <div class="cmt-body">
         <div class="cmt-user">${name}</div>
@@ -962,17 +1100,23 @@ async function loadSheetComments(pid) {
         ${c.image_url ? `<img class="cmt-img" src="${c.image_url}" alt="" onclick="openLightbox('${c.image_url}')">` : ''}
         <div class="cmt-footer">
           <span class="cmt-time">${formatTime(c.created_at)}</span>
-          <button class="cmt-reply-btn" onclick="replyTo('${name}')">Trả lời</button>
-          <button class="cmt-like-btn" onclick="this.classList.toggle('liked')">
-            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          </button>
+          ${chCurrentUser ? `<button class="cmt-reply-btn" onclick="replyTo('${name}', ${c.id})">Trả lời</button>` : ''}
+          ${isOwn ? `<button class="cmt-reply-btn" style="color:#e84040" onclick="deleteComment(${c.id}, '${pid}')">Xoá</button>` : ''}
         </div>
       </div>
     </div>`
   }).join('')
 }
 
-function replyTo(name) {
+async function deleteComment(id, pid) {
+  if (!confirm('Xoá bình luận này?')) return
+  await sb.from('comments').delete().eq('id', id)
+  loadSheetComments(pid)
+  loadAllCounts()
+}
+
+function replyTo(name, id) {
+  if (!chCurrentUser) { alert('Vui lòng đăng nhập để trả lời!'); return; }
   const ta = document.getElementById('sheet-cmt-input')
   ta.value = `@${name} `; ta.focus()
   ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 'px'
@@ -1006,14 +1150,10 @@ async function uploadImg(file) {
 }
 async function submitSheetComment() {
   if (!activePid) return
+  if (!chCurrentUser) { alert('Vui lòng đăng nhập để bình luận!'); return; }
   const content = document.getElementById('sheet-cmt-input').value.trim()
-  let username, user_id = null
-  if (chCurrentUser) {
-    username = chUserProfile?.display_name || chCurrentUser.email.split('@')[0]
-    user_id = chCurrentUser.id
-  } else {
-    username = document.getElementById('sheet-username')?.value.trim() || 'Ẩn danh'
-  }
+  const username = chUserProfile?.display_name || chCurrentUser.email.split('@')[0]
+  const user_id = chCurrentUser.id
   if (!content && !selectedImgFile) return alert('Nhập nội dung hoặc chọn ảnh nhé!')
   const btn = document.getElementById('sheet-send-btn')
   btn.disabled = true
@@ -1074,11 +1214,7 @@ async function initChapterUser() {
   const { data: prof } = await sb.from('profiles')
     .select('display_name, avatar_url').eq('id', chCurrentUser.id).maybeSingle()
   chUserProfile = prof
-  const nameRow = document.querySelector('.sheet-name-row')
-  if (nameRow) {
-    const name = prof?.display_name || chCurrentUser.email.split('@')[0]
-    nameRow.innerHTML = '<div style="font-size:12px;font-weight:700;color:var(--accent);padding:2px 0">Bình luận với tư cách: <strong>' + name + '</strong></div>'
-  }
+  // username hiện từ profile, không cần nameRow nữa
 }
 
 function setChapterMeta(ch, storyTitle) {
@@ -1109,6 +1245,24 @@ async function loadNavAvatar() {
     btn.title = 'Đăng nhập'; return
   }
   btn.href = 'profile.html'; btn.title = 'Hồ sơ của tôi'
+  // Kiểm tra có phải chủ truyện không
+  if (STORY_ID) {
+    const { data: story } = await sb.from('stories').select('user_id').eq('id', STORY_ID).maybeSingle()
+    const writeBtn = document.getElementById('write-story-btn')
+    if (story && story.user_id === session.user.id) {
+      // Hiện nút 3 chấm cho chủ truyện
+      const ownerBtn = document.getElementById('ownerMenuBtn');
+      if (ownerBtn) ownerBtn.style.display = 'flex';
+      // Cập nhật trạng thái nút đăng/gỡ theo is_published
+      const { data: chData } = await sb.from('chapters').select('is_published').eq('id', CHAPTER_UUID).maybeSingle();
+      const publishBtn = document.getElementById('publish-toggle-btn');
+      if (publishBtn && chData) {
+        if (chData.is_published) {
+          publishBtn.innerHTML = publishBtn.innerHTML.replace('Đăng chương', 'Gỡ xuống');
+        }
+      }
+    }
+  }
   const { data: prof } = await sb.from('profiles').select('display_name, avatar_url').eq('id', session.user.id).maybeSingle()
   if (prof?.avatar_url) {
     btn.innerHTML = '<img src="' + prof.avatar_url + '" alt="avatar" style="width:34px;height:34px;border-radius:50%;object-fit:cover;display:block;">'
@@ -1163,6 +1317,99 @@ initChapterUser()
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', injectWatermark);
   else injectWatermark();
 })();
+
+/* ── OWNER MENU ── */
+function toggleOwnerMenu() {
+  const menu = document.getElementById('ownerMenu');
+  menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+}
+document.addEventListener('click', e => {
+  const wrap = document.getElementById('ownerMenuWrap');
+  if (wrap && !wrap.contains(e.target)) {
+    const m = document.getElementById('ownerMenu');
+    if (m) m.style.display = 'none';
+  }
+});
+function goToWrite() {
+  location.href = 'write.html?story=' + STORY_ID;
+}
+async function togglePublish() {
+  if (!CHAPTER_UUID) return;
+  const { data } = await sb.from('chapters').select('is_published, title').eq('id', CHAPTER_UUID).single();
+  if (!data) return;
+  const newState = !data.is_published;
+  const label = newState ? 'đăng' : 'gỡ xuống';
+  if (!confirm(`Bạn muốn ${label} chương này?`)) return;
+  await sb.from('chapters').update({ is_published: newState }).eq('id', CHAPTER_UUID);
+  const btn = document.getElementById('publish-toggle-btn');
+  if (btn) {
+    btn.querySelector('svg').style.stroke = newState ? '#1fba52' : 'currentColor';
+    btn.innerHTML = btn.innerHTML.replace(
+      newState ? 'Đăng chương' : 'Gỡ xuống',
+      newState ? 'Gỡ xuống' : 'Đăng chương'
+    );
+  }
+  document.getElementById('ownerMenu').style.display = 'none';
+  const action = newState ? 'Đã đăng chương! 🎉' : 'Đã gỡ chương xuống';
+  if (window.showToast) showToast(action);
+}
+async function deleteChapter() {
+  if (!CHAPTER_UUID) return;
+  if (!confirm('Xóa chương này? Không thể hoàn tác!')) return;
+  await sb.from('chapters').delete().eq('id', CHAPTER_UUID);
+  location.href = 'story.html?story=' + STORY_ID;
+}
+
+
+/* ── AUDIO PLAYER (settings) ── */
+const _audio = new Audio();
+let _audioPlaying = false;
+
+function initSettingsAudio(url) {
+  if (!url) {
+    document.getElementById('audio-no-file').style.display = 'block';
+    document.getElementById('audio-player-ui').style.display = 'none';
+    return;
+  }
+  document.getElementById('audio-no-file').style.display = 'none';
+  document.getElementById('audio-player-ui').style.display = 'block';
+  _audio.src = url;
+  _audio.ontimeupdate = () => {
+    const cur = _audio.currentTime, dur = _audio.duration || 0;
+    document.getElementById('audio-seek').value = dur ? (cur / dur * 100) : 0;
+    document.getElementById('audio-seek').max = 100;
+    document.getElementById('audio-cur').textContent = fmtTime(cur);
+    document.getElementById('audio-dur').textContent = fmtTime(dur);
+  };
+  _audio.onended = () => {
+    _audioPlaying = false;
+    document.getElementById('audio-play-icon').innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
+  };
+}
+function fmtTime(s) {
+  if (!s || isNaN(s)) return '0:00';
+  const m = Math.floor(s/60), sec = Math.floor(s%60);
+  return `${m}:${sec.toString().padStart(2,'0')}`;
+}
+function toggleAudioPlay() {
+  if (!_audio.src) return;
+  if (_audioPlaying) {
+    _audio.pause(); _audioPlaying = false;
+    document.getElementById('audio-play-icon').innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
+  } else {
+    _audio.play(); _audioPlaying = true;
+    document.getElementById('audio-play-icon').innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+  }
+}
+function seekAudio(val) {
+  if (_audio.duration) _audio.currentTime = val / 100 * _audio.duration;
+}
+function setAudioSpeed(speed, btn) {
+  _audio.playbackRate = speed;
+  document.querySelectorAll('.audio-speed-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
 </script>
 </body>
 </html>
