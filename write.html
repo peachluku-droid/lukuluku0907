@@ -499,11 +499,11 @@ let coverFile = null;
 // ── AUTH ──
 async function init() {
   const { data: { session } } = await sb.auth.getSession();
-  if (session && ADMIN_EMAILS.includes(session.user.email)) {
+  if (session) {
     currentUser = session.user;
     showApp();
   } else {
-    // Chưa đăng nhập hoặc không phải admin
+    // Chưa đăng nhập
     const nextUrl = encodeURIComponent(location.pathname + location.search);
     document.getElementById('authGateLink').href = 'auth.html?next=' + nextUrl;
     document.getElementById('authGate').style.display = 'flex';
@@ -533,7 +533,10 @@ function showApp() {
 // ── STORIES ──
 async function loadStories() {
   let query = sb.from('stories').select('id, title, user_id').order('created_at', { ascending: false });
-  if (!ADMIN_EMAILS.includes(currentUser?.email)) {
+  if (ADMIN_EMAILS.includes(currentUser?.email)) {
+    // Admin xem tất cả truyện
+  } else {
+    // Tác giả chỉ thấy truyện của mình
     query = query.eq('user_id', currentUser.id);
   }
   const { data } = await query;

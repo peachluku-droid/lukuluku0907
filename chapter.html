@@ -855,6 +855,7 @@ async function loadChapter() {
   }
   initSettingsAudio(ch.audio_url || null)
   renderParagraphs(ch.content || '')
+  await initChapterUser()
   await Promise.all([loadToc(), countView(), loadVotes(), loadAllCounts()])
   if (window.plLib) {
     plLib.pushHistory(STORY_ID, CHAPTER_UUID, ch.chapter_number, ch.title)
@@ -956,21 +957,22 @@ async function loadVotes() {
   document.getElementById('vote-count').textContent = votes
   document.getElementById('vote-count-end').textContent = votes
   document.getElementById('view-count').textContent = formatViews(data.views || 0)
-  const voted = localStorage.getItem(`voted_${STORY_ID}_ch${CHAPTER_UUID}`)
+  const voted = chCurrentUser
+    ? (await sb.from('chapter_votes').select('id').eq('chapter_id', CHAPTER_UUID).eq('voter_ip', chCurrentUser.id).maybeSingle()).data
+    : null
   if (voted) document.getElementById('vote-btn').classList.add('voted')
 }
 
 async function submitVote() {
   const btn = document.getElementById('vote-btn')
-  const voterId = localStorage.getItem('pl_voter_id') || (() => {
-    const id = Math.random().toString(36).slice(2)
-    localStorage.setItem('pl_voter_id', id); return id
-  })()
-  if (localStorage.getItem(`voted_${STORY_ID}_ch${CHAPTER_UUID}`)) { btn.classList.add('voted'); return }
+  if (!chCurrentUser) { alert('Vui lòng đăng nhập để vote!'); return }
+  // Kiểm tra đã vote chưa (theo user_id thực từ Supabase)
+  const { data: existing } = await sb.from('chapter_votes')
+    .select('id').eq('chapter_id', CHAPTER_UUID).eq('voter_ip', chCurrentUser.id).maybeSingle()
+  if (existing) { btn.classList.add('voted'); showToast && showToast('Bạn đã vote rồi!'); return }
   if (!CHAPTER_UUID) return
-  const { error } = await sb.from('chapter_votes').insert({ chapter_id: CHAPTER_UUID, voter_ip: voterId })
+  const { error } = await sb.from('chapter_votes').insert({ chapter_id: CHAPTER_UUID, voter_ip: chCurrentUser.id })
   if (!error) await sb.rpc('increment_votes', { chapter_id: CHAPTER_UUID })
-  localStorage.setItem(`voted_${STORY_ID}_ch${CHAPTER_UUID}`, '1')
   btn.classList.add('voted')
   loadVotes()
 }
@@ -1317,7 +1319,10 @@ initChapterUser()
   document.addEventListener('dragstart', e => { e.preventDefault(); return false; });
   document.addEventListener('selectstart', e => {
     const t = e.target;
-    if (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.closest('.cmt-sheet-input') || t.closest('.sheet-input-bar') || t.closest('.sheet-name') || t.closest('#sheet-cmt-input')) return true;
+    if (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' 
+      || t.closest('.cmt-sheet-input') || t.closest('.sheet-input-bar') 
+      || t.closest('.sheet-name') || t.closest('#sheet-cmt-input')
+      || t.closest('.cmt-sheet') || t.id === 'sheet-cmt-input') return true;
     e.preventDefault(); return false;
   });
   function injectWatermark() {

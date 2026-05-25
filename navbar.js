@@ -21,6 +21,32 @@
 
   // ── 1. Inject CSS ──────────────────────────────────────────────────────────
   const CSS = `
+/* ─── THEME VARIABLES (green/mint/pastelgreen) ────────────── */
+body.theme-green {
+  --peach:#5a9e6f;--peach-light:#e8f5ee;--peach-mid:#7dbb93;
+  --peach-dark:#3a7a52;--peach-darker:#1e5235;
+  --gold:#6aaa7a;--gold-light:#f0faf4;
+  --bg:#f0faf4;--bg2:#fafffe;--card:#fafffe;
+  --text:#1a3326;--text-muted:#6a9a7a;
+  --border:rgba(90,158,111,0.18);--border-hover:#7dbb93;
+}
+body.theme-mint {
+  --peach:#3aaa7a;--peach-light:#e0f5ec;--peach-mid:#5dc99a;
+  --peach-dark:#1a7a55;--peach-darker:#0a4a33;
+  --gold:#4ab888;--gold-light:#edfaf5;
+  --bg:#f2fbf7;--bg2:#ffffff;--card:#ffffff;
+  --text:#0e2d1e;--text-muted:#5a9a7a;
+  --border:rgba(58,170,122,0.15);--border-hover:#5dc99a;
+}
+body.theme-pastelgreen {
+  --peach:#6abf8a;--peach-light:#e6f7ee;--peach-mid:#8dd4a8;
+  --peach-dark:#3d8f60;--peach-darker:#1e5c3a;
+  --gold:#7acfa0;--gold-light:#f0fbf5;
+  --bg:#eef8f2;--bg2:#f8fefb;--card:#f8fefb;
+  --text:#1a3328;--text-muted:#70a882;
+  --border:rgba(106,191,138,0.22);--border-hover:#8dd4a8;
+}
+
 /* ─── TOPBAR ─────────────────────────────────────────────── */
 .topbar {
   background: var(--bg2);
@@ -441,6 +467,9 @@
     <div><div class="swatch" style="background:#f0ebff;border:2px solid #8a5de0" data-theme="purple" title="Purple"></div><div class="swatch-label">Purple</div></div>
     <div><div class="swatch" style="background:#f0f0f0;border:2px solid #777" data-theme="gray" title="Gray"></div><div class="swatch-label">Gray</div></div>
     <div><div class="swatch" style="background:#faf5ee;border:2px solid #f26522" data-theme="wattpad" title="Wattpad"></div><div class="swatch-label">Wattpad</div></div>
+    <div><div class="swatch" style="background:#f0faf4;border:2px solid #7dbb93" data-theme="green" title="Green"></div><div class="swatch-label">Green</div></div>
+    <div><div class="swatch" style="background:#f2fbf7;border:2px solid #3aaa7a" data-theme="mint" title="Mint"></div><div class="swatch-label">Mint 🌿</div></div>
+    <div><div class="swatch" style="background:#eef8f2;border:2px solid #6abf8a" data-theme="pastelgreen" title="Pastel Green"></div><div class="swatch-label">Lá 🍃</div></div>
   </div>
 </div>
 
