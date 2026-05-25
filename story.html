@@ -482,7 +482,9 @@ body {
 <script>
 const SUPABASE_URL = 'https://jnlqzqtavfptkfvnndxq.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ojRrfSwxK_B6-TGSXaYGxQ_DKERN0-f';
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+if (!window._sb) window._sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const sb = window._sb;
+window.sb = sb; // Export cho navbar.js
 const urlParams = new URLSearchParams(window.location.search);
 const storyId = urlParams.get('story');
 
@@ -819,16 +821,6 @@ async function signOut(e) {
 
 loadNavAvatar();
 
-</script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-// Tạo instance supabase dùng chung cho navbar.js
-if (typeof supabase === 'undefined') {
-  window.supabase = window.supabase || supabasejs.createClient(
-    'https://jnlqzqtavfptkfvnndxq.supabase.co',
-    'sb_publishable_ojRrfSwxK_B6-TGSXaYGxQ_DKERN0-f'
-  );
-}
 </script>
 <script src="navbar.js"></script>
 </body>
