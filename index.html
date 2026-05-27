@@ -342,13 +342,13 @@ body {
 @media (max-width: 700px) { .new-update-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; } }
 .new-update-card {
   background: var(--card); border: 1px solid var(--border); border-radius: 14px;
-  cursor: pointer; transition: all .2s;
-  text-decoration: none; color: var(--text); display: flex; flex-direction: column;
+  cursor: pointer; transition: all .2s; overflow: hidden;
+  text-decoration: none; color: var(--text); display: block;
 }
 .new-update-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.09); border-color: var(--peach-mid); }
 .new-update-card:hover .new-update-cover-wrap { box-shadow: none; }
-.new-update-cover-wrap { position: relative; width: 100%; aspect-ratio: 5/7; overflow: hidden; background: linear-gradient(145deg, var(--peach-light), var(--gold-light)); flex-shrink: 0; border-radius: 14px 14px 0 0; border: none; transition: all .2s; }
-.new-update-cover-wrap img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.new-update-cover-wrap { position: relative; width: 100%; height: 0; padding-bottom: 140%; overflow: hidden; background: linear-gradient(145deg, var(--peach-light), var(--gold-light)); flex-shrink: 0; border-radius: 14px 14px 0 0; }
+.new-update-cover-wrap img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 .new-update-ch-badge { position: absolute; top: 6px; left: 6px; background: var(--peach); color: white; font-size: 9px; font-weight: 800; padding: 2px 7px; border-radius: 10px; }
 .status-badge { position: absolute; top: 6px; right: 6px; font-size: 9px; font-weight: 800; padding: 2px 7px; border-radius: 10px; color: white; }
 .status-full { background: #4caf50; }
