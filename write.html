@@ -167,10 +167,31 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 
 /* Toolbar */
 .toolbar {
-  display: flex; align-items: center; gap: 2px;
-  padding: 6px 16px; border-bottom: 1px solid var(--border);
-  background: #fff; flex-wrap: wrap;
+  border-top: 1px solid var(--border);
+  background: #fff;
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+  box-shadow: 0 -2px 12px rgba(0,0,0,0.07);
 }
+.toolbar-toggle {
+  display: flex; align-items: center; justify-content: flex-end;
+  padding: 2px 10px 0;
+}
+.toolbar-toggle-btn {
+  background: #222; border: none; cursor: pointer;
+  padding: 3px 10px 3px 8px; border-radius: 6px 6px 0 0;
+  color: #fff; font-size: 12px; font-weight: 700;
+  display: flex; align-items: center; gap: 4px; transition: background .15s;
+  line-height: 1;
+}
+.toolbar-toggle-btn:hover { background: #000; }
+.toolbar-toggle-btn .tb-arrow { transition: transform .2s; display: inline-block; }
+.toolbar-toggle-btn.collapsed .tb-arrow { transform: rotate(90deg); }
+.toolbar-inner {
+  display: flex; align-items: center; gap: 2px;
+  padding: 6px 16px 8px; flex-wrap: wrap;
+  transition: all .2s;
+}
+.toolbar-inner.hidden { display: none; }
 .tb-btn {
   background: none; border: none; cursor: pointer;
   padding: 5px 8px; border-radius: 6px; color: var(--text-muted);
@@ -183,12 +204,11 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 .tb-align { font-size: 11px; }
 
 /* Content */
-.content-scroll { flex: 1; overflow-y: auto; background: var(--bg); padding: 24px; }
+.content-scroll { flex: 1; overflow-y: auto; background: var(--bg); padding: 24px 0 80px; }
 .content-editable {
   font-family: 'Noto Serif', Georgia, serif; font-size: 16px; line-height: 1.9;
-  color: var(--text); min-height: 400px; max-width: 680px; margin: 0 auto;
-  background: #fff; padding: 32px 40px; border-radius: 4px;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  color: var(--text); min-height: 400px; width: 100%;
+  background: #fff; padding: 32px 20px;
   outline: none;
 }
 .content-editable:empty::before { content: attr(data-ph); color: var(--text-muted); font-style: italic; }
@@ -403,6 +423,12 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 
       <!-- Toolbar -->
       <div class="toolbar">
+        <div class="toolbar-toggle">
+          <button class="toolbar-toggle-btn collapsed" id="tbToggleBtn" onclick="toggleToolbar()" title="Ẩn/hiện toolbar">
+            <span class="tb-arrow">▶</span> Định dạng
+          </button>
+        </div>
+        <div class="toolbar-inner hidden" id="toolbarInner">
         <button class="tb-btn" onclick="fmt('bold')" title="In đậm"><b>B</b></button>
         <button class="tb-btn" onclick="fmt('italic')" title="In nghiêng"><i>I</i></button>
         <button class="tb-btn" onclick="fmt('underline')" title="Gạch chân"><u>U</u></button>
@@ -421,6 +447,19 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
         <button class="tb-btn" onclick="insertNote()" title="Ghi chú tác giả">
           <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           Ghi chú
+        </button>
+        <div class="tb-sep"></div>
+        <button class="tb-btn" onclick="insertImage()" title="Chèn ảnh">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          Ảnh
+        </button>
+        <button class="tb-btn" onclick="insertVideo()" title="Chèn video">
+          <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          Video
+        </button>
+        <button class="tb-btn" onclick="insertYoutube()" title="Chèn YouTube">
+          <svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#fff"/></svg>
+          YouTube
         </button>
         <div class="tb-sep"></div>
         <button class="tb-btn" onclick="clearFormat()" title="Xóa định dạng">
@@ -748,6 +787,55 @@ function insertHR() {
   document.getElementById('chContent').focus();
   document.execCommand('insertHTML', false, '<hr><br>');
 }
+function toggleToolbar() {
+  const inner = document.getElementById('toolbarInner');
+  const btn = document.getElementById('tbToggleBtn');
+  inner.classList.toggle('hidden');
+  btn.classList.toggle('collapsed');
+}
+
+function insertImage() {
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = 'image/*';
+  input.onchange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      document.execCommand('insertHTML', false,
+        `<br><img src="${ev.target.result}" style="max-width:100%;border-radius:8px;display:block;margin:12px auto;" /><br>`);
+    };
+    reader.readAsDataURL(file);
+  };
+  input.click();
+}
+
+function insertVideo() {
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = 'video/*';
+  input.onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    document.execCommand('insertHTML', false,
+      `<br><video controls src="${url}" style="max-width:100%;border-radius:8px;display:block;margin:12px auto;"></video><br>`);
+  };
+  input.click();
+}
+
+function insertYoutube() {
+  const url = prompt('Dán link YouTube vào đây:');
+  if (!url) return;
+  let id = '';
+  const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
+  if (m) id = m[1];
+  if (!id) { alert('Link YouTube không hợp lệ!'); return; }
+  document.execCommand('insertHTML', false,
+    `<br><div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;margin:12px 0;">
+      <iframe src="https://www.youtube.com/embed/${id}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allowfullscreen></iframe>
+    </div><br>`);
+}
+
 function insertNote() {
   document.getElementById('chContent').focus();
   document.execCommand('insertHTML', false, '<div style="background:#FEF0E9;border-left:3px solid #E8835A;padding:10px 14px;border-radius:0 10px 10px 0;margin:12px 0;font-size:14px;font-style:italic;color:#9A7A6A"><b>📝 Ghi chú:</b> </div><br>');
