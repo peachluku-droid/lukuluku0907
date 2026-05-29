@@ -154,7 +154,7 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 .editor-empty-state h3 { font-size: 15px; font-weight: 800; color: var(--text); }
 .editor-empty-state p { font-size: 13px; }
 
-.editor-wrap { flex: 1; display: none; flex-direction: column; overflow: hidden; }
+.editor-wrap { flex: 1; display: none; flex-direction: column; overflow: visible; }
 .editor-wrap.show { display: flex; }
 .ch-title-input {
   font-family: 'Noto Serif', Georgia, serif; font-size: 20px; font-weight: 700;
@@ -204,11 +204,11 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 .tb-align { font-size: 11px; }
 
 /* Content */
-.content-scroll { flex: 1; overflow-y: auto; background: var(--bg); padding: 24px 0 80px; }
+.content-scroll { flex: 1; overflow-y: auto; background: var(--bg); padding: 16px 16px 140px; }
 .content-editable {
   font-family: 'Noto Serif', Georgia, serif; font-size: 16px; line-height: 1.9;
-  color: var(--text); min-height: 400px; width: 100%;
-  background: #fff; padding: 32px 20px;
+  color: var(--text); min-height: 400px; width: 100%; box-sizing: border-box;
+  background: #fff; padding: 20px 16px;
   outline: none;
 }
 .content-editable:empty::before { content: attr(data-ph); color: var(--text-muted); font-style: italic; }
