@@ -765,11 +765,12 @@ function showApp() {
   document.getElementById('authGate').style.display = 'none';
   document.getElementById('app').style.display = 'flex';
   document.getElementById('menuBtn').style.display = 'flex';
-  loadStories();
+  // loadStories() sẽ được gọi sau khi currentUser đã được gán trong init()
 }
 
 // ── STORIES ──
 async function loadStories() {
+  if (!currentUser) return; // Chờ đến khi user đã được xác thực
   let query = sb.from('stories').select('id, title, user_id').order('created_at', { ascending: false });
   if (ADMIN_EMAILS.includes(currentUser?.email)) {
     // Admin xem tất cả truyện
