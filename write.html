@@ -409,6 +409,13 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 </head>
 <body>
 
+<!-- LOADING -->
+<div id="loadingScreen" style="position:fixed;inset:0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:9999;">
+  <div style="font-size:32px">🍑</div>
+  <div style="width:36px;height:36px;border:3px solid #f0e0d6;border-top-color:#E8835A;border-radius:50%;animation:spin .7s linear infinite;"></div>
+  <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+</div>
+
 <!-- AUTH GATE -->
 <div class="auth-gate" id="authGate" style="display:none">
   <div class="auth-box">
@@ -732,23 +739,30 @@ let coverFile = null;
 
 // ── AUTH ──
 async function init() {
-  const { data: { session } } = await sb.auth.getSession();
-  if (session) {
-    currentUser = session.user;
-    showApp();
-  } else {
-    // Chưa đăng nhập
-    const nextUrl = encodeURIComponent(location.pathname + location.search);
-    document.getElementById('authGateLink').href = 'auth.html?next=' + nextUrl;
+  const hideLoading = () => { document.getElementById('loadingScreen').style.display = 'none'; };
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    hideLoading();
+    if (session) {
+      currentUser = session.user;
+      showApp();
+    } else {
+      const nextUrl = encodeURIComponent(location.pathname + location.search);
+      document.getElementById('authGateLink').href = 'auth.html?next=' + nextUrl;
+      document.getElementById('authGate').style.display = 'flex';
+    }
+    const params = new URLSearchParams(location.search);
+    const storyParam = params.get('story');
+    if (storyParam && currentUser) {
+      await loadStories();
+      document.getElementById('storySelect').value = storyParam;
+      await onStoryChange();
+    }
+  } catch(err) {
+    console.error('Init error:', err);
+    hideLoading();
     document.getElementById('authGate').style.display = 'flex';
-  }
-  // Kiểm tra ?story= param
-  const params = new URLSearchParams(location.search);
-  const storyParam = params.get('story');
-  if (storyParam && currentUser) {
-    await loadStories();
-    document.getElementById('storySelect').value = storyParam;
-    await onStoryChange();
+    showToast('Không kết nối được server. Kiểm tra mạng!', 'err');
   }
 }
 
