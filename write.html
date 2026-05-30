@@ -157,7 +157,7 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 .editor-wrap { flex: 1; display: none; flex-direction: column; overflow: hidden; min-height: 0; height: 100%; }
 .editor-wrap.show { display: flex; min-height: 0; }
 .ch-title-input {
-  font-family: 'Noto Serif', Georgia, serif; font-size: 20px; font-weight: 700;
+  font-family: 'Noto Serif', Georgia, serif; font-size: 22px; font-weight: 700;
   border: none; border-bottom: 1.5px solid var(--border); padding: 14px 24px 12px;
   outline: none; background: #fff; color: var(--text); width: 100%;
   transition: border .15s;
@@ -172,26 +172,86 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
   flex-shrink: 0;
   box-shadow: 0 -2px 12px rgba(0,0,0,0.07);
 }
-.toolbar-toggle {
-  display: flex; align-items: center; justify-content: flex-end;
-  padding: 2px 10px 0;
-}
-.toolbar-toggle-btn {
-  background: #222; border: none; cursor: pointer;
-  padding: 3px 10px 3px 8px; border-radius: 6px 6px 0 0;
-  color: #fff; font-size: 12px; font-weight: 700;
-  display: flex; align-items: center; gap: 4px; transition: background .15s;
-  line-height: 1;
-}
-.toolbar-toggle-btn:hover { background: #000; }
-.toolbar-toggle-btn .tb-arrow { transition: transform .2s; display: inline-block; }
-.toolbar-toggle-btn.collapsed .tb-arrow { transform: rotate(90deg); }
 .toolbar-inner {
   display: flex; align-items: center; gap: 2px;
-  padding: 6px 16px 8px; flex-wrap: wrap;
-  transition: all .2s;
+  padding: 8px 16px; flex-wrap: wrap;
 }
-.toolbar-inner.hidden { display: none; }
+
+/* Note dropdown */
+.note-dropdown-wrap { position: relative; display: inline-flex; }
+.note-dropdown-menu {
+  display: none; position: absolute; bottom: calc(100% + 6px); left: 0;
+  background: #fff; border: 1.5px solid var(--border); border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12); min-width: 280px; z-index: 200;
+  overflow: hidden;
+}
+.note-dropdown-menu.open { display: block; }
+.note-dropdown-header {
+  background: var(--peach-light); padding: 10px 14px;
+  font-size: 12px; font-weight: 800; color: var(--peach-dark);
+  border-bottom: 1px solid var(--border);
+}
+.note-dropdown-item {
+  display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px;
+  cursor: pointer; transition: background .12s;
+}
+.note-dropdown-item:hover { background: var(--peach-light); }
+.note-dropdown-item + .note-dropdown-item { border-top: 1px solid var(--border); }
+.note-item-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.note-item-text { display: flex; flex-direction: column; gap: 2px; }
+.note-item-title { font-size: 12px; font-weight: 800; color: var(--text); }
+.note-item-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+
+/* Preview modal */
+.preview-modal {
+  position: fixed; inset: 0; z-index: 600;
+  background: rgba(0,0,0,0.55); backdrop-filter: blur(6px);
+  display: none; align-items: flex-start; justify-content: center;
+  padding: 20px; overflow-y: auto;
+}
+.preview-modal.open { display: flex; }
+.preview-box {
+  background: #fff; border-radius: 18px; width: 100%; max-width: 680px;
+  box-shadow: 0 24px 70px rgba(0,0,0,0.2); margin: auto;
+  overflow: hidden; animation: modalIn .2s ease;
+}
+.preview-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 20px; border-bottom: 1px solid var(--border);
+  background: #fff; position: sticky; top: 0; z-index: 1;
+}
+.preview-head h3 { font-size: 14px; font-weight: 900; display: flex; align-items: center; gap: 7px; }
+.preview-head .preview-badge {
+  font-size: 10px; font-weight: 800; background: var(--peach-light);
+  color: var(--peach); padding: 2px 8px; border-radius: 10px;
+}
+.preview-close { background: none; border: none; cursor: pointer; font-size: 18px; color: var(--text-muted); }
+.preview-body { padding: 32px 40px 40px; }
+.preview-story-name { font-size: 11px; font-weight: 800; color: var(--peach); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+.preview-ch-title {
+  font-family: 'Noto Serif', Georgia, serif; font-size: 26px; font-weight: 700;
+  color: var(--text); margin-bottom: 24px; line-height: 1.3;
+}
+.preview-divider { border: none; border-top: 2px solid var(--peach-light); margin: 24px auto; width: 60px; }
+.preview-content {
+  font-family: 'Noto Serif', Georgia, serif; font-size: 16px; line-height: 1.9;
+  color: #2a2a2a;
+}
+.preview-content hr { border: none; border-top: 2px solid var(--peach-light); margin: 2rem auto; width: 50%; }
+.preview-content img { max-width: 100%; border-radius: 8px; display: block; margin: 12px auto; }
+.preview-content video { max-width: 100%; border-radius: 8px; display: block; margin: 12px auto; }
+.preview-footer {
+  margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 12px; color: var(--text-muted); font-weight: 600;
+}
+.preview-actions { display: flex; gap: 8px; }
+.preview-action-btn {
+  padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--border);
+  font-size: 12px; font-weight: 700; cursor: default; color: var(--text-muted);
+  display: flex; align-items: center; gap: 4px;
+}
+@media (max-width: 640px) { .preview-body { padding: 20px; } .preview-ch-title { font-size: 20px; } }
 .tb-btn {
   background: none; border: none; cursor: pointer;
   padding: 5px 8px; border-radius: 6px; color: var(--text-muted);
@@ -206,7 +266,7 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 /* Content */
 .content-scroll { flex: 1; overflow-y: auto; background: #fff; padding: 0; min-height: 0; }
 .content-editable {
-  font-family: 'Noto Serif', Georgia, serif; font-size: 16px; line-height: 1.9;
+  font-family: 'Noto Serif', Georgia, serif; font-size: 18px; line-height: 2;
   color: var(--text); min-height: calc(100vh - 200px); width: 100%; box-sizing: border-box;
   background: #fff; padding: 20px 16px;
   outline: none;
@@ -216,13 +276,6 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 .content-editable hr { border: none; border-top: 2px solid var(--peach-light); margin: 2rem auto; width: 50%; }
 
 /* Bottom bar */
-.bottom-bar {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 8px 24px; border-top: 1px solid var(--border);
-  background: #fff; font-size: 11px; color: var(--text-muted); font-weight: 600;
-}
-.bottom-actions { display: flex; gap: 8px; align-items: center; }
-
 /* ── AUTH GATE ── */
 .auth-gate {
   position: fixed; inset: 0; background: var(--bg);
@@ -276,7 +329,67 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 .modal-submit { flex: 1; padding: 10px; border: none; border-radius: 10px; background: var(--peach); color: #fff; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 800; cursor: pointer; transition: background .15s; }
 .modal-submit:hover { background: var(--peach-dark); }
 
-/* Toast */
+/* ── MOBILE BOTTOM WRAP (fixed to bottom of screen) ── */
+.mobile-bottom-wrap {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 400;
+  display: flex; flex-direction: column;
+  box-shadow: 0 -2px 16px rgba(0,0,0,0.08);
+}
+.slide-panel {
+  display: none; flex-direction: column; gap: 8px;
+  padding: 14px 16px 16px;
+  background: #fff; border-top: 1px solid var(--border);
+}
+.slide-panel.open { display: flex; }
+.mobile-bar {
+  display: flex; align-items: center; justify-content: space-around;
+  height: 52px; background: #fff; border-top: 1px solid var(--border);
+}
+.mobile-bar-btn {
+  flex: 1; height: 100%; background: none; border: none; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px; color: var(--text-muted); font-family: 'Nunito', sans-serif;
+  font-size: 10px; font-weight: 800; transition: color .15s;
+}
+.mobile-bar-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.mobile-bar-btn:hover, .mobile-bar-btn.active { color: var(--peach); }
+.mobile-bar-btn span { font-size: 11px; font-weight: 900; }
+.mobile-bar-publish {
+  flex: 0 0 52px; height: 40px; border-radius: 12px;
+  background: var(--peach) !important; color: #fff !important;
+  box-shadow: 0 2px 10px rgba(232,131,90,0.4);
+}
+.mobile-bar-publish svg { width: 18px; height: 18px; }
+.panel-row { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+.panel-btn {
+  background: none; border: 1.5px solid var(--border); border-radius: 8px;
+  cursor: pointer; padding: 7px 10px; color: var(--text);
+  font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700;
+  display: flex; align-items: center; gap: 5px; transition: all .12s;
+}
+.panel-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.panel-btn:hover { background: var(--peach-light); border-color: var(--peach); color: var(--peach); }
+.panel-btn-wide { flex: 1; justify-content: center; min-width: 110px; font-size: 12px; }
+.panel-sep { width: 1px; height: 22px; background: var(--border); margin: 0 2px; }
+.more-list { display: flex; flex-direction: column; }
+.more-list-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 4px; font-size: 14px; font-weight: 700; cursor: pointer;
+  color: var(--text); transition: color .12s;
+}
+.more-list-item + .more-list-item { border-top: 1px solid var(--border); }
+.more-list-item:hover { color: var(--peach); }
+.more-list-item svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.more-list-item.danger { color: #e84040; }
+.more-list-item.danger:hover { color: #c0392b; }
+.word-count-bar {
+  padding: 4px 16px; font-size: 11px; color: var(--text-muted);
+  font-weight: 600; background: #fff; text-align: right;
+  border-top: 1px solid var(--border);
+}
+.content-scroll { padding-bottom: 60px; }
+
+/* ── TOAST ── */
 .toast {
   position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(60px);
   background: #333; color: #fff; padding: 10px 20px; border-radius: 20px;
@@ -419,7 +532,7 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
     </div>
 
     <div class="editor-wrap" id="editorWrap">
-      <input class="ch-title-input" id="chTitle" placeholder="Tên chương..." maxlength="200">
+      <input class="ch-title-input" id="chTitle" placeholder="Tên chương..." maxlength="200" oninput="saveLocalDraft()">
 
       <div class="content-scroll">
         <div class="content-editable" id="chContent" contenteditable="true"
@@ -427,65 +540,98 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
           oninput="onContentInput()"></div>
       </div>
 
-      <!-- Toolbar -->
-      <div class="toolbar">
-        <div class="toolbar-toggle">
-          <button class="toolbar-toggle-btn collapsed" id="tbToggleBtn" onclick="toggleToolbar()" title="Ẩn/hiện toolbar">
-            <span class="tb-arrow">▶</span> Định dạng
-          </button>
-        </div>
-        <div class="toolbar-inner hidden" id="toolbarInner">
-        <button class="tb-btn" onclick="fmt('bold')" title="In đậm"><b>B</b></button>
-        <button class="tb-btn" onclick="fmt('italic')" title="In nghiêng"><i>I</i></button>
-        <button class="tb-btn" onclick="fmt('underline')" title="Gạch chân"><u>U</u></button>
-        <div class="tb-sep"></div>
-        <button class="tb-btn tb-align" onclick="fmt('justifyLeft')" title="Căn trái">
-          <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg>
-        </button>
-        <button class="tb-btn tb-align" onclick="fmt('justifyCenter')" title="Căn giữa">
-          <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
-        </button>
-        <button class="tb-btn tb-align" onclick="fmt('justifyRight')" title="Căn phải">
-          <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="9" y1="12" x2="21" y2="12"/><line x1="6" y1="18" x2="21" y2="18"/></svg>
-        </button>
-        <div class="tb-sep"></div>
-        <button class="tb-btn" onclick="insertHR()" title="Ngăn cách">— Ngăn cách</button>
-        <button class="tb-btn" onclick="insertNote()" title="Ghi chú tác giả">
-          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          Ghi chú
-        </button>
-        <div class="tb-sep"></div>
-        <button class="tb-btn" onclick="insertImage()" title="Chèn ảnh">
-          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          Ảnh
-        </button>
-        <button class="tb-btn" onclick="insertVideo()" title="Chèn video">
-          <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
-          Video
-        </button>
-        <button class="tb-btn" onclick="insertYoutube()" title="Chèn YouTube">
-          <svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#fff"/></svg>
-          YouTube
-        </button>
-        <div class="tb-sep"></div>
-        <button class="tb-btn" onclick="clearFormat()" title="Xóa định dạng">
-          <svg viewBox="0 0 24 24"><path d="M22 3H7l-4 18h3l1-4h10l1 4h3L22 3z"/><line x1="4" y1="21" x2="20" y2="3"/></svg>
-        </button>
-      </div>
-      </div>
+      <!-- MOBILE BOTTOM WRAP (fixed, panels slide up above bar) -->
+      <div class="mobile-bottom-wrap">
 
-      <div class="bottom-bar">
-        <span id="wordCount">0 từ</span>
-        <div class="bottom-actions">
-          <button class="btn btn-ghost" onclick="saveDraft()">
-            <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-            Lưu bản thảo
+        <!-- Format panel -->
+        <div class="slide-panel" id="formatPanel">
+          <div class="panel-row">
+            <button class="panel-btn" onclick="fmt('bold')"><b>B</b></button>
+            <button class="panel-btn" onclick="fmt('italic')"><i>I</i></button>
+            <button class="panel-btn" onclick="fmt('underline')"><u>U</u></button>
+            <div class="panel-sep"></div>
+            <button class="panel-btn" onclick="fmt('justifyLeft')">
+              <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg>
+            </button>
+            <button class="panel-btn" onclick="fmt('justifyCenter')">
+              <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+            </button>
+            <button class="panel-btn" onclick="fmt('justifyRight')">
+              <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="9" y1="12" x2="21" y2="12"/><line x1="6" y1="18" x2="21" y2="18"/></svg>
+            </button>
+            <div class="panel-sep"></div>
+            <button class="panel-btn" onclick="clearFormat()">
+              <svg viewBox="0 0 24 24"><path d="M22 3H7l-4 18h3l1-4h10l1 4h3L22 3z"/><line x1="4" y1="21" x2="20" y2="3"/></svg>
+            </button>
+          </div>
+          <div class="panel-row" style="border-top:1px solid var(--border);padding-top:8px">
+            <button class="panel-btn panel-btn-wide" onclick="insertHR()">— Ngăn cách</button>
+            <button class="panel-btn panel-btn-wide" onclick="insertNote('author')">✍️ Ghi chú tác giả</button>
+            <button class="panel-btn panel-btn-wide" onclick="insertNote('spoiler')">⚠️ Cảnh báo</button>
+            <button class="panel-btn panel-btn-wide" onclick="insertNote('translation')">📖 Chú thích</button>
+          </div>
+        </div>
+
+        <!-- Media panel -->
+        <div class="slide-panel" id="mediaPanel">
+          <div class="panel-row">
+            <button class="panel-btn panel-btn-wide" onclick="insertImage()">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              Ảnh
+            </button>
+            <button class="panel-btn panel-btn-wide" onclick="insertVideo()">
+              <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+              Video
+            </button>
+            <button class="panel-btn panel-btn-wide" onclick="insertYoutube()">
+              <svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#fff"/></svg>
+              YouTube
+            </button>
+          </div>
+        </div>
+
+        <!-- More panel -->
+        <div class="slide-panel" id="morePanel">
+          <div class="more-list">
+            <div class="more-list-item" onclick="saveDraft();closeAllPanels()">
+              <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              Lưu
+            </div>
+            <div class="more-list-item" onclick="openPreview();closeAllPanels()">
+              <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              Xem trước
+            </div>
+            <div class="more-list-item" onclick="showToast('Lịch sử chỉnh sửa chưa có!','');closeAllPanels()">
+              <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.95"/></svg>
+              Lịch sử chỉnh sửa
+            </div>
+            <div class="more-list-item danger" onclick="deleteChapter();closeAllPanels()">
+              <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+              Xóa
+            </div>
+          </div>
+        </div>
+
+        <!-- Word count -->
+        <div class="word-count-bar"><span id="wordCount">0 từ</span></div>
+
+        <!-- Bar -->
+        <div class="mobile-bar">
+          <button class="mobile-bar-btn" onclick="togglePanel('formatPanel')" id="btnFormat">
+            <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg>
+            <span>A≡</span>
           </button>
-          <button class="btn btn-success" onclick="publishChapter()">
+          <button class="mobile-bar-btn" onclick="togglePanel('mediaPanel')" id="btnMedia">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          </button>
+          <button class="mobile-bar-btn mobile-bar-publish" onclick="publishChapter()">
             <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-            Đăng chương
+          </button>
+          <button class="mobile-bar-btn" onclick="togglePanel('morePanel')" id="btnMore">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg>
           </button>
         </div>
+
       </div>
     </div>
   </main>
@@ -517,6 +663,49 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
       <button class="modal-submit" onclick="createStory()">Tạo truyện</button>
     </div>
   </div>
+</div>
+
+<!-- PREVIEW MODAL -->
+<div class="preview-modal" id="previewModal" onclick="handlePreviewClick(event)">
+  <div class="preview-box">
+    <div class="preview-head">
+      <h3>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        Xem trước
+        <span class="preview-badge">Demo</span>
+      </h3>
+      <button class="preview-close" onclick="closePreview()">✕</button>
+    </div>
+    <div class="preview-body">
+      <div class="preview-story-name" id="previewStoryName">Tên truyện</div>
+      <div class="preview-ch-title" id="previewChTitle">Tên chương</div>
+      <hr class="preview-divider">
+      <div class="preview-content" id="previewContent"></div>
+      <div class="preview-footer">
+        <span>👁 Giao diện như khi độc giả đọc thật</span>
+        <div class="preview-actions">
+          <div class="preview-action-btn">❤️ Thích</div>
+          <div class="preview-action-btn">💬 Bình luận</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FLOATING SELECTION TOOLBAR -->
+<div class="sel-toolbar" id="selToolbar">
+  <button class="sel-tb-btn" onclick="fmt('bold')"><b>B</b></button>
+  <button class="sel-tb-btn" onclick="fmt('italic')"><i>I</i></button>
+  <button class="sel-tb-btn" onclick="fmt('underline')"><u>U</u></button>
+  <button class="sel-tb-btn" onclick="fmt('justifyLeft')" title="Căn trái">
+    <svg class="sel-tb-align-icon" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg>
+  </button>
+  <button class="sel-tb-btn" onclick="fmt('justifyCenter')" title="Căn giữa">
+    <svg class="sel-tb-align-icon" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+  </button>
+  <button class="sel-tb-btn" onclick="fmt('justifyRight')" title="Căn phải">
+    <svg class="sel-tb-align-icon" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="9" y1="12" x2="21" y2="12"/><line x1="6" y1="18" x2="21" y2="18"/></svg>
+  </button>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -596,6 +785,7 @@ async function onStoryChange() {
   currentStoryId = document.getElementById('storySelect').value;
   if (!currentStoryId) return;
   await Promise.all([loadStoryInfo(), loadChapterList()]);
+  await restoreLocalDraftIfNeeded();
 }
 
 async function loadStoryInfo() {
@@ -767,6 +957,7 @@ async function saveDraft() {
   isDirty = false;
   setSaveStatus('Đã lưu ✓');
   showToast('Đã lưu bản thảo!', 'ok');
+  clearLocalDraft();
   loadChapterList();
   return true;
 }
@@ -788,12 +979,44 @@ function insertHR() {
   document.getElementById('chContent').focus();
   document.execCommand('insertHTML', false, '<hr><br>');
 }
-function toggleToolbar() {
-  const inner = document.getElementById('toolbarInner');
-  const btn = document.getElementById('tbToggleBtn');
-  inner.classList.toggle('hidden');
-  btn.classList.toggle('collapsed');
+function toggleNoteDropdown() {
+  const menu = document.getElementById('noteDropdownMenu');
+  menu.classList.toggle('open');
 }
+
+function insertNote(type = 'author') {
+  document.getElementById('noteDropdownMenu').classList.remove('open');
+  document.getElementById('chContent').focus();
+  let html = '';
+  if (type === 'author') {
+    html = '<div style="background:#FEF0E9;border-left:3px solid #E8835A;padding:10px 14px;border-radius:0 10px 10px 0;margin:12px 0;font-size:14px;font-style:italic;color:#9A7A6A"><b>✍️ Ghi chú tác giả:</b> </div><br>';
+  } else if (type === 'spoiler') {
+    html = '<div style="background:#FFF3CD;border-left:3px solid #FFC107;padding:10px 14px;border-radius:0 10px 10px 0;margin:12px 0;font-size:14px;color:#856404"><b>⚠️ Cảnh báo:</b> </div><br>';
+  } else if (type === 'translation') {
+    html = '<div style="background:#E8F4FD;border-left:3px solid #5BA4D4;padding:10px 14px;border-radius:0 10px 10px 0;margin:12px 0;font-size:14px;color:#2C6B9C"><b>📖 Chú thích:</b> </div><br>';
+  }
+  document.execCommand('insertHTML', false, html);
+}
+
+// Close note dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  const wrap = document.getElementById('noteDropdownWrap');
+  if (wrap && !wrap.contains(e.target)) {
+    document.getElementById('noteDropdownMenu')?.classList.remove('open');
+  }
+});
+
+function openPreview() {
+  const title = document.getElementById('chTitle')?.value || 'Chưa đặt tên chương';
+  const content = document.getElementById('chContent')?.innerHTML || '';
+  const storyName = document.getElementById('storyTitle')?.value || document.getElementById('storySelect')?.options[document.getElementById('storySelect').selectedIndex]?.text || 'Tên truyện';
+  document.getElementById('previewChTitle').textContent = title;
+  document.getElementById('previewStoryName').textContent = storyName;
+  document.getElementById('previewContent').innerHTML = content || '<p style="color:#aaa;font-style:italic">Chưa có nội dung...</p>';
+  document.getElementById('previewModal').classList.add('open');
+}
+function closePreview() { document.getElementById('previewModal').classList.remove('open'); }
+function handlePreviewClick(e) { if (e.target === document.getElementById('previewModal')) closePreview(); }
 
 function insertImage() {
   const input = document.createElement('input');
@@ -837,14 +1060,85 @@ function insertYoutube() {
     </div><br>`);
 }
 
-function insertNote() {
-  document.getElementById('chContent').focus();
-  document.execCommand('insertHTML', false, '<div style="background:#FEF0E9;border-left:3px solid #E8835A;padding:10px 14px;border-radius:0 10px 10px 0;margin:12px 0;font-size:14px;font-style:italic;color:#9A7A6A"><b>📝 Ghi chú:</b> </div><br>');
+// ── PANEL TOGGLE ──
+function togglePanel(id) {
+  const panels = ['formatPanel','mediaPanel','morePanel'];
+  const btns   = { formatPanel:'btnFormat', mediaPanel:'btnMedia', morePanel:'btnMore' };
+  panels.forEach(p => {
+    const el = document.getElementById(p);
+    const btn = document.getElementById(btns[p]);
+    if (p === id) {
+      el.classList.toggle('open');
+      btn?.classList.toggle('active', el.classList.contains('open'));
+    } else {
+      el.classList.remove('open');
+      btn?.classList.remove('active');
+    }
+  });
 }
+function closeAllPanels() {
+  ['formatPanel','mediaPanel','morePanel'].forEach(p => document.getElementById(p)?.classList.remove('open'));
+  ['btnFormat','btnMedia','btnMore'].forEach(b => document.getElementById(b)?.classList.remove('active'));
+}
+
+// ── DELETE CHAPTER ──
+async function deleteChapter() {
+  if (!currentChapterId) { showToast('Chưa mở chương nào!', 'err'); return; }
+  if (!confirm('Xóa chương này? Không thể khôi phục!')) return;
+  const { error } = await sb.from('chapters').delete().eq('id', currentChapterId);
+  if (error) { showToast('Xóa thất bại!', 'err'); return; }
+  currentChapterId = null;
+  document.getElementById('chTitle').value = '';
+  document.getElementById('chContent').innerHTML = '';
+  document.getElementById('editorWrap').classList.remove('show');
+  document.getElementById('editorEmpty').style.display = '';
+  clearLocalDraft();
+  showToast('Đã xóa chương!', 'ok');
+  loadChapterList();
+}
+
+// ── LOCAL DRAFT (chống mất khi load lại) ──
+const DRAFT_KEY = 'write_draft_v1';
+function saveLocalDraft() {
+  try {
+    localStorage.setItem(DRAFT_KEY, JSON.stringify({
+      storyId: currentStoryId,
+      chapterId: currentChapterId,
+      title: document.getElementById('chTitle').value,
+      content: document.getElementById('chContent').innerHTML,
+      ts: Date.now()
+    }));
+  } catch(e) {}
+}
+function clearLocalDraft() {
+  try { localStorage.removeItem(DRAFT_KEY); } catch(e) {}
+}
+async function restoreLocalDraftIfNeeded() {
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    // Chỉ restore nếu cùng story, chưa chọn chương, và draft còn mới (< 7 ngày)
+    if (!d.storyId || Date.now() - d.ts > 7*24*3600*1000) { clearLocalDraft(); return; }
+    if (d.storyId !== currentStoryId) return;
+    if (currentChapterId) return; // Đã mở chương rồi, không cần restore
+    const freshTitle = d.title?.trim();
+    const freshContent = d.content?.trim();
+    if (!freshTitle && (!freshContent || freshContent === '<br>')) { clearLocalDraft(); return; }
+    currentChapterId = d.chapterId || null;
+    document.getElementById('chTitle').value = d.title || '';
+    document.getElementById('chContent').innerHTML = d.content || '';
+    showEditor();
+    updateWordCount();
+    showToast('Đã khôi phục bản nháp! ✓', 'ok');
+  } catch(e) {}
+}
+
 function onContentInput() {
   isDirty = true; setSaveStatus('Chưa lưu'); updateWordCount();
   clearTimeout(autoSaveTimer);
   autoSaveTimer = setTimeout(saveDraft, 15000);
+  saveLocalDraft();
 }
 function updateWordCount() {
   const text = document.getElementById('chContent').innerText || '';
