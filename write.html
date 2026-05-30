@@ -990,12 +990,14 @@ function insertNote(type = 'annotation') {
   let html = '';
   if (type === 'annotation') {
     const id = 'ann_' + Date.now();
-    html = `<div class="annotation-block" id="${id}" contenteditable="false" style="margin:12px 0;user-select:none;">
-  <div class="annotation-toggle" onclick="toggleAnnotation('${id}')" style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;color:#aaa;font-size:14px;font-weight:700;font-style:normal;">
-    <svg class="ann-arrow" viewBox="0 0 24 24" fill="#aaa" stroke="none" style="width:14px;height:14px;transition:transform .2s;"><polygon points="5,4 19,12 5,20"/></svg>
-    <span>Chú thích</span>
+    html = `<div class="annotation-block" id="${id}" contenteditable="false" style="margin:12px 0;user-select:none;position:relative;">
+  <div style="display:flex;align-items:center;gap:6px;">
+    <div class="annotation-toggle" onclick="toggleAnnotation('${id}')" style="display:inline-flex;align-items:center;cursor:pointer;padding:2px 4px;border-radius:4px;">
+      <svg class="ann-arrow" viewBox="0 0 24 24" fill="#bbb" stroke="none" style="width:13px;height:13px;transition:transform .2s;flex-shrink:0;"><polygon points="5,4 19,12 5,20"/></svg>
+    </div>
+    <span onclick="deleteAnnotation('${id}')" title="Xóa chú thích" style="cursor:pointer;color:#ccc;font-size:12px;line-height:1;padding:2px 4px;border-radius:4px;" onmouseover="this.style.color='#e84040'" onmouseout="this.style.color='#ccc'">✕</span>
   </div>
-  <div class="annotation-body" style="display:none;margin-top:6px;padding:8px 12px;border-left:2px solid #ddd;font-size:14px;font-style:italic;color:#b5956a;background:#fdf8f4;border-radius:0 8px 8px 0;" contenteditable="true" placeholder="Nhập chú thích..."></div>
+  <div class="annotation-body" style="display:none;margin-top:4px;padding:8px 12px;border:1.5px dashed #c9a98a;font-size:14px;font-style:italic;color:#b5956a;background:#fdf8f4;border-radius:8px;" contenteditable="true"></div>
 </div><br>`;
   } else if (type === 'author') {
     html = '<div style="background:#FEF0E9;border-left:3px solid #E8835A;padding:10px 14px;border-radius:0 10px 10px 0;margin:12px 0;font-size:14px;font-style:italic;color:#9A7A6A"><b>✍️ Ghi chú tác giả:</b> </div><br>';
@@ -1019,8 +1021,17 @@ function toggleAnnotation(id) {
   } else {
     body.style.display = 'block';
     arrow.style.transform = 'rotate(90deg)';
-    body.focus();
+    setTimeout(() => body.focus(), 50);
   }
+}
+
+function deleteAnnotation(id) {
+  const block = document.getElementById(id);
+  if (!block) return;
+  // Xóa cả <br> liền sau nếu có
+  const next = block.nextSibling;
+  if (next && next.nodeName === 'BR') next.remove();
+  block.remove();
 }
 
 // Close note dropdown when clicking outside
