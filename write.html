@@ -740,38 +740,59 @@ let coverFile = null;
 // ── AUTH ──
 async function init() {
   showLoading(true);
-  // Timeout 6 giây: nếu Supabase không phản hồi thì redirect đăng nhập
-  const timeout = setTimeout(() => {
+  let started = false;
+
+  async function startApp(user) {
+    if (started) return;
+    started = true;
+    currentUser = user;
     showLoading(false);
-    const nextUrl = encodeURIComponent(location.pathname + location.search);
-    location.href = 'auth.html?next=' + nextUrl;
-  }, 6000);
-  try {
-    const { data: { session } } = await sb.auth.getSession();
-    clearTimeout(timeout);
-    if (session) {
-      currentUser = session.user;
-      showLoading(false);
-      showApp();
-      loadStories();
-      const params = new URLSearchParams(location.search);
-      const storyParam = params.get('story');
-      if (storyParam) {
-        document.getElementById('storySelect').value = storyParam;
-        await onStoryChange();
-      }
-    } else {
-      showLoading(false);
-      const nextUrl = encodeURIComponent(location.pathname + location.search);
-      location.href = 'auth.html?next=' + nextUrl;
+    showApp();
+    try {
+      await loadStories();
+    } catch(e) {
+      console.error('loadStories error:', e);
     }
-  } catch(err) {
-    clearTimeout(timeout);
+    const params = new URLSearchParams(location.search);
+    const storyParam = params.get('story');
+    if (storyParam) {
+      document.getElementById('storySelect').value = storyParam;
+      await onStoryChange();
+    }
+  }
+
+  function goToLogin() {
+    if (started) return;
+    started = true;
     showLoading(false);
-    console.error('Init error:', err);
     const nextUrl = encodeURIComponent(location.pathname + location.search);
     location.href = 'auth.html?next=' + nextUrl;
   }
+
+  // Cách 1: getSession() - hoạt động với key cũ lẫn mới
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) {
+      await startApp(session.user);
+      return;
+    }
+  } catch(e) {
+    console.warn('getSession failed:', e);
+  }
+
+  // Cách 2: onAuthStateChange - fallback cho key mới sb_publishable_
+  sb.auth.onAuthStateChange(async (event, session) => {
+    if (session) {
+      await startApp(session.user);
+    } else if (event === 'INITIAL_SESSION' || event === 'SIGNED_OUT') {
+      goToLogin();
+    }
+  });
+
+  // Timeout 8 giây nếu cả 2 cách đều không phản hồi
+  setTimeout(() => {
+    if (!started) goToLogin();
+  }, 8000);
 }
 
 function showLoading(show) {
@@ -1157,6 +1178,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+document.addEventListener('click', e => {
   const wrap = document.getElementById('noteDropdownWrap');
   if (wrap && !wrap.contains(e.target)) {
     document.getElementById('noteDropdownMenu')?.classList.remove('open');
