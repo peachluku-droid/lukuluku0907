@@ -705,12 +705,22 @@ async function doReset() {
 
 /* ── CHECK SESSION (auto-redirect if logged in) ── */
 async function init() {
-  const { data: { session } } = await sb.auth.getSession();
-  if (session) {
+  let redirected = false;
+  function doRedirect() {
+    if (redirected) return;
+    redirected = true;
     const redirect = new URLSearchParams(location.search).get('next') || 'index.html';
     location.href = redirect;
-    return;
   }
+  // Cách 1: getSession
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) { doRedirect(); return; }
+  } catch(e) {}
+  // Cách 2: onAuthStateChange fallback
+  sb.auth.onAuthStateChange((event, session) => {
+    if (session) doRedirect();
+  });
   // check URL tab param
   const tab = new URLSearchParams(location.search).get('tab');
   if (tab === 'signup' || tab === 'reset') switchTab(tab);
