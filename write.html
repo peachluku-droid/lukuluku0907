@@ -1336,6 +1336,30 @@ function switchSideTab(name, el) {
 function showEditor() {
   document.getElementById('editorEmpty').style.display = 'none';
   document.getElementById('editorWrap').classList.add('show');
+  // Gắn nút ✕ cho các block chú thích cũ không có nút xóa
+  setTimeout(upgradeOldAnnotationBlocks, 100);
+}
+
+function upgradeOldAnnotationBlocks() {
+  const editor = document.getElementById('chContent');
+  if (!editor) return;
+  editor.querySelectorAll('.annotation-block').forEach(block => {
+    if (block.querySelector('[onclick^="deleteAnnotation"]')) return; // đã có nút rồi
+    const id = block.id || ('ann_' + Math.random().toString(36).slice(2));
+    block.id = id;
+    // Thêm nút ✕ vào dòng toggle
+    const toggle = block.querySelector('.annotation-toggle');
+    if (toggle && !toggle.parentElement.querySelector('[title="Xóa chú thích"]')) {
+      const btn = document.createElement('span');
+      btn.setAttribute('onclick', "deleteAnnotation('" + id + "')");
+      btn.title = 'Xóa chú thích';
+      btn.style.cssText = 'cursor:pointer;color:#ccc;font-size:12px;line-height:1;padding:2px 4px;border-radius:4px;';
+      btn.onmouseover = () => btn.style.color = '#e84040';
+      btn.onmouseout = () => btn.style.color = '#ccc';
+      btn.textContent = '✕';
+      toggle.parentElement.appendChild(btn);
+    }
+  });
 }
 function setSaveStatus(txt) { document.getElementById('saveStatus').textContent = txt; }
 function showToast(msg, type = '') {
