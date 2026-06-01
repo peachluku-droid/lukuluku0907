@@ -845,6 +845,12 @@ async function loadStories() {
       // Chuyển sang tab Chương để user thấy danh sách chương ngay
       const chTab = document.querySelector('.sidebar-tab:nth-child(2)');
       if (chTab) chTab.click();
+      // Tự động mở lại chương đang làm dở
+      let lastChapter = null;
+      try { lastChapter = localStorage.getItem('luku_last_chapter'); } catch(e) {}
+      if (lastChapter) {
+        await openChapter(lastChapter);
+      }
     }
   }
 }
@@ -990,6 +996,8 @@ async function openChapter(id) {
   updateWordCount();
   loadChapterList();
   closeSidebar();
+  // Ghi nhớ chương đang mở
+  try { localStorage.setItem('luku_last_chapter', id); } catch(e) {}
 }
 
 function newChapter() {
