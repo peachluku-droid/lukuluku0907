@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Hồ sơ — Peach Luku</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -16,7 +16,7 @@
   --text: #2C1A0E; --text-muted: #9A7A6A;
   --border: rgba(232,131,90,0.18); --border-hover: #F2A882;
   --danger: #e05252; --success: #4caf7d;
-  --header-bg: #2C1A0E;
+  --header-bg: #111111;
   --header-text: #ffffff;
 }
 body.theme-dark {
@@ -39,7 +39,7 @@ body.theme-sepia {
 }
 
 body {
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Roboto', sans-serif;
   background: var(--bg); color: var(--text);
   min-height: 100vh;
   transition: background .3s, color .3s;
@@ -88,9 +88,9 @@ body {
 .avatar-ring {
   width: 100px; height: 100px;
   border-radius: 50%;
-  border: 3.5px solid var(--peach-mid);
-  padding: 3px;
-  background: var(--header-bg);
+  border: 2px solid rgba(255,255,255,0.3);
+  padding: 2px;
+  background: #111;
   margin-bottom: 12px;
   position: relative;
 }
@@ -109,7 +109,8 @@ body {
   position: absolute; bottom: 2px; right: 2px;
   width: 28px; height: 28px; border-radius: 50%;
   background: var(--peach); border: 2px solid var(--header-bg);
-  display: flex; align-items: center; justify-content: center;
+  display: none !important;
+  align-items: center; justify-content: center;
   cursor: pointer; transition: background .15s;
 }
 .avatar-edit-label:hover { background: var(--peach-dark); }
@@ -117,8 +118,9 @@ body {
 #avatar-file { display: none; }
 
 .profile-name {
-  font-family: 'Pacifico', cursive;
-  font-size: 24px; color: #fff;
+  font-family: 'Roboto', sans-serif;
+  font-size: 22px; color: #fff;
+  font-weight: 800;
   margin-bottom: 3px;
   text-shadow: 0 2px 8px rgba(0,0,0,0.4);
 }
@@ -157,7 +159,7 @@ body {
 .tab-btn {
   flex: 1; padding: 13px 8px;
   background: none; border: none; cursor: pointer;
-  font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 800;
+  font-family: 'Roboto', sans-serif; font-size: 13px; font-weight: 800;
   color: var(--text-muted);
   border-bottom: 2.5px solid transparent;
   margin-bottom: -1.5px;
@@ -187,7 +189,7 @@ body {
 .field input, .field textarea {
   background: var(--bg); border: 1.5px solid var(--border);
   border-radius: 10px; padding: 9px 12px;
-  font-family: 'Nunito', sans-serif; font-size: 14px; color: var(--text);
+  font-family: 'Roboto', sans-serif; font-size: 14px; color: var(--text);
   outline: none; transition: border .15s; resize: none;
 }
 .field input:focus, .field textarea:focus { border-color: var(--peach-mid); }
@@ -196,7 +198,7 @@ body {
 .save-btn {
   width: 100%; padding: 11px; border-radius: 12px;
   background: var(--peach); border: none; cursor: pointer;
-  font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 800;
+  font-family: 'Roboto', sans-serif; font-size: 15px; font-weight: 800;
   color: #fff; margin-top: .75rem; transition: opacity .15s;
 }
 .save-btn:hover { opacity: .88; }
@@ -207,7 +209,7 @@ body {
 .pw-toggle {
   background: none; border: 1.5px solid var(--border-hover);
   border-radius: 10px; padding: 8px 14px;
-  font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700;
+  font-family: 'Roboto', sans-serif; font-size: 13px; font-weight: 700;
   color: var(--text-muted); cursor: pointer; transition: all .15s;
   display: flex; align-items: center; gap: 6px; width: 100%; justify-content: center;
 }
@@ -220,7 +222,7 @@ body {
 .danger-btn {
   width: 100%; padding: 10px; border-radius: 12px;
   background: none; border: 1.5px solid var(--danger);
-  cursor: pointer; font-family: 'Nunito', sans-serif;
+  cursor: pointer; font-family: 'Roboto', sans-serif;
   font-size: 14px; font-weight: 700; color: var(--danger);
   transition: background .15s;
 }
@@ -281,7 +283,7 @@ body {
 .login-wall-btn {
   background: var(--peach); color: #fff; border: none;
   border-radius: 12px; padding: 10px 28px;
-  font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 800; cursor: pointer;
+  font-family: 'Roboto', sans-serif; font-size: 15px; font-weight: 800; cursor: pointer;
 }
 
 /* ── TOAST ── */
@@ -325,7 +327,7 @@ body {
   background: rgba(255,255,255,0.18); color: #fff;
   border: 1.5px solid rgba(255,255,255,0.6);
   border-radius: 10px; padding: 10px 36px;
-  font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 800;
+  font-family: 'Roboto', sans-serif; font-size: 15px; font-weight: 800;
   cursor: pointer; margin: 8px 0 4px; transition: all .15s;
   letter-spacing: .3px; backdrop-filter: blur(4px);
 }
@@ -419,9 +421,9 @@ body {
 <!-- PANE: HỘI THOẠI -->
 <div class="pane" id="pane-wall">
   <div id="wall-compose" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:14px">
-    <textarea id="wall-input" placeholder="Đăng một tin nhắn..." style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:Nunito,sans-serif;font-size:14px;color:var(--text);outline:none;resize:none;min-height:72px;transition:border .15s" onfocus="this.style.borderColor='var(--peach-mid)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+    <textarea id="wall-input" placeholder="Đăng một tin nhắn..." style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:Roboto,sans-serif;font-size:14px;color:var(--text);outline:none;resize:none;min-height:72px;transition:border .15s" onfocus="this.style.borderColor='var(--peach-mid)'" onblur="this.style.borderColor='var(--border)'"></textarea>
     <div style="display:flex;justify-content:flex-end;margin-top:8px">
-      <button onclick="postWall()" style="background:var(--peach);color:#fff;border:none;border-radius:10px;padding:8px 18px;font-family:Nunito,sans-serif;font-size:13px;font-weight:800;cursor:pointer">Đăng</button>
+      <button onclick="postWall()" style="background:var(--peach);color:#fff;border:none;border-radius:10px;padding:8px 18px;font-family:Roboto,sans-serif;font-size:13px;font-weight:800;cursor:pointer">Đăng</button>
     </div>
   </div>
   <div id="wall-list" style="color:var(--text-muted);font-size:13px;text-align:center;padding:2rem">Đang tải...</div>
@@ -554,21 +556,19 @@ function renderIntro() {
       <div style="font-size:11px;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px">Chỉnh sửa hồ sơ</div>
       <div style="display:flex;flex-direction:column;gap:10px">
         <div><label style="font-size:12px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px">Tên hiển thị</label>
-        <input id="ed-name" value="${esc(p.display_name||'')}" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:Nunito,sans-serif;font-size:14px;color:var(--text);outline:none" onfocus="this.style.borderColor='var(--peach-mid)'" onblur="this.style.borderColor='var(--border)'"></div>
+        <input id="ed-name" value="${esc(p.display_name||'')}" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:Roboto,sans-serif;font-size:14px;color:var(--text);outline:none" onfocus="this.style.borderColor='var(--peach-mid)'" onblur="this.style.borderColor='var(--border)'"></div>
         <div><label style="font-size:12px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px">Username</label>
-        <input id="ed-username" value="${esc(p.username||'')}" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:Nunito,sans-serif;font-size:14px;color:var(--text);outline:none" onfocus="this.style.borderColor='var(--peach-mid)'" onblur="this.style.borderColor='var(--border)'"></div>
+        <input id="ed-username" value="${esc(p.username||'')}" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:Roboto,sans-serif;font-size:14px;color:var(--text);outline:none" onfocus="this.style.borderColor='var(--peach-mid)'" onblur="this.style.borderColor='var(--border)'"></div>
         <div><label style="font-size:12px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px">Giới thiệu bản thân</label>
-        <textarea id="ed-bio" rows="4" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:Nunito,sans-serif;font-size:14px;color:var(--text);outline:none;resize:none" onfocus="this.style.borderColor='var(--peach-mid)'" onblur="this.style.borderColor='var(--border)'">${esc(p.bio||'')}</textarea></div>
-        <div><label style="font-size:12px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px">Website / Link</label>
-        <input id="ed-website" value="${esc(p.website||'')}" placeholder="https://..." style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:Nunito,sans-serif;font-size:14px;color:var(--text);outline:none" onfocus="this.style.borderColor='var(--peach-mid)'" onblur="this.style.borderColor='var(--border)'"></div>
-        <button onclick="saveProfile()" style="width:100%;padding:11px;border-radius:12px;background:var(--peach);border:none;cursor:pointer;font-family:Nunito,sans-serif;font-size:15px;font-weight:800;color:#fff;margin-top:4px">Lưu thông tin</button>
+        <textarea id="ed-bio" rows="4" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:Roboto,sans-serif;font-size:14px;color:var(--text);outline:none;resize:none" onfocus="this.style.borderColor='var(--peach-mid)'" onblur="this.style.borderColor='var(--border)'">${esc(p.bio||'')}</textarea></div>
+        <button onclick="saveProfile()" style="width:100%;padding:11px;border-radius:12px;background:var(--peach);border:none;cursor:pointer;font-family:Roboto,sans-serif;font-size:15px;font-weight:800;color:#fff;margin-top:4px">Lưu thông tin</button>
       </div>
     </div>
     <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:12px">
       <div style="font-size:11px;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px">Đổi mật khẩu</div>
       <div style="display:flex;flex-direction:column;gap:10px">
-        <input id="pw-new" type="password" placeholder="Mật khẩu mới" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:Nunito,sans-serif;font-size:14px;color:var(--text);outline:none">
-        <button onclick="changePassword()" style="width:100%;padding:10px;border-radius:12px;background:none;border:1.5px solid var(--peach-mid);cursor:pointer;font-family:Nunito,sans-serif;font-size:14px;font-weight:700;color:var(--peach-dark)">Đổi mật khẩu</button>
+        <input id="pw-new" type="password" placeholder="Mật khẩu mới" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:Roboto,sans-serif;font-size:14px;color:var(--text);outline:none">
+        <button onclick="changePassword()" style="width:100%;padding:10px;border-radius:12px;background:none;border:1.5px solid var(--peach-mid);cursor:pointer;font-family:Roboto,sans-serif;font-size:14px;font-weight:700;color:var(--peach-dark)">Đổi mật khẩu</button>
       </div>
     </div>`;
   }
@@ -638,13 +638,13 @@ async function loadWall() {
       <hr style="border:none;border-top:1px solid var(--border);margin:10px 0">
       <div style="font-size:15px;color:var(--text);line-height:1.65;white-space:pre-wrap">${esc(p.content)}</div>
       <div id="replies-${p.id}" style="margin-top:8px"></div>
-      <button onclick="openReply('${p.id}')" style="background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:13px;font-weight:600;padding:6px 0 0;display:flex;align-items:center;gap:5px;font-family:Nunito,sans-serif">
+      <button onclick="openReply('${p.id}')" style="background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:13px;font-weight:600;padding:6px 0 0;display:flex;align-items:center;gap:5px;font-family:Roboto,sans-serif">
         <svg viewBox="0 0 24 24" width="14" height="14" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         Trả lời
       </button>
       <div id="replybox-${p.id}" style="display:none;margin-top:10px">
         <div style="display:flex;gap:8px">
-          <input id="reply-input-${p.id}" placeholder="Viết trả lời..." style="flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-family:Nunito,sans-serif;font-size:13px;color:var(--text);outline:none">
+          <input id="reply-input-${p.id}" placeholder="Viết trả lời..." style="flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-family:Roboto,sans-serif;font-size:13px;color:var(--text);outline:none">
           <button onclick="postReply('${p.id}')" style="background:var(--peach);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:800;cursor:pointer">Gửi</button>
         </div>
       </div>
@@ -708,8 +708,8 @@ async function toggleReplies(postId, btn) {
       return `<div style="display:flex;gap:8px;margin-bottom:8px"><div style="width:28px;height:28px;border-radius:50%;background:var(--peach-light);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--peach-dark);flex-shrink:0;overflow:hidden">${pf.avatar_url?`<img src="${esc(pf.avatar_url)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:`${ini}`}</div><div><div style="font-size:12px;font-weight:800">${esc(pf.display_name||'?')}</div><div style="font-size:13px;color:var(--text)">${esc(r.content)}</div></div></div>`;
     }).join('');
   }
-  if (currentUser) html += `<div style="display:flex;gap:8px;margin-top:8px"><input id="reply-input-${postId}" placeholder="Viết trả lời..." style="flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:7px 10px;font-family:Nunito,sans-serif;font-size:13px;color:var(--text);outline:none"><button onclick="postReply('${postId}')" style="background:var(--peach);color:#fff;border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:800;cursor:pointer">Gửi</button></div>`;
-  el.innerHTML = html || '<div style="font-size:12px;color:var(--text-muted);margin-bottom:8px">Chưa có trả lời</div>' + (currentUser?`<div style="display:flex;gap:8px;margin-top:8px"><input id="reply-input-${postId}" placeholder="Viết trả lời..." style="flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:7px 10px;font-family:Nunito,sans-serif;font-size:13px;color:var(--text);outline:none"><button onclick="postReply('${postId}')" style="background:var(--peach);color:#fff;border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:800;cursor:pointer">Gửi</button></div>`:'');
+  if (currentUser) html += `<div style="display:flex;gap:8px;margin-top:8px"><input id="reply-input-${postId}" placeholder="Viết trả lời..." style="flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:7px 10px;font-family:Roboto,sans-serif;font-size:13px;color:var(--text);outline:none"><button onclick="postReply('${postId}')" style="background:var(--peach);color:#fff;border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:800;cursor:pointer">Gửi</button></div>`;
+  el.innerHTML = html || '<div style="font-size:12px;color:var(--text-muted);margin-bottom:8px">Chưa có trả lời</div>' + (currentUser?`<div style="display:flex;gap:8px;margin-top:8px"><input id="reply-input-${postId}" placeholder="Viết trả lời..." style="flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:7px 10px;font-family:Roboto,sans-serif;font-size:13px;color:var(--text);outline:none"><button onclick="postReply('${postId}')" style="background:var(--peach);color:#fff;border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:800;cursor:pointer">Gửi</button></div>`:'');
 }
 
 async function postReply(postId) {
@@ -761,7 +761,15 @@ async function toggleFollow() {
 }
 
 function showOwnControls() {
-  document.getElementById('avatar-edit-label').style.display = 'flex';
+  // Avatar edit: show only on hover
+  const ring = document.getElementById('avatar-ring');
+  const editLabel = document.getElementById('avatar-edit-label');
+  if (ring && editLabel) {
+    ring.style.cursor = 'pointer';
+    ring.addEventListener('mouseenter', () => { editLabel.style.setProperty('display','flex','important'); });
+    ring.addEventListener('mouseleave', () => { editLabel.style.setProperty('display','none','important'); });
+    ring.addEventListener('click', () => document.getElementById('avatar-file').click());
+  }
   // Chạm vào ảnh nền để đổi
   const bg = document.getElementById('header-bg-blur');
   if (bg) { bg.style.cursor = 'pointer'; bg.onclick = () => document.getElementById('banner-file').click(); }
@@ -776,7 +784,6 @@ async function saveProfile() {
     display_name: document.getElementById('ed-name')?.value?.trim(),
     username: document.getElementById('ed-username')?.value?.trim(),
     bio: document.getElementById('ed-bio')?.value?.trim(),
-    website: document.getElementById('ed-website')?.value?.trim(),
   };
   const { error } = await sb.from('profiles').update(updates).eq('id', currentUser.id);
   if (error) { showToast('Lỗi lưu: ' + error.message); return; }
@@ -832,7 +839,7 @@ function renderLoginWall() {
       <div style="font-size:48px;margin-bottom:12px">🐹</div>
       <div style="font-size:18px;font-weight:800;margin-bottom:6px">Peach Luku</div>
       <div style="font-size:13px;opacity:.7;margin-bottom:20px">Đăng nhập để xem hồ sơ của bạn</div>
-      <button onclick="location.href='auth.html'" style="background:var(--peach);color:#fff;border:none;border-radius:12px;padding:10px 28px;font-family:Nunito,sans-serif;font-size:15px;font-weight:800;cursor:pointer">Đăng nhập</button>
+      <button onclick="location.href='auth.html'" style="background:var(--peach);color:#fff;border:none;border-radius:12px;padding:10px 28px;font-family:Roboto,sans-serif;font-size:15px;font-weight:800;cursor:pointer">Đăng nhập</button>
     </div>`;
   document.getElementById('tab-bar').style.display = 'none';
   document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
