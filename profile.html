@@ -169,8 +169,10 @@ body {
 .tab-btn.active { color: var(--peach); border-bottom-color: var(--peach); }
 
 /* ── PANES ── */
-.pane { display: none; padding: 1.25rem; max-width: 600px; margin: 0 auto; }
+.pane { display: none; padding: 1.25rem; max-width: 600px; margin: 0 auto; background: #fff; }
 .pane.active { display: block; }
+body.theme-dark .pane { background: #1a1a1a; }
+body.theme-sepia .pane { background: #f5f0e8; }
 
 /* ── GIỚI THIỆU ── */
 .section-card {
@@ -419,17 +421,51 @@ body {
 </div>
 
 <!-- PANE: HỘI THOẠI -->
-<div class="pane" id="pane-wall">
-  <div id="wall-compose" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:14px">
-    <textarea id="wall-input" placeholder="Đăng một tin nhắn..." style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:Roboto,sans-serif;font-size:14px;color:var(--text);outline:none;resize:none;min-height:72px;transition:border .15s" onfocus="this.style.borderColor='var(--peach-mid)'" onblur="this.style.borderColor='var(--border)'"></textarea>
-    <div style="display:flex;justify-content:flex-end;margin-top:8px">
-      <button onclick="postWall()" style="background:var(--peach);color:#fff;border:none;border-radius:10px;padding:8px 18px;font-family:Roboto,sans-serif;font-size:13px;font-weight:800;cursor:pointer">Đăng</button>
+<div class="pane" id="pane-wall" style="background:#f0f0f0;padding:0;">
+  <!-- Compose box: chỉ hiện khi đăng nhập -->
+  <div id="wall-compose" style="display:none;background:#e8e8e8;padding:0 0 6px 0;margin-bottom:6px">
+    <div style="background:#fff;display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:text" onclick="document.getElementById('wall-input').focus()">
+      <svg viewBox="0 0 24 24" width="20" height="20" style="stroke:#999;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <textarea id="wall-input" placeholder="Đăng một tin nhắn..." rows="1" style="flex:1;background:transparent;border:none;font-family:'Roboto',sans-serif;font-size:14px;color:#333;outline:none;resize:none;line-height:1.5;overflow:hidden" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+      <button onclick="postWall()" style="background:var(--peach);color:#fff;border:none;border-radius:8px;padding:7px 14px;font-family:'Roboto',sans-serif;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0">Đăng</button>
     </div>
   </div>
-  <div id="wall-list" style="color:var(--text-muted);font-size:13px;text-align:center;padding:2rem">Đang tải...</div>
+  <div id="wall-list" style="color:#999;font-size:13px;text-align:center;padding:2rem">Đang tải...</div>
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- EDIT MODAL -->
+<div id="edit-modal" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.5);align-items:flex-end;justify-content:center" onclick="if(event.target===this)closeEditModal()">
+  <div id="edit-modal-box" style="background:var(--bg2);width:100%;max-width:600px;border-radius:20px 20px 0 0;padding:20px 20px 36px;transform:translateY(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);max-height:90vh;overflow-y:auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+      <span style="font-size:16px;font-weight:800;color:var(--text)">Chỉnh sửa hồ sơ</span>
+      <button onclick="closeEditModal()" style="background:var(--peach-light);border:none;border-radius:50%;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--peach-dark)">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div>
+        <label style="font-size:12px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:5px">Tên hiển thị</label>
+        <input id="ed-name" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:10px 13px;font-family:'Roboto',sans-serif;font-size:14px;color:var(--text);outline:none;box-sizing:border-box" onfocus="this.style.borderColor='var(--peach-mid)'" onblur="this.style.borderColor='var(--border)'">
+      </div>
+      <div>
+        <label style="font-size:12px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:5px">Username</label>
+        <input id="ed-username" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:10px 13px;font-family:'Roboto',sans-serif;font-size:14px;color:var(--text);outline:none;box-sizing:border-box" onfocus="this.style.borderColor='var(--peach-mid)'" onblur="this.style.borderColor='var(--border)'">
+      </div>
+      <div>
+        <label style="font-size:12px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:5px">Giới thiệu bản thân</label>
+        <textarea id="ed-bio" rows="4" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:10px 13px;font-family:'Roboto',sans-serif;font-size:14px;color:var(--text);outline:none;resize:none;box-sizing:border-box" onfocus="this.style.borderColor='var(--peach-mid)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+      </div>
+      <button onclick="saveProfile()" style="width:100%;padding:13px;border-radius:12px;background:var(--peach);border:none;cursor:pointer;font-family:'Roboto',sans-serif;font-size:15px;font-weight:700;color:#fff">Lưu thông tin</button>
+      <div style="border-top:1px solid var(--border);padding-top:14px">
+        <label style="font-size:12px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:5px">Đổi mật khẩu</label>
+        <input id="pw-new" type="password" placeholder="Mật khẩu mới" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:10px 13px;font-family:'Roboto',sans-serif;font-size:14px;color:var(--text);outline:none;box-sizing:border-box;margin-bottom:10px">
+        <button onclick="changePassword()" style="width:100%;padding:11px;border-radius:12px;background:none;border:1.5px solid var(--peach-mid);cursor:pointer;font-family:'Roboto',sans-serif;font-size:14px;font-weight:700;color:var(--peach-dark)">Đổi mật khẩu</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script>
 const SUPABASE_URL = 'https://jnlqzqtavfptkfvnndxq.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ojRrfSwxK_B6-TGSXaYGxQ_DKERN0-f';
@@ -532,8 +568,8 @@ async function loadProfile() {
   // Intro pane
   renderIntro();
 
-  // Show follow button for other profiles
-  if (!isOwnProfile && currentUser) {
+  // Show follow button for other profiles (kể cả chưa đăng nhập)
+  if (!isOwnProfile) {
     document.getElementById('follow-btn').style.display = 'inline-flex';
   }
 }
@@ -541,38 +577,97 @@ async function loadProfile() {
 function renderIntro() {
   const p = profileData;
   let html = '';
-  if (p.bio) html += `<div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:12px;font-size:14px;line-height:1.7;color:var(--text);white-space:pre-wrap">${esc(p.bio)}</div>`;
-  if (p.website||p.facebook||p.twitter) {
-    html += `<div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:12px">`;
-    if (p.website) html += `<div style="margin-bottom:8px;font-size:13px"><a href="${esc(p.website)}" target="_blank" style="color:var(--peach);font-weight:700;word-break:break-all">🔗 ${esc(p.website)}</a></div>`;
-    if (p.facebook) html += `<div style="margin-bottom:8px;font-size:13px"><a href="${esc(p.facebook)}" target="_blank" style="color:var(--peach);font-weight:700">📘 Facebook</a></div>`;
+
+  // Bio
+  const bioText = p.bio || 'Nhấp vào đây để thêm một mô tả về bản thân...';
+  const bioColor = p.bio ? 'var(--text)' : 'var(--text-muted)';
+  html += `<div style="font-size:14px;line-height:1.7;color:${bioColor};padding:4px 0 8px;white-space:pre-wrap">${esc(bioText)}</div>`;
+
+  // Join date
+  if (p.created_at) {
+    const joined = new Date(p.created_at);
+    const joinStr = joined.toLocaleDateString('vi-VN',{month:'long',year:'numeric'});
+    html += `<div style="font-size:13px;color:var(--text-muted);padding:2px 0 12px">Đã gia nhập ${joinStr}</div>`;
+  }
+
+  // Social links
+  if (p.website || p.facebook || p.twitter) {
+    html += `<div style="display:flex;flex-direction:column;gap:10px;padding:4px 0 16px;border-bottom:1px solid var(--border)">`;
+    if (p.facebook) html += `<a href="${esc(p.facebook)}" target="_blank" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)">
+      <div style="width:36px;height:36px;border-radius:8px;background:#1877F2;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+      </div>
+      <span style="font-size:14px;font-weight:600">${esc(p.facebook.replace(/https?:\/\/(www\.)?facebook\.com\//,''))}</span>
+    </a>`;
+    if (p.website) html += `<a href="${esc(p.website)}" target="_blank" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)">
+      <div style="width:36px;height:36px;border-radius:8px;background:var(--peach);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg viewBox="0 0 24 24" width="18" height="18" stroke="#fff" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      </div>
+      <span style="font-size:14px;font-weight:600;word-break:break-all">${esc(p.website)}</span>
+    </a>`;
     html += `</div>`;
   }
-  if (!html) html = `<div style="text-align:center;padding:3rem 1rem;color:var(--text-muted);font-size:13px"><div style="font-size:36px;margin-bottom:8px">🐹</div>Chưa có giới thiệu</div>`;
 
-  if (isOwnProfile) {
-    html += `
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:12px">
-      <div style="font-size:11px;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px">Chỉnh sửa hồ sơ</div>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <div><label style="font-size:12px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px">Tên hiển thị</label>
-        <input id="ed-name" value="${esc(p.display_name||'')}" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:Roboto,sans-serif;font-size:14px;color:var(--text);outline:none" onfocus="this.style.borderColor='var(--peach-mid)'" onblur="this.style.borderColor='var(--border)'"></div>
-        <div><label style="font-size:12px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px">Username</label>
-        <input id="ed-username" value="${esc(p.username||'')}" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:Roboto,sans-serif;font-size:14px;color:var(--text);outline:none" onfocus="this.style.borderColor='var(--peach-mid)'" onblur="this.style.borderColor='var(--border)'"></div>
-        <div><label style="font-size:12px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px">Giới thiệu bản thân</label>
-        <textarea id="ed-bio" rows="4" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:Roboto,sans-serif;font-size:14px;color:var(--text);outline:none;resize:none" onfocus="this.style.borderColor='var(--peach-mid)'" onblur="this.style.borderColor='var(--border)'">${esc(p.bio||'')}</textarea></div>
-        <button onclick="saveProfile()" style="width:100%;padding:11px;border-radius:12px;background:var(--peach);border:none;cursor:pointer;font-family:Roboto,sans-serif;font-size:15px;font-weight:800;color:#fff;margin-top:4px">Lưu thông tin</button>
-      </div>
+  // Works section - horizontal scroll
+  html += `<div style="margin-top:18px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <span style="font-size:15px;font-weight:800;color:var(--text)">Truyện của ${esc(p.username||p.display_name||'...')} <span style="color:var(--peach)">›</span></span>
+      <span id="intro-works-count" style="font-size:13px;color:var(--text-muted)"></span>
     </div>
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:12px">
-      <div style="font-size:11px;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px">Đổi mật khẩu</div>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <input id="pw-new" type="password" placeholder="Mật khẩu mới" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:Roboto,sans-serif;font-size:14px;color:var(--text);outline:none">
-        <button onclick="changePassword()" style="width:100%;padding:10px;border-radius:12px;background:none;border:1.5px solid var(--peach-mid);cursor:pointer;font-family:Roboto,sans-serif;font-size:14px;font-weight:700;color:var(--peach-dark)">Đổi mật khẩu</button>
-      </div>
+    <div id="intro-works-scroll" style="display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;-webkit-overflow-scrolling:touch;scrollbar-width:none">
+      <div style="font-size:13px;color:var(--text-muted);padding:.5rem 0">Đang tải...</div>
+    </div>
+  </div>`;
+
+  // Own profile: edit button
+  if (isOwnProfile) {
+    html += `<div style="margin-top:24px;padding-top:16px;border-top:1px solid var(--border)">
+      <button onclick="openEditModal()" style="width:100%;padding:11px;border-radius:12px;background:var(--peach-light);border:1.5px solid var(--border);cursor:pointer;font-family:'Roboto',sans-serif;font-size:14px;font-weight:700;color:var(--peach-dark);display:flex;align-items:center;justify-content:center;gap:8px">
+        <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Chỉnh sửa hồ sơ
+      </button>
     </div>`;
   }
+
   document.getElementById('intro-content').innerHTML = html;
+  loadIntroWorks();
+}
+
+async function loadIntroWorks() {
+  const scroll = document.getElementById('intro-works-scroll');
+  if (!scroll) return;
+  const { data: stories } = await sb.from('stories').select('*').eq('user_id', profileUserId).order('created_at', {ascending:false});
+  const countEl = document.getElementById('intro-works-count');
+  if (!stories || !stories.length) {
+    scroll.innerHTML = '<div style="font-size:13px;color:var(--text-muted);padding:.5rem 0">Chưa có tác phẩm nào</div>';
+    return;
+  }
+  if (countEl) countEl.textContent = stories.length + ' Truyện Đã Đăng';
+  scroll.innerHTML = stories.map(s => `
+    <a href="story.html?story=${s.id}" style="flex-shrink:0;width:120px;text-decoration:none;color:var(--text)">
+      <div style="width:120px;height:168px;border-radius:10px;overflow:hidden;background:linear-gradient(145deg,var(--peach-light),#FDF6E3);margin-bottom:7px;position:relative">
+        ${s.cover_url ? `<img src="${esc(s.cover_url)}" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none'" loading="lazy">` : `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:32px">📖</div>`}
+      </div>
+      <div style="font-size:12px;font-weight:700;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${esc(s.title)}</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:3px;display:flex;align-items:center;gap:3px">
+        <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" fill="none" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        ${fmtNum(s.total_views||0)}
+      </div>
+    </a>`).join('');
+}
+
+function openEditModal() {
+  const p = profileData;
+  document.getElementById('ed-name').value = p.display_name || '';
+  document.getElementById('ed-username').value = p.username || '';
+  document.getElementById('ed-bio').value = p.bio || '';
+  const modal = document.getElementById('edit-modal');
+  modal.style.display = 'flex';
+  setTimeout(() => document.getElementById('edit-modal-box').style.transform = 'translateY(0)', 10);
+}
+function closeEditModal() {
+  document.getElementById('edit-modal-box').style.transform = 'translateY(100%)';
+  setTimeout(() => document.getElementById('edit-modal').style.display = 'none', 250);
 }
 
 async function loadWorks() {
@@ -603,7 +698,9 @@ async function loadWall() {
   const list = document.getElementById('wall-list');
   list.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:13px">Đang tải...</div>';
 
-  if (currentUser) document.getElementById('wall-compose').style.display = 'block';
+  if (currentUser) {
+    document.getElementById('wall-compose').style.display = 'block';
+  }
 
   const { data: posts } = await sb.from('wall_posts')
     .select('*, profiles(display_name, avatar_url, username)')
@@ -611,45 +708,60 @@ async function loadWall() {
     .order('created_at', {ascending:false});
 
   if (!posts || !posts.length) {
-    list.innerHTML = '<div style="text-align:center;padding:3rem 1rem;color:var(--text-muted);font-size:13px"><div style="font-size:36px;margin-bottom:8px">💬</div>Chưa có tin nhắn nào</div>';
+    list.innerHTML = '<div style="text-align:center;padding:3rem 1rem;color:#999;font-size:13px"><div style="font-size:36px;margin-bottom:8px">💬</div>Chưa có tin nhắn nào</div>';
     return;
   }
+  list.style.padding = '0';
+  list.style.textAlign = 'left';
   list.innerHTML = posts.map(p => {
     const pf = p.profiles || {};
     const initials = (pf.display_name||'?')[0].toUpperCase();
     const canDelete = currentUser && (currentUser.id === p.user_id || currentUser.id === profileUserId || ADMIN_EMAILS.includes(currentUser.email));
     const menuId = 'menu_' + p.id;
-    return `<div class="wall-post-item" id="post_${p.id}" style="background:#fff;border-radius:4px;padding:14px 16px;position:relative;margin-bottom:8px">
-      <div style="display:flex;align-items:flex-start;gap:12px">
-        <div style="width:44px;height:44px;border-radius:50%;background:var(--peach-light);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:var(--peach-dark);overflow:hidden;flex-shrink:0">
-          ${pf.avatar_url?`<img src="${esc(pf.avatar_url)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.parentElement.textContent='${initials}'">`:`${initials}`}
+    return `<div id="post_${p.id}" style="background:#fff;margin-bottom:6px;position:relative">
+      <!-- Header: avatar + tên + 3 chấm -->
+      <div style="display:flex;align-items:center;gap:12px;padding:14px 16px 10px">
+        <div style="width:48px;height:48px;border-radius:50%;background:#e8e8e8;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:#555;overflow:hidden;flex-shrink:0">
+          ${pf.avatar_url ? `<img src="${esc(pf.avatar_url)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.parentElement.textContent='${initials}'">` : initials}
         </div>
         <div style="flex:1;min-width:0">
-          <div style="font-size:14px;font-weight:800;color:var(--text)">${esc(pf.display_name||'Người dùng')} <span style="font-weight:400;color:var(--text-muted);font-size:13px">đã đăng một tin nhắn</span></div>
-          <div style="font-size:12px;color:var(--text-muted);margin-top:1px">${fmtDate(p.created_at)}</div>
+          <div style="font-size:14px;font-weight:700;color:#222">${esc(pf.display_name||'Người dùng')} <span style="font-weight:400;color:#888;font-size:13px">đã đăng một tin nhắn</span></div>
+          <div style="font-size:12px;color:#aaa;margin-top:2px">${fmtDate(p.created_at)}</div>
         </div>
-        <button onclick="toggleWallMenu('${menuId}')" style="background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:20px;padding:0 4px;line-height:1;flex-shrink:0">⋯</button>
+        <button onclick="toggleWallMenu('${menuId}')" style="background:none;border:none;cursor:pointer;color:#aaa;padding:4px 6px;line-height:1;flex-shrink:0">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="#aaa"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+        </button>
       </div>
-      <div id="${menuId}" style="display:none;position:absolute;right:12px;top:52px;background:var(--card);border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.14);overflow:hidden;z-index:50;min-width:220px;border:1px solid var(--border)">
-        <div onclick="openReply('${p.id}');toggleWallMenu('${menuId}')" style="padding:16px 20px;font-size:15px;color:var(--text);cursor:pointer;border-bottom:1px solid var(--border)">Trả lời</div>
-        ${canDelete?`<div onclick="deleteWallPost('${p.id}');toggleWallMenu('${menuId}')" style="padding:16px 20px;font-size:15px;color:var(--danger);font-weight:700;cursor:pointer;border-bottom:1px solid var(--border)">Xóa tin nhắn</div>`:''}
-        <div onclick="toggleWallMenu('${menuId}')" style="padding:16px 20px;font-size:15px;color:var(--text-muted);cursor:pointer">Đóng</div>
+      <!-- Dropdown menu -->
+      <div id="${menuId}" style="display:none;position:absolute;right:10px;top:48px;background:#fff;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.15);overflow:hidden;z-index:50;min-width:200px;border:1px solid #eee">
+        <div onclick="openReply('${p.id}');toggleWallMenu('${menuId}')" style="padding:14px 18px;font-size:14px;color:#333;cursor:pointer;border-bottom:1px solid #f0f0f0">Trả lời</div>
+        ${canDelete ? `<div onclick="deleteWallPost('${p.id}');toggleWallMenu('${menuId}')" style="padding:14px 18px;font-size:14px;color:#e05252;font-weight:600;cursor:pointer;border-bottom:1px solid #f0f0f0">Xóa tin nhắn</div>` : ''}
+        <div onclick="toggleWallMenu('${menuId}')" style="padding:14px 18px;font-size:14px;color:#aaa;cursor:pointer">Đóng</div>
       </div>
-      <hr style="border:none;border-top:1px solid var(--border);margin:10px 0">
-      <div style="font-size:15px;color:var(--text);line-height:1.65;white-space:pre-wrap">${esc(p.content)}</div>
-      <div id="replies-${p.id}" style="margin-top:8px"></div>
-      <button onclick="openReply('${p.id}')" style="background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:13px;font-weight:600;padding:6px 0 0;display:flex;align-items:center;gap:5px;font-family:Roboto,sans-serif">
-        <svg viewBox="0 0 24 24" width="14" height="14" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        Trả lời
-      </button>
-      <div id="replybox-${p.id}" style="display:none;margin-top:10px">
+      <!-- Divider -->
+      <div style="height:1px;background:#f0f0f0;margin:0 16px"></div>
+      <!-- Content -->
+      <div style="padding:12px 16px;font-size:15px;color:#333;line-height:1.65;white-space:pre-wrap">${esc(p.content)}</div>
+      <!-- Replies -->
+      <div id="replies-${p.id}" style="padding:0 16px"></div>
+      <!-- Reply box (hidden) -->
+      <div id="replybox-${p.id}" style="display:none;padding:0 16px 10px">
         <div style="display:flex;gap:8px">
-          <input id="reply-input-${p.id}" placeholder="Viết trả lời..." style="flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-family:Roboto,sans-serif;font-size:13px;color:var(--text);outline:none">
-          <button onclick="postReply('${p.id}')" style="background:var(--peach);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:800;cursor:pointer">Gửi</button>
+          <input id="reply-input-${p.id}" placeholder="Viết trả lời..." style="flex:1;background:#f5f5f5;border:none;border-radius:8px;padding:9px 12px;font-family:'Roboto',sans-serif;font-size:13px;color:#333;outline:none">
+          <button onclick="postReply('${p.id}')" style="background:var(--peach);color:#fff;border:none;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer">Gửi</button>
         </div>
+      </div>
+      <!-- Reply button row -->
+      <div style="background:#f0f0f0;padding:10px 16px">
+        <button onclick="openReply('${p.id}')" style="background:none;border:none;cursor:pointer;color:#888;font-size:13px;font-weight:500;display:flex;align-items:center;gap:7px;font-family:'Roboto',sans-serif;padding:0">
+          <svg viewBox="0 0 24 24" width="16" height="16" style="stroke:#888;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Trả lời
+        </button>
       </div>
     </div>`;
   }).join('');
+  // Load replies for all posts
+  posts.forEach(p => loadReplies(p.id));
 }
 
 function toggleWallMenu(id) {
@@ -670,8 +782,7 @@ function openReply(postId) {
   const box = document.getElementById('replybox-'+postId);
   if (!box) return;
   const isOpen = box.style.display !== 'none';
-  box.style.display = isOpen ? 'none' : 'flex';
-  box.style.flexDirection = 'column';
+  box.style.display = isOpen ? 'none' : 'block';
   if (!isOpen) document.getElementById('reply-input-'+postId)?.focus();
 }
 
@@ -680,45 +791,58 @@ async function postWall() {
   const content = input.value.trim();
   if (!content) return;
   if (!currentUser) { showToast('Đăng nhập để đăng tin!'); return; }
+  const btn = input.nextElementSibling?.querySelector('button') || document.querySelector('[onclick="postWall()"]');
   const { error } = await sb.from('wall_posts').insert({ profile_id: profileUserId, user_id: currentUser.id, content });
-  if (error) { showToast('Lỗi đăng tin!'); return; }
+  if (error) { showToast('Lỗi đăng tin: ' + error.message); return; }
   input.value = '';
+  input.style.height = 'auto';
   showToast('Đã đăng! 🎉');
   loadWall();
 }
 
 async function deleteWallPost(id) {
   if (!confirm('Xóa tin nhắn này?')) return;
-  // Xóa khỏi DOM ngay lập tức
   const el = document.getElementById('post_'+id);
   if (el) { el.style.opacity='0'; el.style.transition='opacity .2s'; setTimeout(()=>el.remove(),200); }
   await sb.from('wall_posts').delete().eq('id', id);
-}
-
-async function toggleReplies(postId, btn) {
-  const el = document.getElementById('replies-'+postId);
-  if (el.style.display !== 'none') { el.style.display='none'; return; }
-  el.style.display = 'block';
-  el.innerHTML = '<div style="font-size:12px;color:var(--text-muted)">Đang tải...</div>';
-  const { data: replies } = await sb.from('wall_replies').select('*, profiles(display_name,avatar_url)').eq('post_id',postId).order('created_at');
-  let html = '';
-  if (replies && replies.length) {
-    html = replies.map(r => {
-      const pf = r.profiles||{}; const ini = (pf.display_name||'?')[0].toUpperCase();
-      return `<div style="display:flex;gap:8px;margin-bottom:8px"><div style="width:28px;height:28px;border-radius:50%;background:var(--peach-light);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--peach-dark);flex-shrink:0;overflow:hidden">${pf.avatar_url?`<img src="${esc(pf.avatar_url)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:`${ini}`}</div><div><div style="font-size:12px;font-weight:800">${esc(pf.display_name||'?')}</div><div style="font-size:13px;color:var(--text)">${esc(r.content)}</div></div></div>`;
-    }).join('');
-  }
-  if (currentUser) html += `<div style="display:flex;gap:8px;margin-top:8px"><input id="reply-input-${postId}" placeholder="Viết trả lời..." style="flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:7px 10px;font-family:Roboto,sans-serif;font-size:13px;color:var(--text);outline:none"><button onclick="postReply('${postId}')" style="background:var(--peach);color:#fff;border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:800;cursor:pointer">Gửi</button></div>`;
-  el.innerHTML = html || '<div style="font-size:12px;color:var(--text-muted);margin-bottom:8px">Chưa có trả lời</div>' + (currentUser?`<div style="display:flex;gap:8px;margin-top:8px"><input id="reply-input-${postId}" placeholder="Viết trả lời..." style="flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:7px 10px;font-family:Roboto,sans-serif;font-size:13px;color:var(--text);outline:none"><button onclick="postReply('${postId}')" style="background:var(--peach);color:#fff;border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:800;cursor:pointer">Gửi</button></div>`:'');
 }
 
 async function postReply(postId) {
   const input = document.getElementById('reply-input-'+postId);
   const content = input?.value?.trim();
   if (!content || !currentUser) return;
-  await sb.from('wall_replies').insert({ post_id: postId, user_id: currentUser.id, content });
-  toggleReplies(postId, null);
-  setTimeout(()=>toggleReplies(postId, null), 100);
+  const { error } = await sb.from('wall_replies').insert({ post_id: postId, user_id: currentUser.id, content });
+  if (error) { showToast('Lỗi gửi trả lời!'); return; }
+  input.value = '';
+  // Close reply box
+  const box = document.getElementById('replybox-'+postId);
+  if (box) box.style.display = 'none';
+  // Load and show replies
+  await loadReplies(postId);
+  showToast('Đã gửi! 💬');
+}
+
+async function loadReplies(postId) {
+  const el = document.getElementById('replies-'+postId);
+  if (!el) return;
+  const { data: replies } = await sb.from('wall_replies')
+    .select('*, profiles(display_name,avatar_url)')
+    .eq('post_id', postId)
+    .order('created_at');
+  if (!replies || !replies.length) { el.innerHTML = ''; return; }
+  el.innerHTML = `<div style="padding:8px 0 4px">` + replies.map(r => {
+    const pf = r.profiles||{};
+    const ini = (pf.display_name||'?')[0].toUpperCase();
+    return `<div style="display:flex;gap:10px;padding:8px 0;border-top:1px solid #f0f0f0">
+      <div style="width:32px;height:32px;border-radius:50%;background:#e8e8e8;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#555;flex-shrink:0;overflow:hidden">
+        ${pf.avatar_url ? `<img src="${esc(pf.avatar_url)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : ini}
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:#222">${esc(pf.display_name||'?')}</div>
+        <div style="font-size:13px;color:#444;margin-top:2px;line-height:1.5">${esc(r.content)}</div>
+      </div>
+    </div>`;
+  }).join('') + `</div>`;
 }
 
 /* ── Follow ── */
@@ -788,8 +912,12 @@ async function saveProfile() {
   const { error } = await sb.from('profiles').update(updates).eq('id', currentUser.id);
   if (error) { showToast('Lỗi lưu: ' + error.message); return; }
   showToast('Đã lưu! 🐹');
+  profileData = { ...profileData, ...updates };
   document.getElementById('display-name-header').textContent = updates.display_name || 'Người dùng';
   document.getElementById('username-header').textContent = '@' + (updates.username||'...');
+  document.getElementById('bio-header').textContent = updates.bio ? updates.bio.slice(0,100)+(updates.bio.length>100?'...':'') : '';
+  closeEditModal();
+  renderIntro();
 }
 
 async function changePassword() {
