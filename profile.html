@@ -318,6 +318,18 @@ body {
 .swatch.active { border-color: var(--peach); box-shadow: 0 0 0 2px var(--bg2), 0 0 0 4px var(--peach); }
 .swatch:hover { transform: scale(1.1); }
 .swatch-lbl { font-size: 9px; text-align: center; color: var(--text-muted); margin-top: 3px; font-weight: 700; }
+
+/* ── FOLLOW BTN ── */
+.follow-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: rgba(255,255,255,0.18); color: #fff;
+  border: 1.5px solid rgba(255,255,255,0.6);
+  border-radius: 10px; padding: 10px 36px;
+  font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 800;
+  cursor: pointer; margin: 8px 0 4px; transition: all .15s;
+  letter-spacing: .3px; backdrop-filter: blur(4px);
+}
+.follow-btn:hover { background: rgba(255,255,255,0.28); }
 </style>
 </head>
 <body class="theme-light">
@@ -338,24 +350,43 @@ body {
 <div class="theme-drawer" id="theme-drawer">
   <div class="theme-drawer-title">🎨 Giao diện</div>
   <div class="theme-swatches">
+<!-- TOPBAR -->
+<div class="topbar" id="topbar">
+  <button class="topbar-btn" onclick="history.back()">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <div class="topbar-right">
+    <button class="topbar-btn" onclick="toggleThemeDrawer()" id="theme-toggle-btn">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- THEME DRAWER -->
+<div class="theme-drawer" id="theme-drawer">
+  <div class="theme-drawer-title">🎨 Giao diện</div>
+  <div class="theme-swatches">
     <div><div class="swatch" style="background:#FDF6F2;border:2px solid #F2A882" onclick="setTheme('light',this)"></div><div class="swatch-lbl">Sáng</div></div>
     <div><div class="swatch" style="background:#1a1a1a" onclick="setTheme('dark',this)"></div><div class="swatch-lbl">Tối</div></div>
     <div><div class="swatch" style="background:#f5f0e8;border:2px solid #A67C52" onclick="setTheme('sepia',this)"></div><div class="swatch-lbl">Sepia</div></div>
     <div><div class="swatch" style="background:#e8f0fe;border:2px solid #4a7de0" onclick="setTheme('blue',this)"></div><div class="swatch-lbl">Xanh</div></div>
     <div><div class="swatch" style="background:#fff0f6;border:2px solid #e876a0" onclick="setTheme('pink',this)"></div><div class="swatch-lbl">Hồng</div></div>
     <div><div class="swatch" style="background:#f0ebff;border:2px solid #8a5de0" onclick="setTheme('purple',this)"></div><div class="swatch-lbl">Tím</div></div>
-    <div><div class="swatch" style="background:#f0f0f0;border:2px solid #777" onclick="setTheme('gray',this)"></div><div class="swatch-lbl">Xám</div></div>
-    <div><div class="swatch" style="background:#faf5ee;border:2px solid #f26522" onclick="setTheme('wattpad',this)"></div><div class="swatch-lbl">Warm</div></div>
   </div>
 </div>
 
 <!-- PROFILE HEADER -->
 <div class="profile-header" id="profile-header">
-  <div class="header-bg-blur"></div>
+  <div class="header-bg-blur" id="header-bg-blur"></div>
+  <label id="banner-edit-btn" for="banner-file" style="display:none;position:absolute;top:58px;right:10px;z-index:5;background:rgba(0,0,0,0.35);border:none;border-radius:8px;padding:7px 11px;color:#fff;font-family:Nunito,sans-serif;font-size:12px;font-weight:700;cursor:pointer;align-items:center;gap:5px;backdrop-filter:blur(4px)">
+    <svg viewBox="0 0 24 24" width="13" height="13" style="stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+    Đổi ảnh nền
+  </label>
+  <input type="file" id="banner-file" accept="image/*" style="display:none">
   <div class="header-content" id="header-content">
-    <div class="avatar-ring">
+    <div class="avatar-ring" id="avatar-ring">
       <div class="avatar-img" id="avatar-display">🐹</div>
-      <label class="avatar-edit-label" for="avatar-file" title="Đổi ảnh">
+      <label class="avatar-edit-label" id="avatar-edit-label" for="avatar-file" title="Đổi ảnh" style="display:none">
         <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
       </label>
       <input type="file" id="avatar-file" accept="image/*">
@@ -364,28 +395,32 @@ body {
     <div class="profile-name" id="display-name-header">...</div>
     <div class="profile-username" id="username-header">@...</div>
     <div class="profile-bio-preview" id="bio-header"></div>
+    <button class="follow-btn" id="follow-btn" style="display:none" onclick="toggleFollow()">
+      <svg viewBox="0 0 24 24" width="14" height="14" style="stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+      Theo dõi
+    </button>
     <div class="stats-row">
       <div class="stat-item" onclick="switchTab('works')">
         <div class="stat-num" id="stat-works">0</div>
         <div class="stat-label">Tác phẩm</div>
       </div>
-      <div class="stat-item" onclick="location.href='library.html?tab=reading'">
+      <div class="stat-item" id="stat-reading-item">
         <div class="stat-num" id="stat-reading">0</div>
-        <div class="stat-label">Đang đọc</div>
+        <div class="stat-label">Danh sách đọc</div>
       </div>
-      <div class="stat-item" onclick="location.href='library.html?tab=follow'">
-        <div class="stat-num" id="stat-follow">0</div>
-        <div class="stat-label">Theo dõi</div>
+      <div class="stat-item">
+        <div class="stat-num" id="stat-followers">0</div>
+        <div class="stat-label">Người theo dõi</div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- TAB BAR -->
-<div class="tab-bar">
+<div class="tab-bar" id="tab-bar">
   <button class="tab-btn active" id="tab-intro" onclick="switchTab('intro')">Giới thiệu</button>
-  <button class="tab-btn" id="tab-works" onclick="switchTab('works')">Tác phẩm</button>
-  <button class="tab-btn" id="tab-settings" onclick="switchTab('settings')">Cài đặt</button>
+  <button class="tab-btn" id="tab-wall" onclick="switchTab('wall')">Hội thoại</button>
+  <button class="tab-btn" id="tab-settings" onclick="switchTab('settings')" style="display:none">Cài đặt</button>
 </div>
 
 <!-- PANE: GIỚI THIỆU -->
@@ -398,8 +433,18 @@ body {
   <div class="story-grid" id="works-grid">
     <div class="skel-card"><div class="skel skel-cover-sq"></div><div class="skel skel-line"></div><div class="skel skel-line short"></div></div>
     <div class="skel-card"><div class="skel skel-cover-sq"></div><div class="skel skel-line"></div><div class="skel skel-line short"></div></div>
-    <div class="skel-card"><div class="skel skel-cover-sq"></div><div class="skel skel-line"></div><div class="skel skel-line short"></div></div>
   </div>
+</div>
+
+<!-- PANE: HỘI THOẠI -->
+<div class="pane" id="pane-wall">
+  <div id="wall-compose" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:14px">
+    <textarea id="wall-input" placeholder="Đăng một tin nhắn..." style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:Nunito,sans-serif;font-size:14px;color:var(--text);outline:none;resize:none;min-height:72px;transition:border .15s" onfocus="this.style.borderColor='var(--peach-mid)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+    <div style="display:flex;justify-content:flex-end;margin-top:8px">
+      <button onclick="postWall()" style="background:var(--peach);color:#fff;border:none;border-radius:10px;padding:8px 18px;font-family:Nunito,sans-serif;font-size:13px;font-weight:800;cursor:pointer">Đăng</button>
+    </div>
+  </div>
+  <div id="wall-list" style="color:var(--text-muted);font-size:13px;text-align:center;padding:2rem">Đang tải...</div>
 </div>
 
 <!-- PANE: CÀI ĐẶT -->
@@ -408,70 +453,415 @@ body {
 </div>
 
 <div class="toast" id="toast"></div>
-
 <script>
 const SUPABASE_URL = 'https://jnlqzqtavfptkfvnndxq.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ojRrfSwxK_B6-TGSXaYGxQ_DKERN0-f';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const ADMIN_EMAILS = ['peachluku@gmail.com'];
 
-/* ── theme ── */
-(function(){
-  const t = localStorage.getItem('plTheme') || 'light';
-  document.body.className = 'theme-' + t;
-})();
-function setTheme(name, el) {
-  document.body.className = 'theme-' + name;
-  localStorage.setItem('plTheme', name);
-  document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
-  if (el) el.classList.add('active');
+/* theme */
+(function(){ const t = localStorage.getItem('plTheme')||'light'; document.body.className='theme-'+t; })();
+function setTheme(n,el){ document.body.className='theme-'+n; localStorage.setItem('plTheme',n); document.querySelectorAll('.swatch').forEach(s=>s.classList.remove('active')); if(el)el.classList.add('active'); }
+function toggleThemeDrawer(){ document.getElementById('theme-drawer').classList.toggle('open'); }
+document.addEventListener('click',e=>{ const d=document.getElementById('theme-drawer'); if(!d.contains(e.target)&&!e.target.closest('#theme-toggle-btn'))d.classList.remove('open'); });
+window.addEventListener('scroll',()=>{ document.getElementById('topbar').classList.toggle('scrolled',window.scrollY>60); });
+
+function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2200); }
+function esc(s){ if(!s)return''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmtNum(n){ if(!n)return'0'; if(n>=1000000)return(n/1e6).toFixed(1)+'M'; if(n>=1000)return(n/1000).toFixed(1)+'K'; return String(n); }
+function fmtDate(d){ const dt=new Date(d); return dt.toLocaleDateString('vi-VN',{day:'numeric',month:'short',year:'numeric'})+' lúc '+dt.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'}); }
+
+let currentUser = null;
+let profileData = null;
+let profileUserId = null;
+let isOwnProfile = false;
+let isFollowing = false;
+
+function switchTab(name) {
+  ['intro','works','wall','settings'].forEach(t => {
+    document.getElementById('tab-'+t)?.classList.toggle('active', t===name);
+    document.getElementById('pane-'+t)?.classList.toggle('active', t===name);
+  });
+  if (name === 'wall') loadWall();
+  if (name === 'works') loadWorks();
 }
-function toggleThemeDrawer() {
-  document.getElementById('theme-drawer').classList.toggle('open');
+
+async function init() {
+  const params = new URLSearchParams(location.search);
+  const userParam = params.get('user');
+
+  let sessionUser = null;
+  try { const {data:{session}} = await sb.auth.getSession(); sessionUser = session?.user||null; } catch(e){}
+  if (!sessionUser) {
+    sb.auth.onAuthStateChange((ev,session) => { if(session){ currentUser=session.user; if(isOwnProfile) showOwnControls(); checkFollowing(); } });
+  } else {
+    currentUser = sessionUser;
+  }
+
+  if (!userParam) {
+    // Own profile
+    if (!currentUser) { renderLoginWall(); return; }
+    profileUserId = currentUser.id;
+    isOwnProfile = true;
+  } else {
+    profileUserId = userParam;
+    isOwnProfile = currentUser && currentUser.id === profileUserId;
+  }
+
+  await loadProfile();
+  loadWorks();
+  if (currentUser && !isOwnProfile) checkFollowing();
+  if (isOwnProfile) showOwnControls();
+}
+
+async function loadProfile() {
+  const { data } = await sb.from('profiles').select('*').eq('id', profileUserId).maybeSingle();
+  profileData = data || {};
+
+  // Banner
+  const bannerUrl = profileData.banner_url || profileData.avatar_url;
+  if (bannerUrl) {
+    const blur = document.getElementById('header-bg-blur');
+    blur.style.backgroundImage = `url('${bannerUrl}')`;
+    blur.style.backgroundSize = 'cover';
+    blur.style.backgroundPosition = 'center';
+    blur.style.filter = profileData.banner_url ? 'blur(0px) brightness(0.55)' : 'blur(22px) brightness(0.35)';
+    blur.style.transform = profileData.banner_url ? 'scale(1)' : 'scale(1.15)';
+  }
+
+  // Avatar
+  const avatarEl = document.getElementById('avatar-display');
+  if (profileData.avatar_url) {
+    avatarEl.innerHTML = `<img src="${esc(profileData.avatar_url)}" onerror="this.parentElement.textContent='🐹'">`;
+  } else {
+    const initials = (profileData.display_name||'?')[0].toUpperCase();
+    avatarEl.textContent = initials;
+  }
+
+
+  document.getElementById('display-name-header').textContent = profileData.display_name || 'Người dùng';
+  document.getElementById('username-header').textContent = '@' + (profileData.username || '...');
+  document.getElementById('bio-header').textContent = profileData.bio ? profileData.bio.slice(0,100)+(profileData.bio.length>100?'...':'') : '';
+  document.title = (profileData.display_name||'Hồ sơ') + ' — Peach Luku';
+
+  // Stats
+  const [{ count: worksCount }, { count: followersCount }] = await Promise.all([
+    sb.from('stories').select('*', {count:'exact',head:true}).eq('user_id', profileUserId),
+    sb.from('user_follows').select('*', {count:'exact',head:true}).eq('following_id', profileUserId),
+  ]);
+  document.getElementById('stat-works').textContent = fmtNum(worksCount||0);
+  document.getElementById('stat-followers').textContent = fmtNum(followersCount||0);
+
+  // Intro pane
+  renderIntro();
+
+  // Show follow button for other profiles
+  if (!isOwnProfile && currentUser) {
+    document.getElementById('follow-btn').style.display = 'inline-flex';
+  }
+}
+
+function renderIntro() {
+  const p = profileData;
+  let html = '';
+  if (p.bio) html += `<div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:12px;font-size:14px;line-height:1.7;color:var(--text);white-space:pre-wrap">${esc(p.bio)}</div>`;
+  if (p.website||p.facebook||p.twitter) {
+    html += `<div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:12px">`;
+    if (p.website) html += `<div style="margin-bottom:8px;font-size:13px"><a href="${esc(p.website)}" target="_blank" style="color:var(--peach);font-weight:700;word-break:break-all">🔗 ${esc(p.website)}</a></div>`;
+    if (p.facebook) html += `<div style="margin-bottom:8px;font-size:13px"><a href="${esc(p.facebook)}" target="_blank" style="color:var(--peach);font-weight:700">📘 Facebook</a></div>`;
+    html += `</div>`;
+  }
+  if (!html) html = `<div style="text-align:center;padding:3rem 1rem;color:var(--text-muted);font-size:13px"><div style="font-size:36px;margin-bottom:8px">🐹</div>Chưa có giới thiệu</div>`;
+
+  if (isOwnProfile) {
+    html += `
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:12px">
+      <div style="font-size:11px;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px">Chỉnh sửa hồ sơ</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div><label style="font-size:12px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px">Tên hiển thị</label>
+        <input id="ed-name" value="${esc(p.display_name||'')}" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:Nunito,sans-serif;font-size:14px;color:var(--text);outline:none" onfocus="this.style.borderColor='var(--peach-mid)'" onblur="this.style.borderColor='var(--border)'"></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px">Username</label>
+        <input id="ed-username" value="${esc(p.username||'')}" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:Nunito,sans-serif;font-size:14px;color:var(--text);outline:none" onfocus="this.style.borderColor='var(--peach-mid)'" onblur="this.style.borderColor='var(--border)'"></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px">Giới thiệu bản thân</label>
+        <textarea id="ed-bio" rows="4" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:Nunito,sans-serif;font-size:14px;color:var(--text);outline:none;resize:none" onfocus="this.style.borderColor='var(--peach-mid)'" onblur="this.style.borderColor='var(--border)'">${esc(p.bio||'')}</textarea></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px">Website / Link</label>
+        <input id="ed-website" value="${esc(p.website||'')}" placeholder="https://..." style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:Nunito,sans-serif;font-size:14px;color:var(--text);outline:none" onfocus="this.style.borderColor='var(--peach-mid)'" onblur="this.style.borderColor='var(--border)'"></div>
+        <button onclick="saveProfile()" style="width:100%;padding:11px;border-radius:12px;background:var(--peach);border:none;cursor:pointer;font-family:Nunito,sans-serif;font-size:15px;font-weight:800;color:#fff;margin-top:4px">Lưu thông tin</button>
+      </div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:12px">
+      <div style="font-size:11px;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px">Đổi mật khẩu</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <input id="pw-new" type="password" placeholder="Mật khẩu mới" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-family:Nunito,sans-serif;font-size:14px;color:var(--text);outline:none">
+        <button onclick="changePassword()" style="width:100%;padding:10px;border-radius:12px;background:none;border:1.5px solid var(--peach-mid);cursor:pointer;font-family:Nunito,sans-serif;font-size:14px;font-weight:700;color:var(--peach-dark)">Đổi mật khẩu</button>
+      </div>
+    </div>`;
+  }
+  document.getElementById('intro-content').innerHTML = html;
+}
+
+async function loadWorks() {
+  const grid = document.getElementById('works-grid');
+  const { data: stories } = await sb.from('stories').select('*').eq('user_id', profileUserId).order('created_at', {ascending:false});
+  if (!stories || !stories.length) {
+    grid.innerHTML = '<div style="text-align:center;padding:3rem 1rem;color:var(--text-muted);font-size:13px"><div style="font-size:36px;margin-bottom:8px">📚</div>Chưa có tác phẩm nào</div>';
+    return;
+  }
+  grid.innerHTML = stories.map(s => `
+    <a class="story-card" href="story.html?story=${s.id}">
+      <div class="story-cover${s.cover_url?' has-img':''}">
+        <div class="story-cover-ph">📖</div>
+        ${s.cover_url?`<img src="${esc(s.cover_url)}" onerror="this.style.display='none'" loading="lazy">`:''}
+      </div>
+      <div class="story-info">
+        <div class="story-title">${esc(s.title)}</div>
+        <div class="story-meta">
+          <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          ${fmtNum(s.total_views||0)}
+        </div>
+      </div>
+    </a>`).join('');
+}
+
+/* ── Wall / Hội thoại ── */
+async function loadWall() {
+  const list = document.getElementById('wall-list');
+  list.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:13px">Đang tải...</div>';
+
+  if (currentUser) document.getElementById('wall-compose').style.display = 'block';
+
+  const { data: posts } = await sb.from('wall_posts')
+    .select('*, profiles(display_name, avatar_url, username)')
+    .eq('profile_id', profileUserId)
+    .order('created_at', {ascending:false});
+
+  if (!posts || !posts.length) {
+    list.innerHTML = '<div style="text-align:center;padding:3rem 1rem;color:var(--text-muted);font-size:13px"><div style="font-size:36px;margin-bottom:8px">💬</div>Chưa có tin nhắn nào</div>';
+    return;
+  }
+  list.innerHTML = posts.map(p => {
+    const pf = p.profiles || {};
+    const initials = (pf.display_name||'?')[0].toUpperCase();
+    const canDelete = currentUser && (currentUser.id === p.user_id || currentUser.id === profileUserId || ADMIN_EMAILS.includes(currentUser.email));
+    const menuId = 'menu_' + p.id;
+    return `<div class="wall-post-item" id="post_${p.id}" style="background:var(--card);border-bottom:1px solid var(--border);padding:14px 16px;position:relative">
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <div style="width:44px;height:44px;border-radius:50%;background:var(--peach-light);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:var(--peach-dark);overflow:hidden;flex-shrink:0">
+          ${pf.avatar_url?`<img src="${esc(pf.avatar_url)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.parentElement.textContent='${initials}'">`:`${initials}`}
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:14px;font-weight:800;color:var(--text)">${esc(pf.display_name||'Người dùng')} <span style="font-weight:400;color:var(--text-muted);font-size:13px">đã đăng một tin nhắn</span></div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:1px">${fmtDate(p.created_at)}</div>
+        </div>
+        <button onclick="toggleWallMenu('${menuId}')" style="background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:20px;padding:0 4px;line-height:1;flex-shrink:0">⋯</button>
+      </div>
+      <div id="${menuId}" style="display:none;position:absolute;right:12px;top:52px;background:var(--card);border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.14);overflow:hidden;z-index:50;min-width:220px;border:1px solid var(--border)">
+        <div onclick="openReply('${p.id}');toggleWallMenu('${menuId}')" style="padding:16px 20px;font-size:15px;color:var(--text);cursor:pointer;border-bottom:1px solid var(--border)">Trả lời</div>
+        ${canDelete?`<div onclick="deleteWallPost('${p.id}');toggleWallMenu('${menuId}')" style="padding:16px 20px;font-size:15px;color:var(--danger);font-weight:700;cursor:pointer;border-bottom:1px solid var(--border)">Xóa tin nhắn</div>`:''}
+        <div onclick="toggleWallMenu('${menuId}')" style="padding:16px 20px;font-size:15px;color:var(--text-muted);cursor:pointer">Đóng</div>
+      </div>
+      <hr style="border:none;border-top:1px solid var(--border);margin:10px 0">
+      <div style="font-size:15px;color:var(--text);line-height:1.65;white-space:pre-wrap">${esc(p.content)}</div>
+      <div id="replies-${p.id}" style="margin-top:8px"></div>
+      <button onclick="openReply('${p.id}')" style="background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:13px;font-weight:600;padding:6px 0 0;display:flex;align-items:center;gap:5px;font-family:Nunito,sans-serif">
+        <svg viewBox="0 0 24 24" width="14" height="14" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Trả lời
+      </button>
+      <div id="replybox-${p.id}" style="display:none;margin-top:10px;display:none">
+        <div style="display:flex;gap:8px">
+          <input id="reply-input-${p.id}" placeholder="Viết trả lời..." style="flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-family:Nunito,sans-serif;font-size:13px;color:var(--text);outline:none">
+          <button onclick="postReply('${p.id}')" style="background:var(--peach);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:800;cursor:pointer">Gửi</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleWallMenu(id) {
+  const m = document.getElementById(id);
+  if (!m) return;
+  const isOpen = m.style.display !== 'none';
+  // Close all menus first
+  document.querySelectorAll('[id^="menu_"]').forEach(el => el.style.display = 'none');
+  m.style.display = isOpen ? 'none' : 'block';
 }
 document.addEventListener('click', e => {
-  const d = document.getElementById('theme-drawer');
-  if (!d.contains(e.target) && !e.target.closest('#theme-toggle-btn')) d.classList.remove('open');
+  if (!e.target.closest('[id^="menu_"]') && e.target.textContent !== '⋯') {
+    document.querySelectorAll('[id^="menu_"]').forEach(el => el.style.display = 'none');
+  }
 });
 
-/* topbar scroll */
-window.addEventListener('scroll', () => {
-  document.getElementById('topbar').classList.toggle('scrolled', window.scrollY > 60);
+function openReply(postId) {
+  const box = document.getElementById('replybox-'+postId);
+  if (!box) return;
+  const isOpen = box.style.display !== 'none';
+  box.style.display = isOpen ? 'none' : 'flex';
+  box.style.flexDirection = 'column';
+  if (!isOpen) document.getElementById('reply-input-'+postId)?.focus();
+}
+
+async function postWall() {
+  const input = document.getElementById('wall-input');
+  const content = input.value.trim();
+  if (!content) return;
+  if (!currentUser) { showToast('Đăng nhập để đăng tin!'); return; }
+  const { error } = await sb.from('wall_posts').insert({ profile_id: profileUserId, user_id: currentUser.id, content });
+  if (error) { showToast('Lỗi đăng tin!'); return; }
+  input.value = '';
+  showToast('Đã đăng! 🎉');
+  loadWall();
+}
+
+async function deleteWallPost(id) {
+  if (!confirm('Xóa tin nhắn này?')) return;
+  // Xóa khỏi DOM ngay lập tức
+  const el = document.getElementById('post_'+id);
+  if (el) { el.style.opacity='0'; el.style.transition='opacity .2s'; setTimeout(()=>el.remove(),200); }
+  await sb.from('wall_posts').delete().eq('id', id);
+}
+
+async function toggleReplies(postId, btn) {
+  const el = document.getElementById('replies-'+postId);
+  if (el.style.display !== 'none') { el.style.display='none'; return; }
+  el.style.display = 'block';
+  el.innerHTML = '<div style="font-size:12px;color:var(--text-muted)">Đang tải...</div>';
+  const { data: replies } = await sb.from('wall_replies').select('*, profiles(display_name,avatar_url)').eq('post_id',postId).order('created_at');
+  let html = '';
+  if (replies && replies.length) {
+    html = replies.map(r => {
+      const pf = r.profiles||{}; const ini = (pf.display_name||'?')[0].toUpperCase();
+      return `<div style="display:flex;gap:8px;margin-bottom:8px"><div style="width:28px;height:28px;border-radius:50%;background:var(--peach-light);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--peach-dark);flex-shrink:0;overflow:hidden">${pf.avatar_url?`<img src="${esc(pf.avatar_url)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:`${ini}`}</div><div><div style="font-size:12px;font-weight:800">${esc(pf.display_name||'?')}</div><div style="font-size:13px;color:var(--text)">${esc(r.content)}</div></div></div>`;
+    }).join('');
+  }
+  if (currentUser) html += `<div style="display:flex;gap:8px;margin-top:8px"><input id="reply-input-${postId}" placeholder="Viết trả lời..." style="flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:7px 10px;font-family:Nunito,sans-serif;font-size:13px;color:var(--text);outline:none"><button onclick="postReply('${postId}')" style="background:var(--peach);color:#fff;border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:800;cursor:pointer">Gửi</button></div>`;
+  el.innerHTML = html || '<div style="font-size:12px;color:var(--text-muted);margin-bottom:8px">Chưa có trả lời</div>' + (currentUser?`<div style="display:flex;gap:8px;margin-top:8px"><input id="reply-input-${postId}" placeholder="Viết trả lời..." style="flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:7px 10px;font-family:Nunito,sans-serif;font-size:13px;color:var(--text);outline:none"><button onclick="postReply('${postId}')" style="background:var(--peach);color:#fff;border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:800;cursor:pointer">Gửi</button></div>`:'');
+}
+
+async function postReply(postId) {
+  const input = document.getElementById('reply-input-'+postId);
+  const content = input?.value?.trim();
+  if (!content || !currentUser) return;
+  await sb.from('wall_replies').insert({ post_id: postId, user_id: currentUser.id, content });
+  toggleReplies(postId, null);
+  setTimeout(()=>toggleReplies(postId, null), 100);
+}
+
+/* ── Follow ── */
+async function checkFollowing() {
+  if (!currentUser || isOwnProfile) return;
+  const { data } = await sb.from('user_follows').select('id').eq('follower_id', currentUser.id).eq('following_id', profileUserId).maybeSingle();
+  isFollowing = !!data;
+  updateFollowBtn();
+}
+
+function updateFollowBtn() {
+  const btn = document.getElementById('follow-btn');
+  if (!btn) return;
+  if (isFollowing) {
+    btn.style.background = 'rgba(255,255,255,0.15)';
+    btn.style.border = '2px solid rgba(255,255,255,0.75)';
+    btn.style.color = '#fff';
+    btn.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" style="stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg> Đang theo dõi`;
+  } else {
+    btn.style.background = 'transparent';
+    btn.style.border = '2px solid rgba(255,255,255,0.75)';
+    btn.style.color = '#fff';
+    btn.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" style="stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg> Theo dõi`;
+  }
+}
+
+async function toggleFollow() {
+  if (!currentUser) { showToast('Đăng nhập để theo dõi!'); return; }
+  if (isFollowing) {
+    await sb.from('user_follows').delete().eq('follower_id', currentUser.id).eq('following_id', profileUserId);
+    isFollowing = false;
+  } else {
+    await sb.from('user_follows').insert({ follower_id: currentUser.id, following_id: profileUserId });
+    isFollowing = true;
+  }
+  updateFollowBtn();
+  // Update count
+  const { count } = await sb.from('user_follows').select('*',{count:'exact',head:true}).eq('following_id', profileUserId);
+  document.getElementById('stat-followers').textContent = fmtNum(count||0);
+}
+
+function showOwnControls() {
+  document.getElementById('avatar-edit-label').style.display = 'flex';
+  document.getElementById('banner-edit-btn').style.display = 'flex';
+  document.getElementById('follow-btn').style.display = 'none';
+  document.getElementById('tab-settings')?.style.setProperty('display','block');
+}
+
+/* ── Save profile ── */
+async function saveProfile() {
+  if (!currentUser) return;
+  const updates = {
+    display_name: document.getElementById('ed-name')?.value?.trim(),
+    username: document.getElementById('ed-username')?.value?.trim(),
+    bio: document.getElementById('ed-bio')?.value?.trim(),
+    website: document.getElementById('ed-website')?.value?.trim(),
+  };
+  const { error } = await sb.from('profiles').update(updates).eq('id', currentUser.id);
+  if (error) { showToast('Lỗi lưu: ' + error.message); return; }
+  showToast('Đã lưu! 🐹');
+  document.getElementById('display-name-header').textContent = updates.display_name || 'Người dùng';
+  document.getElementById('username-header').textContent = '@' + (updates.username||'...');
+}
+
+async function changePassword() {
+  const pw = document.getElementById('pw-new')?.value;
+  if (!pw || pw.length < 6) { showToast('Mật khẩu tối thiểu 6 ký tự!'); return; }
+  const { error } = await sb.auth.updateUser({ password: pw });
+  if (error) { showToast('Lỗi: ' + error.message); return; }
+  showToast('Đổi mật khẩu thành công!');
+  document.getElementById('pw-new').value = '';
+}
+
+/* ── Avatar upload ── */
+document.getElementById('avatar-file').addEventListener('change', async e => {
+  const file = e.target.files[0];
+  if (!file || !currentUser) return;
+  document.getElementById('upload-hint').style.display = 'block';
+  const path = `avatars/${currentUser.id}/avatar_${Date.now()}`;
+  const { error: upErr } = await sb.storage.from('avatars').upload(path, file, { upsert: true });
+  if (upErr) { showToast('Lỗi upload!'); document.getElementById('upload-hint').style.display='none'; return; }
+  const url = sb.storage.from('avatars').getPublicUrl(path).data.publicUrl;
+  await sb.from('profiles').update({ avatar_url: url }).eq('id', currentUser.id);
+  document.getElementById('avatar-display').innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+  document.getElementById('upload-hint').style.display = 'none';
+  showToast('Đã cập nhật ảnh! 🐹');
 });
 
-/* ── toast ── */
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2200);
-}
+/* ── Banner upload ── */
+document.getElementById('banner-file').addEventListener('change', async e => {
+  const file = e.target.files[0];
+  if (!file || !currentUser) return;
+  showToast('Đang tải ảnh nền...');
+  const path = `banners/${currentUser.id}/banner_${Date.now()}`;
+  const { error: upErr } = await sb.storage.from('avatars').upload(path, file, { upsert: true });
+  if (upErr) { showToast('Lỗi upload!'); return; }
+  const url = sb.storage.from('avatars').getPublicUrl(path).data.publicUrl;
+  await sb.from('profiles').update({ banner_url: url }).eq('id', currentUser.id);
+  document.getElementById('header-bg-blur').style.backgroundImage = `url('${url}')`;
+  document.getElementById('header-bg-blur').style.backgroundSize = 'cover';
+  document.getElementById('header-bg-blur').style.backgroundPosition = 'center';
+  document.getElementById('header-bg-blur').style.filter = 'blur(0px) brightness(0.55)';
+  showToast('Đã cập nhật ảnh nền! 🎨');
+});
 
-function esc(s) {
-  if (!s) return '';
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-function fmtNum(n) {
-  if (!n) return '0';
-  if (n >= 1000000) return (n/1e6).toFixed(1)+'M';
-  if (n >= 1000) return (n/1000).toFixed(1)+'K';
-  return String(n);
-}
-
-/* ── tab ── */
-function switchTab(name) {
-  ['intro','works','settings'].forEach(t => {
-    document.getElementById('tab-'+t)?.classList.toggle('active', t === name);
-    document.getElementById('pane-'+t)?.classList.toggle('active', t === name);
-  });
-}
-
-/* ── state ── */
-let currentUser = null;
-let profile = null;
-
-/* ── login wall ── */
 function renderLoginWall() {
   document.getElementById('header-content').innerHTML = `
     <div style="padding:80px 0 20px;color:#fff;text-align:center">
       <div style="font-size:48px;margin-bottom:12px">🐹</div>
       <div style="font-size:18px;font-weight:800;margin-bottom:6px">Peach Luku</div>
-      <
+      <div style="font-size:13px;opacity:.7;margin-bottom:20px">Đăng nhập để xem hồ sơ của bạn</div>
+      <button onclick="location.href='auth.html'" style="background:var(--peach);color:#fff;border:none;border-radius:12px;padding:10px 28px;font-family:Nunito,sans-serif;font-size:15px;font-weight:800;cursor:pointer">Đăng nhập</button>
+    </div>`;
+  document.getElementById('tab-bar').style.display = 'none';
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
+}
+
+init();
+</script>
+</body>
+</html>
