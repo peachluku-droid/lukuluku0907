@@ -2,9 +2,9 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Hồ sơ — Peach Luku</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -350,6 +350,22 @@ body {
 <div class="theme-drawer" id="theme-drawer">
   <div class="theme-drawer-title">🎨 Giao diện</div>
   <div class="theme-swatches">
+<!-- TOPBAR -->
+<div class="topbar" id="topbar">
+  <button class="topbar-btn" onclick="history.back()">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <div class="topbar-right">
+    <button class="topbar-btn" onclick="toggleThemeDrawer()" id="theme-toggle-btn">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- THEME DRAWER -->
+<div class="theme-drawer" id="theme-drawer">
+  <div class="theme-drawer-title">🎨 Giao diện</div>
+  <div class="theme-swatches">
     <div><div class="swatch" style="background:#FDF6F2;border:2px solid #F2A882" onclick="setTheme('light',this)"></div><div class="swatch-lbl">Sáng</div></div>
     <div><div class="swatch" style="background:#1a1a1a" onclick="setTheme('dark',this)"></div><div class="swatch-lbl">Tối</div></div>
     <div><div class="swatch" style="background:#f5f0e8;border:2px solid #A67C52" onclick="setTheme('sepia',this)"></div><div class="swatch-lbl">Sepia</div></div>
@@ -361,11 +377,7 @@ body {
 
 <!-- PROFILE HEADER -->
 <div class="profile-header" id="profile-header">
-  <div class="header-bg-blur" id="header-bg-blur"></div>
-  <label id="banner-edit-btn" for="banner-file" style="display:none;position:absolute;top:58px;right:10px;z-index:5;background:rgba(0,0,0,0.35);border:none;border-radius:8px;padding:7px 11px;color:#fff;font-family:Nunito,sans-serif;font-size:12px;font-weight:700;cursor:pointer;align-items:center;gap:5px;backdrop-filter:blur(4px)">
-    <svg viewBox="0 0 24 24" width="13" height="13" style="stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-    Đổi ảnh nền
-  </label>
+  <div class="header-bg-blur" id="header-bg-blur" title="Chạm để đổi ảnh nền"></div>
   <input type="file" id="banner-file" accept="image/*" style="display:none">
   <div class="header-content" id="header-content">
     <div class="avatar-ring" id="avatar-ring">
@@ -404,7 +416,7 @@ body {
 <div class="tab-bar" id="tab-bar">
   <button class="tab-btn active" id="tab-intro" onclick="switchTab('intro')">Giới thiệu</button>
   <button class="tab-btn" id="tab-wall" onclick="switchTab('wall')">Hội thoại</button>
-  <button class="tab-btn" id="tab-settings" onclick="switchTab('settings')" style="display:none">Cài đặt</button>
+
 </div>
 
 <!-- PANE: GIỚI THIỆU -->
@@ -429,11 +441,6 @@ body {
     </div>
   </div>
   <div id="wall-list" style="color:var(--text-muted);font-size:13px;text-align:center;padding:2rem">Đang tải...</div>
-</div>
-
-<!-- PANE: CÀI ĐẶT -->
-<div class="pane" id="pane-settings">
-  <div id="settings-content" style="color:var(--text-muted);font-size:13px;text-align:center;padding:2rem">Đang tải...</div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -628,7 +635,7 @@ async function loadWall() {
     const initials = (pf.display_name||'?')[0].toUpperCase();
     const canDelete = currentUser && (currentUser.id === p.user_id || currentUser.id === profileUserId || ADMIN_EMAILS.includes(currentUser.email));
     const menuId = 'menu_' + p.id;
-    return `<div class="wall-post-item" id="post_${p.id}" style="background:var(--card);border-bottom:1px solid var(--border);padding:14px 16px;position:relative">
+    return `<div class="wall-post-item" id="post_${p.id}" style="background:#fff;border-radius:4px;padding:14px 16px;position:relative;margin-bottom:8px">
       <div style="display:flex;align-items:flex-start;gap:12px">
         <div style="width:44px;height:44px;border-radius:50%;background:var(--peach-light);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:var(--peach-dark);overflow:hidden;flex-shrink:0">
           ${pf.avatar_url?`<img src="${esc(pf.avatar_url)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.parentElement.textContent='${initials}'">`:`${initials}`}
@@ -651,7 +658,7 @@ async function loadWall() {
         <svg viewBox="0 0 24 24" width="14" height="14" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         Trả lời
       </button>
-      <div id="replybox-${p.id}" style="display:none;margin-top:10px;display:none">
+      <div id="replybox-${p.id}" style="display:none;margin-top:10px">
         <div style="display:flex;gap:8px">
           <input id="reply-input-${p.id}" placeholder="Viết trả lời..." style="flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-family:Nunito,sans-serif;font-size:13px;color:var(--text);outline:none">
           <button onclick="postReply('${p.id}')" style="background:var(--peach);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:800;cursor:pointer">Gửi</button>
@@ -771,7 +778,9 @@ async function toggleFollow() {
 
 function showOwnControls() {
   document.getElementById('avatar-edit-label').style.display = 'flex';
-  document.getElementById('banner-edit-btn').style.display = 'flex';
+  // Chạm vào ảnh nền để đổi
+  const bg = document.getElementById('header-bg-blur');
+  if (bg) { bg.style.cursor = 'pointer'; bg.onclick = () => document.getElementById('banner-file').click(); }
   document.getElementById('follow-btn').style.display = 'none';
   document.getElementById('tab-settings')?.style.setProperty('display','block');
 }
