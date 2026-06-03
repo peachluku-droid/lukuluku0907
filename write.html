@@ -22,14 +22,14 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; height: 100dvh; overflow: hidden; }
+html, body { height: 100%; overflow: hidden; }
 body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); }
 
 /* ── TOPBAR ── */
 .topbar {
   height: 52px; background: #fff; border-bottom: 1px solid var(--border);
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0 16px; position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 0 16px;
   box-shadow: 0 1px 6px rgba(0,0,0,0.06);
 }
 .topbar-left { display: flex; align-items: center; gap: 10px; }
@@ -64,17 +64,17 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 .new-story-btn:hover { background: var(--peach-dark); }
 
 /* ── LAYOUT ── */
-/* Topbar phải ở trên cùng khi scroll - đảm bảo không bị che bởi bất kỳ phần tử nào */
-.topbar { isolation: isolate; }
-.app { display: flex; padding-top: 52px; height: 100%; height: 100dvh; overflow: hidden; }
+/* body là flex column: topbar cố định trên cùng, app chiếm phần còn lại */
+body { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
+.topbar { flex-shrink: 0; position: relative; z-index: 100; }
+.app { display: flex; flex: 1; min-height: 0; overflow: hidden; }
 
 /* ── SIDEBAR ── */
 .sidebar {
   width: var(--sidebar-w); flex-shrink: 0;
   background: #fff; border-right: 1px solid var(--border);
   overflow: hidden; display: flex; flex-direction: column;
-  height: calc(100vh - 52px);
-  height: calc(100dvh - 52px);
+  height: 100%;
 }
 .sidebar-tabs {
   display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0;
@@ -89,7 +89,7 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 .sidebar-pane.active { display: flex; }
 
 /* Info pane */
-.info-pane { padding: 16px; gap: 16px; flex: 1; min-height: 0; }
+.info-pane { padding: 16px; gap: 16px; }
 .cover-area {
   display: flex; align-items: center; gap: 12px;
   padding-bottom: 16px; border-bottom: 1px solid var(--border);
@@ -557,7 +557,7 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 .sidebar-backdrop {
   display: none; position: fixed;
   top: 52px; left: 0; right: 0; bottom: 0;
-  z-index: 149;   /* dưới sidebar (150) nhưng trên app (100) */
+  z-index: 149;
   background: rgba(0,0,0,0.4); backdrop-filter: blur(2px);
   touch-action: none;
 }
@@ -569,24 +569,22 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
   .sidebar {
     display: none;
     position: fixed;
-    top: 52px;          /* bắt đầu từ dưới topbar */
+    top: 52px;
     left: 0; right: 0; bottom: 0;
     width: 100%;
-    z-index: 150;       /* cao hơn topbar (100) */
+    z-index: 150;
     overflow: hidden;
     flex-direction: column;
+    height: auto;
   }
   .sidebar.open { display: flex !important; }
-  /* Pane con scroll */
   .sidebar.open .sidebar-pane.active {
     flex: 1;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
-  /* Main luôn full width */
   .main { flex: 1; width: 100%; max-width: 100%; min-width: 0; }
   .story-select { max-width: 130px; font-size: 12px; }
-  /* content-scroll trên mobile: cho phép momentum scroll */
   .content-scroll {
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: contain;
@@ -1738,55 +1736,50 @@ document.addEventListener('keydown', e => {
 
 // ── TỰ SCROLL THEO CARET KHI GÕ ──
 (function setupCaretScroll() {
+  let rafId = null;
+
   function scrollCaretIntoView() {
     const ed = document.getElementById('chContent');
     const scroll = document.querySelector('.content-scroll');
-    if (!ed || !scroll || document.activeElement !== ed) return;
+    if (!ed || !scroll) return;
+    if (document.activeElement !== ed) return;
 
     const sel = window.getSelection();
     if (!sel || sel.rangeCount === 0) return;
 
-    // Chèn span tạm tại vị trí caret rồi scrollIntoView — cách đáng tin cậy nhất
+    // Dùng getClientRects() trực tiếp — không insert DOM, không gây scroll reset
     const range = sel.getRangeAt(0).cloneRange();
     range.collapse(true);
-    const marker = document.createElement('span');
-    marker.style.cssText = 'display:inline-block;width:0;height:1em;overflow:hidden;pointer-events:none;';
-    range.insertNode(marker);
+    const rects = range.getClientRects();
+    if (!rects || rects.length === 0) return;
+    const caretRect = rects[0];
 
+    const scrollRect = scroll.getBoundingClientRect();
     const bottomWrap = document.querySelector('.mobile-bottom-wrap');
     const bottomH = bottomWrap ? bottomWrap.offsetHeight : 0;
-    const PAD = 24;
+    const PAD = 32;
 
-    const markerRect = marker.getBoundingClientRect();
-    const scrollRect = scroll.getBoundingClientRect();
     const visibleBottom = scrollRect.bottom - bottomH - PAD;
     const visibleTop = scrollRect.top + PAD;
 
-    if (markerRect.bottom > visibleBottom) {
-      scroll.scrollTop += markerRect.bottom - visibleBottom;
-    } else if (markerRect.top < visibleTop) {
-      scroll.scrollTop -= visibleTop - markerRect.top;
+    if (caretRect.bottom > visibleBottom) {
+      scroll.scrollTop += caretRect.bottom - visibleBottom;
+    } else if (caretRect.top < visibleTop) {
+      scroll.scrollTop -= visibleTop - caretRect.top;
     }
+  }
 
-    marker.remove();
-    // Khôi phục selection
-    try {
-      sel.removeAllRanges();
-      const r2 = document.createRange();
-      r2.setStart(range.startContainer, range.startOffset);
-      r2.collapse(true);
-      sel.addRange(r2);
-    } catch(e) {}
+  function scheduleScroll() {
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(() => { rafId = null; scrollCaretIntoView(); });
   }
 
   function attach() {
     const ed = document.getElementById('chContent');
     if (!ed) { setTimeout(attach, 300); return; }
-    ed.addEventListener('input', scrollCaretIntoView, { passive: true });
-    ed.addEventListener('keyup', scrollCaretIntoView, { passive: true });
-    document.addEventListener('selectionchange', () => {
-      if (document.activeElement === ed) scrollCaretIntoView();
-    }, { passive: true });
+    // Chỉ bắt input — không dùng selectionchange vì nó fire khi scroll touch làm mất selection
+    ed.addEventListener('input', scheduleScroll, { passive: true });
+    ed.addEventListener('keyup', scheduleScroll, { passive: true });
   }
   attach();
 })();
