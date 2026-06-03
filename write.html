@@ -384,13 +384,22 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 /* Content */
 .content-scroll { flex: 1; overflow-y: auto; background: #fff; padding: 0; min-height: 0; }
 .content-editable {
-  font-family: 'Noto Serif', Georgia, serif; font-size: 18px; line-height: 1.85;
-  color: var(--text); min-height: calc(100vh - 200px); width: 100%; box-sizing: border-box;
-  background: #fff; padding: 20px 16px;
+  font-family: 'Noto Serif', Georgia, serif;
+  font-size: 19px;
+  line-height: 2.0;
+  color: #1a1a1a;
+  min-height: calc(100vh - 200px); width: 100%; box-sizing: border-box;
+  background: #fff;
+  padding: 24px 20px;
   outline: none;
+  word-break: break-word;
 }
 .content-editable:empty::before { content: attr(data-ph); color: var(--text-muted); font-style: italic; }
-.content-editable p { margin-bottom: 1.2em; }
+.content-editable p {
+  margin-top: 0;
+  margin-bottom: 1.6em;  /* khoảng cách đoạn như hình */
+}
+.content-editable p:last-child { margin-bottom: 0; }
 .content-editable hr { border: none; border-top: 2px solid var(--peach-light); margin: 2rem auto; width: 50%; }
 
 /* Bottom bar */
@@ -449,12 +458,14 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 
 /* ── MOBILE BOTTOM WRAP (fixed to bottom of screen, stays above keyboard) ── */
 .mobile-bottom-wrap {
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 400;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 400;
   display: flex; flex-direction: column;
   box-shadow: 0 -2px 16px rgba(0,0,0,0.08);
-  /* Stay above virtual keyboard on iOS/Android */
-  bottom: env(safe-area-inset-bottom, 0px);
   transform: translateZ(0);
+  /* Dùng dvh/svh để biết đúng chiều cao viewport có keyboard */
+  will-change: transform;
 }
 .slide-panel {
   display: none; flex-direction: column; gap: 8px;
@@ -523,19 +534,35 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 
 .sidebar-backdrop {
   display: none; position: fixed; inset: 0; z-index: 49;
-  background: rgba(0,0,0,0.35); backdrop-filter: blur(2px);
+  background: rgba(0,0,0,0.4); backdrop-filter: blur(2px);
+  touch-action: none;
 }
 .sidebar-backdrop.show { display: block; }
 
-@media (max-width: 900px) {
+/* Mobile: ẩn sidebar hoàn toàn — KHÔNG chiếm không gian flex */
+@media (max-width: 768px) {
+  #sidebarCloseBtn { display: block !important; }
   .sidebar {
-    position: fixed; left: -280px; top: 52px; bottom: 0;
-    z-index: 50; width: 280px;
-    transition: left .22s cubic-bezier(.4,0,.2,1);
-    box-shadow: 4px 0 24px rgba(0,0,0,0.14);
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100%;
+    z-index: 50;
+    /* Sidebar container KHÔNG tự scroll — để pane con scroll */
+    overflow: hidden;
+    flex-direction: column;
   }
-  .sidebar.open { left: 0; }
-  .main { width: 100% !important; flex: 1; }
+  .sidebar.open { display: flex !important; }
+  /* Pane con mới scroll */
+  .sidebar.open .sidebar-pane.active {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  /* Main luôn full width vì sidebar không trong flex flow */
+  .main {
+    flex: 1; width: 100%; max-width: 100%; min-width: 0;
+  }
   .story-select { max-width: 130px; font-size: 12px; }
 }
 </style>
@@ -592,9 +619,15 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 
   <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
-    <div class="sidebar-tabs">
+    <div class="sidebar-tabs" style="position:relative">
       <div class="sidebar-tab active" onclick="switchSideTab('info',this)">📖 Truyện</div>
       <div class="sidebar-tab" onclick="switchSideTab('chapters',this)">📄 Chương</div>
+      <button onclick="closeSidebar()" style="
+        position:absolute; right:10px; top:50%; transform:translateY(-50%);
+        background:none; border:none; cursor:pointer; font-size:20px;
+        color:var(--text-muted); padding:4px 8px; line-height:1;
+        display:none;
+      " id="sidebarCloseBtn">✕</button>
     </div>
 
     <!-- INFO PANE -->
@@ -1053,9 +1086,11 @@ async function loadStoryInfo() {
   document.getElementById('storyGenre').value = data.genre || '';
   document.getElementById('storyStatus').value = data.status || 'ongoing';
   // Tags
-  storyTags = data.genre ? [] : [];
+  storyTags = [];
   if (data.tags) {
-    try { storyTags = typeof data.tags === 'string' ? data.tags.split(',').map(t=>t.trim()).filter(Boolean) : data.tags; } catch{}
+    try { storyTags = typeof data.tags === 'string'
+      ? data.tags.split(',').map(t => t.trim()).filter(Boolean)
+      : (Array.isArray(data.tags) ? data.tags : []); } catch{}
   }
   renderTags();
   // Cover
@@ -1085,8 +1120,20 @@ async function saveStoryInfo() {
   if (cover_url) payload.cover_url = cover_url;
 
   const { error } = await sb.from('stories').update(payload).eq('id', currentStoryId);
-  if (error) { showToast('Lưu thất bại: ' + error.message, 'err'); return; }
-  showToast('Đã lưu thông tin truyện! ✓', 'ok');
+  if (error) {
+    // Nếu cột tags chưa tồn tại, thử lưu lại không có tags
+    if (error.message && error.message.includes('tags')) {
+      const { error: e2 } = await sb.from('stories').update({
+        title, description, genre, status, updated_at: new Date().toISOString()
+      }).eq('id', currentStoryId);
+      if (e2) { showToast('Lưu thất bại: ' + e2.message, 'err'); return; }
+      showToast('Đã lưu (thẻ chưa hỗ trợ trong DB) ✓', 'ok');
+    } else {
+      showToast('Lưu thất bại: ' + error.message, 'err'); return;
+    }
+  } else {
+    showToast('Đã lưu thông tin truyện! ✓', 'ok');
+  }
   loadStories();
 }
 
@@ -1636,9 +1683,17 @@ function escH(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').r
 function toggleSidebar() {
   const sidebar = document.getElementById('sidebar');
   const backdrop = document.getElementById('sidebarBackdrop');
-  const isOpen = sidebar.classList.toggle('open');
-  backdrop.classList.toggle('show', isOpen);
-  document.body.style.overflow = isOpen ? 'hidden' : '';
+  if (window.innerWidth <= 768) {
+    // Mobile: toggle overlay
+    const isOpen = sidebar.classList.toggle('open');
+    backdrop.classList.toggle('show', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  } else {
+    // Desktop: toggle sidebar in flex flow
+    sidebar.classList.toggle('hidden-desk');
+    const main = document.querySelector('.main');
+    if (main) main.style.width = sidebar.classList.contains('hidden-desk') ? '100%' : '';
+  }
 }
 function closeSidebar() {
   const sidebar = document.getElementById('sidebar');
@@ -1695,17 +1750,37 @@ document.addEventListener('keydown', e => {
   });
 })();
 
-// ── GIỮ TOOLBAR CỐ ĐỊNH KHI HIỆN BÀN PHÍM (Visual Viewport API) ──
+// ── GIỮ TOOLBAR CỐ ĐỊNH KHI HIỆN BÀN PHÍM ──
 (function() {
   const wrap = document.querySelector('.mobile-bottom-wrap');
-  if (!wrap || !window.visualViewport) return;
-  function updateToolbarPos() {
-    const vv = window.visualViewport;
-    const offsetBottom = window.innerHeight - (vv.offsetTop + vv.height);
-    wrap.style.bottom = Math.max(0, offsetBottom) + 'px';
+  if (!wrap) return;
+
+  function updateBarPos() {
+    if (window.visualViewport) {
+      const vv = window.visualViewport;
+      // Khoảng cách từ bottom visual viewport đến bottom window = keyboard height
+      const keyboardH = window.innerHeight - vv.height - vv.offsetTop;
+      const safeBottom = Math.max(0, keyboardH);
+      wrap.style.bottom = safeBottom + 'px';
+      // Co content-scroll lại để không bị che bởi toolbar + keyboard
+      const scroll = document.querySelector('.content-scroll');
+      if (scroll) {
+        scroll.style.paddingBottom = (wrap.offsetHeight + safeBottom + 8) + 'px';
+      }
+    }
   }
-  window.visualViewport.addEventListener('resize', updateToolbarPos);
-  window.visualViewport.addEventListener('scroll', updateToolbarPos);
+
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', updateBarPos);
+    window.visualViewport.addEventListener('scroll', updateBarPos);
+  }
+  // Fallback: focusin/blur trên editor
+  document.getElementById('chContent')?.addEventListener('focus', () => setTimeout(updateBarPos, 300));
+  document.getElementById('chContent')?.addEventListener('blur', () => {
+    wrap.style.bottom = '0px';
+    const scroll = document.querySelector('.content-scroll');
+    if (scroll) scroll.style.paddingBottom = '';
+  });
 })();
 document.getElementById('passInp')?.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
 
