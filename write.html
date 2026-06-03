@@ -1,4 +1,3 @@
-Trải nghiệm AI ngay trong các ứng dụng bạn yêu thích … Dùng Gemini để tạo bản nháp và tinh chỉnh nội dung, đồng thời sử dụng Gemini Pro để khai thác AI thế hệ mới của Google với giá 489.000 ₫ 122.000 ₫ cho 3 tháng
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -614,12 +613,6 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
     </button>
   </div>
 </div>
-
-<!-- FOCUS RECOVERY OVERLAY (hiện khi editor mất focus do popup app khác) -->
-<div id="focusOverlay" style="
-  display:none; position:fixed; inset:0; z-index:90;
-  background:rgba(0,0,0,0); cursor:text;
-" onclick="recoverEditorFocus()" title="Tap để tiếp tục viết"></div>
 
 <!-- APP -->
 <div class="app" id="app" style="display:none">
@@ -1716,95 +1709,95 @@ document.addEventListener('keydown', e => {
   if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); saveDraft(); }
 });
 
-// ── FIX: Popup ứng dụng khác che mất focus editor ──
-function recoverEditorFocus() {
+// ── FOCUS RECOVERY — đặt caret tại vị trí tap, không phải cuối ──
+function recoverEditorFocus(tapX, tapY) {
   const ed = document.getElementById('chContent');
-  const overlay = document.getElementById('focusOverlay');
-  if (overlay) overlay.style.display = 'none';
-  if (ed) {
-    ed.focus();
-    // Đặt caret về cuối
-    const sel = window.getSelection();
-    if (sel) {
-      const range = document.createRange();
-      range.selectNodeContents(ed);
-      range.collapse(false);
+  if (!ed) return;
+
+  ed.focus({ preventScroll: true });
+
+  // Nếu có toạ độ tap → dùng caretRangeFromPoint để đặt caret đúng chỗ
+  if (tapX !== undefined && tapY !== undefined) {
+    let range;
+    if (document.caretRangeFromPoint) {
+      range = document.caretRangeFromPoint(tapX, tapY);
+    } else if (document.caretPositionFromPoint) {
+      const pos = document.caretPositionFromPoint(tapX, tapY);
+      if (pos) {
+        range = document.createRange();
+        range.setStart(pos.offsetNode, pos.offset);
+        range.collapse(true);
+      }
+    }
+    if (range) {
+      const sel = window.getSelection();
       sel.removeAllRanges();
       sel.addRange(range);
+      return;
     }
+  }
+
+  // Fallback: giữ nguyên selection hiện tại, không dời caret
+  const sel = window.getSelection();
+  if (!sel || sel.rangeCount === 0) {
+    const range = document.createRange();
+    range.selectNodeContents(ed);
+    range.collapse(false);
+    sel.removeAllRanges();
+    sel.addRange(range);
   }
 }
 
-// Khi editor blur (có thể do popup app khác), hiện overlay transparent
-// để user tap vào bất cứ đâu cũng focus lại editor
 function setupFocusRecovery() {
   const ed = document.getElementById('chContent');
-  const overlay = document.getElementById('focusOverlay');
-  if (!ed || !overlay) return;
+  if (!ed) return;
 
-  let blurTimer = null;
-  ed.addEventListener('blur', () => {
-    // Delay 300ms để tránh false trigger khi click toolbar
-    blurTimer = setTimeout(() => {
-      const wrap = document.getElementById('editorWrap');
-      if (wrap && wrap.classList.contains('show')) {
-        // Chỉ hiện overlay nếu không có modal/sidebar đang mở
-        const sidebarOpen = document.getElementById('sidebar')?.classList.contains('open');
-        const previewOpen = document.getElementById('previewModal')?.classList.contains('open');
-        if (!sidebarOpen && !previewOpen) {
-          overlay.style.display = 'block';
-        }
-      }
-    }, 300);
-  });
-
-  ed.addEventListener('focus', () => {
-    clearTimeout(blurTimer);
-    overlay.style.display = 'none';
-  });
-}
-
-// ── FIX: Popup ứng dụng khác che mất focus editor (old) ──
-// Khi user tap vào vùng editor sau khi popup biến mất → tự refocus
-(function() {
-  const editorArea = document.getElementById('chContent');
-  if (!editorArea) return;
-
-  // Khi tab/app được focus lại (từ app khác quay về)
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden && document.activeElement !== editorArea) {
-      // Nếu editor đang hiển thị thì restore focus nhẹ (không scroll)
-      const wrap = document.getElementById('editorWrap');
-      if (wrap && wrap.classList.contains('show')) {
-        // Không force focus ngay — đợi user tap
-      }
-    }
-  });
-
-  // Tap vào vùng content-scroll → focus editor nếu chưa focused
-  document.getElementById('chContent')?.addEventListener('click', function() {
+  // ── 1. Tap thẳng vào editor → focus + caret đúng chỗ ──
+  ed.addEventListener('touchend', function(e) {
     if (document.activeElement !== this) {
-      this.focus();
-      // Đặt caret về cuối nếu chưa có selection
-      const sel = window.getSelection();
-      if (sel && sel.rangeCount === 0) {
-        const range = document.createRange();
-        range.selectNodeContents(this);
-        range.collapse(false);
-        sel.removeAllRanges();
-        sel.addRange(range);
-      }
+      e.preventDefault(); // ngăn synthetic click làm mất focus lần 2
+      const t = e.changedTouches[0];
+      recoverEditorFocus(t.clientX, t.clientY);
+    }
+  }, { passive: false });
+
+  // ── 2. Tap vào vùng trắng quanh editor (content-scroll) ──
+  document.querySelector('.content-scroll')?.addEventListener('touchend', function(e) {
+    if (e.target === this) {
+      e.preventDefault();
+      const t = e.changedTouches[0];
+      recoverEditorFocus(t.clientX, t.clientY);
+    }
+  }, { passive: false });
+
+  // ── 3. Quay về từ app khác (visibilitychange) ──
+  // Không force focus ngay — chỉ đánh dấu để lần tap tiếp theo recover
+  let needsRecovery = false;
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+      const wrap = document.getElementById('editorWrap');
+      if (wrap?.classList.contains('show')) needsRecovery = true;
     }
   });
 
-  // Tap vào wrapper scroll (vùng trắng xung quanh) cũng focus editor
-  document.querySelector('.content-scroll')?.addEventListener('click', function(e) {
-    if (e.target === this) {
-      const editor = document.getElementById('chContent');
-      if (editor) editor.click();
-    }
-  });
-})();
+  // ── 4. Tap bất kỳ đâu trên trang sau khi quay về → recover ──
+  document.addEventListener('touchend', function(e) {
+    if (!needsRecovery) return;
+    needsRecovery = false;
+
+    // Không recover nếu đang tap vào sidebar, modal, toolbar
+    const ignore = ['sidebar','newStoryModal','previewModal',
+                    'mobile-bottom-wrap','topbar'];
+    const inIgnore = ignore.some(id => {
+      const el = document.getElementById(id) || document.querySelector('.' + id);
+      return el?.contains(e.target);
+    });
+    if (inIgnore) return;
+
+    const t = e.changedTouches[0];
+    recoverEditorFocus(t.clientX, t.clientY);
+  }, { passive: true });
+}
 
 // ── GIỮ TOOLBAR CỐ ĐỊNH KHI HIỆN BÀN PHÍM ──
 (function() {
