@@ -202,56 +202,174 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 .note-item-title { font-size: 12px; font-weight: 800; color: var(--text); }
 .note-item-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
 
-/* Preview modal */
+/* ── PREVIEW FULL PAGE ── */
 .preview-modal {
   position: fixed; inset: 0; z-index: 600;
-  background: rgba(0,0,0,0.55); backdrop-filter: blur(6px);
-  display: none; align-items: flex-start; justify-content: center;
-  padding: 20px; overflow-y: auto;
+  background: #f5f0eb;
+  display: none; flex-direction: column;
+  overflow: hidden;
 }
 .preview-modal.open { display: flex; }
+
+/* Topbar reader */
+.preview-topbar {
+  height: 52px; background: #fff; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 16px; flex-shrink: 0; position: sticky; top: 0; z-index: 10;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+}
+.preview-topbar-left { display: flex; align-items: center; gap: 10px; }
+.preview-topbar-logo { font-size: 16px; font-weight: 900; color: var(--peach); }
+.preview-topbar-badge {
+  font-size: 10px; font-weight: 800; background: var(--peach-light);
+  color: var(--peach); padding: 3px 10px; border-radius: 20px;
+}
+.preview-topbar-right { display: flex; align-items: center; gap: 8px; }
+.preview-close {
+  background: none; border: 1.5px solid var(--border); cursor: pointer;
+  border-radius: 8px; padding: 6px 12px; font-family: 'Nunito', sans-serif;
+  font-size: 12px; font-weight: 800; color: var(--text-muted);
+  display: flex; align-items: center; gap: 5px; transition: all .15s;
+}
+.preview-close:hover { background: var(--peach-light); color: var(--peach); border-color: var(--peach); }
+
+/* Scroll area */
+.preview-scroll { flex: 1; overflow-y: auto; padding: 32px 16px 80px; }
+
+/* Content card */
 .preview-box {
   background: #fff; border-radius: 18px; width: 100%; max-width: 680px;
-  box-shadow: 0 24px 70px rgba(0,0,0,0.2); margin: auto;
-  overflow: hidden; animation: modalIn .2s ease;
+  margin: 0 auto 24px; box-shadow: 0 2px 20px rgba(0,0,0,0.07);
+  overflow: hidden;
 }
-.preview-head {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 20px; border-bottom: 1px solid var(--border);
-  background: #fff; position: sticky; top: 0; z-index: 1;
+
+/* Chapter header */
+.preview-ch-header { padding: 32px 36px 24px; border-bottom: 1px solid var(--border); }
+.preview-story-name {
+  font-size: 11px; font-weight: 800; color: var(--peach);
+  text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px;
 }
-.preview-head h3 { font-size: 14px; font-weight: 900; display: flex; align-items: center; gap: 7px; }
-.preview-head .preview-badge {
-  font-size: 10px; font-weight: 800; background: var(--peach-light);
-  color: var(--peach); padding: 2px 8px; border-radius: 10px;
-}
-.preview-close { background: none; border: none; cursor: pointer; font-size: 18px; color: var(--text-muted); }
-.preview-body { padding: 32px 40px 40px; }
-.preview-story-name { font-size: 11px; font-weight: 800; color: var(--peach); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
 .preview-ch-title {
   font-family: 'Noto Serif', Georgia, serif; font-size: 26px; font-weight: 700;
-  color: var(--text); margin-bottom: 24px; line-height: 1.3;
+  color: var(--text); line-height: 1.35; margin-bottom: 12px;
 }
-.preview-divider { border: none; border-top: 2px solid var(--peach-light); margin: 24px auto; width: 60px; }
+.preview-ch-meta { font-size: 11px; color: var(--text-muted); font-weight: 600; display: flex; gap: 12px; }
+
+/* Content body */
+.preview-body { padding: 28px 36px 32px; }
+
 .preview-content {
-  font-family: 'Noto Serif', Georgia, serif; font-size: 16px; line-height: 1.9;
+  font-family: 'Noto Serif', Georgia, serif; font-size: 17px; line-height: 1.95;
   color: #2a2a2a;
 }
-.preview-content hr { border: none; border-top: 2px solid var(--peach-light); margin: 2rem auto; width: 50%; }
-.preview-content img { max-width: 100%; border-radius: 8px; display: block; margin: 12px auto; }
-.preview-content video { max-width: 100%; border-radius: 8px; display: block; margin: 12px auto; }
-.preview-footer {
-  margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-  font-size: 12px; color: var(--text-muted); font-weight: 600;
+.preview-content p { margin-bottom: 1.3em; }
+.preview-content hr { border: none; border-top: 2px solid var(--peach-light); margin: 2.5rem auto; width: 50%; }
+.preview-content img { max-width: 100%; border-radius: 10px; display: block; margin: 16px auto; }
+.preview-content video { max-width: 100%; border-radius: 10px; display: block; margin: 16px auto; }
+
+/* Paragraph comment wrapper */
+.para-cmt-wrap {
+  position: relative;
+  margin-bottom: 1.3em;
 }
-.preview-actions { display: flex; gap: 8px; }
-.preview-action-btn {
-  padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--border);
-  font-size: 12px; font-weight: 700; cursor: default; color: var(--text-muted);
-  display: flex; align-items: center; gap: 4px;
+.para-cmt-wrap > p { margin-bottom: 0; }
+.para-cmt-btn {
+  position: absolute; right: -36px; top: 50%; transform: translateY(-50%);
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--peach-light); color: var(--peach);
+  border: 1.5px solid var(--peach); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity .18s;
+  font-size: 11px;
 }
-@media (max-width: 640px) { .preview-body { padding: 20px; } .preview-ch-title { font-size: 20px; } }
+.para-cmt-wrap:hover .para-cmt-btn { opacity: 1; }
+.para-cmt-box {
+  display: none; margin-top: 8px; padding: 10px 14px;
+  background: #fffaf7; border: 1.5px solid var(--peach-light);
+  border-radius: 10px; font-family: 'Nunito', sans-serif;
+  font-size: 12px; color: var(--text-muted);
+  text-align: center; font-style: italic;
+}
+.para-cmt-box.open { display: block; }
+
+/* Annotation block reader style */
+.preview-annotation {
+  margin: 14px 0; padding: 10px 14px;
+  border: 1.5px dashed #c9a98a; background: #fdf8f4;
+  border-radius: 10px; position: relative;
+}
+.preview-annotation-toggle {
+  display: flex; align-items: center; gap: 8px; cursor: pointer;
+  font-size: 13px; font-style: italic; color: #b5956a; font-weight: 700;
+  user-select: none;
+}
+.preview-annotation-toggle svg { flex-shrink: 0; transition: transform .2s; }
+.preview-annotation-toggle.open svg { transform: rotate(90deg); }
+.preview-annotation-body {
+  display: none; margin-top: 8px; font-size: 14px;
+  font-style: italic; color: #b5956a; line-height: 1.7;
+}
+.preview-annotation-body.open { display: block; }
+
+/* Note blocks (author, spoiler, translation) */
+.preview-author-note { background:#FEF0E9; border-left:3px solid #E8835A; padding:10px 14px; border-radius:0 10px 10px 0; margin:14px 0; font-size:14px; font-style:italic; color:#9A7A6A; }
+.preview-spoiler-note { background:#FFF3CD; border-left:3px solid #FFC107; padding:10px 14px; border-radius:0 10px 10px 0; margin:14px 0; font-size:14px; color:#856404; }
+.preview-translation-note { background:#E8F4FD; border-left:3px solid #5BA4D4; padding:10px 14px; border-radius:0 10px 10px 0; margin:14px 0; font-size:14px; color:#2C6B9C; }
+
+/* Footer chapter */
+.preview-footer-box {
+  background: #fff; border-radius: 18px; width: 100%; max-width: 680px;
+  margin: 0 auto; box-shadow: 0 2px 20px rgba(0,0,0,0.07);
+  padding: 20px 28px;
+}
+.preview-footer-actions {
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 16px;
+}
+.preview-react-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 10px 20px; border-radius: 24px; border: 1.5px solid var(--border);
+  font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 800;
+  cursor: pointer; background: none; color: var(--text-muted);
+  transition: all .15s;
+}
+.preview-react-btn:hover { background: var(--peach-light); color: var(--peach); border-color: var(--peach); }
+.preview-cmt-area { display: flex; flex-direction: column; gap: 10px; }
+.preview-cmt-input-wrap {
+  display: flex; align-items: center; gap: 8px;
+  border: 1.5px solid var(--border); border-radius: 24px; padding: 8px 14px;
+  background: var(--bg);
+}
+.preview-cmt-input-wrap input {
+  flex: 1; border: none; background: none; outline: none;
+  font-family: 'Nunito', sans-serif; font-size: 13px; color: var(--text);
+}
+.preview-cmt-input-wrap input::placeholder { color: var(--text-muted); }
+.preview-cmt-send {
+  border: none; background: var(--peach); color: #fff;
+  border-radius: 50%; width: 28px; height: 28px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.preview-cmt-send svg { width: 13px; height: 13px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+.preview-sample-cmts { display: flex; flex-direction: column; gap: 10px; }
+.preview-cmt-item { display: flex; align-items: flex-start; gap: 10px; }
+.preview-cmt-avatar {
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 800; color: #fff;
+}
+.preview-cmt-bubble { background: var(--bg); border-radius: 12px; padding: 8px 12px; flex: 1; }
+.preview-cmt-name { font-size: 11px; font-weight: 800; color: var(--text); margin-bottom: 2px; }
+.preview-cmt-text { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+@media (max-width: 640px) {
+  .preview-ch-header, .preview-body { padding: 20px; }
+  .preview-ch-title { font-size: 20px; }
+  .preview-content { font-size: 16px; }
+  .para-cmt-btn { display: none; }
+  .preview-scroll { padding: 16px 10px 80px; }
+}
 .tb-btn {
   background: none; border: none; cursor: pointer;
   padding: 5px 8px; border-radius: 6px; color: var(--text-muted);
@@ -266,13 +384,13 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 /* Content */
 .content-scroll { flex: 1; overflow-y: auto; background: #fff; padding: 0; min-height: 0; }
 .content-editable {
-  font-family: 'Noto Serif', Georgia, serif; font-size: 18px; line-height: 2;
+  font-family: 'Noto Serif', Georgia, serif; font-size: 18px; line-height: 1.85;
   color: var(--text); min-height: calc(100vh - 200px); width: 100%; box-sizing: border-box;
   background: #fff; padding: 20px 16px;
   outline: none;
 }
 .content-editable:empty::before { content: attr(data-ph); color: var(--text-muted); font-style: italic; }
-.content-editable p { margin-bottom: 0.8em; }
+.content-editable p { margin-bottom: 1.2em; }
 .content-editable hr { border: none; border-top: 2px solid var(--peach-light); margin: 2rem auto; width: 50%; }
 
 /* Bottom bar */
@@ -329,11 +447,14 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 .modal-submit { flex: 1; padding: 10px; border: none; border-radius: 10px; background: var(--peach); color: #fff; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 800; cursor: pointer; transition: background .15s; }
 .modal-submit:hover { background: var(--peach-dark); }
 
-/* ── MOBILE BOTTOM WRAP (fixed to bottom of screen) ── */
+/* ── MOBILE BOTTOM WRAP (fixed to bottom of screen, stays above keyboard) ── */
 .mobile-bottom-wrap {
   position: fixed; bottom: 0; left: 0; right: 0; z-index: 400;
   display: flex; flex-direction: column;
   box-shadow: 0 -2px 16px rgba(0,0,0,0.08);
+  /* Stay above virtual keyboard on iOS/Android */
+  bottom: env(safe-area-inset-bottom, 0px);
+  transform: translateZ(0);
 }
 .slide-panel {
   display: none; flex-direction: column; gap: 8px;
@@ -387,7 +508,7 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
   font-weight: 600; background: #fff; text-align: right;
   border-top: 1px solid var(--border);
 }
-.content-scroll { padding-bottom: 60px; }
+.content-scroll { padding-bottom: 120px; }
 
 /* ── TOAST ── */
 .toast {
@@ -400,14 +521,29 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 .toast.ok { background: #1fba52; }
 .toast.err { background: #e84040; }
 
-@media (max-width: 640px) {
-  .sidebar { position: fixed; left: -260px; top: 52px; bottom: 0; z-index: 50; transition: left .2s; box-shadow: 4px 0 20px rgba(0,0,0,0.12); }
+.sidebar-backdrop {
+  display: none; position: fixed; inset: 0; z-index: 49;
+  background: rgba(0,0,0,0.35); backdrop-filter: blur(2px);
+}
+.sidebar-backdrop.show { display: block; }
+
+@media (max-width: 900px) {
+  .sidebar {
+    position: fixed; left: -280px; top: 52px; bottom: 0;
+    z-index: 50; width: 280px;
+    transition: left .22s cubic-bezier(.4,0,.2,1);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.14);
+  }
   .sidebar.open { left: 0; }
-  .story-select { max-width: 120px; font-size: 12px; }
+  .main { width: 100% !important; flex: 1; }
+  .story-select { max-width: 130px; font-size: 12px; }
 }
 </style>
 </head>
 <body>
+
+<!-- SIDEBAR BACKDROP -->
+<div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeSidebar()"></div>
 
 <!-- LOADING OVERLAY -->
 <div id="loadingOverlay" style="position:fixed;inset:0;background:#f9f9f9;display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:14px;">
@@ -677,30 +813,75 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
   </div>
 </div>
 
-<!-- PREVIEW MODAL -->
-<div class="preview-modal" id="previewModal" onclick="handlePreviewClick(event)">
-  <div class="preview-box">
-    <div class="preview-head">
-      <h3>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-        Xem trước
-        <span class="preview-badge">Demo</span>
-      </h3>
-      <button class="preview-close" onclick="closePreview()">✕</button>
+<!-- PREVIEW FULL PAGE -->
+<div class="preview-modal" id="previewModal">
+
+  <!-- Topbar giả lập trang đọc -->
+  <div class="preview-topbar">
+    <div class="preview-topbar-left">
+      <span class="preview-topbar-logo">🍑 Peach Luku</span>
+      <span class="preview-topbar-badge">Xem trước</span>
     </div>
-    <div class="preview-body">
-      <div class="preview-story-name" id="previewStoryName">Tên truyện</div>
-      <div class="preview-ch-title" id="previewChTitle">Tên chương</div>
-      <hr class="preview-divider">
-      <div class="preview-content" id="previewContent"></div>
-      <div class="preview-footer">
-        <span>👁 Giao diện như khi độc giả đọc thật</span>
-        <div class="preview-actions">
-          <div class="preview-action-btn">❤️ Thích</div>
-          <div class="preview-action-btn">💬 Bình luận</div>
+    <div class="preview-topbar-right">
+      <button class="preview-close" onclick="closePreview()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        Đóng preview
+      </button>
+    </div>
+  </div>
+
+  <!-- Scroll content -->
+  <div class="preview-scroll" id="previewScroll">
+
+    <!-- Card chương -->
+    <div class="preview-box">
+      <div class="preview-ch-header">
+        <div class="preview-story-name" id="previewStoryName">Tên truyện</div>
+        <div class="preview-ch-title" id="previewChTitle">Tên chương</div>
+        <div class="preview-ch-meta">
+          <span>👁 1.234 lượt đọc</span>
+          <span>❤️ 56 lượt thích</span>
+          <span>💬 12 bình luận</span>
+        </div>
+      </div>
+      <div class="preview-body">
+        <div class="preview-content" id="previewContent"></div>
+      </div>
+    </div>
+
+    <!-- Footer actions + bình luận -->
+    <div class="preview-footer-box">
+      <div class="preview-footer-actions">
+        <button class="preview-react-btn">❤️ Thích · 56</button>
+        <button class="preview-react-btn">🔖 Lưu</button>
+        <button class="preview-react-btn">↗ Chia sẻ</button>
+      </div>
+      <div class="preview-cmt-area">
+        <div class="preview-cmt-input-wrap">
+          <input type="text" placeholder="Viết bình luận... (demo)">
+          <button class="preview-cmt-send">
+            <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+        <div class="preview-sample-cmts">
+          <div class="preview-cmt-item">
+            <div class="preview-cmt-avatar" style="background:#e8835a">M</div>
+            <div class="preview-cmt-bubble">
+              <div class="preview-cmt-name">mochi.reads</div>
+              <div class="preview-cmt-text">Chương này hay quá aaaa 😭❤️ cảm ơn tác giả đã cập nhật nhanh!</div>
+            </div>
+          </div>
+          <div class="preview-cmt-item">
+            <div class="preview-cmt-avatar" style="background:#5ba4d4">T</div>
+            <div class="preview-cmt-bubble">
+              <div class="preview-cmt-name">tanuki.star</div>
+              <div class="preview-cmt-text">Đoạn cuối làm mình nổi da gà 🐹✨</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
   </div>
 </div>
 
@@ -1196,14 +1377,90 @@ document.addEventListener('click', e => {
 
 function openPreview() {
   const title = document.getElementById('chTitle')?.value || 'Chưa đặt tên chương';
-  const content = document.getElementById('chContent')?.innerHTML || '';
-  const storyName = document.getElementById('storyTitle')?.value || document.getElementById('storySelect')?.options[document.getElementById('storySelect').selectedIndex]?.text || 'Tên truyện';
+  const rawContent = document.getElementById('chContent')?.innerHTML || '';
+  const storyName = document.getElementById('storyTitle')?.value
+    || document.getElementById('storySelect')?.options[document.getElementById('storySelect').selectedIndex]?.text
+    || 'Tên truyện';
+
   document.getElementById('previewChTitle').textContent = title;
   document.getElementById('previewStoryName').textContent = storyName;
-  document.getElementById('previewContent').innerHTML = content || '<p style="color:#aaa;font-style:italic">Chưa có nội dung...</p>';
+
+  // Process content for reader view
+  document.getElementById('previewContent').innerHTML = buildPreviewContent(rawContent);
+
+  // Attach paragraph comment toggles
+  document.querySelectorAll('.para-cmt-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const box = this.closest('.para-cmt-wrap').querySelector('.para-cmt-box');
+      box.classList.toggle('open');
+      this.textContent = box.classList.contains('open') ? '✕' : '💬';
+    });
+  });
+
+  // Attach annotation toggles in preview
+  document.querySelectorAll('.preview-annotation-toggle').forEach(toggle => {
+    toggle.addEventListener('click', function() {
+      const body = this.closest('.preview-annotation').querySelector('.preview-annotation-body');
+      const isOpen = body.classList.contains('open');
+      body.classList.toggle('open', !isOpen);
+      this.classList.toggle('open', !isOpen);
+    });
+  });
+
   document.getElementById('previewModal').classList.add('open');
+  document.getElementById('previewScroll').scrollTop = 0;
+  document.body.style.overflow = 'hidden';
 }
-function closePreview() { document.getElementById('previewModal').classList.remove('open'); }
+
+function buildPreviewContent(rawHtml) {
+  // Parse HTML
+  const tmp = document.createElement('div');
+  tmp.innerHTML = rawHtml;
+
+  // Process annotation blocks → reader style
+  tmp.querySelectorAll('.annotation-block').forEach(block => {
+    const bodyEl = block.querySelector('.annotation-body');
+    const bodyText = bodyEl ? bodyEl.innerHTML : '';
+    const annDiv = document.createElement('div');
+    annDiv.className = 'preview-annotation';
+    annDiv.innerHTML = `
+      <div class="preview-annotation-toggle">
+        <svg viewBox="0 0 24 24" fill="#c9a98a" stroke="none" width="13" height="13"><polygon points="5,4 19,12 5,20"/></svg>
+        <span>Chú thích của tác giả</span>
+      </div>
+      <div class="preview-annotation-body">${bodyText || '<i style="color:#ccc">Chưa có nội dung</i>'}</div>`;
+    block.replaceWith(annDiv);
+  });
+
+  // Remove editor-only contenteditable attrs
+  tmp.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+
+  // Remove editor-only attributes/controls that shouldn't show
+  tmp.querySelectorAll('[onclick^="deleteAnnotation"],[onclick^="toggleAnnotation"]').forEach(el => el.remove());
+
+  // Wrap each top-level <p> with paragraph comment UI
+  let html = '';
+  tmp.childNodes.forEach(node => {
+    if (node.nodeType === 1 && node.tagName === 'P' && node.textContent.trim()) {
+      html += `<div class="para-cmt-wrap">
+        ${node.outerHTML}
+        <button class="para-cmt-btn" title="Bình luận đoạn này">💬</button>
+        <div class="para-cmt-box">
+          <span style="font-style:italic;color:var(--text-muted)">💬 Bình luận vào đoạn này (demo — chưa hoạt động)</span>
+        </div>
+      </div>`;
+    } else {
+      html += node.outerHTML || (node.nodeValue || '');
+    }
+  });
+
+  return html || '<p style="color:#aaa;font-style:italic">Chưa có nội dung...</p>';
+}
+
+function closePreview() {
+  document.getElementById('previewModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
 function handlePreviewClick(e) { if (e.target === document.getElementById('previewModal')) closePreview(); }
 
 function insertImage() {
@@ -1376,15 +1633,80 @@ function showToast(msg, type = '') {
   setTimeout(() => t.classList.remove('show'), 2500);
 }
 function escH(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const backdrop = document.getElementById('sidebarBackdrop');
+  const isOpen = sidebar.classList.toggle('open');
+  backdrop.classList.toggle('show', isOpen);
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+}
 function closeSidebar() {
-  if (window.innerWidth <= 640) document.getElementById('sidebar').classList.remove('open');
+  const sidebar = document.getElementById('sidebar');
+  const backdrop = document.getElementById('sidebarBackdrop');
+  sidebar.classList.remove('open');
+  backdrop.classList.remove('show');
+  document.body.style.overflow = '';
 }
 
 // Phím tắt Ctrl+S
 document.addEventListener('keydown', e => {
   if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); saveDraft(); }
 });
+
+// ── FIX: Popup ứng dụng khác che mất focus editor ──
+// Khi user tap vào vùng editor sau khi popup biến mất → tự refocus
+(function() {
+  const editorArea = document.getElementById('chContent');
+  if (!editorArea) return;
+
+  // Khi tab/app được focus lại (từ app khác quay về)
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && document.activeElement !== editorArea) {
+      // Nếu editor đang hiển thị thì restore focus nhẹ (không scroll)
+      const wrap = document.getElementById('editorWrap');
+      if (wrap && wrap.classList.contains('show')) {
+        // Không force focus ngay — đợi user tap
+      }
+    }
+  });
+
+  // Tap vào vùng content-scroll → focus editor nếu chưa focused
+  document.getElementById('chContent')?.addEventListener('click', function() {
+    if (document.activeElement !== this) {
+      this.focus();
+      // Đặt caret về cuối nếu chưa có selection
+      const sel = window.getSelection();
+      if (sel && sel.rangeCount === 0) {
+        const range = document.createRange();
+        range.selectNodeContents(this);
+        range.collapse(false);
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
+    }
+  });
+
+  // Tap vào wrapper scroll (vùng trắng xung quanh) cũng focus editor
+  document.querySelector('.content-scroll')?.addEventListener('click', function(e) {
+    if (e.target === this) {
+      const editor = document.getElementById('chContent');
+      if (editor) editor.click();
+    }
+  });
+})();
+
+// ── GIỮ TOOLBAR CỐ ĐỊNH KHI HIỆN BÀN PHÍM (Visual Viewport API) ──
+(function() {
+  const wrap = document.querySelector('.mobile-bottom-wrap');
+  if (!wrap || !window.visualViewport) return;
+  function updateToolbarPos() {
+    const vv = window.visualViewport;
+    const offsetBottom = window.innerHeight - (vv.offsetTop + vv.height);
+    wrap.style.bottom = Math.max(0, offsetBottom) + 'px';
+  }
+  window.visualViewport.addEventListener('resize', updateToolbarPos);
+  window.visualViewport.addEventListener('scroll', updateToolbarPos);
+})();
 document.getElementById('passInp')?.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
 
 // Click ngoài modal
