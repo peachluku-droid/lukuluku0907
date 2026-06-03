@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chỉnh Sửa Truyện — Peach Luku</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#E8835A">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Peach Luku">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -24,6 +30,7 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
   height: 52px; background: #fff; border-bottom: 1px solid var(--border);
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 16px; position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
 }
 .topbar-left { display: flex; align-items: center; gap: 10px; }
 .topbar-logo { font-size: 16px; font-weight: 900; color: var(--peach); text-decoration: none; }
@@ -63,7 +70,7 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 .sidebar {
   width: var(--sidebar-w); flex-shrink: 0;
   background: #fff; border-right: 1px solid var(--border);
-  overflow-y: auto; display: flex; flex-direction: column;
+  overflow: hidden; display: flex; flex-direction: column;
   height: 100%;
 }
 .sidebar-tabs {
@@ -75,11 +82,11 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
   border-bottom: 2px solid transparent; transition: all .15s;
 }
 .sidebar-tab.active { color: var(--peach); border-bottom-color: var(--peach); }
-.sidebar-pane { display: none; flex-direction: column; flex: 1; }
+.sidebar-pane { display: none; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; }
 .sidebar-pane.active { display: flex; }
 
 /* Info pane */
-.info-pane { padding: 16px; gap: 16px; overflow-y: auto; }
+.info-pane { padding: 16px; gap: 16px; overflow-y: auto; flex: 1; min-height: 0; }
 .cover-area {
   display: flex; align-items: center; gap: 12px;
   padding-bottom: 16px; border-bottom: 1px solid var(--border);
@@ -259,10 +266,10 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 .preview-body { padding: 28px 36px 32px; }
 
 .preview-content {
-  font-family: 'Noto Serif', Georgia, serif; font-size: 17px; line-height: 1.95;
+  font-family: 'Noto Serif', Georgia, serif; font-size: 17px; line-height: 1.6;
   color: #2a2a2a;
 }
-.preview-content p { margin-bottom: 1.3em; }
+.preview-content p { margin-bottom: 0.65em; }
 .preview-content hr { border: none; border-top: 2px solid var(--peach-light); margin: 2.5rem auto; width: 50%; }
 .preview-content img { max-width: 100%; border-radius: 10px; display: block; margin: 16px auto; }
 .preview-content video { max-width: 100%; border-radius: 10px; display: block; margin: 16px auto; }
@@ -386,7 +393,7 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 .content-editable {
   font-family: 'Noto Serif', Georgia, serif;
   font-size: 19px;
-  line-height: 1.75;      /* vừa phải, không quá thưa */
+  line-height: 1.4;
   color: #1a1a1a;
   min-height: calc(100vh - 200px); width: 100%; box-sizing: border-box;
   background: #fff;
@@ -397,7 +404,7 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 .content-editable:empty::before { content: attr(data-ph); color: var(--text-muted); font-style: italic; }
 .content-editable p {
   margin-top: 0;
-  margin-bottom: 1em;    /* đúng 1 dòng trống giữa các đoạn */
+  margin-bottom: 0.5em;
 }
 .content-editable p:last-child { margin-bottom: 0; }
 .content-editable hr { border: none; border-top: 2px solid var(--peach-light); margin: 2rem auto; width: 50%; }
@@ -1770,15 +1777,14 @@ function setupFocusRecovery() {
     }
   }, { passive: false });
 
-  // ── 3. Quay về từ app khác (visibilitychange) ──
-  // Không force focus ngay — chỉ đánh dấu để lần tap tiếp theo recover
+  // ── 3. Quay về từ app khác / đóng cửa sổ PiP ──
   let needsRecovery = false;
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) {
-      const wrap = document.getElementById('editorWrap');
-      if (wrap?.classList.contains('show')) needsRecovery = true;
-    }
-  });
+  const markRecovery = () => {
+    const wrap = document.getElementById('editorWrap');
+    if (wrap?.classList.contains('show')) needsRecovery = true;
+  };
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) markRecovery(); });
+  window.addEventListener('focus', markRecovery);
 
   // ── 4. Tap bất kỳ đâu trên trang sau khi quay về → recover ──
   document.addEventListener('touchend', function(e) {
@@ -1839,6 +1845,13 @@ document.getElementById('newStoryModal').addEventListener('click', e => {
 });
 
 init();
+
+// ── ĐĂNG KÝ SERVICE WORKER (PWA) ──
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
 </script>
 </body>
 </html>
