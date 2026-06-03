@@ -22,7 +22,7 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; overflow: hidden; }
+html, body { height: 100%; height: 100dvh; overflow: hidden; }
 body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); }
 
 /* ── TOPBAR ── */
@@ -64,7 +64,9 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 .new-story-btn:hover { background: var(--peach-dark); }
 
 /* ── LAYOUT ── */
-.app { display: flex; padding-top: 52px; height: 100vh; overflow: hidden; }
+/* Topbar phải ở trên cùng khi scroll - đảm bảo không bị che bởi bất kỳ phần tử nào */
+.topbar { isolation: isolate; }
+.app { display: flex; padding-top: 52px; height: 100%; height: 100dvh; overflow: hidden; }
 
 /* ── SIDEBAR ── */
 .sidebar {
@@ -72,6 +74,7 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
   background: #fff; border-right: 1px solid var(--border);
   overflow: hidden; display: flex; flex-direction: column;
   height: calc(100vh - 52px);
+  height: calc(100dvh - 52px);
 }
 .sidebar-tabs {
   display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0;
@@ -82,11 +85,11 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
   border-bottom: 2px solid transparent; transition: all .15s;
 }
 .sidebar-tab.active { color: var(--peach); border-bottom-color: var(--peach); }
-.sidebar-pane { display: none; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; }
+.sidebar-pane { display: none; flex-direction: column; flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
 .sidebar-pane.active { display: flex; }
 
 /* Info pane */
-.info-pane { padding: 16px; gap: 16px; overflow-y: auto; flex: 1; min-height: 0; }
+.info-pane { padding: 16px; gap: 16px; flex: 1; min-height: 0; }
 .cover-area {
   display: flex; align-items: center; gap: 12px;
   padding-bottom: 16px; border-bottom: 1px solid var(--border);
@@ -125,7 +128,7 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 .info-save-btn:hover { background: var(--peach-dark); }
 
 /* Chapters pane */
-.ch-pane { overflow-y: auto; }
+.ch-pane { display: flex; flex-direction: column; }
 .ch-pane-head { padding: 10px 12px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
 .new-ch-btn {
   width: 100%; padding: 8px; border: 1.5px dashed var(--peach);
@@ -136,7 +139,7 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 }
 .new-ch-btn:hover { background: var(--peach); color: #fff; }
 .new-ch-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-.ch-list { flex: 1; overflow-y: auto; }
+.ch-list { flex: 1; }
 .ch-item {
   display: flex; align-items: center; gap: 8px;
   padding: 10px 12px; border-bottom: 1px solid var(--border);
@@ -389,15 +392,26 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 .tb-align { font-size: 11px; }
 
 /* Content */
-.content-scroll { flex: 1; overflow-y: auto; background: #fff; padding: 0; min-height: 0; }
+.content-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #fff;
+  padding: 0;
+  min-height: 0;
+  -webkit-overflow-scrolling: touch;
+  /* Không dùng overscroll-behavior để tránh khựng trên iOS */
+}
 .content-editable {
   font-family: 'Noto Serif', Georgia, serif;
   font-size: 19px;
   line-height: 1.4;
   color: #1a1a1a;
-  min-height: calc(100vh - 200px); width: 100%; box-sizing: border-box;
+  /* min-height linh hoạt thay vì cứng calc(100vh - 200px) */
+  min-height: 60vh;
+  width: 100%; box-sizing: border-box;
   background: #fff;
-  padding: 20px 18px;
+  padding: 20px 18px 120px;
   outline: none;
   word-break: break-word;
 }
@@ -526,7 +540,7 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
   font-weight: 600; background: #fff; text-align: right;
   border-top: 1px solid var(--border);
 }
-.content-scroll { padding-bottom: 120px; }
+/* padding-bottom handled inside .content-editable */
 
 /* ── TOAST ── */
 .toast {
@@ -571,6 +585,11 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
   /* Main luôn full width */
   .main { flex: 1; width: 100%; max-width: 100%; min-width: 0; }
   .story-select { max-width: 130px; font-size: 12px; }
+  /* content-scroll trên mobile: cho phép momentum scroll */
+  .content-scroll {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
 }
 </style>
 </head>
@@ -1692,10 +1711,10 @@ function toggleSidebar() {
   const sidebar = document.getElementById('sidebar');
   const backdrop = document.getElementById('sidebarBackdrop');
   if (window.innerWidth <= 768) {
-    // Mobile: toggle overlay
+    // Mobile: toggle overlay — KHÔNG set body overflow để không chặn PiP/app khác
     const isOpen = sidebar.classList.toggle('open');
     backdrop.classList.toggle('show', isOpen);
-    document.body.style.overflow = isOpen ? 'hidden' : '';
+    // Không set document.body.style.overflow để tránh chặn gõ chữ từ cửa sổ nổi
   } else {
     // Desktop: toggle sidebar in flex flow
     sidebar.classList.toggle('hidden-desk');
@@ -1708,13 +1727,54 @@ function closeSidebar() {
   const backdrop = document.getElementById('sidebarBackdrop');
   sidebar.classList.remove('open');
   backdrop.classList.remove('show');
-  document.body.style.overflow = '';
+  // Không reset body overflow vì không bao giờ set nó
 }
 
 // Phím tắt Ctrl+S
 document.addEventListener('keydown', e => {
   if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); saveDraft(); }
 });
+
+// ── TỰ SCROLL THEO CARET KHI GÕ ──
+(function setupCaretScroll() {
+  function scrollCaretIntoView() {
+    const ed = document.getElementById('chContent');
+    const scroll = document.querySelector('.content-scroll');
+    if (!ed || !scroll) return;
+
+    const sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0) return;
+
+    const range = sel.getRangeAt(0).cloneRange();
+    range.collapse(true);
+    const rect = range.getBoundingClientRect();
+    if (!rect || rect.height === 0) return;
+
+    const scrollRect = scroll.getBoundingClientRect();
+    const bottomWrap = document.querySelector('.mobile-bottom-wrap');
+    const bottomH = bottomWrap ? bottomWrap.offsetHeight : 0;
+    const PAD = 32;
+
+    const visibleBottom = scrollRect.bottom - bottomH;
+
+    if (rect.bottom + PAD > visibleBottom) {
+      scroll.scrollTop += (rect.bottom + PAD - visibleBottom);
+    } else if (rect.top - PAD < scrollRect.top) {
+      scroll.scrollTop -= (scrollRect.top - rect.top + PAD);
+    }
+  }
+
+  function attach() {
+    const ed = document.getElementById('chContent');
+    if (!ed) { setTimeout(attach, 300); return; }
+    ed.addEventListener('input', scrollCaretIntoView, { passive: true });
+    ed.addEventListener('keyup', scrollCaretIntoView, { passive: true });
+    document.addEventListener('selectionchange', () => {
+      if (document.activeElement === ed) scrollCaretIntoView();
+    }, { passive: true });
+  }
+  attach();
+})();
 
 // ── FOCUS RECOVERY — đặt caret tại vị trí tap, không phải cuối ──
 function recoverEditorFocus(tapX, tapY) {
@@ -1771,11 +1831,11 @@ function setupFocusRecovery() {
   // ── 2. Tap vào vùng trắng quanh editor (content-scroll) ──
   document.querySelector('.content-scroll')?.addEventListener('touchend', function(e) {
     if (e.target === this) {
-      e.preventDefault();
+      // Không preventDefault để không chặn scroll
       const t = e.changedTouches[0];
       recoverEditorFocus(t.clientX, t.clientY);
     }
-  }, { passive: false });
+  }, { passive: true });
 
   // ── 3. Quay về từ app khác / đóng cửa sổ PiP ──
   let needsRecovery = false;
@@ -1813,29 +1873,31 @@ function setupFocusRecovery() {
   function updateBarPos() {
     if (window.visualViewport) {
       const vv = window.visualViewport;
-      // Khoảng cách từ bottom visual viewport đến bottom window = keyboard height
-      const keyboardH = window.innerHeight - vv.height - vv.offsetTop;
-      const safeBottom = Math.max(0, keyboardH);
-      wrap.style.bottom = safeBottom + 'px';
-      // Co content-scroll lại để không bị che bởi toolbar + keyboard
-      const scroll = document.querySelector('.content-scroll');
-      if (scroll) {
-        scroll.style.paddingBottom = (wrap.offsetHeight + safeBottom + 8) + 'px';
+      // keyboard height = phần window bị bàn phím che
+      const keyboardH = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+      wrap.style.bottom = keyboardH + 'px';
+      // Thêm padding vào editable (không phải container) để tránh scroll jump
+      const ed = document.getElementById('chContent');
+      if (ed) {
+        const barH = wrap.offsetHeight;
+        ed.style.paddingBottom = (barH + keyboardH + 24) + 'px';
       }
     }
   }
 
+  function resetBarPos() {
+    wrap.style.bottom = '0px';
+    const ed = document.getElementById('chContent');
+    if (ed) ed.style.paddingBottom = '120px';
+  }
+
   if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', updateBarPos);
-    window.visualViewport.addEventListener('scroll', updateBarPos);
+    window.visualViewport.addEventListener('resize', updateBarPos, { passive: true });
+    window.visualViewport.addEventListener('scroll', updateBarPos, { passive: true });
   }
   // Fallback: focusin/blur trên editor
   document.getElementById('chContent')?.addEventListener('focus', () => setTimeout(updateBarPos, 300));
-  document.getElementById('chContent')?.addEventListener('blur', () => {
-    wrap.style.bottom = '0px';
-    const scroll = document.querySelector('.content-scroll');
-    if (scroll) scroll.style.paddingBottom = '';
-  });
+  document.getElementById('chContent')?.addEventListener('blur', resetBarPos);
 })();
 document.getElementById('passInp')?.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
 
