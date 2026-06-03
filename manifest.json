@@ -1,0 +1,20 @@
+{
+  "name": "Peach Luku",
+  "short_name": "Peach Luku",
+  "description": "Web đọc & viết truyện chữ cute & thơm 🍑",
+  "start_url": "/write.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#E8835A",
+  "lang": "vi",
+  "icons": [
+    {
+      "src": "https://jnlqzqtavfptkfvnndxq.supabase.co/storage/v1/object/public/avatars/og-cover.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["books", "entertainment"]
+}
