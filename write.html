@@ -22,7 +22,7 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; }
+html, body { height: 100%; overflow: hidden; }
 body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); }
 
 /* ── TOPBAR ── */
@@ -64,14 +64,14 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 .new-story-btn:hover { background: var(--peach-dark); }
 
 /* ── LAYOUT ── */
-.app { display: flex; padding-top: 52px; height: 100vh; }
+.app { display: flex; padding-top: 52px; height: 100vh; overflow: hidden; }
 
 /* ── SIDEBAR ── */
 .sidebar {
   width: var(--sidebar-w); flex-shrink: 0;
   background: #fff; border-right: 1px solid var(--border);
   overflow: hidden; display: flex; flex-direction: column;
-  height: 100%;
+  height: calc(100vh - 52px);
 }
 .sidebar-tabs {
   display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0;
