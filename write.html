@@ -1,3 +1,4 @@
+Trải nghiệm AI ngay trong các ứng dụng bạn yêu thích … Dùng Gemini để tạo bản nháp và tinh chỉnh nội dung, đồng thời sử dụng Gemini Pro để khai thác AI thế hệ mới của Google với giá 489.000 ₫ 122.000 ₫ cho 3 tháng
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -386,18 +387,18 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 .content-editable {
   font-family: 'Noto Serif', Georgia, serif;
   font-size: 19px;
-  line-height: 2.0;
+  line-height: 1.75;      /* vừa phải, không quá thưa */
   color: #1a1a1a;
   min-height: calc(100vh - 200px); width: 100%; box-sizing: border-box;
   background: #fff;
-  padding: 24px 20px;
+  padding: 20px 18px;
   outline: none;
   word-break: break-word;
 }
 .content-editable:empty::before { content: attr(data-ph); color: var(--text-muted); font-style: italic; }
 .content-editable p {
   margin-top: 0;
-  margin-bottom: 1.6em;  /* khoảng cách đoạn như hình */
+  margin-bottom: 1em;    /* đúng 1 dòng trống giữa các đoạn */
 }
 .content-editable p:last-child { margin-bottom: 0; }
 .content-editable hr { border: none; border-top: 2px solid var(--peach-light); margin: 2rem auto; width: 50%; }
@@ -533,7 +534,9 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 .toast.err { background: #e84040; }
 
 .sidebar-backdrop {
-  display: none; position: fixed; inset: 0; z-index: 49;
+  display: none; position: fixed;
+  top: 52px; left: 0; right: 0; bottom: 0;
+  z-index: 149;   /* dưới sidebar (150) nhưng trên app (100) */
   background: rgba(0,0,0,0.4); backdrop-filter: blur(2px);
   touch-action: none;
 }
@@ -545,24 +548,22 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
   .sidebar {
     display: none;
     position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
+    top: 52px;          /* bắt đầu từ dưới topbar */
+    left: 0; right: 0; bottom: 0;
     width: 100%;
-    z-index: 50;
-    /* Sidebar container KHÔNG tự scroll — để pane con scroll */
+    z-index: 150;       /* cao hơn topbar (100) */
     overflow: hidden;
     flex-direction: column;
   }
   .sidebar.open { display: flex !important; }
-  /* Pane con mới scroll */
+  /* Pane con scroll */
   .sidebar.open .sidebar-pane.active {
     flex: 1;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
-  /* Main luôn full width vì sidebar không trong flex flow */
-  .main {
-    flex: 1; width: 100%; max-width: 100%; min-width: 0;
-  }
+  /* Main luôn full width */
+  .main { flex: 1; width: 100%; max-width: 100%; min-width: 0; }
   .story-select { max-width: 130px; font-size: 12px; }
 }
 </style>
@@ -613,6 +614,12 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
     </button>
   </div>
 </div>
+
+<!-- FOCUS RECOVERY OVERLAY (hiện khi editor mất focus do popup app khác) -->
+<div id="focusOverlay" style="
+  display:none; position:fixed; inset:0; z-index:90;
+  background:rgba(0,0,0,0); cursor:text;
+" onclick="recoverEditorFocus()" title="Tap để tiếp tục viết"></div>
 
 <!-- APP -->
 <div class="app" id="app" style="display:none">
@@ -1023,6 +1030,7 @@ function showApp() {
   document.getElementById('authGate').style.display = 'none';
   document.getElementById('app').style.display = 'flex';
   document.getElementById('menuBtn').style.display = 'flex';
+  setupFocusRecovery();
   // loadStories() sẽ được gọi sau khi currentUser đã được gán trong init()
 }
 
@@ -1709,6 +1717,54 @@ document.addEventListener('keydown', e => {
 });
 
 // ── FIX: Popup ứng dụng khác che mất focus editor ──
+function recoverEditorFocus() {
+  const ed = document.getElementById('chContent');
+  const overlay = document.getElementById('focusOverlay');
+  if (overlay) overlay.style.display = 'none';
+  if (ed) {
+    ed.focus();
+    // Đặt caret về cuối
+    const sel = window.getSelection();
+    if (sel) {
+      const range = document.createRange();
+      range.selectNodeContents(ed);
+      range.collapse(false);
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
+  }
+}
+
+// Khi editor blur (có thể do popup app khác), hiện overlay transparent
+// để user tap vào bất cứ đâu cũng focus lại editor
+function setupFocusRecovery() {
+  const ed = document.getElementById('chContent');
+  const overlay = document.getElementById('focusOverlay');
+  if (!ed || !overlay) return;
+
+  let blurTimer = null;
+  ed.addEventListener('blur', () => {
+    // Delay 300ms để tránh false trigger khi click toolbar
+    blurTimer = setTimeout(() => {
+      const wrap = document.getElementById('editorWrap');
+      if (wrap && wrap.classList.contains('show')) {
+        // Chỉ hiện overlay nếu không có modal/sidebar đang mở
+        const sidebarOpen = document.getElementById('sidebar')?.classList.contains('open');
+        const previewOpen = document.getElementById('previewModal')?.classList.contains('open');
+        if (!sidebarOpen && !previewOpen) {
+          overlay.style.display = 'block';
+        }
+      }
+    }, 300);
+  });
+
+  ed.addEventListener('focus', () => {
+    clearTimeout(blurTimer);
+    overlay.style.display = 'none';
+  });
+}
+
+// ── FIX: Popup ứng dụng khác che mất focus editor (old) ──
 // Khi user tap vào vùng editor sau khi popup biến mất → tự refocus
 (function() {
   const editorArea = document.getElementById('chContent');
