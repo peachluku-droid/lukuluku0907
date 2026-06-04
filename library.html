@@ -15,13 +15,12 @@
 <meta name="twitter:title" content="Peach Luku">
 <meta name="twitter:description" content="Web đọc truyện chữ cute & thơm 🍑">
 <meta name="twitter:image" content="https://jnlqzqtavfptkfvnndxq.supabase.co/storage/v1/object/public/avatars/og-cover.png">
-<title>Thư viện — Peach Luku</title>
+<title>Đang tải... — Peach Luku</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ─── THEMES ─────────────────────────────────── */
 :root, body.theme-light {
   --peach: #E8835A; --peach-light: #FEF0E9; --peach-mid: #F2A882;
   --peach-dark: #B85B30; --peach-darker: #7A3A1A;
@@ -29,16 +28,17 @@
   --bg: #FDF6F2; --bg2: #ffffff;
   --card: #ffffff; --text: #2C1A0E; --text-muted: #9A7A6A;
   --border: rgba(232,131,90,0.18); --border-hover: #F2A882;
+  --shadow: rgba(232,131,90,0.08);
   --green: #4caf7d; --green-light: #f0fff6;
 }
 body.theme-dark {
   --peach: #F2A882; --peach-light: #2A1A0E; --peach-mid: #C87050;
   --peach-dark: #F2C0A0; --peach-darker: #FFE0CC;
   --gold: #D4B86A; --gold-light: #1A1500;
-  --bg: #1a1a1a; --bg2: #242424;
-  --card: #242424; --text: #F0D8C8; --text-muted: #A08070;
+  --bg: #1a1a1a; --bg2: #242424; --card: #242424;
+  --text: #F0D8C8; --text-muted: #A08070;
   --border: rgba(242,168,130,0.15); --border-hover: #C87050;
-  --green: #6fcf97; --green-light: #0d2016;
+  --shadow: rgba(0,0,0,0.3); --green: #6fcf97; --green-light: #0d2016;
 }
 body.theme-sepia {
   --peach: #8B5E3C; --peach-light: #F0E8D8; --peach-mid: #A67C52;
@@ -47,7 +47,7 @@ body.theme-sepia {
   --bg: #f5f0e8; --bg2: #faf7f0; --card: #faf7f0;
   --text: #3d2b1f; --text-muted: #9a8070;
   --border: rgba(139,94,60,0.18); --border-hover: #A67C52;
-  --green: #5a8a60; --green-light: #edf7ee;
+  --shadow: rgba(139,94,60,0.08); --green: #5a8a60; --green-light: #edf7ee;
 }
 body.theme-blue {
   --peach: #2a5bbf; --peach-light: #dce8fc; --peach-mid: #4a7de0;
@@ -56,7 +56,7 @@ body.theme-blue {
   --bg: #e8f0fe; --bg2: #f4f7ff; --card: #f4f7ff;
   --text: #1a2a4a; --text-muted: #7a9ac0;
   --border: rgba(42,91,191,0.18); --border-hover: #4a7de0;
-  --green: #2a9bbf; --green-light: #e0f7ff;
+  --shadow: rgba(42,91,191,0.08); --green: #2a9bbf; --green-light: #e0f7ff;
 }
 body.theme-pink {
   --peach: #d4537e; --peach-light: #ffe6f2; --peach-mid: #e876a0;
@@ -65,7 +65,7 @@ body.theme-pink {
   --bg: #fff0f6; --bg2: #fff8fb; --card: #fff8fb;
   --text: #2c1a22; --text-muted: #c09aaa;
   --border: rgba(212,83,126,0.18); --border-hover: #e876a0;
-  --green: #c054a0; --green-light: #fff0fb;
+  --shadow: rgba(212,83,126,0.08); --green: #c054a0; --green-light: #fff0fb;
 }
 body.theme-purple {
   --peach: #6a3bbf; --peach-light: #e8dcfc; --peach-mid: #8a5de0;
@@ -74,7 +74,7 @@ body.theme-purple {
   --bg: #f0ebff; --bg2: #f9f6ff; --card: #f9f6ff;
   --text: #2a1a4a; --text-muted: #9a7ac0;
   --border: rgba(106,59,191,0.18); --border-hover: #8a5de0;
-  --green: #5a3bbf; --green-light: #ede8ff;
+  --shadow: rgba(106,59,191,0.08); --green: #5a3bbf; --green-light: #ede8ff;
 }
 body.theme-gray {
   --peach: #555555; --peach-light: #e8e8e8; --peach-mid: #777777;
@@ -83,7 +83,7 @@ body.theme-gray {
   --bg: #f0f0f0; --bg2: #fafafa; --card: #fafafa;
   --text: #222222; --text-muted: #888888;
   --border: rgba(85,85,85,0.18); --border-hover: #777777;
-  --green: #4a7a4a; --green-light: #eef5ee;
+  --shadow: rgba(85,85,85,0.08); --green: #4a7a4a; --green-light: #eef5ee;
 }
 body.theme-green {
   --peach: #5a9e6f; --peach-light: #e8f5ee; --peach-mid: #7dbb93;
@@ -100,297 +100,192 @@ body.theme-wattpad {
   --bg: #faf5ee; --bg2: #fff9f2; --card: #fff9f2;
   --text: #2c1f0e; --text-muted: #a08050;
   --border: rgba(242,101,34,0.18); --border-hover: #f8863a;
-  --green: #4caf7d; --green-light: #f0fff6;
+  --shadow: rgba(242,101,34,0.08); --green: #4caf7d; --green-light: #f0fff6;
 }
 
 /* ── Nav avatar fix ── */
-#nav-user-btn,
-.user-nav-btn,
-.user-nav-btn-ch {
-  width: 34px; height: 34px;
-  border-radius: 50%; overflow: hidden;
+.user-nav-btn, #nav-user-btn {
+  width: 34px; height: 34px; border-radius: 50%; overflow: hidden;
   display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 800;
-  color: var(--peach); text-decoration: none;
-  border: 1.5px solid var(--border-hover);
-  flex-shrink: 0; background: none; padding: 0;
-  cursor: pointer;
+  font-size: 13px; font-weight: 800; color: var(--peach);
+  text-decoration: none; flex-shrink: 0; padding: 0;
+  background: none; border: none; cursor: pointer;
 }
-#nav-user-btn img,
-.user-nav-btn img,
-.user-nav-btn-ch img {
-  width: 34px; height: 34px;
-  border-radius: 50%; object-fit: cover; display: block;
+.user-nav-btn img, #nav-user-btn img {
+  width: 34px; height: 34px; border-radius: 50%; object-fit: cover; display: block;
 }
 
 body {
-  font-family: 'Nunito', sans-serif;
-  background: var(--bg); color: var(--text);
-  transition: background .3s, color .3s;
-  min-height: 100vh;
+  font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text);
+  transition: background .3s, color .3s; line-height: 1.6;
+  max-width: 680px; margin: 0 auto; min-height: 100vh;
 }
-
-/* ─── TOPBAR ──────────────────────────────────── */
 .topbar {
   background: var(--bg2); border-bottom: 1px solid var(--border);
-  padding: 0 1.25rem; display: flex; align-items: center;
+  padding: 0 1rem; display: flex; align-items: center;
   justify-content: space-between; height: 56px;
   position: sticky; top: 0; z-index: 100; transition: background .3s;
 }
-.logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
-.logo-text { font-family: 'Nunito', sans-serif; font-size: 19px; font-weight: 800; color: var(--peach); }
-.topbar-right { display: flex; align-items: center; gap: 6px; }
-.icon-btn {
-  background: none; border: 1.5px solid var(--border-hover);
-  border-radius: 20px; width: 34px; height: 34px;
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  transition: all .15s; color: var(--peach);
-}
+.topbar-left { display: flex; align-items: center; gap: 8px; }
+.back-btn { background: none; border: none; cursor: pointer; color: var(--text); padding: 7px; border-radius: 50%; display: flex; align-items: center; transition: background .15s; }
+.back-btn:hover { background: var(--peach-light); }
+.back-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.logo { display: flex; align-items: center; gap: 6px; text-decoration: none; }
+.logo-text { font-family: 'Nunito', sans-serif; font-size: 18px; font-weight: 800; color: var(--peach); }
+.topbar-right { display: flex; align-items: center; gap: 2px; }
+.icon-btn { background: none; border: none; cursor: pointer; color: var(--text); padding: 8px; border-radius: 50%; display: flex; align-items: center; transition: background .15s; }
 .icon-btn:hover { background: var(--peach-light); }
-.icon-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
-/* ─── THEME DRAWER ───────────────────────────── */
-.theme-drawer {
-  position: fixed; top: 58px; right: 1rem; z-index: 300;
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 16px; padding: 14px 16px; width: 220px;
-  box-shadow: 0 8px 28px rgba(0,0,0,0.12); display: none;
-}
+.icon-btn svg { width: 19px; height: 19px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.theme-drawer { position: fixed; top: 58px; right: .75rem; z-index: 300; background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 12px 14px; width: 210px; box-shadow: 0 8px 28px rgba(0,0,0,0.12); display: none; }
 .theme-drawer.open { display: block; }
-.theme-drawer-title { font-size: 12px; font-weight: 800; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: .5px; }
-.theme-swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-.swatch { width: 38px; height: 38px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: all .15s; }
+.theme-drawer-title { font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 9px; text-transform: uppercase; letter-spacing: .5px; }
+.theme-swatches { display: grid; grid-template-columns: repeat(4,1fr); gap: 7px; }
+.swatch { width: 36px; height: 36px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: all .15s; }
 .swatch.active { border-color: var(--peach); box-shadow: 0 0 0 2px var(--bg2), 0 0 0 4px var(--peach); }
 .swatch:hover { transform: scale(1.12); }
-.swatch-label { font-size: 10px; text-align: center; color: var(--text-muted); margin-top: 3px; font-weight: 700; }
+.swatch-label { font-size: 9px; text-align: center; color: var(--text-muted); margin-top: 3px; font-weight: 700; }
+.cover-hero { position: relative; width: 100%; background: var(--peach-light); display: flex; justify-content: center; padding: 2rem 1.5rem 2.5rem; overflow: hidden; }
+.cover-hero-blur { position: absolute; inset: 0; filter: blur(22px) saturate(1.4); opacity: 0.32; background-size: cover; background-position: center; transform: scale(1.1); }
+.cover-book { position: relative; width: 154px; height: 230px; border-radius: 10px; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.28); background: var(--peach-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.cover-book img { width: 100%; height: 100%; object-fit: cover; }
+.cover-book-ph { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
+.cover-book-ph svg { width: 52px; height: 52px; stroke: var(--peach-mid); fill: none; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+.story-body { background: var(--bg2); padding: 1.2rem 1.2rem 0; }
+.story-title-main { font-size: 20px; font-weight: 800; color: var(--text); line-height: 1.3; margin-bottom: 0.7rem; text-align: center; }
+.author-row { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 1rem; cursor: pointer; }
+.author-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--peach-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; border: 2px solid var(--border); }
+.author-avatar svg { width: 16px; height: 16px; stroke: var(--peach-mid); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.author-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.author-name { font-size: 14px; font-weight: 700; }
+.author-row:hover .author-name { color: var(--peach); text-decoration: underline; }
+.stats-row { display: flex; gap: 0; margin-bottom: 1.2rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: .7rem 0; }
+.stat-block { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; position: relative; }
+.stat-block + .stat-block::before { content: ''; position: absolute; left: 0; top: 10%; bottom: 10%; width: 1px; background: var(--border); }
+.stat-icon { color: var(--text-muted); display: flex; align-items: center; margin-bottom: 1px; }
+.stat-icon svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.stat-val { font-size: 15px; font-weight: 800; color: var(--text); }
+.stat-label { font-size: 10.5px; color: var(--text-muted); font-weight: 600; }
+.action-row { display: flex; gap: 8px; margin-bottom: 1.2rem; }
+.btn-read { flex: 1; background: var(--text); color: var(--bg2); border: none; border-radius: 28px; padding: 13px 16px; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; transition: opacity .2s, transform .1s; text-decoration: none; font-family: 'Nunito', sans-serif; }
+.btn-read svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.btn-read:hover { opacity: .82; }
+.btn-read:active { transform: scale(.97); }
+.btn-secondary-action { background: var(--bg2); color: var(--text); border: 1.5px solid var(--border-hover); border-radius: 28px; padding: 13px 14px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background .15s, transform .1s; font-family: 'Nunito', sans-serif; white-space: nowrap; }
+.btn-secondary-action svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.btn-secondary-action:hover { background: var(--peach-light); }
+.btn-secondary-action.active { background: var(--peach-light); color: var(--peach-dark); border-color: var(--peach-mid); }
+.btn-secondary-action.active svg { stroke: var(--peach); fill: var(--peach); }
+#follow-btn.active svg { stroke: var(--peach); fill: var(--peach); }
+#bookmark-btn.active svg { stroke: var(--peach); fill: var(--peach); }
+.btn-secondary-action:active { transform: scale(.97); }
+.tags-row { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 1.2rem; align-items: center; }
+.status-chip { padding: 5px 13px; border-radius: 20px; font-size: 11.5px; font-weight: 800; display: flex; align-items: center; gap: 5px; }
+.status-chip svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.status-chip.done { background: var(--green-light); color: var(--green); }
+.status-chip.ongoing { background: var(--gold-light); color: var(--gold); }
+.genre-tag { padding: 5px 13px; background: var(--peach-light); color: var(--peach-dark); border-radius: 20px; font-size: 11.5px; font-weight: 700; cursor: pointer; text-decoration: none; transition: background .12s; }
+.genre-tag:hover { background: var(--peach-mid); color: white; }
+.description-box { background: var(--bg); border: 1px solid var(--border); border-radius: 14px; padding: .9rem 1rem; margin-bottom: 1.4rem; }
+.description-label { font-size: 10.5px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 5px; }
+.description-text { font-size: 13.5px; line-height: 1.78; color: var(--text); }
+.description-text.clamped { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.description-text * { font-family: inherit !important; font-size: inherit !important; color: inherit !important; background: transparent !important; }
+.description-text p, .description-text div { margin-bottom: 0.3em; line-height: 1.78; }
+.description-text b, .description-text strong { font-weight: 700; }
+.description-text i, .description-text em { font-style: italic; }
 
-/* ─── PAGE HEADER ────────────────────────────── */
-.page-header {
-  padding: 1.1rem 1.25rem 0;
-}
-.page-title {
-  font-family: 'Pacifico', cursive;
-  font-size: 22px; color: var(--peach); margin-bottom: 2px;
-}
-.page-sub { font-size: 12px; color: var(--text-muted); font-weight: 600; }
-
-/* ─── TAB BAR ────────────────────────────────── */
-.tab-bar {
-  display: flex; gap: 4px;
-  padding: 1rem 1.25rem 0;
-  border-bottom: 1.5px solid var(--border);
-  background: var(--bg2);
-  position: sticky; top: 56px; z-index: 90;
-  transition: background .3s;
-}
-.tab-btn {
-  display: flex; align-items: center; gap: 6px;
-  padding: 9px 14px;
-  border: none; background: none; cursor: pointer;
-  font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700;
-  color: var(--text-muted);
-  border-bottom: 2.5px solid transparent;
-  margin-bottom: -1.5px;
-  transition: all .15s; white-space: nowrap;
-  border-radius: 10px 10px 0 0;
-}
-.tab-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
-.tab-btn:hover { color: var(--peach); background: var(--peach-light); }
-.tab-btn.active { color: var(--peach); border-bottom-color: var(--peach); }
-.tab-count {
-  background: var(--peach-light); color: var(--peach-dark);
-  font-size: 10px; font-weight: 800;
-  padding: 1px 6px; border-radius: 10px; min-width: 18px; text-align: center;
-}
+.read-more-btn { background: none; border: none; cursor: pointer; color: var(--peach); font-size: 12.5px; font-weight: 700; padding: 4px 0; margin-top: 5px; font-family: 'Nunito', sans-serif; display: flex; align-items: center; gap: 4px; }
+.read-more-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; transition: transform .15s; }
+.read-more-btn.expanded svg { transform: rotate(180deg); }
+.content-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); background: var(--bg2); position: sticky; top: 56px; z-index: 90; transition: background .3s; }
+.tab-btn { flex: 1; background: none; border: none; padding: 12px 0; font-size: 13px; font-weight: 700; color: var(--text-muted); cursor: pointer; position: relative; transition: color .15s; font-family: 'Nunito', sans-serif; display: flex; align-items: center; justify-content: center; gap: 5px; }
+.tab-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.tab-btn:hover { color: var(--peach); }
+.tab-btn.active { color: var(--peach); }
+.tab-btn.active::after { content: ''; position: absolute; bottom: -2px; left: 15%; right: 15%; height: 2.5px; background: var(--peach); border-radius: 2px; }
+.tab-count { font-size: 10px; font-weight: 800; background: var(--peach-light); color: var(--peach-dark); padding: 1px 5px; border-radius: 8px; min-width: 16px; text-align: center; }
 .tab-btn.active .tab-count { background: var(--peach); color: white; }
-
-/* ─── TAB CONTENT ────────────────────────────── */
-.tab-pane { display: none; }
-.tab-pane.active { display: block; }
-
-/* ─── CONTENT WRAP ───────────────────────────── */
-.content { padding: 1rem 1.25rem; max-width: 860px; margin: 0 auto; }
-
-/* ─── SECTION CONTROLS ───────────────────────── */
-.pane-controls {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 12px; gap: 8px; flex-wrap: wrap;
-}
-.pane-info { font-size: 12px; color: var(--text-muted); font-weight: 700; }
-.pane-info span { color: var(--peach); font-weight: 800; }
-.ctrl-btn {
-  display: flex; align-items: center; gap: 4px;
-  padding: 5px 12px; border-radius: 20px;
-  border: 1.5px solid var(--border-hover); background: var(--bg);
-  font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 700;
-  color: var(--text-muted); cursor: pointer; transition: all .12s;
-}
-.ctrl-btn:hover { background: var(--peach-light); color: var(--peach-dark); border-color: var(--peach-mid); }
-.ctrl-btn.danger:hover { background: #fff0f0; color: #e05252; border-color: #e05252; }
-.ctrl-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
-/* ─── SORT CHIPS ─────────────────────────────── */
-.sort-chips { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 12px; }
-.sort-chip {
-  padding: 3px 10px; border-radius: 20px;
-  border: 1.5px solid var(--border-hover); background: var(--bg);
-  font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 700;
-  color: var(--text-muted); cursor: pointer; transition: all .12s;
-}
-.sort-chip:hover { background: var(--peach-light); color: var(--peach-dark); border-color: var(--peach-mid); }
-.sort-chip.active { background: var(--peach); color: white; border-color: var(--peach); }
-
-/* ─── STORY CARDS ────────────────────────────── */
-.story-list { display: flex; flex-direction: column; gap: 10px; }
-.story-row {
-  display: flex; gap: 12px; align-items: flex-start;
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 14px; overflow: hidden;
-  text-decoration: none; color: inherit;
-  transition: all .15s; position: relative;
-  padding: 10px;
-}
-.story-row:hover { border-color: var(--peach-mid); box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
-.row-cover {
-  width: 62px; height: 88px; flex-shrink: 0;
-  border-radius: 8px; overflow: hidden;
-  background: linear-gradient(145deg, var(--peach-light), var(--gold-light));
-  position: relative;
-}
-.row-cover img { width: 100%; height: 100%; object-fit: cover; display: none; }
-.row-cover.has-img img { display: block; }
-.row-cover.has-img .cover-ph-sm { display: none; }
-.cover-ph-sm {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-}
-.cover-ph-sm svg { width: 22px; height: 22px; stroke: var(--peach-mid); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
-.row-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; padding-top: 2px; }
-.row-title { font-size: 13px; font-weight: 800; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.row-author { font-size: 11px; color: var(--text-muted); font-weight: 600; }
-.row-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 2px; }
-.row-badge {
-  font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 8px;
-  white-space: nowrap;
-}
-.badge-progress { background: var(--peach-light); color: var(--peach-dark); }
-.badge-done { background: var(--green-light); color: var(--green); }
-.badge-ongoing { background: var(--gold-light); color: var(--gold); }
-.row-time { font-size: 10px; color: var(--text-muted); font-weight: 600; }
-.row-chapter { font-size: 11px; color: var(--peach); font-weight: 700; }
-.row-actions {
-  display: flex; flex-direction: column; gap: 5px; align-items: flex-end; flex-shrink: 0;
-  padding-top: 2px;
-}
-.row-action-btn {
-  background: none; border: 1.5px solid var(--border-hover);
-  border-radius: 8px; width: 30px; height: 30px;
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  transition: all .12s; color: var(--text-muted);
-}
-.row-action-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.row-action-btn:hover { background: var(--peach-light); color: var(--peach-dark); border-color: var(--peach-mid); }
-.row-action-btn.danger:hover { background: #fff0f0; color: #e05252; border-color: #e05252; }
-
-.read-progress-wrap { margin-top: 4px; }
-.read-progress-bar { height: 4px; border-radius: 4px; background: var(--border); overflow: hidden; }
-.read-progress-fill {
-  height: 100%; border-radius: 4px;
-  background: linear-gradient(90deg, var(--peach), var(--peach-mid));
-  transition: width .3s;
-}
-.read-progress-label { font-size: 10px; color: var(--text-muted); font-weight: 700; margin-top: 3px; }
-
-/* --- Grid (theo dõi) --- */
-.story-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
-.story-card {
-  display: flex; flex-direction: column;
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 13px; overflow: hidden;
-  text-decoration: none; color: inherit; position: relative;
-  transition: all .15s;
-}
-.story-card:hover { border-color: var(--peach-mid); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
-.card-cover {
-  position: relative; width: 100%; padding-top: 140%;
-  background: linear-gradient(145deg, var(--peach-light), var(--gold-light));
-  overflow: hidden; flex-shrink: 0;
-}
-.card-cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none; }
-.card-cover.has-img img { display: block; }
-.card-cover.has-img .cover-ph-lg { display: none; }
-.cover-ph-lg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
-.cover-ph-lg svg { width: 32px; height: 32px; stroke: var(--peach-mid); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
-.card-ch-badge { position: absolute; bottom: 7px; right: 7px; background: rgba(0,0,0,0.52); color: white; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 8px; backdrop-filter: blur(4px); }
-.card-new-badge {
-  position: absolute; top: 7px; left: 7px;
-  background: var(--peach); color: white;
-  font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 7px;
-  text-transform: uppercase; letter-spacing: .3px;
-}
-.card-unfollow-btn {
-  position: absolute; top: 7px; right: 7px;
-  width: 24px; height: 24px; border-radius: 50%;
-  background: rgba(0,0,0,0.45); border: none; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  color: white; backdrop-filter: blur(4px);
-  opacity: 0; transition: opacity .15s;
-}
-.story-card:hover .card-unfollow-btn { opacity: 1; }
-.card-unfollow-btn:hover { background: rgba(224,82,82,0.85); }
-.card-unfollow-btn svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
-.card-info { padding: 8px 9px 10px; flex: 1; display: flex; flex-direction: column; gap: 3px; }
-.card-title { font-size: 12px; font-weight: 800; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.card-author { font-size: 10.5px; color: var(--text-muted); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.card-views { font-size: 10.5px; color: var(--peach); font-weight: 700; display: flex; align-items: center; gap: 3px; margin-top: auto; }
-.card-views svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; }
-
-/* ─── EMPTY STATE ────────────────────────────── */
-.empty-state {
-  text-align: center; padding: 3.5rem 1rem;
-  display: flex; flex-direction: column; align-items: center; gap: 10px;
-}
-.empty-icon { display: flex; align-items: center; justify-content: center; }
-.empty-icon svg { width: 52px; height: 52px; stroke: var(--peach-mid); fill: none; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
-.empty-title { font-size: 15px; font-weight: 800; }
-.empty-sub { font-size: 13px; color: var(--text-muted); max-width: 260px; line-height: 1.6; }
-.empty-cta {
-  margin-top: 4px; display: inline-flex; align-items: center; gap: 6px;
-  padding: 9px 20px; border-radius: 22px;
-  background: var(--peach); color: white; text-decoration: none;
-  font-size: 13px; font-weight: 700; transition: background .15s;
-}
-.empty-cta svg { width: 14px; height: 14px; stroke: white; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-.empty-cta:hover { background: var(--peach-dark); }
-
-/* ─── SKELETON ───────────────────────────────── */
-.skel { animation: shimmer 1.4s infinite; background: linear-gradient(90deg, var(--border) 25%, var(--peach-light) 50%, var(--border) 75%); background-size: 200% 100%; border-radius: 8px; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+.chapter-controls { display: flex; justify-content: space-between; align-items: center; padding: .9rem 1.2rem .7rem; flex-wrap: wrap; gap: .6rem; background: var(--bg2); }
+.chapter-count-label { font-size: 13.5px; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 6px; }
+.chapter-count-label svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; color: var(--text-muted); }
+.sort-btn { padding: 5px 12px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 16px; font-size: 12px; font-weight: 700; color: var(--text); cursor: pointer; transition: all .15s; font-family: 'Nunito', sans-serif; display: flex; align-items: center; gap: 5px; }
+.sort-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: transform .2s; }
+.sort-btn:hover { background: var(--peach-light); border-color: var(--border-hover); }
+.chapter-search-bar { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 22px; padding: 7px 15px; margin: 0 1.2rem .7rem; transition: border-color .15s; }
+.chapter-search-bar:focus-within { border-color: var(--peach); }
+.chapter-search-bar svg { width: 14px; height: 14px; stroke: var(--text-muted); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.chapter-search-bar input { border: none; background: none; outline: none; font-size: 13px; color: var(--text); flex: 1; font-family: 'Nunito', sans-serif; }
+.chapter-search-bar input::placeholder { color: var(--text-muted); }
+.chapter-list { padding: 0 1.2rem 1.5rem; display: flex; flex-direction: column; }
+.chapter-item { display: flex; align-items: center; gap: 12px; padding: 12px 4px; border-bottom: 1px solid var(--border); text-decoration: none; color: var(--text); transition: all .12s; border-radius: 0; }
+.chapter-item:last-child { border-bottom: none; }
+.chapter-item:hover { background: var(--peach-light); margin: 0 -8px; padding-left: 12px; padding-right: 12px; border-radius: 10px; border-bottom-color: transparent; }
+.chapter-num-badge { width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0; background: var(--peach-light); color: var(--peach-dark); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; }
+.chapter-item.read .chapter-num-badge { background: var(--green-light); color: var(--green); }
+.chapter-info { flex: 1; min-width: 0; }
+.chapter-name { font-weight: 700; font-size: 13.5px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chapter-item.read .chapter-name { color: var(--text-muted); }
+.chapter-meta { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
+.chapter-meta svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.chapter-arrow { color: var(--text-muted); flex-shrink: 0; }
+.chapter-arrow svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.skel-ch { display: flex; gap: 12px; padding: 12px 4px; align-items: center; border-bottom: 1px solid var(--border); }
+.skel { animation: shimmer 1.4s infinite; background: linear-gradient(90deg, var(--border) 25%, var(--peach-light) 50%, var(--border) 75%); background-size: 200% 100%; border-radius: 6px; }
+.skel-sq { width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0; }
+.skel-lines { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.skel-line { height: 11px; }
+.skel-line.w70 { width: 70%; }
+.skel-line.w40 { width: 40%; }
 @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-.skel-row { display: flex; gap: 12px; padding: 10px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; }
-.skel-cover-sm { width: 62px; height: 88px; border-radius: 8px; flex-shrink: 0; }
-.skel-lines { flex: 1; display: flex; flex-direction: column; gap: 7px; padding-top: 4px; }
-.skel-line { height: 11px; border-radius: 6px; }
-.skel-line.w80 { width: 80%; }
-.skel-line.w50 { width: 50%; }
-.skel-line.w60 { width: 60%; }
-
-/* ─── TOAST ──────────────────────────────────── */
-.toast {
-  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
-  background: var(--text); color: var(--bg2);
-  padding: 10px 20px; border-radius: 22px;
-  font-size: 13px; font-weight: 700;
-  z-index: 999; opacity: 0;
-  transition: transform .25s, opacity .25s;
-  white-space: nowrap; pointer-events: none;
-}
+.comment-section { padding: 1rem 1.2rem 2rem; }
+.comment-compose { display: flex; gap: 10px; margin-bottom: 1.4rem; background: var(--bg); border: 1.5px solid var(--border); border-radius: 16px; padding: 12px 14px; transition: border-color .15s; }
+.comment-compose:focus-within { border-color: var(--peach); }
+.compose-avatar { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); }
+.compose-avatar svg { width: 14px; height: 14px; stroke: var(--peach-mid); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.compose-body { flex: 1; min-width: 0; }
+.compose-input { width: 100%; border: none; background: none; outline: none; font-family: 'Nunito', sans-serif; font-size: 13.5px; color: var(--text); resize: none; min-height: 38px; max-height: 120px; line-height: 1.5; }
+.compose-input::placeholder { color: var(--text-muted); }
+.compose-footer { display: flex; align-items: center; justify-content: flex-end; margin-top: 8px; }
+.compose-submit { background: var(--peach); color: white; border: none; border-radius: 20px; padding: 6px 16px; font-family: 'Nunito', sans-serif; font-size: 12.5px; font-weight: 700; cursor: pointer; transition: background .15s; display: flex; align-items: center; gap: 5px; }
+.compose-submit svg { width: 13px; height: 13px; stroke: white; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.compose-submit:hover { background: var(--peach-dark); }
+.compose-submit:disabled { opacity: .6; cursor: not-allowed; }
+.comment-list { display: flex; flex-direction: column; gap: 14px; }
+.comment-item { display: flex; gap: 10px; }
+.comment-avatar { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); font-size: 14px; font-weight: 800; color: var(--peach-dark); overflow: hidden; }
+.comment-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.comment-bubble { flex: 1; min-width: 0; }
+.comment-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
+.comment-name { font-size: 13px; font-weight: 800; }
+.comment-time { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+.comment-text { font-size: 13.5px; line-height: 1.65; color: var(--text); word-break: break-word; }
+.comment-actions { display: flex; align-items: center; gap: 12px; margin-top: 6px; }
+.comment-action-btn { background: none; border: none; cursor: pointer; font-family: 'Nunito', sans-serif; font-size: 11.5px; font-weight: 700; color: var(--text-muted); display: flex; align-items: center; gap: 4px; padding: 0; transition: color .12s; }
+.comment-action-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.comment-action-btn:hover { color: var(--peach); }
+.load-more-btn { width: 100%; margin-top: 16px; padding: 11px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: all .15s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.load-more-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.load-more-btn:hover { background: var(--peach-light); color: var(--peach-dark); border-color: var(--peach-mid); }
+.comment-empty { text-align: center; padding: 2.5rem 1rem; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.comment-empty svg { width: 44px; height: 44px; stroke: var(--peach-mid); fill: none; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+.comment-empty-title { font-size: 14px; font-weight: 800; }
+.comment-empty-sub { font-size: 12.5px; color: var(--text-muted); }
+.login-prompt { background: var(--peach-light); border: 1.5px solid var(--border-hover); border-radius: 14px; padding: 14px 16px; margin-bottom: 1.4rem; display: flex; align-items: center; gap: 12px; }
+.login-prompt svg { width: 20px; height: 20px; stroke: var(--peach-dark); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.login-prompt-text { flex: 1; font-size: 13px; color: var(--peach-dark); font-weight: 700; }
+.login-prompt-btn { background: var(--peach); color: white; border: none; border-radius: 20px; padding: 6px 14px; font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; transition: background .15s; white-space: nowrap; }
+.login-prompt-btn:hover { background: var(--peach-dark); }
+.empty-state { text-align: center; padding: 3rem 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.empty-state svg { width: 46px; height: 46px; stroke: var(--peach-mid); fill: none; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+.empty-state-text { font-size: 14px; color: var(--text-muted); font-weight: 600; }
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--text); color: var(--bg2); padding: 10px 20px; border-radius: 22px; font-size: 13px; font-weight: 700; z-index: 999; opacity: 0; transition: transform .25s, opacity .25s; white-space: nowrap; pointer-events: none; max-width: 90vw; text-align: center; }
 .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-
 @media (max-width: 480px) {
-  .tab-btn { padding: 8px 10px; font-size: 12px; gap: 4px; }
+  .story-title-main { font-size: 18px; }
+  .tab-btn { font-size: 12px; padding: 11px 0; gap: 3px; }
   .tab-btn svg { display: none; }
-  .content { padding: 0.9rem 1rem; }
-  .story-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 9px; }
 }
 
 .profile-menu-wrap { position: relative; }
@@ -447,12 +342,10 @@ body {
 </head>
 <body class="theme-light">
 
-<!-- TOPBAR -->
 
 
-<!-- THEME DRAWER -->
 <div class="theme-drawer" id="theme-drawer">
-  <div class="theme-drawer-title">Chọn giao diện</div>
+  <div class="theme-drawer-title">Giao diện</div>
   <div class="theme-swatches">
     <div><div class="swatch" style="background:#FDF6F2;border:2px solid #F2A882" onclick="setTheme('light',this)"></div><div class="swatch-label">Sáng</div></div>
     <div><div class="swatch" style="background:#1a1a1a" onclick="setTheme('dark',this)"></div><div class="swatch-label">Tối</div></div>
@@ -465,99 +358,125 @@ body {
   </div>
 </div>
 
-<!-- PAGE HEADER -->
-<div class="page-header" style="background:var(--bg2);padding:1rem 1.25rem 0;transition:background .3s">
-  <div class="page-title" style="display:flex;align-items:center;gap:8px">
-    <svg viewBox="0 0 24 24" width="22" height="22" style="stroke:var(--peach);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-    Thư viện
+<div class="cover-hero" id="cover-hero">
+  <div class="cover-hero-blur" id="cover-blur"></div>
+  <div class="cover-book" id="story-cover">
+    <div class="cover-book-ph">
+      <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    </div>
   </div>
-  <div class="page-sub">Tất cả truyện bạn đã lưu &amp; theo dõi</div>
 </div>
 
-<!-- TAB BAR -->
-<div class="tab-bar" id="tabBar">
-  <button class="tab-btn active" onclick="switchTab('reading',this)">
-    <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-    Đang đọc
-    <span class="tab-count" id="cnt-reading">0</span>
+<div class="story-body">
+  <h1 class="story-title-main" id="story-title">Đang tải...</h1>
+  <div class="author-row" onclick="searchByAuthor()" title="Xem truyện cùng tác giả">
+    <div class="author-avatar" id="author-avatar">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </div>
+    <span class="author-name" id="story-author">...</span>
+  </div>
+  <div class="stats-row">
+    <div class="stat-block">
+      <span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
+      <span class="stat-val" id="story-views">—</span><span class="stat-label">Lượt đọc</span>
+    </div>
+    <div class="stat-block">
+      <span class="stat-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+      <span class="stat-val" id="story-votes">—</span><span class="stat-label">Bình chọn</span>
+    </div>
+    <div class="stat-block">
+      <span class="stat-icon"><svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></span>
+      <span class="stat-val" id="story-chapters">—</span><span class="stat-label">Chương</span>
+    </div>
+    <div class="stat-block">
+      <span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+      <span class="stat-val" id="story-comment-count">—</span><span class="stat-label">Review</span>
+    </div>
+  </div>
+  <div class="action-row">
+    <a href="#" class="btn-read" id="read-btn">
+      <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      <span id="read-btn-text">Đọc</span>
+    </a>
+    <button class="btn-secondary-action" id="bookmark-btn" onclick="toggleBookmark()">
+      <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      <span id="bookmark-text">Lưu</span>
+    </button>
+    <button class="btn-secondary-action" id="follow-btn" onclick="toggleFollow()">
+      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      <span id="follow-text">Theo dõi</span>
+    </button>
+  </div>
+  <div class="tags-row" id="tags-row">
+    <span class="status-chip done" id="story-status-chip">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      Hoàn thành
+    </span>
+  </div>
+  <div id="story-genres" style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:1.2rem"></div>
+  <div class="description-box">
+    <div class="description-label">Tóm tắt</div>
+    <div class="description-text clamped" id="story-description">...</div>
+    <button class="read-more-btn" id="desc-toggle" onclick="toggleDesc()">
+      Đọc thêm <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+  </div>
+</div>
+
+<div class="content-tabs">
+  <button class="tab-btn active" onclick="showTab('chapters',this)">
+    <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+    Chương <span class="tab-count" id="tc-chapters">0</span>
   </button>
-  <button class="tab-btn" onclick="switchTab('follow',this)">
-    <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-    Theo dõi
-    <span class="tab-count" id="cnt-follow">0</span>
+  <button class="tab-btn" onclick="showTab('comments',this)">
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    Review <span class="tab-count" id="tc-comments">0</span>
   </button>
-  <button class="tab-btn" onclick="switchTab('history',this)">
-    <svg viewBox="0 0 24 24"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"/></svg>
-    Lịch sử
-    <span class="tab-count" id="cnt-history">0</span>
+  <button class="tab-btn" onclick="showTab('info',this)">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    Thông tin
   </button>
 </div>
 
-<!-- ═══ TAB: ĐANG ĐỌC ═══ -->
-<div class="tab-pane active" id="pane-reading">
-  <div class="content">
-    <div class="pane-controls">
-      <div class="pane-info" id="info-reading">Đang tải...</div>
-      <div style="display:flex;gap:5px">
-        <button class="ctrl-btn danger" onclick="clearBookmarks()">
-          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-          Xoá tất cả
-        </button>
-      </div>
+<div class="tab-content active" id="tab-chapters">
+  <div class="chapter-controls">
+    <div class="chapter-count-label">
+      <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      <span id="chapter-count-label">0 chương</span>
     </div>
-    <div class="sort-chips">
-      <div class="sort-chip active" onclick="setSortReading('recent',this)">Gần đây nhất</div>
-      <div class="sort-chip" onclick="setSortReading('title',this)">A → Z</div>
-      <div class="sort-chip" onclick="setSortReading('progress',this)">Tiến độ</div>
-    </div>
-    <div class="story-list" id="list-reading">
-      <div class="skel-row"><div class="skel skel-cover-sm"></div><div class="skel-lines"><div class="skel skel-line w80"></div><div class="skel skel-line w50"></div><div class="skel skel-line w60"></div></div></div>
-      <div class="skel-row"><div class="skel skel-cover-sm"></div><div class="skel-lines"><div class="skel skel-line w80"></div><div class="skel skel-line w50"></div><div class="skel skel-line w60"></div></div></div>
-      <div class="skel-row"><div class="skel skel-cover-sm"></div><div class="skel-lines"><div class="skel skel-line w80"></div><div class="skel skel-line w50"></div><div class="skel skel-line w60"></div></div></div>
-    </div>
+    <button class="sort-btn" id="sort-toggle" onclick="toggleSort()">
+      <svg viewBox="0 0 24 24" id="sort-icon-svg"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+      <span id="sort-label">Cũ → Mới</span>
+    </button>
+  </div>
+  <div class="chapter-search-bar">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" placeholder="Tìm chương..." id="search-input" oninput="searchChapters()">
+  </div>
+  <div class="chapter-list" id="chapter-list">
+    <div class="skel-ch"><div class="skel skel-sq"></div><div class="skel-lines"><div class="skel skel-line w70"></div><div class="skel skel-line w40"></div></div></div>
+    <div class="skel-ch"><div class="skel skel-sq"></div><div class="skel-lines"><div class="skel skel-line w70"></div><div class="skel skel-line w40"></div></div></div>
+    <div class="skel-ch"><div class="skel skel-sq"></div><div class="skel-lines"><div class="skel skel-line w70"></div><div class="skel skel-line w40"></div></div></div>
   </div>
 </div>
 
-<!-- ═══ TAB: THEO DÕI ═══ -->
-<div class="tab-pane" id="pane-follow">
-  <div class="content">
-    <div class="pane-controls">
-      <div class="pane-info" id="info-follow">Đang tải...</div>
-      <div style="display:flex;gap:5px">
-        <button class="ctrl-btn danger" onclick="clearFollows()">
-          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-          Xoá tất cả
-        </button>
-      </div>
-    </div>
-    <div class="sort-chips">
-      <div class="sort-chip active" onclick="setSortFollow('recent',this)">Mới theo dõi</div>
-      <div class="sort-chip" onclick="setSortFollow('title',this)">A → Z</div>
-      <div class="sort-chip" onclick="setSortFollow('views',this)">Lượt xem</div>
-    </div>
-    <div class="story-grid" id="grid-follow"></div>
+<div class="tab-content" id="tab-comments">
+  <div class="comment-section">
+    <div id="compose-area"></div>
+    <div class="comment-list" id="comment-list"></div>
+    <button class="load-more-btn" id="load-more-btn" style="display:none" onclick="loadMoreComments()">
+      <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      Xem thêm bình luận
+    </button>
   </div>
 </div>
 
-<!-- ═══ TAB: LỊCH SỬ ═══ -->
-<div class="tab-pane" id="pane-history">
-  <div class="content">
-    <div class="pane-controls">
-      <div class="pane-info" id="info-history">Đang tải...</div>
-      <button class="ctrl-btn danger" onclick="clearHistory()">
-        <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>
-        Xoá lịch sử
-      </button>
-    </div>
-    <div class="sort-chips">
-      <div class="sort-chip active" onclick="setSortHistory('recent',this)">Gần đây nhất</div>
-      <div class="sort-chip" onclick="setSortHistory('title',this)">A → Z</div>
-    </div>
-    <div class="story-list" id="list-history"></div>
+<div class="tab-content" id="tab-info">
+  <div style="padding:1.1rem 1.2rem 2rem">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="info-grid"></div>
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
@@ -566,486 +485,262 @@ const SUPABASE_KEY = 'sb_publishable_ojRrfSwxK_B6-TGSXaYGxQ_DKERN0-f';
 if (!window._sb) window._sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const sb = window._sb;
 window.sb = sb; // Export cho navbar.js
+const urlParams = new URLSearchParams(window.location.search);
+const storyId = urlParams.get('story');
 
-function setTheme(name, el) {
-  document.body.className = 'theme-' + name;
-  localStorage.setItem('plTheme', name);
-  document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
-  if (el) el.classList.add('active');
+if (!storyId) {
+  document.body.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;text-align:center;padding:2rem;gap:12px"><svg viewBox="0 0 24 24" width="56" height="56" style="stroke:var(--peach-mid);fill:none;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div style="font-size:18px;font-weight:800">Không tìm thấy truyện</div><div style="font-size:13px;color:var(--text-muted)">ID truyện không hợp lệ</div><a href="index.html" style="margin-top:8px;padding:10px 24px;background:var(--peach);color:white;border-radius:24px;text-decoration:none;font-weight:700;font-size:13px">Về trang chủ</a></div>`;
 }
-function toggleThemeDrawer() {
-  document.getElementById('theme-drawer').classList.toggle('open');
+
+let allChapters = [], currentSort = 'asc', storyData = null, currentUser = null, currentUserProfile = null;
+let comments = [], commentsPage = 0;
+const COMMENTS_PER_PAGE = 15;
+let commentTotal = 0;
+
+function setTheme(name, el) { document.body.className = 'theme-' + name; localStorage.setItem('plTheme', name); document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active')); if (el) el.classList.add('active'); }
+function toggleThemeDrawer() { document.getElementById('theme-drawer').classList.toggle('open'); }
+document.addEventListener('click', e => { const d = document.getElementById('theme-drawer'); if (!d.contains(e.target) && !e.target.closest('[onclick="toggleThemeDrawer()"]')) d.classList.remove('open'); });
+(function() { const t = localStorage.getItem('plTheme') || 'light'; document.body.className = 'theme-' + t; })();
+
+function escapeHtml(str) { if (!str) return ''; const d = document.createElement('div'); d.textContent = str; return d.innerHTML; }
+function formatViews(n) { if (!n) return '0'; if (n >= 1e6) return (n/1e6).toFixed(1)+'M'; if (n >= 1000) return (n/1000).toFixed(1)+'K'; return String(n); }
+function timeAgo(ts) { const diff = Date.now() - new Date(ts).getTime(); const m = Math.floor(diff/60000), h = Math.floor(diff/3600000), d = Math.floor(diff/86400000); if (d > 30) return new Date(ts).toLocaleDateString('vi-VN', {day:'2-digit',month:'2-digit',year:'numeric'}); if (d > 0) return d + ' ngày trước'; if (h > 0) return h + ' giờ trước'; if (m > 0) return m + ' phút trước'; return 'Vừa xong'; }
+function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2300); }
+function setDescriptionContent(el, content) {
+  if (!content) { el.textContent = 'Chưa có mô tả.'; return; }
+  // Chỉ coi là HTML nếu có tag thực sự: <p>, <br>, <div>, <span>, <b>, <i>...
+  // Không phải ký tự < đơn lẻ trong text thuần
+  const isHtml = /<(p|br|div|span|b|i|em|strong|ul|ol|li|h[1-6])(\s|>|\/)/i.test(content);
+  if (isHtml) {
+    el.innerHTML = content;
+  } else {
+    // Plain text: giữ xuống dòng
+    el.innerHTML = content
+      .split('\n')
+      .map(line => '<span>' + line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</span>')
+      .join('<br>');
+  }
 }
-document.addEventListener('click', e => {
-  const d = document.getElementById('theme-drawer');
-  if (!d.contains(e.target) && !e.target.closest('[onclick="toggleThemeDrawer()"]')) d.classList.remove('open');
-});
-(function() {
-  const t = localStorage.getItem('plTheme') || 'light';
-  document.body.className = 'theme-' + t;
-})();
 
-const KEY_BOOKMARKS = 'pl_bookmarks';
-const KEY_FOLLOWS   = 'pl_follows';
-const KEY_HISTORY   = 'pl_history';
+let descExpanded = false;
+function toggleDesc() { descExpanded = !descExpanded; const el = document.getElementById('story-description'); const btn = document.getElementById('desc-toggle'); el.classList.toggle('clamped', !descExpanded); btn.classList.toggle('expanded', descExpanded); btn.childNodes[0].textContent = descExpanded ? 'Thu gọn' : 'Đọc thêm'; }
+function showTab(name, btn) { document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); btn.classList.add('active'); document.getElementById('tab-' + name).classList.add('active'); if (name === 'comments' && comments.length === 0) loadComments(); }
+function getLib() { return window.plLib || null; }
+function updateBookmarkBtn(active) {
+  const btn = document.getElementById('bookmark-btn');
+  const txt = document.getElementById('bookmark-text');
+  btn.classList.toggle('active', active);
+  txt.textContent = active ? 'Đã lưu' : 'Lưu';
+  btn.querySelector('svg').innerHTML = active
+    ? '<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" fill="var(--peach)" stroke="var(--peach)"/>'
+    : '<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>';
+}
+function updateFollowBtn(active) {
+  const btn = document.getElementById('follow-btn');
+  const txt = document.getElementById('follow-text');
+  btn.classList.toggle('active', active);
+  txt.textContent = active ? 'Đang theo dõi' : 'Theo dõi';
+  btn.querySelector('svg').innerHTML = active
+    ? '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="var(--peach)" stroke="var(--peach)"/>'
+    : '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>';
+}
 
-function getBookmarks() { try { return JSON.parse(localStorage.getItem(KEY_BOOKMARKS) || '{}'); } catch { return {}; } }
-function getFollows()   { try { return JSON.parse(localStorage.getItem(KEY_FOLLOWS)   || '{}'); } catch { return {}; } }
-function getHistory()   { try { return JSON.parse(localStorage.getItem(KEY_HISTORY)   || '[]'); } catch { return []; } }
-function saveBookmarks(obj) { localStorage.setItem(KEY_BOOKMARKS, JSON.stringify(obj)); }
-function saveFollows(obj)   { localStorage.setItem(KEY_FOLLOWS,   JSON.stringify(obj)); }
-function saveHistory(arr)   { localStorage.setItem(KEY_HISTORY,   JSON.stringify(arr)); }
+async function toggleBookmark() {
+  if (!currentUser) { showToast('Cần đăng nhập để lưu truyện'); return; }
+  const { data } = await sb.from('bookmarks').select('story_id').eq('user_id', currentUser.id).eq('story_id', storyId).maybeSingle();
+  if (data) { await sb.from('bookmarks').delete().eq('user_id', currentUser.id).eq('story_id', storyId); updateBookmarkBtn(false); showToast('Đã xoá khỏi thư viện'); }
+  else { await sb.from('bookmarks').upsert({ user_id: currentUser.id, story_id: storyId, added_at: new Date().toISOString() }, { onConflict: 'user_id,story_id' }); updateBookmarkBtn(true); showToast('Đã lưu vào thư viện'); }
+}
+async function toggleFollow() {
+  if (!currentUser) { showToast('Cần đăng nhập để theo dõi'); return; }
+  const { data } = await sb.from('follows').select('story_id').eq('user_id', currentUser.id).eq('story_id', storyId).maybeSingle();
+  if (data) { await sb.from('follows').delete().eq('user_id', currentUser.id).eq('story_id', storyId); updateFollowBtn(false); showToast('Đã bỏ theo dõi'); }
+  else { await sb.from('follows').upsert({ user_id: currentUser.id, story_id: storyId }, { onConflict: 'user_id,story_id' }); updateFollowBtn(true); showToast('Đang theo dõi truyện này'); }
+}
 
-let currentUser = null;
-async function initUser() {
+function searchByAuthor() {
+  const author = storyData?.author;
+  if (!author) return;
+  location.href = 'search.html?author=' + encodeURIComponent(author);
+}
+
+function shareStory() {
+  const url = window.location.href;
+  if (navigator.share) { navigator.share({ title: storyData?.title, text: storyData?.description, url }).catch(() => {}); }
+  else { navigator.clipboard.writeText(url).then(() => showToast('Đã sao chép link truyện')); }
+}
+
+async function loadStory() {
+  try {
+    const [{ data: story, error }, { data: chapVotes }] = await Promise.all([
+      sb.from('stories').select('*').eq('id', storyId).single(),
+      sb.from('chapters').select('votes').eq('story_id', storyId)
+    ]);
+    if (error || !story) throw error || new Error('Not found');
+    storyData = story;
+
+    // Tổng vote = cộng votes của tất cả chương
+    const totalVotes = (chapVotes || []).reduce((sum, c) => sum + (c.votes || 0), 0);
+
+    document.title = story.title + ' — Peach Luku';
+    setStoryMeta(story);
+    document.getElementById('story-title').textContent = story.title || 'Không có tiêu đề';
+    document.getElementById('story-author').textContent = story.author || 'Ẩn danh';
+    setDescriptionContent(document.getElementById('story-description'), story.description);
+    document.getElementById('story-views').textContent = formatViews(story.total_views || 0);
+    document.getElementById('story-votes').textContent = formatViews(totalVotes);
+    const isDone = story.status === 'completed' || story.status === 'done' || story.completed;
+    const chip = document.getElementById('story-status-chip');
+    if (isDone) { chip.className = 'status-chip done'; chip.innerHTML = `<svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><polyline points="20 6 9 17 4 12"/></svg> Hoàn thành`; }
+    else { chip.className = 'status-chip ongoing'; chip.innerHTML = `<svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 1 .5 4"/></svg> Đang ra`; }
+    if (story.cover_url) { document.getElementById('story-cover').innerHTML = `<img src="${escapeHtml(story.cover_url)}" alt="${escapeHtml(story.title)}">`;  document.getElementById('cover-blur').style.backgroundImage = `url('${escapeHtml(story.cover_url)}')`; }
+    // Ẩn dòng thể loại, chỉ hiển thị tags
+    document.getElementById('story-genres').style.display = 'none';
+    if (story.tags) {
+      const tags = story.tags.split(',').map(t => t.trim()).filter(Boolean);
+      const tagsHtml = tags.map(t => `<a class="genre-tag" href="search.html?tag=${encodeURIComponent(t)}">${escapeHtml(t)}</a>`).join('');
+      document.getElementById('tags-row').insertAdjacentHTML('beforeend', tagsHtml);
+    }
+    const updated = story.updated_at ? new Date(story.updated_at).toLocaleDateString('vi-VN') : '—';
+    const created = story.created_at ? new Date(story.created_at).toLocaleDateString('vi-VN') : '—';
+    document.getElementById('info-grid').innerHTML = [
+      { label: 'Tác giả', val: story.author || 'Ẩn danh' }, { label: 'Trạng thái', val: isDone ? 'Hoàn thành' : 'Đang ra' },
+      { label: 'Đăng lần đầu', val: created }, { label: 'Cập nhật', val: updated },
+      { label: 'Lượt xem', val: formatViews(story.total_views || 0) }, { label: 'Bình chọn', val: formatViews(totalVotes) },
+    ].map(i => `<div style="background:var(--bg);border-radius:12px;padding:11px 13px"><div style="font-size:10.5px;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">${i.label}</div><div style="font-size:14px;font-weight:700">${escapeHtml(i.val)}</div></div>`).join('');
+    const lib = getLib();
+    if (lib) { updateBookmarkBtn(lib.hasBookmark(storyId)); updateFollowBtn(lib.hasFollow(storyId)); }
+    await loadChapters();
+    await loadCommentCount();
+  } catch (err) {
+    document.body.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;text-align:center;padding:2rem;gap:12px"><svg viewBox="0 0 24 24" width="52" height="52" style="stroke:var(--peach-mid);fill:none;stroke-width:1.3"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div style="font-size:17px;font-weight:800">Không thể tải truyện</div><div style="font-size:13px;color:var(--text-muted)">${escapeHtml(err?.message || '')}</div><a href="index.html" style="margin-top:8px;padding:10px 24px;background:var(--peach);color:white;border-radius:24px;text-decoration:none;font-weight:700;font-size:13px">Về trang chủ</a></div>`;
+  }
+}
+
+async function loadChapters() {
+  const { data: chapters } = await sb.from('chapters').select('*').eq('story_id', storyId).eq('is_published', true).order('chapter_number', { ascending: true });
+  allChapters = chapters || [];
+  const count = allChapters.length;
+  document.getElementById('story-chapters').textContent = count;
+  document.getElementById('chapter-count-label').textContent = count + ' chương';
+  document.getElementById('tc-chapters').textContent = count;
+  const readBtn = document.getElementById('read-btn'), readTxt = document.getElementById('read-btn-text');
+  let bmEntry = null;
+  try { const bm = JSON.parse(localStorage.getItem('pl_bookmarks') || '{}'); bmEntry = bm[storyId]; } catch {}
+  if (bmEntry?.lastChapterId) { readBtn.href = `chapter.html?story=${storyId}&chapter=${bmEntry.lastChapterId}`; readTxt.textContent = `Tiếp chương ${bmEntry.lastChapterNum || ''}`; }
+  else if (allChapters.length > 0) { readBtn.href = `chapter.html?story=${storyId}&chapter=${allChapters[0].id}`; readTxt.textContent = 'Đọc từ đầu'; }
+  else { readBtn.style.opacity = '.5'; readTxt.textContent = 'Chưa có chương'; }
+  // Nếu là chủ truyện -> đổi nút thành Chỉnh sửa
+  if (currentUser && storyData && currentUser.id === storyData.user_id) {
+    readBtn.href = 'write.html?story=' + storyId;
+    readBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg><span>Chỉnh sửa</span>';
+  }
+  renderChapters();
+}
+
+function renderChapters(filtered = null) {
+  const list = filtered !== null ? filtered : allChapters;
+  const listEl = document.getElementById('chapter-list');
+  if (!list.length) { listEl.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><div class="empty-state-text">Chưa có chương nào</div></div>`; return; }
+  const sorted = [...list].sort((a, b) => { const nA = a.chapter_number || 0, nB = b.chapter_number || 0; return currentSort === 'asc' ? nA - nB : nB - nA; });
+  let readChapterIds = new Set();
+  try { const h = JSON.parse(localStorage.getItem('pl_history') || '[]'); const entry = h.find(x => x.storyId === storyId); if (entry) readChapterIds.add(entry.chapterId); } catch {}
+  listEl.innerHTML = sorted.map(ch => {
+    const num = ch.chapter_number || '?', isRead = readChapterIds.has(ch.id);
+    return `<a class="chapter-item${isRead ? ' read' : ''}" href="chapter.html?story=${storyId}&chapter=${ch.id}"><div class="chapter-num-badge">${num}</div><div class="chapter-info"><div class="chapter-name">${escapeHtml(ch.title || `Chương ${num}`)}</div><div class="chapter-meta"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${ch.created_at ? timeAgo(ch.created_at) : ''}${ch.views ? `<svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> ${formatViews(ch.views)}` : ''}</div></div><span class="chapter-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span></a>`;
+  }).join('');
+}
+
+function toggleSort() {
+  currentSort = currentSort === 'asc' ? 'desc' : 'asc';
+  const icon = document.getElementById('sort-icon-svg');
+  document.getElementById('sort-label').textContent = currentSort === 'asc' ? 'Cũ → Mới' : 'Mới → Cũ';
+  icon.innerHTML = currentSort === 'asc' ? '<line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>' : '<line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>';
+  renderChapters();
+}
+function searchChapters() { const q = document.getElementById('search-input').value.toLowerCase().trim(); if (!q) { renderChapters(); return; } renderChapters(allChapters.filter(ch => (ch.title || '').toLowerCase().includes(q) || String(ch.chapter_number || '').includes(q))); }
+
+async function loadCommentCount() { const { count } = await sb.from('comments').select('id', { count: 'exact', head: true }).eq('story_id', storyId); commentTotal = count || 0; document.getElementById('story-comment-count').textContent = formatViews(commentTotal); document.getElementById('tc-comments').textContent = commentTotal; }
+
+function renderComposeArea() {
+  const area = document.getElementById('compose-area');
+  if (currentUser) {
+    const profile = currentUserProfile || {};
+    const name = profile.display_name || currentUser.email?.split('@')[0] || 'U';
+    const initial = name[0].toUpperCase();
+    const avatarHtml = profile.avatar_url
+      ? `<img src="${escapeHtml(profile.avatar_url)}" alt="${escapeHtml(name)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+      : `<span style="font-size:13px;font-weight:800;color:var(--peach-dark)">${initial}</span>`;
+    area.innerHTML = `<div class="comment-compose"><div class="compose-avatar">${avatarHtml}</div><div class="compose-body"><textarea class="compose-input" id="comment-input" placeholder="Viết review của bạn..." rows="1" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onkeydown="if(event.key==='Enter'&&event.ctrlKey)submitComment()"></textarea><div class="compose-footer"><button class="compose-submit" onclick="submitComment()"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Gửi</button></div></div></div>`;
+  } else {
+    area.innerHTML = `<div class="login-prompt"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><div class="login-prompt-text">Đăng nhập để review và lưu tiến độ đọc</div><button class="login-prompt-btn" onclick="location.href='auth.html?next='+encodeURIComponent(location.href)">Đăng nhập</button></div>`;
+  }
+}
+
+async function loadComments(append = false) {
+  if (!append) { commentsPage = 0; comments = []; document.getElementById('comment-list').innerHTML = `<div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:13px;font-weight:600">Đang tải bình luận...</div>`; }
+  const from = commentsPage * COMMENTS_PER_PAGE;
+  const { data, count } = await sb.from('comments').select('*, profiles(display_name, avatar_url)', { count: 'exact' }).eq('story_id', storyId).order('created_at', { ascending: false }).range(from, from + COMMENTS_PER_PAGE - 1);
+  if (!append) comments = data || []; else comments = [...comments, ...(data || [])];
+  commentTotal = count || commentTotal;
+  renderComments();
+  document.getElementById('load-more-btn').style.display = comments.length < commentTotal ? 'flex' : 'none';
+  commentsPage++;
+}
+
+function renderComments() {
+  const list = document.getElementById('comment-list');
+  renderComposeArea();
+  if (!comments.length) { list.innerHTML = `<div class="comment-empty"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><div class="comment-empty-title">Chưa có bình luận nào</div><div class="comment-empty-sub">Hãy là người đầu tiên chia sẻ cảm nhận!</div></div>`; return; }
+  list.innerHTML = comments.map(c => {
+    const profile = c.profiles || {}, name = profile.display_name || c.user_email?.split('@')[0] || 'Người dùng', initial = name[0].toUpperCase();
+    const avatar = profile.avatar_url ? `<img src="${escapeHtml(profile.avatar_url)}" alt="${escapeHtml(name)}">` : `<span style="font-size:13px;font-weight:800">${initial}</span>`;
+    const isOwn = currentUser && c.user_id === currentUser.id;
+    return `<div class="comment-item" id="cmt-${c.id}"><div class="comment-avatar">${avatar}</div><div class="comment-bubble"><div class="comment-header"><span class="comment-name">${escapeHtml(name)}</span><span class="comment-time">${timeAgo(c.created_at)}</span></div><div class="comment-text">${escapeHtml(c.content)}</div><div class="comment-actions">${isOwn ? `<button class="comment-action-btn" onclick="deleteComment('${c.id}')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg> Xoá</button>` : ''}</div></div></div>`;
+  }).join('');
+}
+
+async function submitComment() {
+  if (!currentUser) { showToast('Cần đăng nhập để bình luận'); return; }
+  const input = document.getElementById('comment-input'), content = (input?.value || '').trim();
+  if (!content) { showToast('Vui lòng nhập nội dung bình luận'); return; }
+  const btn = document.querySelector('.compose-submit');
+  if (btn) { btn.disabled = true; btn.textContent = 'Đang gửi...'; }
+  const { error } = await sb.from('comments').insert({ story_id: storyId, user_id: currentUser.id, user_email: currentUser.email, content });
+  if (error) {
+    showToast('Gửi thất bại: ' + error.message);
+    // Chỉ restore btn nếu gặp lỗi (DOM chưa bị re-render)
+    const btnNow = document.querySelector('.compose-submit');
+    if (btnNow) { btnNow.disabled = false; btnNow.innerHTML = `<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:white;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Gửi`; }
+  } else {
+    showToast('Đã gửi bình luận');
+    await loadComments(); // renderComposeArea() sẽ được gọi bên trong, tự reset textarea
+    await loadCommentCount();
+  }
+}
+async function deleteComment(id) {
+  if (!confirm('Xoá bình luận này?')) return;
+  const { error } = await sb.from('comments').delete().eq('id', id).eq('user_id', currentUser.id);
+  if (error) { showToast('Không thể xoá'); return; }
+  showToast('Đã xoá bình luận'); await loadComments(); await loadCommentCount();
+}
+function loadMoreComments() { loadComments(true); }
+
+const ADMIN_EMAILS = ['peachluku@gmail.com'];
+async function init() {
   const { data: { session } } = await sb.auth.getSession();
   currentUser = session?.user || null;
-}
-
-async function cloudGetBookmarks() {
-  if (!currentUser) return getBookmarks();
-  const { data } = await sb.from('bookmarks').select('*').eq('user_id', currentUser.id);
-  if (!data) return getBookmarks();
-  const obj = {};
-  data.forEach(r => {
-    obj[r.story_id] = {
-      addedAt: new Date(r.added_at).getTime(),
-      lastChapterId: r.last_chapter_id,
-      lastChapterNum: r.last_chapter_num,
-      chapterTotal: r.chapter_total,
-    };
-  });
-  return obj;
-}
-async function cloudGetFollows() {
-  if (!currentUser) return getFollows();
-  const { data } = await sb.from('follows').select('*').eq('user_id', currentUser.id);
-  if (!data) return getFollows();
-  const obj = {};
-  data.forEach(r => { obj[r.story_id] = { addedAt: new Date(r.added_at).getTime() }; });
-  return obj;
-}
-async function cloudGetHistory() {
-  if (!currentUser) return getHistory();
-  const { data } = await sb.from('reading_history').select('*')
-    .eq('user_id', currentUser.id).order('read_at', { ascending: false });
-  if (!data) return getHistory();
-  return data.map(r => ({
-    storyId: r.story_id, chapterId: r.chapter_id,
-    chapterNum: r.chapter_num, chapterTitle: r.chapter_title,
-    readAt: new Date(r.read_at).getTime(),
-  }));
-}
-
-window.plLib = {
-  async addBookmark(storyId, data = {}) {
-    if (currentUser) {
-      await sb.from('bookmarks').upsert({
-        user_id: currentUser.id, story_id: storyId,
-        last_chapter_id: data.lastChapterId || null,
-        last_chapter_num: data.lastChapterNum || 0,
-        chapter_total: data.chapterTotal || 0,
-        added_at: new Date().toISOString(),
-      }, { onConflict: 'user_id,story_id' });
-    } else {
-      const bm = getBookmarks();
-      bm[storyId] = { addedAt: Date.now(), ...data };
-      saveBookmarks(bm);
-    }
-  },
-  async removeBookmark(storyId) {
-    if (currentUser) {
-      await sb.from('bookmarks').delete().eq('user_id', currentUser.id).eq('story_id', storyId);
-    } else {
-      const bm = getBookmarks(); delete bm[storyId]; saveBookmarks(bm);
-    }
-  },
-  async hasBookmark(storyId) {
-    if (currentUser) {
-      const { data } = await sb.from('bookmarks').select('story_id')
-        .eq('user_id', currentUser.id).eq('story_id', storyId).maybeSingle();
-      return !!data;
-    }
-    return !!getBookmarks()[storyId];
-  },
-  async updateBookmarkProgress(storyId, lastChapterId, lastChapterNum, chapterTotal) {
-    if (currentUser) {
-      await sb.from('bookmarks').upsert({
-        user_id: currentUser.id, story_id: storyId,
-        last_chapter_id: lastChapterId,
-        last_chapter_num: lastChapterNum,
-        chapter_total: chapterTotal,
-      }, { onConflict: 'user_id,story_id' });
-    } else {
-      const bm = getBookmarks();
-      if (bm[storyId]) Object.assign(bm[storyId], { lastChapterId, lastChapterNum, chapterTotal });
-      else bm[storyId] = { addedAt: Date.now(), lastChapterId, lastChapterNum, chapterTotal };
-      saveBookmarks(bm);
-    }
-  },
-  async addFollow(storyId) {
-    if (currentUser) {
-      await sb.from('follows').upsert(
-        { user_id: currentUser.id, story_id: storyId },
-        { onConflict: 'user_id,story_id' }
-      );
-    } else {
-      const f = getFollows(); f[storyId] = { addedAt: Date.now() }; saveFollows(f);
-    }
-  },
-  async removeFollow(storyId) {
-    if (currentUser) {
-      await sb.from('follows').delete().eq('user_id', currentUser.id).eq('story_id', storyId);
-    } else {
-      const f = getFollows(); delete f[storyId]; saveFollows(f);
-    }
-  },
-  async hasFollow(storyId) {
-    if (currentUser) {
-      const { data } = await sb.from('follows').select('story_id')
-        .eq('user_id', currentUser.id).eq('story_id', storyId).maybeSingle();
-      return !!data;
-    }
-    return !!getFollows()[storyId];
-  },
-  async pushHistory(storyId, chapterId, chapterNum, chapterTitle) {
-    if (currentUser) {
-      await sb.from('reading_history').upsert({
-        user_id: currentUser.id, story_id: storyId,
-        chapter_id: chapterId,
-        chapter_num: chapterNum || 0,
-        chapter_title: chapterTitle || '',
-        read_at: new Date().toISOString(),
-      }, { onConflict: 'user_id,story_id' });
-    } else {
-      let h = getHistory().filter(x => x.storyId !== storyId);
-      h.unshift({ storyId, chapterId, chapterNum: chapterNum || 0, chapterTitle: chapterTitle || '', readAt: Date.now() });
-      if (h.length > 200) h = h.slice(0, 200);
-      saveHistory(h);
-    }
-  },
-};
-
-let storyCache = {};
-let chapterCounts = {};
-let sortReading = 'recent';
-let sortFollow = 'recent';
-let sortHistory = 'recent';
-let activeTab = 'reading';
-
-function switchTab(tab, btn) {
-  activeTab = tab;
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-  document.getElementById('pane-' + tab).classList.add('active');
-}
-
-function esc(s) {
-  if (!s) return '';
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-function fmtViews(n) {
-  if (!n) return '0';
-  if (n >= 1000000) return (n/1e6).toFixed(1)+'M';
-  if (n >= 1000) return (n/1000).toFixed(1)+'K';
-  return String(n);
-}
-function timeAgo(ts) {
-  const diff = Date.now() - ts;
-  const m = Math.floor(diff/60000);
-  const h = Math.floor(diff/3600000);
-  const d = Math.floor(diff/86400000);
-  if (d > 30) return new Date(ts).toLocaleDateString('vi-VN', {day:'2-digit',month:'2-digit',year:'numeric'});
-  if (d > 0) return d + ' ngày trước';
-  if (h > 0) return h + ' giờ trước';
-  if (m > 0) return m + ' phút trước';
-  return 'Vừa xong';
-}
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2200);
-}
-function bookIcon() {
-  return `<svg viewBox="0 0 24 24" width="22" height="22" style="stroke:var(--peach-mid);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`;
-}
-
-async function ensureStories(ids) {
-  const missing = ids.filter(id => !storyCache[id]);
-  if (!missing.length) return;
-  const { data } = await sb.from('stories').select('*').in('id', missing);
-  if (data) data.forEach(s => { storyCache[s.id] = s; });
-  const { data: chaps } = await sb.from('chapters').select('story_id').in('story_id', missing);
-  if (chaps) chaps.forEach(c => { chapterCounts[c.story_id] = (chapterCounts[c.story_id] || 0) + 1; });
-}
-
-function setSortReading(val, el) {
-  sortReading = val;
-  document.querySelectorAll('#pane-reading .sort-chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  renderReading();
-}
-
-async function renderReading() {
-  const bm = await cloudGetBookmarks();
-  const ids = Object.keys(bm);
-  document.getElementById('cnt-reading').textContent = ids.length;
-
-  if (!ids.length) {
-    document.getElementById('info-reading').innerHTML = 'Chưa có truyện nào';
-    document.getElementById('list-reading').innerHTML = `
-      <div class="empty-state">
-        <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
-        <div class="empty-title">Chưa đánh dấu truyện nào</div>
-        <div class="empty-sub">Khi bạn đọc truyện, tiến độ sẽ được lưu tại đây</div>
-        <a class="empty-cta" href="search.html">Tìm truyện <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
-      </div>`;
-    return;
+  // Load profile để dùng avatar trong compose area
+  if (currentUser) {
+    const { data: prof } = await sb.from('profiles').select('display_name, avatar_url').eq('id', currentUser.id).maybeSingle();
+    currentUserProfile = prof || null;
   }
-
-  await ensureStories(ids);
-  let entries = ids.map(id => ({ id, ...bm[id], story: storyCache[id] })).filter(e => e.story);
-
-  if (sortReading === 'recent') entries.sort((a,b) => (b.addedAt||0)-(a.addedAt||0));
-  else if (sortReading === 'title') entries.sort((a,b) => (a.story.title||'').localeCompare(b.story.title||'','vi'));
-  else if (sortReading === 'progress') entries.sort((a,b) => {
-    const pA = a.chapterTotal ? (a.lastChapterNum||0)/a.chapterTotal : 0;
-    const pB = b.chapterTotal ? (b.lastChapterNum||0)/b.chapterTotal : 0;
-    return pB - pA;
-  });
-
-  document.getElementById('info-reading').innerHTML = `<span>${entries.length}</span> truyện đang đọc`;
-
-  document.getElementById('list-reading').innerHTML = entries.map(e => {
-    const s = e.story;
-    const hasCover = !!s.cover_url;
-    const totalCh = e.chapterTotal || chapterCounts[e.id] || 0;
-    const lastCh = e.lastChapterNum || 0;
-    const pct = totalCh > 0 ? Math.round((lastCh / totalCh) * 100) : 0;
-    const isDone = s.status === 'completed' || s.status === 'done' || s.completed;
-    const resumeHref = e.lastChapterId
-      ? `chapter.html?story=${e.id}&chapter=${e.lastChapterId}`
-      : `story.html?story=${e.id}`;
-    return `
-    <div class="story-row" style="cursor:pointer" onclick="location.href='${resumeHref}'">
-      <div class="row-cover${hasCover?' has-img':''}">
-        <span class="cover-ph-sm">${bookIcon()}</span>
-        ${hasCover?`<img src="${esc(s.cover_url)}" alt="${esc(s.title)}" loading="lazy">`:''}
-      </div>
-      <div class="row-body">
-        <div class="row-title">${esc(s.title)}</div>
-        <div class="row-author">${esc(s.author||'Ẩn danh')}</div>
-        <div class="row-meta">
-          ${lastCh ? `<span class="row-chapter">Chương ${lastCh}${totalCh?' / '+totalCh:''}</span>` : ''}
-          <span class="row-badge ${isDone?'badge-done':'badge-ongoing'}">${isDone?'Hoàn thành':'Đang ra'}</span>
-          <span class="row-time">${timeAgo(e.addedAt||Date.now())}</span>
-        </div>
-        ${totalCh > 0 ? `
-        <div class="read-progress-wrap">
-          <div class="read-progress-bar"><div class="read-progress-fill" style="width:${pct}%"></div></div>
-          <div class="read-progress-label">${pct}% đã đọc</div>
-        </div>` : ''}
-      </div>
-      <div class="row-actions" onclick="event.stopPropagation()">
-        <button class="row-action-btn" title="Mở truyện" onclick="location.href='story.html?story=${e.id}'">
-          <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-        </button>
-        <button class="row-action-btn danger" title="Xoá" onclick="removeBookmark('${e.id}')">
-          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>
-        </button>
-      </div>
-    </div>`;
-  }).join('');
+  if (storyId) await loadStory();
+  if (currentUser && ADMIN_EMAILS.includes(currentUser.email)) { const wb = document.getElementById('write-btn'); if (wb) wb.style.display = 'flex'; }
 }
-
-function removeBookmark(id) {
-  const bm = getBookmarks(); delete bm[id]; saveBookmarks(bm);
-  showToast('Đã xoá khỏi Đang đọc');
-  renderReading();
-  document.getElementById('cnt-reading').textContent = Object.keys(getBookmarks()).length;
-}
-function clearBookmarks() {
-  if (!confirm('Xoá tất cả truyện đang đọc?')) return;
-  saveBookmarks({});
-  showToast('Đã xoá tất cả');
-  renderReading();
-}
-
-function setSortFollow(val, el) {
-  sortFollow = val;
-  document.querySelectorAll('#pane-follow .sort-chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  renderFollow();
-}
-
-async function renderFollow() {
-  const f = await cloudGetFollows();
-  const ids = Object.keys(f);
-  document.getElementById('cnt-follow').textContent = ids.length;
-
-  if (!ids.length) {
-    document.getElementById('info-follow').innerHTML = 'Chưa theo dõi truyện nào';
-    document.getElementById('grid-follow').innerHTML = `
-      <div class="empty-state" style="grid-column:1/-1">
-        <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
-        <div class="empty-title">Chưa theo dõi truyện nào</div>
-        <div class="empty-sub">Nhấn theo dõi trên trang truyện để nhận thông báo chương mới</div>
-        <a class="empty-cta" href="search.html">Khám phá <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
-      </div>`;
-    return;
-  }
-
-  await ensureStories(ids);
-  let entries = ids.map(id => ({ id, ...f[id], story: storyCache[id] })).filter(e => e.story);
-
-  if (sortFollow === 'recent') entries.sort((a,b) => (b.addedAt||0)-(a.addedAt||0));
-  else if (sortFollow === 'title') entries.sort((a,b) => (a.story.title||'').localeCompare(b.story.title||'','vi'));
-  else if (sortFollow === 'views') entries.sort((a,b) => (b.story.total_views||0)-(a.story.total_views||0));
-
-  document.getElementById('info-follow').innerHTML = `<span>${entries.length}</span> truyện đang theo dõi`;
-
-  document.getElementById('grid-follow').innerHTML = entries.map(e => {
-    const s = e.story;
-    const hasCover = !!s.cover_url;
-    const ch = chapterCounts[e.id] || 0;
-    const isNew = s.updated_at && (Date.now() - new Date(s.updated_at).getTime()) < 7*24*3600*1000;
-    return `
-    <a class="story-card" href="story.html?story=${e.id}">
-      <div class="card-cover${hasCover?' has-img':''}">
-        <span class="cover-ph-lg">${bookIcon()}</span>
-        ${hasCover?`<img src="${esc(s.cover_url)}" alt="${esc(s.title)}" loading="lazy">`:''}
-        ${ch>0?`<span class="card-ch-badge">${ch} ch.</span>`:''}
-        ${isNew?`<span class="card-new-badge">Mới</span>`:''}
-        <button class="card-unfollow-btn" title="Bỏ theo dõi" onclick="event.preventDefault();removeFollow('${e.id}')">
-          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-      </div>
-      <div class="card-info">
-        <div class="card-title">${esc(s.title)}</div>
-        <div class="card-author">${esc(s.author||'Ẩn danh')}</div>
-        <div class="card-views">
-          <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          ${fmtViews(s.total_views||0)}
-        </div>
-      </div>
-    </a>`;
-  }).join('');
-}
-
-function removeFollow(id) {
-  const f = getFollows(); delete f[id]; saveFollows(f);
-  showToast('Đã bỏ theo dõi');
-  renderFollow();
-  document.getElementById('cnt-follow').textContent = Object.keys(getFollows()).length;
-}
-function clearFollows() {
-  if (!confirm('Bỏ theo dõi tất cả truyện?')) return;
-  saveFollows({});
-  showToast('Đã xoá tất cả');
-  renderFollow();
-}
-
-function setSortHistory(val, el) {
-  sortHistory = val;
-  document.querySelectorAll('#pane-history .sort-chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  renderHistory();
-}
-
-async function renderHistory() {
-  let h = await cloudGetHistory();
-  document.getElementById('cnt-history').textContent = h.length;
-
-  if (!h.length) {
-    document.getElementById('info-history').innerHTML = 'Chưa có lịch sử';
-    document.getElementById('list-history').innerHTML = `
-      <div class="empty-state">
-        <div class="empty-icon"><svg viewBox="0 0 24 24"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"/></svg></div>
-        <div class="empty-title">Lịch sử trống</div>
-        <div class="empty-sub">Lịch sử đọc của bạn sẽ xuất hiện ở đây</div>
-        <a class="empty-cta" href="search.html">Bắt đầu đọc <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
-      </div>`;
-    return;
-  }
-
-  const ids = [...new Set(h.map(x => x.storyId))];
-  await ensureStories(ids);
-  let entries = h.map(x => ({ ...x, story: storyCache[x.storyId] })).filter(e => e.story);
-  if (sortHistory === 'title') entries.sort((a,b) => (a.story.title||'').localeCompare(b.story.title||'','vi'));
-
-  document.getElementById('info-history').innerHTML = `<span>${entries.length}</span> truyện đã đọc`;
-
-  document.getElementById('list-history').innerHTML = entries.map(e => {
-    const s = e.story;
-    const hasCover = !!s.cover_url;
-    const resumeHref = e.chapterId
-      ? `chapter.html?story=${e.storyId}&chapter=${e.chapterId}`
-      : `story.html?story=${e.storyId}`;
-    return `
-    <div class="story-row" style="cursor:pointer" onclick="location.href='${resumeHref}'">
-      <div class="row-cover${hasCover?' has-img':''}">
-        <span class="cover-ph-sm">${bookIcon()}</span>
-        ${hasCover?`<img src="${esc(s.cover_url)}" alt="${esc(s.title)}" loading="lazy">`:''}
-      </div>
-      <div class="row-body">
-        <div class="row-title">${esc(s.title)}</div>
-        <div class="row-author">${esc(s.author||'Ẩn danh')}</div>
-        <div class="row-meta">
-          ${e.chapterNum ? `<span class="row-chapter">Chương ${e.chapterNum}${e.chapterTitle?' — '+esc(e.chapterTitle.substring(0,20)):''}</span>` : ''}
-          <span class="row-time">${timeAgo(e.readAt||Date.now())}</span>
-        </div>
-      </div>
-      <div class="row-actions" onclick="event.stopPropagation()">
-        <button class="row-action-btn" title="Trang truyện" onclick="location.href='story.html?story=${e.storyId}'">
-          <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-        </button>
-        <button class="row-action-btn danger" title="Xoá khỏi lịch sử" onclick="removeHistoryItem('${e.storyId}')">
-          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>
-        </button>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function removeHistoryItem(storyId) {
-  const h = getHistory().filter(x => x.storyId !== storyId);
-  saveHistory(h);
-  showToast('Đã xoá khỏi lịch sử');
-  renderHistory();
-  document.getElementById('cnt-history').textContent = getHistory().length;
-}
-function clearHistory() {
-  if (!confirm('Xoá toàn bộ lịch sử đọc?')) return;
-  saveHistory([]);
-  showToast('Đã xoá lịch sử');
-  renderHistory();
-}
-
-async function init() {
-  await initUser();
-  document.getElementById('list-reading').innerHTML = [1,2,3].map(() => `
-    <div class="skel-row">
-      <div class="skel skel-cover-sm"></div>
-      <div class="skel-lines">
-        <div class="skel skel-line w80"></div>
-        <div class="skel skel-line w50"></div>
-        <div class="skel skel-line w60"></div>
-      </div>
-    </div>`).join('');
-
-  await Promise.all([renderReading(), renderFollow(), renderHistory()]);
-
-  const tab = new URLSearchParams(location.search).get('tab');
-  if (tab === 'follow' || tab === 'history') {
-    const btn = document.querySelector(`.tab-btn[onclick*="${tab}"]`);
-    if (btn) switchTab(tab, btn);
-  }
-}
-
 init();
 
+/* ── FIX: img constrained bằng inline style, không tràn layout ── */
 async function loadNavAvatar() {
   const { data: { session } } = await sb.auth.getSession();
   const btn = document.getElementById('nav-user-btn');
@@ -1059,12 +754,39 @@ async function loadNavAvatar() {
   btn.title = 'Hồ sơ của tôi';
   const { data: prof } = await sb.from('profiles').select('display_name, avatar_url').eq('id', session.user.id).maybeSingle();
   if (prof?.avatar_url) {
-    btn.innerHTML = `<img src="${prof.avatar_url}" alt="avatar">`;
+    btn.innerHTML = '<img src="' + prof.avatar_url + '" alt="avatar" style="width:34px;height:34px;border-radius:50%;object-fit:cover;display:block;">';
   } else {
     btn.textContent = (prof?.display_name || session.user.email || 'U')[0].toUpperCase();
   }
 }
 loadNavAvatar();
+
+function setStoryMeta(story) {
+  const title = (story.title || 'Truyện') + ' — Peach Luku';
+  const desc = story.description ? story.description.replace(/<[^>]+>/g, '').slice(0, 160) : 'Web đọc truyện chữ cute & thơm 🍑';
+  const img = story.cover_url || 'https://jnlqzqtavfptkfvnndxq.supabase.co/storage/v1/object/public/avatars/og-cover.png';
+  document.title = title;
+  _setMeta('description', desc); _setMeta('og:title', title); _setMeta('og:description', desc);
+  _setMeta('og:image', img); _setMeta('og:url', location.href);
+  _setMeta('twitter:title', title); _setMeta('twitter:description', desc); _setMeta('twitter:image', img);
+}
+function _setMeta(k, v) { const el = document.querySelector('[property="'+k+'"]') || document.querySelector('[name="'+k+'"]'); if (el) el.setAttribute('content', v); }
+
+(function() {
+  'use strict';
+  const protectCSS = document.createElement('style');
+  protectCSS.textContent = `.story-body,.description-text,.story-title-main,.author-name,.stat-val,.chapter-name{-webkit-user-select:none!important;-moz-user-select:none!important;-ms-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important}img{-webkit-user-drag:none!important;user-drag:none!important;pointer-events:none}::selection{background:transparent!important}::-moz-selection{background:transparent!important}`;
+  document.head.appendChild(protectCSS);
+  document.addEventListener('contextmenu', e => { e.preventDefault(); return false; });
+  document.addEventListener('keydown', e => { const key = e.key.toLowerCase(), ctrl = e.ctrlKey || e.metaKey; if (ctrl && ['c','x','a','s','p','u'].includes(key)) { e.preventDefault(); return false; } if (e.key === 'F12') { e.preventDefault(); return false; } if (ctrl && e.shiftKey && ['i','j','c','k'].includes(key)) { e.preventDefault(); return false; } });
+  document.addEventListener('copy', e => { e.preventDefault(); if (e.clipboardData) e.clipboardData.setData('text/plain', '© Peach Luku'); return false; });
+  document.addEventListener('cut', e => { e.preventDefault(); return false; });
+  document.addEventListener('dragstart', e => { e.preventDefault(); return false; });
+  document.addEventListener('selectstart', e => { const t = e.target; if (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.closest('.comment-compose') || t.closest('.chapter-search-bar')) return true; e.preventDefault(); return false; });
+  function injectWatermark() { if (document.getElementById('__pl_wm')) return; const wm = document.createElement('div'); wm.id = '__pl_wm'; wm.style.cssText = 'position:fixed;bottom:18px;right:18px;font-size:11px;color:var(--text-muted,#aaa);font-family:"Nunito",sans-serif;font-weight:700;pointer-events:none;z-index:9999;opacity:0.45;letter-spacing:.3px;'; wm.textContent = '© Peach Luku'; document.body.appendChild(wm); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', injectWatermark); else injectWatermark();
+  document.addEventListener('DOMContentLoaded', function() { document.querySelectorAll('meta[name="description"],meta[property="og:description"]').forEach(m => m.removeAttribute('content')); });
+})();
 
 /* ── PROFILE DROPDOWN ── */
 function toggleProfileMenu(e) {
