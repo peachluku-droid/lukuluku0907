@@ -727,15 +727,15 @@ body { display: block; }
         <div class="info-label">Thể Loại Truyện</div>
         <select class="info-select" id="storyGenre">
           <option value="">-- Chọn thể loại --</option>
-          <option>Lãng mạn</option>
-          <option>Đam mỹ</option>
-          <option>Hành động</option>
-          <option>Kỳ huyễn</option>
-          <option>Đô thị</option>
-          <option>Hài hước</option>
-          <option>Kinh dị</option>
-          <option>Xuyên không</option>
-          <option>Khác</option>
+          <option value="Lãng mạn">Lãng mạn</option>
+          <option value="Đam mỹ">Đam mỹ</option>
+          <option value="Hành động">Hành động</option>
+          <option value="Kỳ huyễn">Kỳ huyễn</option>
+          <option value="Đô thị">Đô thị</option>
+          <option value="Hài hước">Hài hước</option>
+          <option value="Kinh dị">Kinh dị</option>
+          <option value="Xuyên không">Xuyên không</option>
+          <option value="Khác">Khác</option>
         </select>
       </div>
 
@@ -1186,6 +1186,8 @@ async function loadStoryInfo() {
   // Cover
   if (data.cover_url) {
     document.getElementById('coverThumb').innerHTML = `<img src="${data.cover_url}" alt="">`;
+  } else {
+    document.getElementById('coverThumb').innerHTML = `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`;
   }
 }
 
@@ -1206,18 +1208,18 @@ async function saveStoryInfo() {
     coverFile = null;
   }
 
-  const payload = { title, description, genre, status, tags: storyTags.join(','), updated_at: new Date().toISOString() };
+  const payload = { title, description, genre, status, updated_at: new Date().toISOString() };
   if (cover_url) payload.cover_url = cover_url;
 
-  const { error } = await sb.from('stories').update(payload).eq('id', currentStoryId);
+  // Thử lưu với tags trước
+  const tagsValue = storyTags.join(',');
+  const { error } = await sb.from('stories').update({ ...payload, tags: tagsValue }).eq('id', currentStoryId);
   if (error) {
-    // Nếu cột tags chưa tồn tại, thử lưu lại không có tags
     if (error.message && error.message.includes('tags')) {
-      const { error: e2 } = await sb.from('stories').update({
-        title, description, genre, status, updated_at: new Date().toISOString()
-      }).eq('id', currentStoryId);
+      // Cột tags chưa có trong DB — lưu không có tags, hiện hướng dẫn
+      const { error: e2 } = await sb.from('stories').update(payload).eq('id', currentStoryId);
       if (e2) { showToast('Lưu thất bại: ' + e2.message, 'err'); return; }
-      showToast('Đã lưu (thẻ chưa hỗ trợ trong DB) ✓', 'ok');
+      showToast('Lưu thành công (cần thêm cột tags vào DB để lưu thẻ)', 'ok');
     } else {
       showToast('Lưu thất bại: ' + error.message, 'err'); return;
     }
