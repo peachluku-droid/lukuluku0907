@@ -492,7 +492,7 @@ if (!storyId) {
   document.body.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;text-align:center;padding:2rem;gap:12px"><svg viewBox="0 0 24 24" width="56" height="56" style="stroke:var(--peach-mid);fill:none;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div style="font-size:18px;font-weight:800">Không tìm thấy truyện</div><div style="font-size:13px;color:var(--text-muted)">ID truyện không hợp lệ</div><a href="index.html" style="margin-top:8px;padding:10px 24px;background:var(--peach);color:white;border-radius:24px;text-decoration:none;font-weight:700;font-size:13px">Về trang chủ</a></div>`;
 }
 
-let allChapters = [], currentSort = 'asc', storyData = null, currentUser = null;
+let allChapters = [], currentSort = 'asc', storyData = null, currentUser = null, currentUserProfile = null;
 let comments = [], commentsPage = 0;
 const COMMENTS_PER_PAGE = 15;
 let commentTotal = 0;
@@ -594,7 +594,13 @@ async function loadStory() {
     if (isDone) { chip.className = 'status-chip done'; chip.innerHTML = `<svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><polyline points="20 6 9 17 4 12"/></svg> Hoàn thành`; }
     else { chip.className = 'status-chip ongoing'; chip.innerHTML = `<svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 1 .5 4"/></svg> Đang ra`; }
     if (story.cover_url) { document.getElementById('story-cover').innerHTML = `<img src="${escapeHtml(story.cover_url)}" alt="${escapeHtml(story.title)}">`;  document.getElementById('cover-blur').style.backgroundImage = `url('${escapeHtml(story.cover_url)}')`; }
-    if (story.genre) { const genres = story.genre.split(',').map(g => g.trim()).filter(Boolean); document.getElementById('story-genres').innerHTML = genres.map(g => `<a class="genre-tag" href="search.html?genre=${encodeURIComponent(g)}">${escapeHtml(g)}</a>`).join(''); }
+    // Ẩn dòng thể loại, chỉ hiển thị tags
+    document.getElementById('story-genres').style.display = 'none';
+    if (story.tags) {
+      const tags = story.tags.split(',').map(t => t.trim()).filter(Boolean);
+      const tagsHtml = tags.map(t => `<a class="genre-tag" href="search.html?tag=${encodeURIComponent(t)}">${escapeHtml(t)}</a>`).join('');
+      document.getElementById('tags-row').insertAdjacentHTML('beforeend', tagsHtml);
+    }
     const updated = story.updated_at ? new Date(story.updated_at).toLocaleDateString('vi-VN') : '—';
     const created = story.created_at ? new Date(story.created_at).toLocaleDateString('vi-VN') : '—';
     document.getElementById('info-grid').innerHTML = [
@@ -659,8 +665,13 @@ async function loadCommentCount() { const { count } = await sb.from('comments').
 function renderComposeArea() {
   const area = document.getElementById('compose-area');
   if (currentUser) {
-    const initials = (currentUser.email || 'U')[0].toUpperCase();
-    area.innerHTML = `<div class="comment-compose"><div class="compose-avatar" style="font-size:13px;font-weight:800;color:var(--peach-dark)">${initials}</div><div class="compose-body"><textarea class="compose-input" id="comment-input" placeholder="Viết review của bạn..." rows="1" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onkeydown="if(event.key==='Enter'&&event.ctrlKey)submitComment()"></textarea><div class="compose-footer"><button class="compose-submit" onclick="submitComment()"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Gửi</button></div></div></div>`;
+    const profile = currentUserProfile || {};
+    const name = profile.display_name || currentUser.email?.split('@')[0] || 'U';
+    const initial = name[0].toUpperCase();
+    const avatarHtml = profile.avatar_url
+      ? `<img src="${escapeHtml(profile.avatar_url)}" alt="${escapeHtml(name)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+      : `<span style="font-size:13px;font-weight:800;color:var(--peach-dark)">${initial}</span>`;
+    area.innerHTML = `<div class="comment-compose"><div class="compose-avatar">${avatarHtml}</div><div class="compose-body"><textarea class="compose-input" id="comment-input" placeholder="Viết review của bạn..." rows="1" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onkeydown="if(event.key==='Enter'&&event.ctrlKey)submitComment()"></textarea><div class="compose-footer"><button class="compose-submit" onclick="submitComment()"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Gửi</button></div></div></div>`;
   } else {
     area.innerHTML = `<div class="login-prompt"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><div class="login-prompt-text">Đăng nhập để review và lưu tiến độ đọc</div><button class="login-prompt-btn" onclick="location.href='auth.html?next='+encodeURIComponent(location.href)">Đăng nhập</button></div>`;
   }
@@ -696,8 +707,16 @@ async function submitComment() {
   const btn = document.querySelector('.compose-submit');
   if (btn) { btn.disabled = true; btn.textContent = 'Đang gửi...'; }
   const { error } = await sb.from('comments').insert({ story_id: storyId, user_id: currentUser.id, user_email: currentUser.email, content });
-  if (error) { showToast('Gửi thất bại: ' + error.message); } else { showToast('Đã gửi bình luận'); await loadComments(); await loadCommentCount(); }
-  if (btn) { btn.disabled = false; btn.innerHTML = `<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:white;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Gửi`; }
+  if (error) {
+    showToast('Gửi thất bại: ' + error.message);
+    // Chỉ restore btn nếu gặp lỗi (DOM chưa bị re-render)
+    const btnNow = document.querySelector('.compose-submit');
+    if (btnNow) { btnNow.disabled = false; btnNow.innerHTML = `<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:white;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Gửi`; }
+  } else {
+    showToast('Đã gửi bình luận');
+    await loadComments(); // renderComposeArea() sẽ được gọi bên trong, tự reset textarea
+    await loadCommentCount();
+  }
 }
 async function deleteComment(id) {
   if (!confirm('Xoá bình luận này?')) return;
@@ -711,6 +730,11 @@ const ADMIN_EMAILS = ['peachluku@gmail.com'];
 async function init() {
   const { data: { session } } = await sb.auth.getSession();
   currentUser = session?.user || null;
+  // Load profile để dùng avatar trong compose area
+  if (currentUser) {
+    const { data: prof } = await sb.from('profiles').select('display_name, avatar_url').eq('id', currentUser.id).maybeSingle();
+    currentUserProfile = prof || null;
+  }
   if (storyId) await loadStory();
   if (currentUser && ADMIN_EMAILS.includes(currentUser.email)) { const wb = document.getElementById('write-btn'); if (wb) wb.style.display = 'flex'; }
 }
