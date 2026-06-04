@@ -483,11 +483,13 @@ body { display: block; }
   position: fixed;
   bottom: 0; left: 0; right: 0;
   z-index: 400;
-  display: flex; flex-direction: column;
+  display: none; flex-direction: column;
   box-shadow: 0 -2px 16px rgba(0,0,0,0.08);
   transform: translateZ(0);
-  /* Dùng dvh/svh để biết đúng chiều cao viewport có keyboard */
   will-change: transform;
+}
+@media (max-width: 768px) {
+  .mobile-bottom-wrap { display: flex; }
 }
 .slide-panel {
   display: none; flex-direction: column; gap: 8px;
@@ -543,7 +545,45 @@ body { display: block; }
 }
 /* padding-bottom handled inside .content-editable */
 
-/* ── TOAST ── */
+/* ── SPELL CHECK MODAL ── */
+.spell-modal-overlay {
+  position: fixed; inset: 0; z-index: 600;
+  background: rgba(0,0,0,0.45); backdrop-filter: blur(4px);
+  display: none; align-items: flex-end; justify-content: center;
+}
+.spell-modal-overlay.open { display: flex; }
+.spell-modal {
+  background: #fff; border-radius: 20px 20px 0 0;
+  width: 100%; max-width: 640px; max-height: 80vh;
+  display: flex; flex-direction: column;
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.15);
+  animation: slideUp .25s ease;
+}
+@keyframes slideUp { from { transform: translateY(60px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.spell-modal-head {
+  padding: 16px 20px 12px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+}
+.spell-modal-head h3 { font-size: 15px; font-weight: 900; display: flex; align-items: center; gap: 8px; }
+.spell-modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-muted); padding: 0 4px; }
+.spell-modal-body { flex: 1; overflow-y: auto; padding: 12px 16px 24px; }
+.spell-running { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 14px; }
+.spell-running .spin { display: inline-block; font-size: 28px; animation: spin 1s linear infinite; margin-bottom: 10px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.spell-empty { text-align: center; padding: 40px 20px; }
+.spell-empty .icon { font-size: 36px; margin-bottom: 8px; }
+.spell-empty p { font-size: 14px; color: var(--text-muted); }
+.spell-error-item {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 12px 14px; border-radius: 12px; margin-bottom: 8px;
+  background: var(--bg); border: 1.5px solid var(--border);
+  cursor: pointer; transition: all .15s;
+}
+.spell-error-item:hover, .spell-error-item:active { border-color: var(--peach); background: var(--peach-light); }
+.spell-error-wrong { font-size: 14px; font-weight: 800; color: #e84040; display: flex; align-items: center; gap: 6px; }
+.spell-error-suggest { font-size: 13px; color: var(--text-muted); }
+.spell-error-suggest b { color: var(--peach-dark); font-weight: 800; }
+.spell-error-ctx { font-size: 12px; color: #aaa; margin-top: 2px; font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .toast {
   position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(60px);
   background: #333; color: #fff; padding: 10px 20px; border-radius: 20px;
@@ -795,6 +835,10 @@ body { display: block; }
         <!-- More panel -->
         <div class="slide-panel" id="morePanel">
           <div class="more-list">
+            <div class="more-list-item" onclick="openSpellCheck();closeAllPanels()">
+              <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              Check chính tả
+            </div>
             <div class="more-list-item" onclick="saveDraft();closeAllPanels()">
               <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
               Lưu
@@ -959,6 +1003,17 @@ body { display: block; }
   </button>
 </div>
 
+<!-- ── SPELL CHECK MODAL ── -->
+<div class="spell-modal-overlay" id="spellModal" onclick="if(event.target===this)closeSpellCheck()">
+  <div class="spell-modal">
+    <div class="spell-modal-head">
+      <h3>✏️ Check chính tả</h3>
+      <button class="spell-modal-close" onclick="closeSpellCheck()">✕</button>
+    </div>
+    <div class="spell-modal-body" id="spellModalBody"></div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -1098,8 +1153,17 @@ async function loadStories() {
 async function onStoryChange() {
   currentStoryId = document.getElementById('storySelect').value;
   if (!currentStoryId) return;
-  // Lưu truyện đang chọn để khôi phục lần sau
   try { localStorage.setItem('luku_last_story', currentStoryId); } catch(e) {}
+
+  // Reset sạch editor và chapter list trước khi load truyện mới
+  currentChapterId = null;
+  isDirty = false;
+  document.getElementById('chTitle').value = '';
+  document.getElementById('chContent').innerHTML = '';
+  document.getElementById('editorWrap').classList.remove('show');
+  document.getElementById('chList').innerHTML = '';
+  document.querySelector('.content-scroll').scrollTop = 0;
+
   await Promise.all([loadStoryInfo(), loadChapterList()]);
   await restoreLocalDraftIfNeeded();
 }
@@ -1678,7 +1742,116 @@ function insertYoutube() {
   ));
 }
 
-// ── PANEL TOGGLE ──
+// ── SPELL CHECK ──
+function openSpellCheck() {
+  const overlay = document.getElementById('spellModal');
+  const body = document.getElementById('spellModalBody');
+  overlay.classList.add('open');
+  body.innerHTML = '<div class="spell-running"><div class="spin">⟳</div><br>Đang phân tích chính tả...</div>';
+  runSpellCheck();
+}
+function closeSpellCheck() {
+  document.getElementById('spellModal').classList.remove('open');
+  // Xóa highlight
+  document.querySelectorAll('.spell-hl').forEach(el => {
+    el.outerHTML = el.innerHTML;
+  });
+}
+
+async function runSpellCheck() {
+  const ed = document.getElementById('chContent');
+  const text = ed.innerText || '';
+  if (!text.trim()) {
+    document.getElementById('spellModalBody').innerHTML = '<div class="spell-empty"><div class="icon">📄</div><p>Chương chưa có nội dung.</p></div>';
+    return;
+  }
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: `Bạn là công cụ check chính tả tiếng Việt. Phân tích văn bản và trả về JSON (không có markdown, chỉ JSON thuần):
+{"errors":[{"wrong":"từ sai","suggest":"từ đúng","context":"...đoạn văn xung quanh..."}]}
+Chỉ liệt kê lỗi chính tả thực sự (sai dấu, sai chữ). Không bắt lỗi văn phong, ngữ pháp sáng tạo, tên riêng, tiếng lóng. Nếu không có lỗi, trả về {"errors":[]}.`,
+        messages: [{ role: 'user', content: text.slice(0, 6000) }]
+      })
+    });
+
+    const data = await res.json();
+    const raw = data.content?.[0]?.text || '{"errors":[]}';
+    let parsed;
+    try { parsed = JSON.parse(raw.replace(/```json|```/g, '').trim()); }
+    catch { parsed = { errors: [] }; }
+
+    renderSpellResults(parsed.errors || [], text);
+  } catch(e) {
+    document.getElementById('spellModalBody').innerHTML = '<div class="spell-empty"><div class="icon">⚠️</div><p>Không kết nối được. Thử lại sau.</p></div>';
+  }
+}
+
+function renderSpellResults(errors, fullText) {
+  const body = document.getElementById('spellModalBody');
+  if (!errors.length) {
+    body.innerHTML = '<div class="spell-empty"><div class="icon">✅</div><p>Không tìm thấy lỗi chính tả!</p></div>';
+    return;
+  }
+  body.innerHTML = `<div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Tìm thấy <b>${errors.length}</b> lỗi — tap để nhảy đến chỗ sai</div>` +
+    errors.map((err, i) => `
+    <div class="spell-error-item" onclick="jumpToError(${i})" data-wrong="${escH(err.wrong)}">
+      <div class="spell-error-wrong">⚠ ${escH(err.wrong)}</div>
+      <div class="spell-error-suggest">Gợi ý: <b>${escH(err.suggest)}</b></div>
+      <div class="spell-error-ctx">${escH(err.context || '')}</div>
+    </div>`).join('');
+
+  // Lưu errors để jumpToError dùng
+  window._spellErrors = errors;
+}
+
+function jumpToError(idx) {
+  const err = window._spellErrors?.[idx];
+  if (!err) return;
+  const ed = document.getElementById('chContent');
+  const scroll = document.querySelector('.content-scroll');
+
+  // Tìm text node chứa từ sai và highlight
+  const walker = document.createTreeWalker(ed, NodeFilter.SHOW_TEXT);
+  let node;
+  while ((node = walker.nextNode())) {
+    const pos = node.nodeValue.indexOf(err.wrong);
+    if (pos === -1) continue;
+
+    // Tạo range bao quanh từ sai
+    const range = document.createRange();
+    range.setStart(node, pos);
+    range.setEnd(node, pos + err.wrong.length);
+
+    // Highlight
+    document.querySelectorAll('.spell-hl').forEach(el => { el.outerHTML = el.textContent; });
+    const mark = document.createElement('mark');
+    mark.className = 'spell-hl';
+    mark.style.cssText = 'background:#ffe066;border-radius:3px;outline:2px solid #f0a500;';
+    range.surroundContents(mark);
+
+    // Scroll đến chỗ đó
+    const rect = mark.getBoundingClientRect();
+    const scrollRect = scroll.getBoundingClientRect();
+    if (rect.top < scrollRect.top || rect.bottom > scrollRect.bottom) {
+      scroll.scrollTop += rect.top - scrollRect.top - 120;
+    }
+
+    // Đặt selection vào đó để dễ sửa
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.selectAllChildren(mark);
+
+    closeSpellCheck();
+    ed.focus();
+    break;
+  }
+}
 function togglePanel(id) {
   const panels = ['formatPanel','mediaPanel','morePanel'];
   const btns   = { formatPanel:'btnFormat', mediaPanel:'btnMedia', morePanel:'btnMore' };
