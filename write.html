@@ -1246,6 +1246,7 @@ async function openChapter(id) {
   if (!data) return;
   document.getElementById('chTitle').value = data.title || '';
   document.getElementById('chContent').innerHTML = data.content || '';
+  wrapLegacyMedia();
   showEditor();
   updateWordCount();
   loadChapterList();
@@ -1581,6 +1582,30 @@ function deleteMediaBlock(id) {
   }, { capture: true, passive: false });
 })();
 
+// Wrap các media cũ (chưa có nút xóa) khi load content
+function wrapLegacyMedia() {
+  const ed = document.getElementById('chContent');
+  if (!ed) return;
+  // Tìm img, video, iframe KHÔNG nằm trong .media-block
+  ed.querySelectorAll('img, video, iframe').forEach(el => {
+    if (el.closest('.media-block')) return; // đã wrap rồi
+    const id = 'media_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
+    const wrapper = document.createElement('div');
+    wrapper.id = id;
+    wrapper.className = 'media-block';
+    wrapper.contentEditable = 'false';
+    wrapper.style.cssText = 'position:relative;margin:16px 0;user-select:none;';
+    const btn = document.createElement('button');
+    btn.dataset.deleteMedia = id;
+    btn.title = 'Xóa';
+    btn.style.cssText = 'position:absolute;top:6px;right:6px;width:32px;height:32px;border-radius:50%;border:none;background:rgba(0,0,0,0.6);color:#fff;font-size:18px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:99;touch-action:manipulation;';
+    btn.textContent = '✕';
+    el.parentNode.insertBefore(wrapper, el);
+    wrapper.appendChild(el);
+    wrapper.appendChild(btn);
+  });
+}
+
 // Lưu/restore selection để insert media đúng vị trí dù editor mất focus
 let _savedRange = null;
 function saveEditorSelection() {
@@ -1726,6 +1751,7 @@ async function restoreLocalDraftIfNeeded() {
     currentChapterId = d.chapterId || null;
     document.getElementById('chTitle').value = d.title || '';
     document.getElementById('chContent').innerHTML = d.content || '';
+    wrapLegacyMedia();
     showEditor();
     updateWordCount();
     showToast('Đã khôi phục bản nháp! ✓', 'ok');
