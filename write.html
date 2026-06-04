@@ -827,7 +827,7 @@ body { display: block; }
             <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg>
             <span>A≡</span>
           </button>
-          <button class="mobile-bar-btn" onclick="togglePanel('mediaPanel')" id="btnMedia">
+          <button class="mobile-bar-btn" onclick="saveEditorSelection();togglePanel('mediaPanel')" id="btnMedia">
             <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
           </button>
           <button class="mobile-bar-btn mobile-bar-publish" onclick="publishChapter()">
@@ -1252,15 +1252,15 @@ async function openChapter(id) {
   closeSidebar();
   try { localStorage.setItem('luku_last_chapter', id); } catch(e) {}
 
-  // Khôi phục vị trí scroll sau khi DOM render xong
-  requestAnimationFrame(() => {
+  // Khôi phục vị trí scroll sau khi browser paint xong
+  setTimeout(() => {
     const scroll = document.querySelector('.content-scroll');
     if (!scroll) return;
     try {
       const saved = localStorage.getItem('luku_scroll_' + id);
       if (saved) scroll.scrollTop = parseInt(saved, 10);
     } catch(e) {}
-  });
+  }, 150);
 }
 
 function newChapter() {
@@ -1555,23 +1555,58 @@ function handlePreviewClick(e) { if (e.target === document.getElementById('previ
 
 function makeMediaBlock(innerHTML) {
   const id = 'media_' + Date.now();
-  return `<div id="${id}" class="media-block" contenteditable="false" style="position:relative;margin:16px 0;user-select:none;">
-    ${innerHTML}
-    <button onclick="deleteMediaBlock('${id}')" title="Xóa" style="position:absolute;top:6px;right:6px;width:28px;height:28px;border-radius:50%;border:none;background:rgba(0,0,0,0.55);color:#fff;font-size:16px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;">✕</button>
-  </div><br>`;
+  return `<div id="${id}" class="media-block" contenteditable="false" style="position:relative;margin:16px 0;user-select:none;">${innerHTML}<button data-delete-media="${id}" title="Xóa" style="position:absolute;top:6px;right:6px;width:32px;height:32px;border-radius:50%;border:none;background:rgba(0,0,0,0.6);color:#fff;font-size:18px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:99;touch-action:manipulation;">✕</button></div><br>`;
 }
 
 function deleteMediaBlock(id) {
   const el = document.getElementById(id);
   if (!el) return;
-  // Xóa cả <br> liền sau nếu có
   const next = el.nextSibling;
   if (next && next.nodeName === 'BR') next.remove();
   el.remove();
   saveDraft();
 }
 
+// Delegation: bắt touch/click xóa media trên toàn document để không bị contenteditable chặn
+(function setupMediaDelete() {
+  function tryDelete(target) {
+    const btn = target.closest('[data-delete-media]');
+    if (!btn) return false;
+    deleteMediaBlock(btn.dataset.deleteMedia);
+    return true;
+  }
+  document.addEventListener('click', e => tryDelete(e.target), true);
+  document.addEventListener('touchend', e => {
+    if (tryDelete(e.target)) { e.preventDefault(); e.stopPropagation(); }
+  }, { capture: true, passive: false });
+})();
+
+// Lưu/restore selection để insert media đúng vị trí dù editor mất focus
+let _savedRange = null;
+function saveEditorSelection() {
+  const sel = window.getSelection();
+  const ed = document.getElementById('chContent');
+  if (sel && sel.rangeCount && ed && ed.contains(sel.getRangeAt(0).commonAncestorContainer)) {
+    _savedRange = sel.getRangeAt(0).cloneRange();
+  }
+}
+function restoreEditorSelection() {
+  const ed = document.getElementById('chContent');
+  ed.focus({ preventScroll: true });
+  if (_savedRange) {
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(_savedRange);
+  }
+}
+function insertAtSavedPos(html) {
+  restoreEditorSelection();
+  document.execCommand('insertHTML', false, html);
+  _savedRange = null;
+}
+
 function insertImage() {
+  saveEditorSelection();
   const input = document.createElement('input');
   input.type = 'file'; input.accept = 'image/*';
   input.onchange = async (e) => {
@@ -1579,7 +1614,7 @@ function insertImage() {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (ev) => {
-      document.execCommand('insertHTML', false, makeMediaBlock(
+      insertAtSavedPos(makeMediaBlock(
         `<img src="${ev.target.result}" style="max-width:100%;border-radius:8px;display:block;" />`
       ));
     };
@@ -1589,13 +1624,14 @@ function insertImage() {
 }
 
 function insertVideo() {
+  saveEditorSelection();
   const input = document.createElement('input');
   input.type = 'file'; input.accept = 'video/*';
   input.onchange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
     const url = URL.createObjectURL(file);
-    document.execCommand('insertHTML', false, makeMediaBlock(
+    insertAtSavedPos(makeMediaBlock(
       `<video controls src="${url}" style="max-width:100%;border-radius:8px;display:block;"></video>`
     ));
   };
@@ -1603,13 +1639,14 @@ function insertVideo() {
 }
 
 function insertYoutube() {
+  saveEditorSelection();
   const url = prompt('Dán link YouTube vào đây:');
   if (!url) return;
   let id = '';
   const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
   if (m) id = m[1];
   if (!id) { alert('Link YouTube không hợp lệ!'); return; }
-  document.execCommand('insertHTML', false, makeMediaBlock(
+  insertAtSavedPos(makeMediaBlock(
     `<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;">
       <iframe src="https://www.youtube.com/embed/${id}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allowfullscreen></iframe>
     </div>`
@@ -1694,10 +1731,10 @@ async function restoreLocalDraftIfNeeded() {
     showToast('Đã khôi phục bản nháp! ✓', 'ok');
     // Khôi phục vị trí scroll
     if (d.scrollTop) {
-      requestAnimationFrame(() => {
+      setTimeout(() => {
         const scroll = document.querySelector('.content-scroll');
         if (scroll) scroll.scrollTop = d.scrollTop;
-      });
+      }, 150);
     }
   } catch(e) {}
 }
