@@ -1752,20 +1752,18 @@ document.addEventListener('keydown', e => {
     if (rects && rects.length > 0) return rects[0];
 
     // Cách 2: Android Chrome trả về rỗng khi caret ở cuối text node
-    // → lùi 1 ký tự để lấy rect của ký tự trước
     if (range.startOffset > 0) {
       const r2 = range.cloneRange();
       r2.setStart(range.startContainer, range.startOffset - 1);
       r2.setEnd(range.startContainer, range.startOffset);
       rects = r2.getClientRects();
       if (rects && rects.length > 0) {
-        // Trả về rect giả lập ở cuối ký tự trước
         const r = rects[rects.length - 1];
         return { top: r.top, bottom: r.bottom, left: r.right, right: r.right };
       }
     }
 
-    // Cách 3: fallback getBoundingClientRect của node chứa caret
+    // Cách 3: fallback getBoundingClientRect của element chứa caret
     const node = range.startContainer;
     const el = node.nodeType === 1 ? node : node.parentElement;
     if (el) return el.getBoundingClientRect();
@@ -1782,13 +1780,22 @@ document.addEventListener('keydown', e => {
     const caretRect = getCaretRect();
     if (!caretRect) return;
 
-    const scrollRect = scroll.getBoundingClientRect();
+    // Tính vùng nhìn thấy thực tế có tính bàn phím + toolbar
     const bottomWrap = document.querySelector('.mobile-bottom-wrap');
-    const bottomH = bottomWrap ? bottomWrap.offsetHeight : 0;
-    const PAD = 32;
+    const barH = (bottomWrap && bottomWrap.style.display !== 'none')
+      ? bottomWrap.offsetHeight : 0;
 
-    const visibleBottom = scrollRect.bottom - bottomH - PAD;
-    const visibleTop = scrollRect.top + PAD;
+    // Dùng visualViewport nếu có (chính xác nhất khi bàn phím mở)
+    let viewportBottom;
+    if (window.visualViewport) {
+      viewportBottom = window.visualViewport.offsetTop + window.visualViewport.height;
+    } else {
+      viewportBottom = window.innerHeight;
+    }
+
+    const PAD = 16;
+    const visibleBottom = viewportBottom - barH - PAD;
+    const visibleTop = (window.visualViewport ? window.visualViewport.offsetTop : 0) + PAD;
 
     if (caretRect.bottom > visibleBottom) {
       scroll.scrollTop += caretRect.bottom - visibleBottom;
@@ -1807,6 +1814,10 @@ document.addEventListener('keydown', e => {
     if (!ed) { setTimeout(attach, 300); return; }
     ed.addEventListener('input', scheduleScroll, { passive: true });
     ed.addEventListener('keyup', scheduleScroll, { passive: true });
+    // visualViewport resize = bàn phím hiện/ẩn → cũng cần re-check caret
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', scheduleScroll, { passive: true });
+    }
   }
   attach();
 })();
