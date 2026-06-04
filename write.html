@@ -119,7 +119,8 @@ body { display: block; }
 .tag-input-wrap { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; border-bottom: 1.5px solid var(--border); padding-bottom: 6px; }
 .tag-chip { background: var(--peach-light); color: var(--peach-dark); font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 20px; display: flex; align-items: center; gap: 4px; }
 .tag-chip button { background: none; border: none; cursor: pointer; color: var(--peach-dark); font-size: 13px; line-height: 1; padding: 0; }
-.tag-inp { border: none; outline: none; font-family: 'Nunito', sans-serif; font-size: 12px; min-width: 80px; background: none; color: var(--text); }
+.tag-inp { border: none; outline: none; font-family: 'Nunito', sans-serif; font-size: 12px; min-width: 80px; flex: 1; background: none; color: var(--text); }
+.tag-add-btn { background: var(--peach); color: #fff; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 16px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; touch-action: manipulation; }
 .info-save-btn {
   margin-top: 4px; width: 100%; padding: 10px; border: none; border-radius: 10px;
   background: var(--peach); color: #fff; font-family: 'Nunito', sans-serif;
@@ -391,6 +392,27 @@ body { display: block; }
 .tb-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .tb-sep { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
 .tb-align { font-size: 11px; }
+
+/* ── DESKTOP TOOLBAR ── */
+.desktop-toolbar {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 2px;
+  padding: 6px 12px; background: #fff;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.desktop-tb-group { display: flex; align-items: center; gap: 1px; }
+.dtb-sep { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
+.dtb-btn {
+  background: none; border: none; cursor: pointer;
+  padding: 5px 7px; border-radius: 6px;
+  color: var(--text-muted); font-family: 'Nunito', sans-serif;
+  font-size: 13px; font-weight: 700; line-height: 1;
+  display: flex; align-items: center; gap: 4px;
+  transition: all .12s;
+}
+.dtb-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.dtb-btn:hover { background: var(--peach-light); color: var(--peach); }
+@media (max-width: 768px) { .desktop-toolbar { display: none; } }
 
 /* Content */
 .content-scroll {
@@ -719,7 +741,8 @@ body { display: block; }
       <div class="info-field">
         <div class="info-label">Thẻ</div>
         <div class="tag-input-wrap" id="tagWrap">
-          <input class="tag-inp" id="tagInp" placeholder="Thêm thẻ..." onkeydown="handleTagKey(event)">
+          <input class="tag-inp" id="tagInp" placeholder="Thêm thẻ..." onkeydown="handleTagKey(event)" oninput="handleTagInput(event)">
+          <button class="tag-add-btn" onclick="addTagFromInput()" title="Thêm thẻ">+</button>
         </div>
       </div>
 
@@ -774,6 +797,55 @@ body { display: block; }
 
     <div class="editor-wrap" id="editorWrap">
       <input class="ch-title-input" id="chTitle" placeholder="Tên chương..." maxlength="200" oninput="saveLocalDraft()">
+
+      <!-- DESKTOP TOOLBAR (ẩn trên mobile, hiện trên laptop) -->
+      <div class="desktop-toolbar" id="desktopToolbar">
+        <div class="desktop-tb-group">
+          <button class="dtb-btn" onclick="fmt('bold')" title="Đậm"><b>B</b></button>
+          <button class="dtb-btn" onclick="fmt('italic')" title="Nghiêng"><i>I</i></button>
+          <button class="dtb-btn" onclick="fmt('underline')" title="Gạch chân"><u>U</u></button>
+        </div>
+        <div class="dtb-sep"></div>
+        <div class="desktop-tb-group">
+          <button class="dtb-btn" onclick="fmt('justifyLeft')" title="Căn trái">
+            <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg>
+          </button>
+          <button class="dtb-btn" onclick="fmt('justifyCenter')" title="Căn giữa">
+            <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+          </button>
+          <button class="dtb-btn" onclick="fmt('justifyRight')" title="Căn phải">
+            <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="9" y1="12" x2="21" y2="12"/><line x1="6" y1="18" x2="21" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="dtb-sep"></div>
+        <div class="desktop-tb-group">
+          <button class="dtb-btn" onclick="fmt('insertUnorderedList')" title="Danh sách">
+            <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          </button>
+          <button class="dtb-btn" onclick="clearFormat()" title="Xóa định dạng">
+            <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/><line x1="2" y1="2" x2="22" y2="22" stroke-width="2"/></svg>
+          </button>
+        </div>
+        <div class="dtb-sep"></div>
+        <div class="desktop-tb-group">
+          <button class="dtb-btn" onclick="saveEditorSelection();insertImage()" title="Chèn ảnh">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          </button>
+          <button class="dtb-btn" onclick="saveEditorSelection();insertVideo()" title="Chèn video">
+            <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          </button>
+          <button class="dtb-btn" onclick="saveEditorSelection();insertYoutube()" title="Chèn YouTube">
+            <svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="white"/></svg>
+          </button>
+        </div>
+        <div class="dtb-sep"></div>
+        <div class="desktop-tb-group">
+          <button class="dtb-btn" onclick="openSpellCheck()" title="Check chính tả">✏️ Chính tả</button>
+          <button class="dtb-btn" onclick="openPreview()" title="Xem trước">
+            <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
 
       <div class="content-scroll">
         <div class="content-editable" id="chContent" contenteditable="true"
@@ -835,29 +907,29 @@ body { display: block; }
         <!-- More panel -->
         <div class="slide-panel" id="morePanel">
           <div class="more-list">
-            <div class="more-list-item" onclick="openSpellCheck();closeAllPanels()">
+            <div class="more-list-item" onclick="closeAllPanels();setTimeout(openSpellCheck,50)">
               <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
               Check chính tả
             </div>
-            <div class="more-list-item" onclick="saveDraft();closeAllPanels()">
+            <div class="more-list-item" onclick="closeAllPanels();saveDraft()">
               <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
               Lưu
             </div>
-            <div class="more-list-item" onclick="openPreview();closeAllPanels()">
+            <div class="more-list-item" onclick="closeAllPanels();setTimeout(openPreview,50)">
               <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               Xem trước
             </div>
-            <div class="more-list-item" onclick="showToast('Lịch sử chỉnh sửa chưa có!','');closeAllPanels()">
+            <div class="more-list-item" onclick="closeAllPanels();showToast('Tính năng đang phát triển','')">
               <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.95"/></svg>
               Lịch sử chỉnh sửa
             </div>
-            <div class="more-list-item" onclick="migrateOldAnnotations();closeAllPanels()">
+            <div class="more-list-item" onclick="closeAllPanels();setTimeout(migrateOldAnnotations,50)">
               <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
               Xóa chú thích cũ
             </div>
-            <div class="more-list-item danger" onclick="deleteChapter();closeAllPanels()">
+            <div class="more-list-item danger" onclick="closeAllPanels();setTimeout(deleteChapter,50)">
               <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-              Xóa
+              Xóa chương
             </div>
           </div>
         </div>
@@ -1109,12 +1181,10 @@ function showApp() {
 
 // ── STORIES ──
 async function loadStories() {
-  if (!currentUser) return; // Chờ đến khi user đã được xác thực
+  if (!currentUser) return;
   let query = sb.from('stories').select('id, title, user_id').order('created_at', { ascending: false });
   if (ADMIN_EMAILS.includes(currentUser?.email)) {
-    // Admin xem tất cả truyện
   } else {
-    // Tác giả chỉ thấy truyện của mình
     query = query.eq('user_id', currentUser.id);
   }
   const { data } = await query;
@@ -1130,32 +1200,23 @@ async function loadStories() {
   if (cur) {
     sel.value = cur;
   } else {
-    // Khôi phục truyện đã chọn lần trước
-    let lastStory = null;
+    let lastStory = null, lastChapter = null;
     try { lastStory = localStorage.getItem('luku_last_story'); } catch(e) {}
+    try { lastChapter = localStorage.getItem('luku_last_chapter'); } catch(e) {}
     const toSelect = lastStory && data.find(s => s.id === lastStory) ? lastStory : (data.length > 0 ? data[0].id : null);
     if (toSelect) {
       sel.value = toSelect;
-      await onStoryChange();
-      // Chuyển sang tab Chương để user thấy danh sách chương ngay
-      const chTab = document.querySelector('.sidebar-tab:nth-child(2)');
-      if (chTab) chTab.click();
-      // Tự động mở lại chương đang làm dở
-      let lastChapter = null;
-      try { lastChapter = localStorage.getItem('luku_last_chapter'); } catch(e) {}
-      if (lastChapter) {
-        await openChapter(lastChapter);
-      }
+      await onStoryChange(lastChapter); // truyền chapter để mở thẳng
     }
   }
 }
 
-async function onStoryChange() {
+async function onStoryChange(restoreChapterId = null) {
   currentStoryId = document.getElementById('storySelect').value;
   if (!currentStoryId) return;
   try { localStorage.setItem('luku_last_story', currentStoryId); } catch(e) {}
 
-  // Reset sạch editor và chapter list trước khi load truyện mới
+  // Reset sạch editor và chapter list
   currentChapterId = null;
   isDirty = false;
   document.getElementById('chTitle').value = '';
@@ -1165,7 +1226,16 @@ async function onStoryChange() {
   document.querySelector('.content-scroll').scrollTop = 0;
 
   await Promise.all([loadStoryInfo(), loadChapterList()]);
-  await restoreLocalDraftIfNeeded();
+
+  if (restoreChapterId) {
+    // Mở thẳng chapter đã lưu — bỏ qua restoreLocalDraft
+    await openChapter(restoreChapterId);
+    // Chuyển sang tab Chương
+    const chTab = document.querySelector('.sidebar-tab:nth-child(2)');
+    if (chTab) chTab.click();
+  } else {
+    await restoreLocalDraftIfNeeded();
+  }
 }
 
 async function loadStoryInfo() {
@@ -1211,15 +1281,15 @@ async function saveStoryInfo() {
   const payload = { title, description, genre, status, updated_at: new Date().toISOString() };
   if (cover_url) payload.cover_url = cover_url;
 
-  // Thử lưu với tags trước
   const tagsValue = storyTags.join(',');
   const { error } = await sb.from('stories').update({ ...payload, tags: tagsValue }).eq('id', currentStoryId);
   if (error) {
-    if (error.message && error.message.includes('tags')) {
-      // Cột tags chưa có trong DB — lưu không có tags, hiện hướng dẫn
+    console.error('saveStoryInfo error:', error);
+    if (error.message && (error.message.includes('tags') || error.code === '42703')) {
+      // Cột tags chưa có — lưu phần còn lại trước
       const { error: e2 } = await sb.from('stories').update(payload).eq('id', currentStoryId);
       if (e2) { showToast('Lưu thất bại: ' + e2.message, 'err'); return; }
-      showToast('Lưu thành công (cần thêm cột tags vào DB để lưu thẻ)', 'ok');
+      showToast('⚠ Cần thêm cột "tags" (text) vào bảng stories trong Supabase để lưu thẻ', 'err');
     } else {
       showToast('Lưu thất bại: ' + error.message, 'err'); return;
     }
@@ -1267,6 +1337,20 @@ function renderTags() {
   });
   wrap.appendChild(inp);
   inp.focus();
+}
+function addTagFromInput() {
+  const inp = document.getElementById('tagInp');
+  const tag = inp.value.trim().replace(/,/g,'').toLowerCase();
+  if (tag && !storyTags.includes(tag)) { storyTags.push(tag); renderTags(); }
+  else inp.value = '';
+}
+function handleTagInput(e) {
+  // Bắt dấu phẩy khi gõ trên mobile (không qua keydown)
+  if (e.target.value.includes(',')) {
+    const tag = e.target.value.replace(/,/g,'').trim().toLowerCase();
+    if (tag && !storyTags.includes(tag)) { storyTags.push(tag); renderTags(); }
+    else e.target.value = '';
+  }
 }
 function handleTagKey(e) {
   const inp = document.getElementById('tagInp');
