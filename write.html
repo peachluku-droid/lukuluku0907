@@ -64,10 +64,10 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 .new-story-btn:hover { background: var(--peach-dark); }
 
 /* ── LAYOUT ── */
-/* body là flex column: topbar cố định trên cùng, app chiếm phần còn lại */
-body { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
-.topbar { flex-shrink: 0; position: relative; z-index: 100; }
-.app { display: flex; flex: 1; min-height: 0; overflow: hidden; }
+/* Topbar fixed — cách duy nhất đảm bảo hiện cố định trên mọi mobile browser */
+body { display: block; }
+.topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 200; }
+.app { display: flex; margin-top: 52px; height: calc(100vh - 52px); height: calc(100dvh - 52px); overflow: hidden; }
 
 /* ── SIDEBAR ── */
 .sidebar {
@@ -557,7 +557,7 @@ body { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
 .sidebar-backdrop {
   display: none; position: fixed;
   top: 52px; left: 0; right: 0; bottom: 0;
-  z-index: 149;
+  z-index: 410;
   background: rgba(0,0,0,0.4); backdrop-filter: blur(2px);
   touch-action: none;
 }
@@ -572,7 +572,7 @@ body { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
     top: 52px;
     left: 0; right: 0; bottom: 0;
     width: 100%;
-    z-index: 150;
+    z-index: 420;
     overflow: hidden;
     flex-direction: column;
     height: auto;
@@ -1710,12 +1710,12 @@ function toggleSidebar() {
   const sidebar = document.getElementById('sidebar');
   const backdrop = document.getElementById('sidebarBackdrop');
   if (window.innerWidth <= 768) {
-    // Mobile: toggle overlay — KHÔNG set body overflow để không chặn PiP/app khác
     const isOpen = sidebar.classList.toggle('open');
     backdrop.classList.toggle('show', isOpen);
-    // Không set document.body.style.overflow để tránh chặn gõ chữ từ cửa sổ nổi
+    // Ẩn bottom toolbar khi sidebar mở để không đè lên
+    const bottomWrap = document.querySelector('.mobile-bottom-wrap');
+    if (bottomWrap) bottomWrap.style.display = isOpen ? 'none' : '';
   } else {
-    // Desktop: toggle sidebar in flex flow
     sidebar.classList.toggle('hidden-desk');
     const main = document.querySelector('.main');
     if (main) main.style.width = sidebar.classList.contains('hidden-desk') ? '100%' : '';
@@ -1726,7 +1726,9 @@ function closeSidebar() {
   const backdrop = document.getElementById('sidebarBackdrop');
   sidebar.classList.remove('open');
   backdrop.classList.remove('show');
-  // Không reset body overflow vì không bao giờ set nó
+  // Hiện lại bottom toolbar
+  const bottomWrap = document.querySelector('.mobile-bottom-wrap');
+  if (bottomWrap) bottomWrap.style.display = '';
 }
 
 // Phím tắt Ctrl+S
@@ -1738,21 +1740,47 @@ document.addEventListener('keydown', e => {
 (function setupCaretScroll() {
   let rafId = null;
 
+  function getCaretRect() {
+    const sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0) return null;
+
+    const range = sel.getRangeAt(0).cloneRange();
+    range.collapse(true);
+
+    // Cách 1: getClientRects — nhanh, chuẩn
+    let rects = range.getClientRects();
+    if (rects && rects.length > 0) return rects[0];
+
+    // Cách 2: Android Chrome trả về rỗng khi caret ở cuối text node
+    // → lùi 1 ký tự để lấy rect của ký tự trước
+    if (range.startOffset > 0) {
+      const r2 = range.cloneRange();
+      r2.setStart(range.startContainer, range.startOffset - 1);
+      r2.setEnd(range.startContainer, range.startOffset);
+      rects = r2.getClientRects();
+      if (rects && rects.length > 0) {
+        // Trả về rect giả lập ở cuối ký tự trước
+        const r = rects[rects.length - 1];
+        return { top: r.top, bottom: r.bottom, left: r.right, right: r.right };
+      }
+    }
+
+    // Cách 3: fallback getBoundingClientRect của node chứa caret
+    const node = range.startContainer;
+    const el = node.nodeType === 1 ? node : node.parentElement;
+    if (el) return el.getBoundingClientRect();
+
+    return null;
+  }
+
   function scrollCaretIntoView() {
     const ed = document.getElementById('chContent');
     const scroll = document.querySelector('.content-scroll');
     if (!ed || !scroll) return;
     if (document.activeElement !== ed) return;
 
-    const sel = window.getSelection();
-    if (!sel || sel.rangeCount === 0) return;
-
-    // Dùng getClientRects() trực tiếp — không insert DOM, không gây scroll reset
-    const range = sel.getRangeAt(0).cloneRange();
-    range.collapse(true);
-    const rects = range.getClientRects();
-    if (!rects || rects.length === 0) return;
-    const caretRect = rects[0];
+    const caretRect = getCaretRect();
+    if (!caretRect) return;
 
     const scrollRect = scroll.getBoundingClientRect();
     const bottomWrap = document.querySelector('.mobile-bottom-wrap');
@@ -1777,7 +1805,6 @@ document.addEventListener('keydown', e => {
   function attach() {
     const ed = document.getElementById('chContent');
     if (!ed) { setTimeout(attach, 300); return; }
-    // Chỉ bắt input — không dùng selectionchange vì nó fire khi scroll touch làm mất selection
     ed.addEventListener('input', scheduleScroll, { passive: true });
     ed.addEventListener('keyup', scheduleScroll, { passive: true });
   }
