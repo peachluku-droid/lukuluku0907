@@ -206,7 +206,7 @@ body {
 .read-more-btn { background: none; border: none; cursor: pointer; color: var(--peach); font-size: 12.5px; font-weight: 700; padding: 4px 0; margin-top: 5px; font-family: 'Nunito', sans-serif; display: flex; align-items: center; gap: 4px; }
 .read-more-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; transition: transform .15s; }
 .read-more-btn.expanded svg { transform: rotate(180deg); }
-.content-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); background: var(--bg2); position: sticky; top: 56px; z-index: 90; transition: background .3s; }
+.content-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); background: var(--bg); position: sticky; top: 56px; z-index: 90; transition: background .3s; }
 .tab-btn { flex: 1; background: none; border: none; padding: 12px 0; font-size: 13px; font-weight: 700; color: var(--text-muted); cursor: pointer; position: relative; transition: color .15s; font-family: 'Nunito', sans-serif; display: flex; align-items: center; justify-content: center; gap: 5px; }
 .tab-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 .tab-btn:hover { color: var(--peach); }
@@ -740,6 +740,18 @@ async function loadComments(append = false) {
     });
   }
   renderComments();
+  // Load reply counts for all comments
+  if (ids.length) {
+    const { data: replyCounts } = await sb.from('comments').select('parent_id').in('parent_id', ids).not('parent_id', 'is', null);
+    if (replyCounts) {
+      const countMap = {};
+      replyCounts.forEach(r => { countMap[r.parent_id] = (countMap[r.parent_id] || 0) + 1; });
+      ids.forEach(id => {
+        const lbl = document.getElementById('reply-label-' + id);
+        if (lbl && countMap[id]) lbl.textContent = `Xem ${countMap[id]} trả lời`;
+      });
+    }
+  }
   document.getElementById('load-more-btn').style.display = comments.length < commentTotal ? 'flex' : 'none';
   commentsPage++;
 }
@@ -779,7 +791,7 @@ function renderCommentCard(c) {
   const canDelete = isOwn || isAdmin;
   const lk = likesCache[c.id] || { count: 0, liked: false };
   const likedClass = lk.liked ? ' liked' : '';
-  return `<div class="comment-card" id="cmt-${c.id}">
+  return `<div class="comment-card" id="cmt-${c.id}" onclick="toggleReplyBox('${c.id}','${escapeHtml(name)}')" style="cursor:pointer">
     <div class="comment-item">
       <div class="comment-avatar">${avatarHtml(c.user_id, c.user_email)}</div>
       <div class="comment-bubble">
@@ -789,15 +801,15 @@ function renderCommentCard(c) {
         </div>
         <div class="comment-text">${escapeHtml(c.content)}</div>
         <div class="comment-actions">
-          <button class="comment-action-btn${likedClass}" onclick="toggleLike('${c.id}')">
+          <button class="comment-action-btn${likedClass}" onclick="event.stopPropagation();toggleLike('${c.id}')">
             <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             <span id="like-count-${c.id}">${lk.count || ''}</span>
           </button>
-          <button class="comment-action-btn" onclick="toggleReplyBox('${c.id}')">
+          <button class="comment-action-btn" id="reply-toggle-${c.id}" onclick="event.stopPropagation();toggleReplyBox('${c.id}')">
             <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            Trả lời
+            <span id="reply-label-${c.id}">Trả lời</span>
           </button>
-          ${canDelete ? `<button class="comment-action-btn delete-btn" onclick="deleteComment('${c.id}')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg> Xoá</button>` : ''}
+          ${canDelete ? `<button class="comment-action-btn delete-btn" onclick="event.stopPropagation();deleteComment('${c.id}')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg> Xoá</button>` : ''}
         </div>
       </div>
     </div>
@@ -805,14 +817,25 @@ function renderCommentCard(c) {
   </div>`;
 }
 
-async function toggleReplyBox(parentId) {
+async function toggleReplyBox(parentId, tagName = null) {
   const sec = document.getElementById('replies-' + parentId);
-  if (sec.style.display === 'none' || sec.style.display === '') {
+  const isHidden = sec.style.display === 'none' || sec.style.display === '';
+  if (isHidden) {
     sec.style.display = 'flex';
     sec.style.flexDirection = 'column';
     await loadReplies(parentId);
   } else {
-    sec.style.display = 'none';
+    // Nếu đã mở, chỉ focus textarea và tag tên
+  }
+  // Focus và tag tên nếu có
+  const input = document.getElementById('reply-input-' + parentId);
+  if (input && tagName) {
+    if (!input.value.startsWith('@' + tagName)) {
+      input.value = '@' + tagName + ' ';
+    }
+    input.focus();
+  } else if (input) {
+    input.focus();
   }
 }
 
@@ -821,6 +844,9 @@ async function loadReplies(parentId) {
   sec.innerHTML = '<div style="font-size:12px;color:var(--text-muted);padding:4px 0">Đang tải...</div>';
   const { data } = await sb.from('comments').select('*').eq('parent_id', parentId).order('created_at', { ascending: true });
   const replies = data || [];
+  // Update reply count label
+  const labelEl = document.getElementById('reply-label-' + parentId);
+  if (labelEl) labelEl.textContent = replies.length > 0 ? `Xem ${replies.length} trả lời` : 'Trả lời';
   // Fetch profiles for replies
   const rUserIds = [...new Set(replies.map(r => r.user_id).filter(Boolean))];
   await fetchProfiles(rUserIds);
@@ -853,12 +879,16 @@ async function loadReplies(parentId) {
     return `<div class="reply-item" id="cmt-${r.id}">
       <div class="reply-avatar">${avatarHtml(r.user_id, r.user_email, 28, 11)}</div>
       <div class="reply-bubble">
-        <div class="reply-header"><span class="reply-name">${escapeHtml(rname)}</span><span class="reply-time">${timeAgo(r.created_at)}</span></div>
+        <div class="reply-header"><span class="reply-name" style="cursor:pointer" onclick="toggleReplyBox('${parentId}','${escapeHtml(rname)}')" title="Trả lời ${escapeHtml(rname)}">@${escapeHtml(rname)}</span><span class="reply-time">${timeAgo(r.created_at)}</span></div>
         <div class="reply-text">${escapeHtml(r.content)}</div>
         <div class="reply-actions">
           <button class="comment-action-btn${lk.liked ? ' liked' : ''}" onclick="toggleLike('${r.id}','${parentId}')">
             <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             <span id="like-count-${r.id}">${lk.count || ''}</span>
+          </button>
+          <button class="comment-action-btn" onclick="toggleReplyBox('${parentId}','${escapeHtml(rname)}')">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Trả lời
           </button>
           ${(isOwn || isAdmin) ? `<button class="comment-action-btn delete-btn" onclick="deleteComment('${r.id}','${parentId}')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg> Xoá</button>` : ''}
         </div>
