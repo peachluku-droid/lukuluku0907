@@ -248,23 +248,47 @@ body {
 .compose-input { width: 100%; border: none; background: none; outline: none; font-family: 'Nunito', sans-serif; font-size: 13.5px; color: var(--text); resize: none; min-height: 38px; max-height: 120px; line-height: 1.5; }
 .compose-input::placeholder { color: var(--text-muted); }
 .compose-footer { display: flex; align-items: center; justify-content: flex-end; margin-top: 8px; }
-.compose-submit { background: var(--peach); color: white; border: none; border-radius: 20px; padding: 6px 16px; font-family: 'Nunito', sans-serif; font-size: 12.5px; font-weight: 700; cursor: pointer; transition: background .15s; display: flex; align-items: center; gap: 5px; }
+.compose-submit { background: var(--peach-dark); color: white; border: none; border-radius: 20px; padding: 6px 16px; font-family: 'Nunito', sans-serif; font-size: 12.5px; font-weight: 700; cursor: pointer; transition: background .15s; display: flex; align-items: center; gap: 5px; }
 .compose-submit svg { width: 13px; height: 13px; stroke: white; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 .compose-submit:hover { background: var(--peach-dark); }
 .compose-submit:disabled { opacity: .6; cursor: not-allowed; }
-.comment-list { display: flex; flex-direction: column; gap: 14px; }
+.comment-list { display: flex; flex-direction: column; gap: 10px; }
+.comment-card { background: var(--bg); border: 1.5px solid var(--border); border-radius: 16px; padding: 13px 15px; transition: border-color .15s; }
+.comment-card:hover { border-color: var(--border-hover); }
 .comment-item { display: flex; gap: 10px; }
-.comment-avatar { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); font-size: 14px; font-weight: 800; color: var(--peach-dark); overflow: hidden; }
+.comment-avatar { width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); font-size: 13px; font-weight: 800; color: var(--peach-dark); overflow: hidden; }
 .comment-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .comment-bubble { flex: 1; min-width: 0; }
-.comment-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
+.comment-header { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; flex-wrap: wrap; }
 .comment-name { font-size: 13px; font-weight: 800; }
 .comment-time { font-size: 11px; color: var(--text-muted); font-weight: 600; }
 .comment-text { font-size: 13.5px; line-height: 1.65; color: var(--text); word-break: break-word; }
-.comment-actions { display: flex; align-items: center; gap: 12px; margin-top: 6px; }
-.comment-action-btn { background: none; border: none; cursor: pointer; font-family: 'Nunito', sans-serif; font-size: 11.5px; font-weight: 700; color: var(--text-muted); display: flex; align-items: center; gap: 4px; padding: 0; transition: color .12s; }
-.comment-action-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.comment-action-btn:hover { color: var(--peach); }
+.comment-actions { display: flex; align-items: center; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+.comment-action-btn { background: none; border: none; cursor: pointer; font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; color: var(--text-muted); display: flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 20px; transition: all .12s; }
+.comment-action-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.comment-action-btn:hover { background: var(--peach-light); color: var(--peach-dark); }
+.comment-action-btn.liked { color: #e05a7a; }
+.comment-action-btn.liked svg { fill: #e05a7a; stroke: #e05a7a; }
+.comment-action-btn.delete-btn:hover { background: #fff0f0; color: #c0392b; }
+.replies-section { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+.reply-item { display: flex; gap: 9px; }
+.reply-avatar { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); font-size: 11px; font-weight: 800; color: var(--peach-dark); overflow: hidden; }
+.reply-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.reply-bubble { flex: 1; min-width: 0; }
+.reply-header { display: flex; align-items: center; gap: 7px; margin-bottom: 3px; }
+.reply-name { font-size: 12.5px; font-weight: 800; }
+.reply-time { font-size: 10.5px; color: var(--text-muted); font-weight: 600; }
+.reply-text { font-size: 13px; line-height: 1.6; color: var(--text); word-break: break-word; }
+.reply-actions { display: flex; align-items: center; gap: 6px; margin-top: 5px; }
+.reply-compose { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); display: flex; gap: 9px; align-items: flex-start; }
+.reply-compose-avatar { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); font-size: 11px; font-weight: 800; color: var(--peach-dark); overflow: hidden; margin-top: 2px; }
+.reply-compose-body { flex: 1; display: flex; gap: 8px; align-items: flex-end; }
+.reply-input { flex: 1; border: 1.5px solid var(--border); background: var(--bg2); outline: none; font-family: 'Nunito', sans-serif; font-size: 13px; color: var(--text); resize: none; min-height: 34px; max-height: 80px; line-height: 1.5; border-radius: 12px; padding: 6px 10px; transition: border-color .15s; }
+.reply-input:focus { border-color: var(--peach); }
+.reply-input::placeholder { color: var(--text-muted); }
+.reply-submit { background: var(--peach-dark); color: white; border: none; border-radius: 20px; padding: 6px 13px; font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: opacity .15s; flex-shrink: 0; }
+.reply-submit:hover { opacity: .85; }
+.reply-submit:disabled { opacity: .5; cursor: not-allowed; }
 .load-more-btn { width: 100%; margin-top: 16px; padding: 11px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: all .15s; display: flex; align-items: center; justify-content: center; gap: 6px; }
 .load-more-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .load-more-btn:hover { background: var(--peach-light); color: var(--peach-dark); border-color: var(--peach-mid); }
@@ -683,27 +707,166 @@ function renderComposeArea() {
   }
 }
 
+// --- likes cache: commentId -> { count, liked } ---
+const likesCache = {};
+
 async function loadComments(append = false) {
-  if (!append) { commentsPage = 0; comments = []; document.getElementById('comment-list').innerHTML = `<div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:13px;font-weight:600">Đang tải bình luận...</div>`; }
+  if (!append) { commentsPage = 0; comments = []; document.getElementById('comment-list').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:13px;font-weight:600">Đang tải bình luận...</div>'; }
   const from = commentsPage * COMMENTS_PER_PAGE;
-  const { data, count } = await sb.from('comments').select('*, profiles(display_name, avatar_url)', { count: 'exact' }).eq('story_id', storyId).order('created_at', { ascending: false }).range(from, from + COMMENTS_PER_PAGE - 1);
+  const { data, count } = await sb.from('comments').select('*', { count: 'exact' }).eq('story_id', storyId).is('parent_id', null).order('created_at', { ascending: false }).range(from, from + COMMENTS_PER_PAGE - 1);
   if (!append) comments = data || []; else comments = [...comments, ...(data || [])];
   commentTotal = count || commentTotal;
+  // Load likes cho các comment
+  const ids = (data || []).map(c => c.id);
+  if (ids.length) {
+    const { data: likesData } = await sb.from('comment_likes').select('comment_id, user_id').in('comment_id', ids);
+    ids.forEach(id => {
+      const rows = (likesData || []).filter(l => l.comment_id === id);
+      likesCache[id] = { count: rows.length, liked: currentUser ? rows.some(l => l.user_id === currentUser.id) : false };
+    });
+  }
   renderComments();
   document.getElementById('load-more-btn').style.display = comments.length < commentTotal ? 'flex' : 'none';
   commentsPage++;
 }
 
+function avatarHtml(email, size = 34, fsize = 13) {
+  const name = email?.split('@')[0] || 'U';
+  return `<span style="font-size:${fsize}px;font-weight:800">${name[0].toUpperCase()}</span>`;
+}
+
 function renderComments() {
   const list = document.getElementById('comment-list');
   renderComposeArea();
-  if (!comments.length) { list.innerHTML = `<div class="comment-empty"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><div class="comment-empty-title">Chưa có bình luận nào</div><div class="comment-empty-sub">Hãy là người đầu tiên chia sẻ cảm nhận!</div></div>`; return; }
-  list.innerHTML = comments.map(c => {
-    const profile = c.profiles || {}, name = profile.display_name || c.user_email?.split('@')[0] || 'Người dùng', initial = name[0].toUpperCase();
-    const avatar = profile.avatar_url ? `<img src="${escapeHtml(profile.avatar_url)}" alt="${escapeHtml(name)}">` : `<span style="font-size:13px;font-weight:800">${initial}</span>`;
-    const isOwn = currentUser && c.user_id === currentUser.id;
-    return `<div class="comment-item" id="cmt-${c.id}"><div class="comment-avatar">${avatar}</div><div class="comment-bubble"><div class="comment-header"><span class="comment-name">${escapeHtml(name)}</span><span class="comment-time">${timeAgo(c.created_at)}</span></div><div class="comment-text">${escapeHtml(c.content)}</div><div class="comment-actions">${isOwn ? `<button class="comment-action-btn" onclick="deleteComment('${c.id}')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg> Xoá</button>` : ''}</div></div></div>`;
-  }).join('');
+  if (!comments.length) { list.innerHTML = '<div class="comment-empty"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><div class="comment-empty-title">Chưa có bình luận nào</div><div class="comment-empty-sub">Hãy là người đầu tiên chia sẻ cảm nhận!</div></div>'; return; }
+  list.innerHTML = comments.map(c => renderCommentCard(c)).join('');
+}
+
+function renderCommentCard(c) {
+  const name = c.user_email?.split('@')[0] || 'Người dùng';
+  const isOwn = currentUser && c.user_id === currentUser.id;
+  const isAdmin = currentUser && ADMIN_EMAILS.includes(currentUser.email);
+  const canDelete = isOwn || isAdmin;
+  const lk = likesCache[c.id] || { count: 0, liked: false };
+  const likedClass = lk.liked ? ' liked' : '';
+  return `<div class="comment-card" id="cmt-${c.id}">
+    <div class="comment-item">
+      <div class="comment-avatar">${avatarHtml(c.user_email)}</div>
+      <div class="comment-bubble">
+        <div class="comment-header">
+          <span class="comment-name">${escapeHtml(name)}</span>
+          <span class="comment-time">${timeAgo(c.created_at)}</span>
+        </div>
+        <div class="comment-text">${escapeHtml(c.content)}</div>
+        <div class="comment-actions">
+          <button class="comment-action-btn${likedClass}" onclick="toggleLike('${c.id}')">
+            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            <span id="like-count-${c.id}">${lk.count || ''}</span>
+          </button>
+          <button class="comment-action-btn" onclick="toggleReplyBox('${c.id}')">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Trả lời
+          </button>
+          ${canDelete ? `<button class="comment-action-btn delete-btn" onclick="deleteComment('${c.id}')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg> Xoá</button>` : ''}
+        </div>
+      </div>
+    </div>
+    <div class="replies-section" id="replies-${c.id}" style="display:none"></div>
+  </div>`;
+}
+
+async function toggleReplyBox(parentId) {
+  const sec = document.getElementById('replies-' + parentId);
+  if (sec.style.display === 'none' || sec.style.display === '') {
+    sec.style.display = 'flex';
+    sec.style.flexDirection = 'column';
+    await loadReplies(parentId);
+  } else {
+    sec.style.display = 'none';
+  }
+}
+
+async function loadReplies(parentId) {
+  const sec = document.getElementById('replies-' + parentId);
+  sec.innerHTML = '<div style="font-size:12px;color:var(--text-muted);padding:4px 0">Đang tải...</div>';
+  const { data } = await sb.from('comments').select('*').eq('parent_id', parentId).order('created_at', { ascending: true });
+  const replies = data || [];
+  // Load likes for replies
+  if (replies.length) {
+    const ids = replies.map(r => r.id);
+    const { data: likesData } = await sb.from('comment_likes').select('comment_id, user_id').in('comment_id', ids);
+    ids.forEach(id => {
+      const rows = (likesData || []).filter(l => l.comment_id === id);
+      likesCache[id] = { count: rows.length, liked: currentUser ? rows.some(l => l.user_id === currentUser.id) : false };
+    });
+  }
+  const composeAv = currentUser ? `<div class="reply-compose-avatar">${avatarHtml(currentUser.email, 28, 11)}</div>` : '';
+  const composeBox = currentUser ? `<div class="reply-compose" id="reply-compose-${parentId}">
+    ${composeAv}
+    <div class="reply-compose-body">
+      <textarea class="reply-input" id="reply-input-${parentId}" placeholder="Viết trả lời..." rows="1" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+      <button class="reply-submit" onclick="submitReply('${parentId}')">Gửi</button>
+    </div>
+  </div>` : '';
+  if (!replies.length) {
+    sec.innerHTML = composeBox;
+    return;
+  }
+  sec.innerHTML = replies.map(r => {
+    const rname = r.user_email?.split('@')[0] || 'Người dùng';
+    const isOwn = currentUser && r.user_id === currentUser.id;
+    const isAdmin = currentUser && ADMIN_EMAILS.includes(currentUser.email);
+    const lk = likesCache[r.id] || { count: 0, liked: false };
+    return `<div class="reply-item" id="cmt-${r.id}">
+      <div class="reply-avatar">${avatarHtml(r.user_email, 28, 11)}</div>
+      <div class="reply-bubble">
+        <div class="reply-header"><span class="reply-name">${escapeHtml(rname)}</span><span class="reply-time">${timeAgo(r.created_at)}</span></div>
+        <div class="reply-text">${escapeHtml(r.content)}</div>
+        <div class="reply-actions">
+          <button class="comment-action-btn${lk.liked ? ' liked' : ''}" onclick="toggleLike('${r.id}','${parentId}')">
+            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            <span id="like-count-${r.id}">${lk.count || ''}</span>
+          </button>
+          ${(isOwn || isAdmin) ? `<button class="comment-action-btn delete-btn" onclick="deleteComment('${r.id}','${parentId}')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg> Xoá</button>` : ''}
+        </div>
+      </div>
+    </div>`;
+  }).join('') + composeBox;
+}
+
+async function submitReply(parentId) {
+  if (!currentUser) { showToast('Cần đăng nhập'); return; }
+  const input = document.getElementById('reply-input-' + parentId);
+  const content = (input?.value || '').trim();
+  if (!content) return;
+  const btn = document.querySelector(`#reply-compose-${parentId} .reply-submit`);
+  if (btn) btn.disabled = true;
+  const { error } = await sb.from('comments').insert({ story_id: storyId, user_id: currentUser.id, user_email: currentUser.email, content, parent_id: parentId });
+  if (error) { showToast('Lỗi: ' + error.message); if (btn) btn.disabled = false; }
+  else { await loadReplies(parentId); }
+}
+
+async function toggleLike(commentId, parentId = null) {
+  if (!currentUser) { showToast('Cần đăng nhập để thả tim'); return; }
+  const lk = likesCache[commentId] || { count: 0, liked: false };
+  // Optimistic UI
+  likesCache[commentId] = { count: lk.liked ? lk.count - 1 : lk.count + 1, liked: !lk.liked };
+  updateLikeBtn(commentId);
+  if (lk.liked) {
+    await sb.from('comment_likes').delete().eq('comment_id', commentId).eq('user_id', currentUser.id);
+  } else {
+    await sb.from('comment_likes').upsert({ comment_id: commentId, user_id: currentUser.id }, { onConflict: 'comment_id,user_id' });
+  }
+}
+
+function updateLikeBtn(commentId) {
+  const lk = likesCache[commentId];
+  const btns = document.querySelectorAll(`[onclick*="toggleLike('${commentId}')"]`);
+  btns.forEach(btn => {
+    btn.classList.toggle('liked', lk.liked);
+    const span = document.getElementById('like-count-' + commentId);
+    if (span) span.textContent = lk.count > 0 ? lk.count : '';
+  });
 }
 
 async function submitComment() {
@@ -712,23 +875,25 @@ async function submitComment() {
   if (!content) { showToast('Vui lòng nhập nội dung bình luận'); return; }
   const btn = document.querySelector('.compose-submit');
   if (btn) { btn.disabled = true; btn.textContent = 'Đang gửi...'; }
-  const { error } = await sb.from('comments').insert({ story_id: storyId, user_id: currentUser.id, user_email: currentUser.email, content });
+  const { error } = await sb.from('comments').insert({ story_id: storyId, user_id: currentUser.id, user_email: currentUser.email, content, parent_id: null });
   if (error) {
     showToast('Gửi thất bại: ' + error.message);
-    // Chỉ restore btn nếu gặp lỗi (DOM chưa bị re-render)
     const btnNow = document.querySelector('.compose-submit');
-    if (btnNow) { btnNow.disabled = false; btnNow.innerHTML = `<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:white;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Gửi`; }
+    if (btnNow) { btnNow.disabled = false; btnNow.innerHTML = '<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:white;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Gửi'; }
   } else {
     showToast('Đã gửi bình luận');
-    await loadComments(); // renderComposeArea() sẽ được gọi bên trong, tự reset textarea
+    await loadComments();
     await loadCommentCount();
   }
 }
-async function deleteComment(id) {
+
+async function deleteComment(id, parentId = null) {
   if (!confirm('Xoá bình luận này?')) return;
-  const { error } = await sb.from('comments').delete().eq('id', id).eq('user_id', currentUser.id);
+  const { error } = await sb.from('comments').delete().eq('id', id);
   if (error) { showToast('Không thể xoá'); return; }
-  showToast('Đã xoá bình luận'); await loadComments(); await loadCommentCount();
+  showToast('Đã xoá');
+  if (parentId) { await loadReplies(parentId); }
+  else { await loadComments(); await loadCommentCount(); }
 }
 function loadMoreComments() { loadComments(true); }
 
