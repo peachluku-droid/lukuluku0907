@@ -701,7 +701,7 @@ function renderComposeArea() {
     const avatarHtml = profile.avatar_url
       ? `<img src="${escapeHtml(profile.avatar_url)}" alt="${escapeHtml(name)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
       : `<span style="font-size:13px;font-weight:800;color:var(--peach-dark)">${initial}</span>`;
-    area.innerHTML = `<div class="comment-compose"><div class="compose-avatar">${avatarHtml}</div><div class="compose-body"><textarea class="compose-input" id="comment-input" placeholder="Viết review của bạn..." rows="1" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onkeydown="if(event.key==='Enter'&&event.ctrlKey)submitComment()"></textarea><div class="compose-footer"><button class="compose-submit" onclick="submitComment()"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Gửi</button></div></div></div>`;
+    area.innerHTML = `<div class="comment-compose"><div class="compose-avatar">${avatarHtml}</div><div class="compose-body"><textarea class="compose-input" id="comment-input" placeholder="Viết review của bạn..." rows="1" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onkeydown="if(event.key==='Enter'&&!event.shiftKey&&window.innerWidth>600){event.preventDefault();submitComment()}"></textarea><div class="compose-footer"><button class="compose-submit" onclick="submitComment()"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Gửi</button></div></div></div>`;
   } else {
     area.innerHTML = `<div class="login-prompt"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><div class="login-prompt-text">Đăng nhập để review và lưu tiến độ đọc</div><button class="login-prompt-btn" onclick="location.href='auth.html?next='+encodeURIComponent(location.href)">Đăng nhập</button></div>`;
   }
@@ -718,6 +718,9 @@ async function loadComments(append = false) {
   commentTotal = count || commentTotal;
   // Load likes cho các comment
   const ids = (data || []).map(c => c.id);
+  // Fetch profiles for display names and avatars
+  const userIds = [...new Set((data || []).map(c => c.user_id).filter(Boolean))];
+  await fetchProfiles(userIds);
   if (ids.length) {
     const { data: likesData } = await sb.from('comment_likes').select('comment_id, user_id').in('comment_id', ids);
     ids.forEach(id => {
@@ -730,9 +733,25 @@ async function loadComments(append = false) {
   commentsPage++;
 }
 
-function avatarHtml(email, size = 34, fsize = 13) {
-  const name = email?.split('@')[0] || 'U';
+const profilesCache = {}; // user_id -> { display_name, avatar_url }
+
+async function fetchProfiles(userIds) {
+  const missing = [...new Set(userIds)].filter(id => id && !profilesCache[id]);
+  if (!missing.length) return;
+  const { data } = await sb.from('profiles').select('id, display_name, avatar_url').in('id', missing);
+  (data || []).forEach(p => profilesCache[p.id] = p);
+}
+
+function avatarHtml(userId, email, size = 34, fsize = 13) {
+  const p = profilesCache[userId] || {};
+  const name = p.display_name || email?.split('@')[0] || 'U';
+  if (p.avatar_url) return `<img src="${p.avatar_url}" alt="${name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
   return `<span style="font-size:${fsize}px;font-weight:800">${name[0].toUpperCase()}</span>`;
+}
+
+function displayName(userId, email) {
+  const p = profilesCache[userId] || {};
+  return p.display_name || email?.split('@')[0] || 'Người dùng';
 }
 
 function renderComments() {
@@ -743,7 +762,7 @@ function renderComments() {
 }
 
 function renderCommentCard(c) {
-  const name = c.user_email?.split('@')[0] || 'Người dùng';
+  const name = displayName(c.user_id, c.user_email);
   const isOwn = currentUser && c.user_id === currentUser.id;
   const isAdmin = currentUser && ADMIN_EMAILS.includes(currentUser.email);
   const canDelete = isOwn || isAdmin;
@@ -751,7 +770,7 @@ function renderCommentCard(c) {
   const likedClass = lk.liked ? ' liked' : '';
   return `<div class="comment-card" id="cmt-${c.id}">
     <div class="comment-item">
-      <div class="comment-avatar">${avatarHtml(c.user_email)}</div>
+      <div class="comment-avatar">${avatarHtml(c.user_id, c.user_email)}</div>
       <div class="comment-bubble">
         <div class="comment-header">
           <span class="comment-name">${escapeHtml(name)}</span>
@@ -791,6 +810,9 @@ async function loadReplies(parentId) {
   sec.innerHTML = '<div style="font-size:12px;color:var(--text-muted);padding:4px 0">Đang tải...</div>';
   const { data } = await sb.from('comments').select('*').eq('parent_id', parentId).order('created_at', { ascending: true });
   const replies = data || [];
+  // Fetch profiles for replies
+  const rUserIds = [...new Set(replies.map(r => r.user_id).filter(Boolean))];
+  await fetchProfiles(rUserIds);
   // Load likes for replies
   if (replies.length) {
     const ids = replies.map(r => r.id);
@@ -800,7 +822,7 @@ async function loadReplies(parentId) {
       likesCache[id] = { count: rows.length, liked: currentUser ? rows.some(l => l.user_id === currentUser.id) : false };
     });
   }
-  const composeAv = currentUser ? `<div class="reply-compose-avatar">${avatarHtml(currentUser.email, 28, 11)}</div>` : '';
+  const composeAv = currentUser ? `<div class="reply-compose-avatar">${avatarHtml(currentUser.id, currentUser.email, 28, 11)}</div>` : '';
   const composeBox = currentUser ? `<div class="reply-compose" id="reply-compose-${parentId}">
     ${composeAv}
     <div class="reply-compose-body">
@@ -813,12 +835,12 @@ async function loadReplies(parentId) {
     return;
   }
   sec.innerHTML = replies.map(r => {
-    const rname = r.user_email?.split('@')[0] || 'Người dùng';
+    const rname = displayName(r.user_id, r.user_email);
     const isOwn = currentUser && r.user_id === currentUser.id;
     const isAdmin = currentUser && ADMIN_EMAILS.includes(currentUser.email);
     const lk = likesCache[r.id] || { count: 0, liked: false };
     return `<div class="reply-item" id="cmt-${r.id}">
-      <div class="reply-avatar">${avatarHtml(r.user_email, 28, 11)}</div>
+      <div class="reply-avatar">${avatarHtml(r.user_id, r.user_email, 28, 11)}</div>
       <div class="reply-bubble">
         <div class="reply-header"><span class="reply-name">${escapeHtml(rname)}</span><span class="reply-time">${timeAgo(r.created_at)}</span></div>
         <div class="reply-text">${escapeHtml(r.content)}</div>
