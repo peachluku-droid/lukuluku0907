@@ -118,7 +118,16 @@ body.theme-wattpad {
 body {
   font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text);
   transition: background .3s, color .3s; line-height: 1.6;
-  max-width: 680px; margin: 0 auto; min-height: 100vh;
+  margin: 0; min-height: 100vh;
+}
+.page-wrapper {
+  max-width: 720px; margin: 0 auto; min-height: 100vh;
+}
+@media (min-width: 900px) {
+  .page-wrapper { max-width: 860px; }
+}
+@media (min-width: 1200px) {
+  .page-wrapper { max-width: 1000px; }
 }
 .topbar {
   background: var(--bg2); border-bottom: 1px solid var(--border);
@@ -382,6 +391,7 @@ body {
   </div>
 </div>
 
+<div class="page-wrapper">
 <div class="cover-hero" id="cover-hero">
   <div class="cover-hero-blur" id="cover-blur"></div>
   <div class="cover-book" id="story-cover">
@@ -502,6 +512,7 @@ body {
 </div>
 
 <div class="toast" id="toast"></div>
+</div><!-- /.page-wrapper -->
 
 <script>
 const SUPABASE_URL = 'https://jnlqzqtavfptkfvnndxq.supabase.co';
@@ -696,7 +707,7 @@ function renderComposeArea() {
   const area = document.getElementById('compose-area');
   if (currentUser) {
     const profile = currentUserProfile || {};
-    const name = profile.display_name || currentUser.email?.split('@')[0] || 'U';
+    const name = profile.username || currentUser.email?.split('@')[0] || 'U';
     const initial = name[0].toUpperCase();
     const avatarHtml = profile.avatar_url
       ? `<img src="${escapeHtml(profile.avatar_url)}" alt="${escapeHtml(name)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
@@ -738,20 +749,20 @@ const profilesCache = {}; // user_id -> { display_name, avatar_url }
 async function fetchProfiles(userIds) {
   const missing = [...new Set(userIds)].filter(id => id && !profilesCache[id]);
   if (!missing.length) return;
-  const { data } = await sb.from('profiles').select('id, display_name, avatar_url').in('id', missing);
+  const { data } = await sb.from('profiles').select('id, username, avatar_url').in('id', missing);
   (data || []).forEach(p => profilesCache[p.id] = p);
 }
 
 function avatarHtml(userId, email, size = 34, fsize = 13) {
   const p = profilesCache[userId] || {};
-  const name = p.display_name || email?.split('@')[0] || 'U';
+  const name = p.username || email?.split('@')[0] || 'U';
   if (p.avatar_url) return `<img src="${p.avatar_url}" alt="${name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
   return `<span style="font-size:${fsize}px;font-weight:800">${name[0].toUpperCase()}</span>`;
 }
 
 function displayName(userId, email) {
   const p = profilesCache[userId] || {};
-  return p.display_name || email?.split('@')[0] || 'Người dùng';
+  return p.username || email?.split('@')[0] || 'Người dùng';
 }
 
 function renderComments() {
@@ -925,7 +936,7 @@ async function init() {
   currentUser = session?.user || null;
   // Load profile để dùng avatar trong compose area
   if (currentUser) {
-    const { data: prof } = await sb.from('profiles').select('display_name, avatar_url').eq('id', currentUser.id).maybeSingle();
+    const { data: prof } = await sb.from('profiles').select('username, avatar_url').eq('id', currentUser.id).maybeSingle();
     currentUserProfile = prof || null;
   }
   if (storyId) await loadStory();
@@ -945,11 +956,11 @@ async function loadNavAvatar() {
   }
   btn.href = 'profile.html';
   btn.title = 'Hồ sơ của tôi';
-  const { data: prof } = await sb.from('profiles').select('display_name, avatar_url').eq('id', session.user.id).maybeSingle();
+  const { data: prof } = await sb.from('profiles').select('username, avatar_url').eq('id', session.user.id).maybeSingle();
   if (prof?.avatar_url) {
     btn.innerHTML = '<img src="' + prof.avatar_url + '" alt="avatar" style="width:34px;height:34px;border-radius:50%;object-fit:cover;display:block;">';
   } else {
-    btn.textContent = (prof?.display_name || session.user.email || 'U')[0].toUpperCase();
+    btn.textContent = (prof?.username || session.user.email || 'U')[0].toUpperCase();
   }
 }
 loadNavAvatar();
@@ -1011,7 +1022,7 @@ async function loadNavAvatar() {
   loggedOut.forEach(el => el.style.display = 'none');
   btn.title = 'Hồ sơ của tôi';
   const { data: prof } = await sb.from('profiles')
-    .select('display_name, avatar_url')
+    .select('username, avatar_url')
     .eq('id', session.user.id)
     .maybeSingle();
   if (prof?.avatar_url) {
@@ -1023,7 +1034,7 @@ async function loadNavAvatar() {
     btn.appendChild(img);
     btn.classList.add('has-avatar');
   } else {
-    const initials = (prof?.display_name || session.user.email || 'U')[0].toUpperCase();
+    const initials = (prof?.username || session.user.email || 'U')[0].toUpperCase();
     btn.innerHTML = initials;
     btn.style.fontSize = '14px';
     btn.style.fontWeight = '800';
