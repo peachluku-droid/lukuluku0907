@@ -122,6 +122,7 @@ body {
 }
 .page-wrapper {
   max-width: 720px; margin: 0 auto; min-height: 100vh;
+  background: var(--bg2);
 }
 @media (min-width: 900px) {
   .page-wrapper { max-width: 860px; }
@@ -159,7 +160,7 @@ body {
 .cover-book img { width: 100%; height: 100%; object-fit: cover; }
 .cover-book-ph { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
 .cover-book-ph svg { width: 52px; height: 52px; stroke: var(--peach-mid); fill: none; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
-.story-body { background: var(--bg2); padding: 1.2rem 1.2rem 0; }
+.story-body { background: var(--bg2); padding: 1.2rem 1.2rem 0; margin-bottom: 0; }
 .story-title-main { font-size: 20px; font-weight: 800; color: var(--text); line-height: 1.3; margin-bottom: 0.7rem; text-align: center; }
 .author-row { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 1rem; cursor: pointer; }
 .author-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--peach-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; border: 2px solid var(--border); }
@@ -194,7 +195,7 @@ body {
 .status-chip.ongoing { background: var(--gold-light); color: var(--gold); }
 .genre-tag { padding: 5px 13px; background: var(--peach-light); color: var(--peach-dark); border-radius: 20px; font-size: 11.5px; font-weight: 700; cursor: pointer; text-decoration: none; transition: background .12s; }
 .genre-tag:hover { background: var(--peach-mid); color: white; }
-.description-box { background: var(--bg); border: 1px solid var(--border); border-radius: 14px; padding: .9rem 1rem; margin-bottom: 1.4rem; }
+.description-box { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: .9rem 1rem; margin-bottom: 1.4rem; }
 .description-label { font-size: 10.5px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 5px; }
 .description-text { font-size: 13.5px; line-height: 1.78; color: var(--text); }
 .description-text.clamped { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
@@ -206,7 +207,7 @@ body {
 .read-more-btn { background: none; border: none; cursor: pointer; color: var(--peach); font-size: 12.5px; font-weight: 700; padding: 4px 0; margin-top: 5px; font-family: 'Nunito', sans-serif; display: flex; align-items: center; gap: 4px; }
 .read-more-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; transition: transform .15s; }
 .read-more-btn.expanded svg { transform: rotate(180deg); }
-.content-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); background: var(--bg); position: sticky; top: 56px; z-index: 90; transition: background .3s; }
+.content-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); background: var(--bg2); position: sticky; top: 56px; z-index: 90; transition: background .3s; }
 .tab-btn { flex: 1; background: none; border: none; padding: 12px 0; font-size: 13px; font-weight: 700; color: var(--text-muted); cursor: pointer; position: relative; transition: color .15s; font-family: 'Nunito', sans-serif; display: flex; align-items: center; justify-content: center; gap: 5px; }
 .tab-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 .tab-btn:hover { color: var(--peach); }
@@ -279,7 +280,7 @@ body {
 .comment-action-btn.liked { color: #e05a7a; }
 .comment-action-btn.liked svg { fill: #e05a7a; stroke: #e05a7a; }
 .comment-action-btn.delete-btn:hover { background: #fff0f0; color: #c0392b; }
-.replies-section { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+.replies-section { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; padding-left: 44px; }
 .reply-item { display: flex; gap: 9px; }
 .reply-avatar { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); font-size: 11px; font-weight: 800; color: var(--peach-dark); overflow: hidden; }
 .reply-avatar img { width: 100%; height: 100%; object-fit: cover; }
@@ -455,8 +456,8 @@ body {
       Đọc thêm <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
     </button>
   </div>
-</div>
 
+<div style="height:12px;background:var(--bg2)"></div>
 <div class="content-tabs">
   <button class="tab-btn active" onclick="showTab('chapters',this)">
     <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
@@ -817,6 +818,21 @@ function renderCommentCard(c) {
   </div>`;
 }
 
+function tagReply(parentId, name) {
+  const sec = document.getElementById('replies-' + parentId);
+  if (sec.style.display === 'none' || sec.style.display === '') {
+    sec.style.display = 'flex';
+    sec.style.flexDirection = 'column';
+    loadReplies(parentId).then(() => {
+      const input = document.getElementById('reply-input-' + parentId);
+      if (input) { input.value = '@' + name + ' '; input.focus(); }
+    });
+  } else {
+    const input = document.getElementById('reply-input-' + parentId);
+    if (input) { input.value = '@' + name + ' '; input.focus(); }
+  }
+}
+
 async function toggleReplyBox(parentId, tagName = null) {
   const sec = document.getElementById('replies-' + parentId);
   const isHidden = sec.style.display === 'none' || sec.style.display === '';
@@ -824,18 +840,21 @@ async function toggleReplyBox(parentId, tagName = null) {
     sec.style.display = 'flex';
     sec.style.flexDirection = 'column';
     await loadReplies(parentId);
-  } else {
-    // Nếu đã mở, chỉ focus textarea và tag tên
-  }
-  // Focus và tag tên nếu có
-  const input = document.getElementById('reply-input-' + parentId);
-  if (input && tagName) {
-    if (!input.value.startsWith('@' + tagName)) {
-      input.value = '@' + tagName + ' ';
+    // Focus và tag tên nếu có
+    const input = document.getElementById('reply-input-' + parentId);
+    if (input && tagName) {
+      if (!input.value.startsWith('@' + tagName)) input.value = '@' + tagName + ' ';
+      input.focus();
+    } else if (input) {
+      input.focus();
     }
-    input.focus();
-  } else if (input) {
-    input.focus();
+  } else {
+    // Đã mở → ẩn đi
+    sec.style.display = 'none';
+    const lbl = document.getElementById('reply-label-' + parentId);
+    // Restore label text from count
+    const count = sec.querySelectorAll('.reply-item').length;
+    if (lbl) lbl.textContent = count > 0 ? `Xem ${count} trả lời` : 'Trả lời';
   }
 }
 
@@ -876,7 +895,7 @@ async function loadReplies(parentId) {
     const isOwn = currentUser && r.user_id === currentUser.id;
     const isAdmin = currentUser && ADMIN_EMAILS.includes(currentUser.email);
     const lk = likesCache[r.id] || { count: 0, liked: false };
-    return `<div class="reply-item" id="cmt-${r.id}">
+    return `<div class="reply-item" id="cmt-${r.id}" onclick="event.stopPropagation();tagReply('${parentId}','${escapeHtml(rname)}')" style="cursor:pointer">
       <div class="reply-avatar">${avatarHtml(r.user_id, r.user_email, 28, 11)}</div>
       <div class="reply-bubble">
         <div class="reply-header"><span class="reply-name" style="cursor:pointer" onclick="toggleReplyBox('${parentId}','${escapeHtml(rname)}')" title="Trả lời ${escapeHtml(rname)}">@${escapeHtml(rname)}</span><span class="reply-time">${timeAgo(r.created_at)}</span></div>
