@@ -1995,6 +1995,97 @@ function closeSpellCheck() {
   });
 }
 
+// ── BỘ TỪ ĐIỂN CHÍNH TẢ TIẾNG VIỆT NHÚNG SẴN ──
+const VI_SPELL_DICT = [
+  // Viết tắt mạng xã hội
+  {w:/\bko\b/gi, s:'không', note:'Viết tắt'},
+  {w:/\bk\b(?=\s)/gi, s:'không', note:'Viết tắt'},
+  {w:/\bmk\b/gi, s:'mình', note:'Viết tắt'},
+  {w:/\bbh\b/gi, s:'bây giờ', note:'Viết tắt'},
+  {w:/\bdc\b/gi, s:'được', note:'Viết tắt'},
+  {w:/\bvs\b/gi, s:'với', note:'Viết tắt'},
+  {w:/\bntn\b/gi, s:'như thế nào', note:'Viết tắt'},
+  {w:/\bbt\b/gi, s:'bình thường', note:'Viết tắt'},
+  {w:/\bck\b/gi, s:'chồng', note:'Viết tắt'},
+  {w:/\bvk\b/gi, s:'vợ', note:'Viết tắt'},
+  {w:/\bbff\b/gi, s:'bạn thân', note:'Viết tắt'},
+  {w:/\bnma\b/gi, s:'nhưng mà', note:'Viết tắt'},
+  {w:/\bdl\b/gi, s:'dưới lên', note:'Viết tắt'},
+  {w:/\bthui\b/gi, s:'thôi', note:'Viết tắt'},
+  {w:/\bcuoi\b(?!g)/gi, s:'cuối / cười', note:'Thiếu dấu'},
+  // Lỗi dấu thanh phổ biến
+  {w:/\bsao\b(?=\s+(?:thế|vậy|không|nào))/gi, s:'sao (kiểm tra ngữ cảnh)', note:'Dễ nhầm "sao/sau"'},
+  {w:/\bchi\b(?=\s+(?:là|có|được|vì))/gi, s:'chỉ', note:'Thiếu dấu hỏi'},
+  {w:/\bday\b/gi, s:'đây / dây', note:'Thiếu dấu'},
+  {w:/\bnay\b(?=\s+(?:là|đã|đang|sẽ|cũng))/gi, s:'này', note:'Thiếu dấu hỏi'},
+  {w:/\bvay\b/gi, s:'vay / vậy', note:'Kiểm tra ngữ cảnh'},
+  {w:/\bthay\b(?=\s+vì)/gi, s:'thay (đúng)', note:''},
+  // Lỗi chữ phổ biến
+  {w:/\bgiời\b/gi, s:'trời', note:'Sai từ'},
+  {w:/\bdza\b/gi, s:'ra / về', note:'Tiếng lóng'},
+  {w:/\bdzô\b/gi, s:'vào', note:'Tiếng lóng'},
+  {w:/\bchưa hề\b/gi, s:'chưa hề (đúng)', note:''},
+  {w:/\bhoàn toàn không\b/gi, s:'hoàn toàn không (đúng)', note:''},
+  {w:/\bkhôn\b(?!\w)/gi, s:'khôn / không', note:'Kiểm tra dấu'},
+  {w:/\bthăm\b(?=\s+(?:hỏi|viếng))/gi, s:'thăm (đúng)', note:''},
+  {w:/\bchăm\b(?=\s+(?:chỉ|sóc))/gi, s:'chăm (đúng)', note:''},
+  {w:/\bquan trọng\b/gi, s:'quan trọng (đúng)', note:''},
+  {w:/\bliền\b(?=\s+tay)/gi, s:'liền tay (đúng)', note:''},
+  // Lỗi i/y
+  {w:/\bkhi nào\b/gi, s:'khi nào (đúng)', note:''},
+  {w:/\bkhỉ\b/gi, s:'khỉ (đúng - kiểm tra ngữ cảnh)', note:''},
+  {w:/\bngay\b(?=\s+(?:cả|lập tức|bây giờ))/gi, s:'ngay (đúng)', note:''},
+  // Từ dễ nhầm
+  {w:/\bchán nản\b/gi, s:'chán nản (đúng)', note:''},
+  {w:/\blan man\b/gi, s:'lan man (đúng)', note:''},
+  {w:/\bxan xát\b/gi, s:'xăng xái / xát xao', note:'Kiểm tra lại'},
+  {w:/\bảnh hưởng\b/gi, s:'ảnh hưởng (đúng)', note:''},
+  {w:/\bảnh hưởng\b/gi, s:'ảnh hưởng (đúng)', note:''},
+  {w:/\bxót xa\b/gi, s:'xót xa (đúng)', note:''},
+  {w:/\bnông nổi\b/gi, s:'nông nổi (đúng)', note:''},
+  {w:/\bsơ suất\b/gi, s:'sơ suất (đúng)', note:''},
+  {w:/\bkhẩn cấp\b/gi, s:'khẩn cấp (đúng)', note:''},
+  {w:/\bkiên nhẫn\b/gi, s:'kiên nhẫn (đúng)', note:''},
+  // Lỗi n/ng cuối
+  {w:/\bthươn\b/gi, s:'thương', note:'Thiếu chữ g'},
+  {w:/\bthươn\b/gi, s:'thường', note:'Thiếu chữ g'},
+  {w:/\bđườn\b/gi, s:'đường', note:'Thiếu chữ g'},
+  {w:/\bnhươn\b/gi, s:'nhường', note:'Thiếu chữ g'},
+  // Lỗi c/ch đầu
+  {w:/\bcó thể\b/gi, s:'có thể (đúng)', note:''},
+  {w:/\bchắc chắn\b/gi, s:'chắc chắn (đúng)', note:''},
+  // Dấu câu
+  {w:/\.\.\./g, s:'… (dùng dấu chấm lửng)', note:'Dấu câu'},
+  {w:/!!/g, s:'! (một dấu thang)', note:'Dấu câu'},
+  {w:/\?\?/g, s:'? (một dấu hỏi)', note:'Dấu câu'},
+].filter(d => d.note !== ''); // chỉ giữ lỗi thực sự
+
+function checkBuiltinDict(text) {
+  const errors = [];
+  const seen = new Set();
+  for (const rule of VI_SPELL_DICT) {
+    if (!rule.note || rule.s.includes('(đúng)')) continue; // bỏ qua xác nhận đúng
+    let match;
+    const re = new RegExp(rule.w.source, rule.w.flags);
+    while ((match = re.exec(text)) !== null) {
+      const key = match.index + ':' + match[0];
+      if (seen.has(key)) continue;
+      seen.add(key);
+      const ctx = text.slice(Math.max(0, match.index - 30), match.index + match[0].length + 30);
+      errors.push({
+        wrong: match[0],
+        suggest: rule.s,
+        context: '...' + ctx + '...',
+        message: rule.note,
+        offset: match.index,
+        length: match[0].length,
+        source: 'builtin'
+      });
+    }
+  }
+  return errors;
+}
+
 async function runSpellCheck() {
   const ed = document.getElementById('chContent');
   const text = ed.innerText || '';
@@ -2003,47 +2094,77 @@ async function runSpellCheck() {
     return;
   }
 
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: `Bạn là công cụ check chính tả tiếng Việt. Phân tích văn bản và trả về JSON (không có markdown, chỉ JSON thuần):
-{"errors":[{"wrong":"từ sai","suggest":"từ đúng","context":"...đoạn văn xung quanh..."}]}
-Chỉ liệt kê lỗi chính tả thực sự (sai dấu, sai chữ). Không bắt lỗi văn phong, ngữ pháp sáng tạo, tên riêng, tiếng lóng. Nếu không có lỗi, trả về {"errors":[]}.`,
-        messages: [{ role: 'user', content: text.slice(0, 6000) }]
-      })
-    });
+  document.getElementById('spellModalBody').innerHTML = '<div class="spell-empty"><div class="icon">🔍</div><p>Đang kiểm tra...</p></div>';
 
-    const data = await res.json();
-    const raw = data.content?.[0]?.text || '{"errors":[]}';
-    let parsed;
-    try { parsed = JSON.parse(raw.replace(/```json|```/g, '').trim()); }
-    catch { parsed = { errors: [] }; }
+  // Chạy song song: LanguageTool + built-in dict
+  const [ltErrors, builtinErrors] = await Promise.all([
+    (async () => {
+      try {
+        const params = new URLSearchParams({
+          text: text.slice(0, 10000),
+          language: 'vi',
+          disabledRules: 'WHITESPACE_RULE'
+        });
+        const res = await fetch('https://api.languagetool.org/v2/check', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: params.toString()
+        });
+        if (!res.ok) return [];
+        const data = await res.json();
+        return (data.matches || []).map(m => ({
+          wrong: text.slice(m.offset, m.offset + m.length),
+          suggest: m.replacements?.[0]?.value || '',
+          context: m.context?.text || '',
+          message: m.message || '',
+          offset: m.offset,
+          length: m.length,
+          source: 'lt'
+        })).filter(e => e.wrong.trim());
+      } catch(e) { return []; }
+    })(),
+    Promise.resolve(checkBuiltinDict(text))
+  ]);
 
-    renderSpellResults(parsed.errors || [], text);
-  } catch(e) {
-    document.getElementById('spellModalBody').innerHTML = '<div class="spell-empty"><div class="icon">⚠️</div><p>Không kết nối được. Thử lại sau.</p></div>';
+  // Gộp, ưu tiên built-in nếu cùng vị trí
+  const allErrors = [...builtinErrors];
+  for (const e of ltErrors) {
+    const dup = allErrors.some(b => Math.abs(b.offset - e.offset) < 3);
+    if (!dup) allErrors.push(e);
   }
+  allErrors.sort((a, b) => a.offset - b.offset);
+
+  const ltCount = ltErrors.length;
+  const builtinCount = builtinErrors.length;
+  renderSpellResults(allErrors, text, ltCount, builtinCount);
 }
 
-function renderSpellResults(errors, fullText) {
+function renderSpellResults(errors, fullText, ltCount = 0, builtinCount = 0) {
   const body = document.getElementById('spellModalBody');
   if (!errors.length) {
     body.innerHTML = '<div class="spell-empty"><div class="icon">✅</div><p>Không tìm thấy lỗi chính tả!</p></div>';
     return;
   }
-  body.innerHTML = `<div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Tìm thấy <b>${errors.length}</b> lỗi — tap để nhảy đến chỗ sai</div>` +
-    errors.map((err, i) => `
-    <div class="spell-error-item" onclick="jumpToError(${i})" data-wrong="${escH(err.wrong)}">
-      <div class="spell-error-wrong">⚠ ${escH(err.wrong)}</div>
-      <div class="spell-error-suggest">Gợi ý: <b>${escH(err.suggest)}</b></div>
-      <div class="spell-error-ctx">${escH(err.context || '')}</div>
-    </div>`).join('');
+  const sourceLine = `<div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">
+    📚 Từ điển nội bộ: <b>${builtinCount}</b> &nbsp;|&nbsp; 🌐 LanguageTool: <b>${ltCount}</b>
+  </div>`;
+  body.innerHTML = sourceLine +
+    `<div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Tổng <b>${errors.length}</b> lỗi — tap để nhảy đến chỗ sai</div>` +
+    errors.map((err, i) => {
+      const badge = err.source === 'builtin'
+        ? `<span style="font-size:10px;background:#fef3e2;color:#c8761a;padding:1px 6px;border-radius:8px;font-weight:700;">📚 Nội bộ</span>`
+        : `<span style="font-size:10px;background:#e8f4fd;color:#1a78c8;padding:1px 6px;border-radius:8px;font-weight:700;">🌐 LT</span>`;
+      return `<div class="spell-error-item" onclick="jumpToError(${i})" data-wrong="${escH(err.wrong)}">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+          <div class="spell-error-wrong">⚠ ${escH(err.wrong)}</div>
+          ${badge}
+        </div>
+        ${err.suggest ? `<div class="spell-error-suggest">Gợi ý: <b>${escH(err.suggest)}</b></div>` : ''}
+        ${err.message ? `<div class="spell-error-ctx">${escH(err.message)}</div>` : ''}
+        <div class="spell-error-ctx">${escH(err.context || '')}</div>
+      </div>`;
+    }).join('');
 
-  // Lưu errors để jumpToError dùng
   window._spellErrors = errors;
 }
 
@@ -2488,7 +2609,7 @@ document.getElementById('newStoryModal').addEventListener('click', e => {
 
 // ── LỊCH SỬ CHỈNH SỬA ──
 const HISTORY_KEY_PREFIX = 'luku_history_';
-const MAX_HISTORY = 20;
+const MAX_HISTORY = 30;
 
 function getHistoryKey() { return HISTORY_KEY_PREFIX + (currentChapterId || 'new'); }
 
