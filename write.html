@@ -217,11 +217,40 @@ body { display: block; }
 /* ── PREVIEW FULL PAGE ── */
 .preview-modal {
   position: fixed; inset: 0; z-index: 600;
-  background: #f5f0eb;
+  background: var(--preview-bg, #f5f0eb);
   display: none; flex-direction: column;
   overflow: hidden;
 }
 .preview-modal.open { display: flex; }
+/* Theme: kem (default) */
+.preview-modal[data-theme="cream"] { --preview-bg: #f5f0eb; }
+/* Theme: trắng */
+.preview-modal[data-theme="white"] { --preview-bg: #f9f9f9; }
+/* Theme: tối */
+.preview-modal[data-theme="dark"] {
+  --preview-bg: #1a1a1a;
+  --preview-box-bg: #262626;
+  --preview-text: #e0d8cf;
+  --preview-muted: #888;
+  --preview-border: #333;
+}
+.preview-modal[data-theme="dark"] .preview-box,
+.preview-modal[data-theme="dark"] .preview-footer-box { background: var(--preview-box-bg, #262626); }
+.preview-modal[data-theme="dark"] .preview-ch-title,
+.preview-modal[data-theme="dark"] .preview-content { color: var(--preview-text, #e0d8cf); }
+.preview-modal[data-theme="dark"] .preview-topbar { background: #262626; border-color: #333; }
+.preview-modal[data-theme="dark"] .preview-ch-meta { color: var(--preview-muted, #888); }
+.preview-modal[data-theme="dark"] .para-cmt-box { background: #333; border-color: #444; }
+/* Theme switcher */
+.preview-theme-btns {
+  display: flex; gap: 5px; align-items: center;
+}
+.preview-theme-btn {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2px solid transparent; cursor: pointer;
+  transition: border .15s;
+}
+.preview-theme-btn.active { border-color: var(--peach); }
 
 /* Topbar reader */
 .preview-topbar {
@@ -616,7 +645,41 @@ body { display: block; }
 .toast.ok { background: #1fba52; }
 .toast.err { background: #e84040; }
 
-.sidebar-backdrop {
+/* ── HISTORY MODAL ── */
+.history-modal-overlay {
+  position: fixed; inset: 0; z-index: 600;
+  background: rgba(0,0,0,0.45); backdrop-filter: blur(4px);
+  display: none; align-items: flex-end; justify-content: center;
+}
+.history-modal-overlay.open { display: flex; }
+.history-modal {
+  background: #fff; border-radius: 20px 20px 0 0;
+  width: 100%; max-width: 640px; max-height: 80vh;
+  display: flex; flex-direction: column;
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.15);
+  animation: slideUp .25s ease;
+}
+.history-modal-head {
+  padding: 16px 20px 12px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+}
+.history-modal-head h3 { font-size: 15px; font-weight: 900; }
+.history-modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-muted); padding: 0 4px; }
+.history-modal-body { flex: 1; overflow-y: auto; padding: 12px 16px 24px; }
+.history-item {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 12px 14px; border-radius: 12px; margin-bottom: 8px;
+  background: var(--bg); border: 1.5px solid var(--border);
+  cursor: pointer; transition: all .15s;
+}
+.history-item:hover { border-color: var(--peach); background: var(--peach-light); }
+.history-item-time { font-size: 11px; color: var(--text-muted); font-weight: 700; }
+.history-item-preview { font-size: 13px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.history-item-words { font-size: 11px; color: var(--peach); font-weight: 700; }
+.history-empty { text-align: center; padding: 40px 20px; }
+.history-empty .icon { font-size: 36px; margin-bottom: 8px; }
+.history-empty p { font-size: 14px; color: var(--text-muted); }
+
   display: none; position: fixed;
   top: 52px; left: 0; right: 0; bottom: 0;
   z-index: 410;
@@ -841,6 +904,14 @@ body { display: block; }
         <div class="dtb-sep"></div>
         <div class="desktop-tb-group">
           <button class="dtb-btn" onclick="openSpellCheck()" title="Check chính tả">✏️ Chính tả</button>
+          <button class="dtb-btn" onclick="openHistoryModal()" title="Lịch sử chỉnh sửa">
+            <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.95"/></svg>
+            Lịch sử
+          </button>
+          <button class="dtb-btn" onclick="migrateOldAnnotations()" title="Xóa chú thích cũ">
+            <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            Xóa chú thích cũ
+          </button>
           <button class="dtb-btn" onclick="openPreview()" title="Xem trước">
             <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
@@ -919,7 +990,7 @@ body { display: block; }
               <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               Xem trước
             </div>
-            <div class="more-list-item" onclick="closeAllPanels();showToast('Tính năng đang phát triển','')">
+            <div class="more-list-item" onclick="closeAllPanels();openHistoryModal()">
               <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.95"/></svg>
               Lịch sử chỉnh sửa
             </div>
@@ -997,6 +1068,11 @@ body { display: block; }
       <span class="preview-topbar-badge">Xem trước</span>
     </div>
     <div class="preview-topbar-right">
+      <div class="preview-theme-btns" title="Đổi theme">
+        <button class="preview-theme-btn active" data-theme="cream" style="background:#f5f0eb" onclick="setPreviewTheme('cream',this)" title="Kem"></button>
+        <button class="preview-theme-btn" data-theme="white" style="background:#f9f9f9;border-color:#ddd" onclick="setPreviewTheme('white',this)" title="Trắng"></button>
+        <button class="preview-theme-btn" data-theme="dark" style="background:#262626" onclick="setPreviewTheme('dark',this)" title="Tối"></button>
+      </div>
       <button class="preview-close" onclick="closePreview()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         Đóng preview
@@ -1083,6 +1159,19 @@ body { display: block; }
       <button class="spell-modal-close" onclick="closeSpellCheck()">✕</button>
     </div>
     <div class="spell-modal-body" id="spellModalBody"></div>
+  </div>
+</div>
+
+<!-- HISTORY MODAL -->
+<div class="history-modal-overlay" id="historyModal" onclick="if(event.target===this)closeHistoryModal()">
+  <div class="history-modal">
+    <div class="history-modal-head">
+      <h3>🕐 Lịch sử chỉnh sửa</h3>
+      <button class="history-modal-close" onclick="closeHistoryModal()">✕</button>
+    </div>
+    <div class="history-modal-body" id="historyModalBody">
+      <div class="history-empty"><div class="icon">📋</div><p>Chưa có lịch sử</p></div>
+    </div>
   </div>
 </div>
 
@@ -1227,9 +1316,21 @@ async function onStoryChange(restoreChapterId = null) {
 
   await Promise.all([loadStoryInfo(), loadChapterList()]);
 
-  if (restoreChapterId) {
+  // Xác định chapter cần restore: ưu tiên tham số truyền vào, rồi localStorage
+  let chapterToOpen = restoreChapterId;
+  if (!chapterToOpen) {
+    try {
+      const lastStoryForChapter = localStorage.getItem('luku_last_story_for_chapter');
+      const lastChapter = localStorage.getItem('luku_last_chapter');
+      if (lastChapter && lastStoryForChapter === currentStoryId) {
+        chapterToOpen = lastChapter;
+      }
+    } catch(e) {}
+  }
+
+  if (chapterToOpen) {
     // Mở thẳng chapter đã lưu — bỏ qua restoreLocalDraft
-    await openChapter(restoreChapterId);
+    await openChapter(chapterToOpen);
     // Chuyển sang tab Chương
     const chTab = document.querySelector('.sidebar-tab:nth-child(2)');
     if (chTab) chTab.click();
@@ -1401,7 +1502,10 @@ async function openChapter(id) {
   updateWordCount();
   loadChapterList();
   closeSidebar();
-  try { localStorage.setItem('luku_last_chapter', id); } catch(e) {}
+  try {
+    localStorage.setItem('luku_last_chapter', id);
+    localStorage.setItem('luku_last_story_for_chapter', currentStoryId);
+  } catch(e) {}
 
   // Khôi phục vị trí scroll sau khi browser paint xong
   setTimeout(() => {
@@ -1457,6 +1561,7 @@ async function saveDraft() {
   isDirty = false;
   setSaveStatus('Đã lưu ✓');
   showToast('Đã lưu bản thảo!', 'ok');
+  pushHistory(title, content);
   clearLocalDraft();
   loadChapterList();
   return true;
@@ -1616,6 +1721,28 @@ document.addEventListener('click', e => {
   }
 });
 
+// ── PARAGRAPH COMMENTS (lưu kèm chapter, không mất khi sửa) ──
+// Lưu map: paragraphHash → commentText trong localStorage theo chapterId
+function getParaCmtKey(chapterId) {
+  return 'luku_para_cmts_' + (chapterId || 'new');
+}
+function saveParaCmts(cmts) {
+  if (!cmts || !Object.keys(cmts).length) return;
+  try { localStorage.setItem(getParaCmtKey(currentChapterId), JSON.stringify(cmts)); } catch(e) {}
+}
+function loadParaCmts() {
+  try {
+    const raw = localStorage.getItem(getParaCmtKey(currentChapterId));
+    return raw ? JSON.parse(raw) : {};
+  } catch(e) { return {}; }
+}
+// Tạo hash đơn giản từ text
+function paraHash(text) {
+  let h = 0;
+  for (let i = 0; i < Math.min(text.length, 120); i++) h = (h * 31 + text.charCodeAt(i)) >>> 0;
+  return h.toString(36);
+}
+
 function openPreview() {
   const title = document.getElementById('chTitle')?.value || 'Chưa đặt tên chương';
   const rawContent = document.getElementById('chContent')?.innerHTML || '';
@@ -1626,13 +1753,17 @@ function openPreview() {
   document.getElementById('previewChTitle').textContent = title;
   document.getElementById('previewStoryName').textContent = storyName;
 
+  // Load saved para comments
+  const paraCmts = loadParaCmts();
+
   // Process content for reader view
-  document.getElementById('previewContent').innerHTML = buildPreviewContent(rawContent);
+  document.getElementById('previewContent').innerHTML = buildPreviewContent(rawContent, paraCmts);
 
   // Attach paragraph comment toggles
-  document.querySelectorAll('.para-cmt-btn').forEach(btn => {
+  document.querySelectorAll('#previewContent .para-cmt-btn').forEach(btn => {
     btn.addEventListener('click', function() {
-      const box = this.closest('.para-cmt-wrap').querySelector('.para-cmt-box');
+      const wrap = this.closest('.para-cmt-wrap');
+      const box = wrap.querySelector('.para-cmt-box');
       box.classList.toggle('open');
       this.textContent = box.classList.contains('open') ? '✕' : '💬';
     });
@@ -1651,9 +1782,18 @@ function openPreview() {
   document.getElementById('previewModal').classList.add('open');
   document.getElementById('previewScroll').scrollTop = 0;
   document.body.style.overflow = 'hidden';
+  // Khôi phục theme đã chọn
+  try {
+    const savedTheme = localStorage.getItem('luku_preview_theme') || 'cream';
+    const modal = document.getElementById('previewModal');
+    modal.setAttribute('data-theme', savedTheme);
+    document.querySelectorAll('.preview-theme-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.theme === savedTheme);
+    });
+  } catch(e) {}
 }
 
-function buildPreviewContent(rawHtml) {
+function buildPreviewContent(rawHtml, paraCmts = {}) {
   // Parse HTML
   const tmp = document.createElement('div');
   tmp.innerHTML = rawHtml;
@@ -1679,16 +1819,19 @@ function buildPreviewContent(rawHtml) {
   // Remove editor-only attributes/controls that shouldn't show
   tmp.querySelectorAll('[onclick^="deleteAnnotation"],[onclick^="toggleAnnotation"]').forEach(el => el.remove());
 
-  // Wrap each top-level <p> with paragraph comment UI
+  // Wrap each top-level <p> with paragraph comment UI, khôi phục comment đã lưu
   let html = '';
   tmp.childNodes.forEach(node => {
     if (node.nodeType === 1 && node.tagName === 'P' && node.textContent.trim()) {
+      const hash = paraHash(node.textContent);
+      const existingCmt = paraCmts[hash] || '';
+      const cmtContent = existingCmt
+        ? `<div style="font-family:'Nunito',sans-serif;font-size:12px;color:var(--text-muted);font-style:italic">💬 ${escH(existingCmt)}</div>`
+        : `<span style="font-style:italic;color:var(--text-muted);font-family:'Nunito',sans-serif;font-size:12px">Chưa có bình luận đoạn này</span>`;
       html += `<div class="para-cmt-wrap">
         ${node.outerHTML}
         <button class="para-cmt-btn" title="Bình luận đoạn này">💬</button>
-        <div class="para-cmt-box">
-          <span style="font-style:italic;color:var(--text-muted)">💬 Bình luận vào đoạn này (demo — chưa hoạt động)</span>
-        </div>
+        <div class="para-cmt-box">${cmtContent}</div>
       </div>`;
     } else {
       html += node.outerHTML || (node.nodeValue || '');
@@ -1696,6 +1839,14 @@ function buildPreviewContent(rawHtml) {
   });
 
   return html || '<p style="color:#aaa;font-style:italic">Chưa có nội dung...</p>';
+}
+
+function setPreviewTheme(theme, btn) {
+  const modal = document.getElementById('previewModal');
+  modal.setAttribute('data-theme', theme);
+  document.querySelectorAll('.preview-theme-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  try { localStorage.setItem('luku_preview_theme', theme); } catch(e) {}
 }
 
 function closePreview() {
@@ -2003,16 +2154,27 @@ async function restoreLocalDraftIfNeeded() {
     const d = JSON.parse(raw);
     if (!d.storyId || Date.now() - d.ts > 7*24*3600*1000) { clearLocalDraft(); return; }
     if (d.storyId !== currentStoryId) return;
-    if (currentChapterId) return;
+    // FIX: không return sớm khi currentChapterId khác — luôn khôi phục nếu có data
     const freshTitle = d.title?.trim();
     const freshContent = d.content?.trim();
     if (!freshTitle && (!freshContent || freshContent === '<br>')) { clearLocalDraft(); return; }
+    // Nếu chapter khớp thì đã mở rồi, chỉ khôi phục scroll
+    if (currentChapterId && currentChapterId === d.chapterId) {
+      if (d.scrollTop) {
+        setTimeout(() => {
+          const scroll = document.querySelector('.content-scroll');
+          if (scroll) scroll.scrollTop = d.scrollTop;
+        }, 150);
+      }
+      return;
+    }
     currentChapterId = d.chapterId || null;
     document.getElementById('chTitle').value = d.title || '';
     document.getElementById('chContent').innerHTML = d.content || '';
     wrapLegacyMedia();
     showEditor();
     updateWordCount();
+    loadChapterList();
     showToast('Đã khôi phục bản nháp! ✓', 'ok');
     // Khôi phục vị trí scroll
     if (d.scrollTop) {
@@ -2323,6 +2485,68 @@ document.getElementById('passInp')?.addEventListener('keydown', e => { if (e.key
 document.getElementById('newStoryModal').addEventListener('click', e => {
   if (e.target === document.getElementById('newStoryModal')) closeNewStoryModal();
 });
+
+// ── LỊCH SỬ CHỈNH SỬA ──
+const HISTORY_KEY_PREFIX = 'luku_history_';
+const MAX_HISTORY = 20;
+
+function getHistoryKey() { return HISTORY_KEY_PREFIX + (currentChapterId || 'new'); }
+
+function pushHistory(title, content) {
+  if (!currentChapterId) return;
+  try {
+    const key = getHistoryKey();
+    let hist = [];
+    try { hist = JSON.parse(localStorage.getItem(key) || '[]'); } catch(e) {}
+    const words = (content.replace(/<[^>]+>/g,'').trim().match(/\S+/g) || []).length;
+    hist.unshift({ title, content, words, ts: Date.now() });
+    if (hist.length > MAX_HISTORY) hist = hist.slice(0, MAX_HISTORY);
+    localStorage.setItem(key, JSON.stringify(hist));
+  } catch(e) {}
+}
+
+function openHistoryModal() {
+  if (!currentChapterId) { showToast('Mở chương trước!', 'err'); return; }
+  const body = document.getElementById('historyModalBody');
+  let hist = [];
+  try { hist = JSON.parse(localStorage.getItem(getHistoryKey()) || '[]'); } catch(e) {}
+  if (!hist.length) {
+    body.innerHTML = '<div class="history-empty"><div class="icon">📋</div><p>Chưa có lịch sử chỉnh sửa cho chương này.</p></div>';
+  } else {
+    body.innerHTML = hist.map((h, i) => {
+      const d = new Date(h.ts);
+      const time = d.toLocaleDateString('vi-VN') + ' ' + d.toLocaleTimeString('vi-VN', {hour:'2-digit',minute:'2-digit'});
+      const preview = (h.content || '').replace(/<[^>]+>/g,'').slice(0,80);
+      return `<div class="history-item" onclick="restoreHistory(${i})">
+        <div class="history-item-time">🕐 ${time}</div>
+        <div class="history-item-preview">${escH(preview)}${preview.length >= 80 ? '…' : ''}</div>
+        <div class="history-item-words">${h.words.toLocaleString()} từ</div>
+      </div>`;
+    }).join('');
+  }
+  document.getElementById('historyModal').classList.add('open');
+}
+
+function closeHistoryModal() {
+  document.getElementById('historyModal').classList.remove('open');
+}
+
+function restoreHistory(idx) {
+  let hist = [];
+  try { hist = JSON.parse(localStorage.getItem(getHistoryKey()) || '[]'); } catch(e) {}
+  const h = hist[idx];
+  if (!h) return;
+  if (!confirm('Khôi phục phiên bản này? Nội dung hiện tại sẽ bị thay thế.')) return;
+  document.getElementById('chTitle').value = h.title || '';
+  document.getElementById('chContent').innerHTML = h.content || '';
+  wrapLegacyMedia();
+  updateWordCount();
+  isDirty = true;
+  setSaveStatus('Chưa lưu');
+  saveLocalDraft();
+  closeHistoryModal();
+  showToast('Đã khôi phục! Nhớ lưu lại.', 'ok');
+}
 
 init();
 
