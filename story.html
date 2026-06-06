@@ -195,7 +195,7 @@ body {
 .status-chip.ongoing { background: var(--gold-light); color: var(--gold); }
 .genre-tag { padding: 5px 13px; background: var(--peach-light); color: var(--peach-dark); border-radius: 20px; font-size: 11.5px; font-weight: 700; cursor: pointer; text-decoration: none; transition: background .12s; }
 .genre-tag:hover { background: var(--peach-mid); color: white; }
-.description-box { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: .9rem 1rem; margin-bottom: 1.4rem; }
+.description-box { background: var(--bg); border: 1px solid var(--border); border-radius: 14px; padding: .9rem 1rem; margin-bottom: 1.4rem; }
 .description-label { font-size: 10.5px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 5px; }
 .description-text { font-size: 13.5px; line-height: 1.78; color: var(--text); }
 .description-text.clamped { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
@@ -217,6 +217,37 @@ body {
 .tab-btn.active .tab-count { background: var(--peach); color: white; }
 .tab-content { display: none; }
 .tab-content.active { display: block; }
+.tab-frame {
+  margin: 0 10px 16px;
+  border-radius: 18px;
+  border: 1.5px solid var(--peach-mid);
+  overflow: hidden;
+  position: relative;
+  background: var(--bg2);
+}
+/* Dải họa tiết trên và dưới */
+.tab-deco-top, .tab-deco-bot {
+  width: 100%;
+  height: 22px;
+  background: var(--peach-light);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  font-size: 11px;
+  color: var(--peach-mid);
+  letter-spacing: 3px;
+  user-select: none;
+  flex-shrink: 0;
+}
+.tab-deco-top { border-bottom: 1px solid var(--peach-mid); }
+.tab-deco-bot { border-top: 1px solid var(--peach-mid); }
+/* Bo trong cho comment cards */
+.comment-card {
+  margin: 8px 10px;
+  border-radius: 14px !important;
+  border: 1px solid var(--peach-mid) !important;
+  border-bottom: 1px solid var(--peach-mid) !important;
+}
+.comment-card:last-child { margin-bottom: 8px; }
 .chapter-controls { display: flex; justify-content: space-between; align-items: center; padding: .9rem 1.2rem .7rem; flex-wrap: wrap; gap: .6rem; background: var(--bg2); }
 .chapter-count-label { font-size: 13.5px; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 6px; }
 .chapter-count-label svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; color: var(--text-muted); }
@@ -249,9 +280,28 @@ body {
 .skel-line.w70 { width: 70%; }
 .skel-line.w40 { width: 40%; }
 @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-.comment-section { padding: 1rem 1.2rem 2rem; }
-.comment-compose { display: flex; gap: 10px; margin-bottom: 1.4rem; background: var(--bg); border: 1.5px solid var(--border); border-radius: 16px; padding: 12px 14px; transition: border-color .15s; }
-.comment-compose:focus-within { border-color: var(--peach); }
+.comment-section { padding: 0; }
+.comment-compose {
+  display: flex; gap: 10px; margin-bottom: 0;
+  background: var(--peach-light);
+  border: 1.5px solid var(--peach-mid);
+  border-radius: 14px;
+  padding: 10px 12px;
+  margin: 10px;
+  width: calc(33% - 4px);
+  transition: width .3s ease, background .2s;
+  cursor: text;
+  overflow: hidden;
+}
+.comment-compose.expanded {
+  width: calc(100% - 20px);
+  cursor: default;
+}
+.comment-compose .compose-footer { display: none; }
+.comment-compose.expanded .compose-footer { display: flex; }
+.comment-compose .compose-input { pointer-events: none; }
+.comment-compose.expanded .compose-input { pointer-events: auto; }
+.comment-compose.expanded:focus-within { background: var(--peach-light); }
 .compose-avatar { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); }
 .compose-avatar svg { width: 14px; height: 14px; stroke: var(--peach-mid); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .compose-body { flex: 1; min-width: 0; }
@@ -262,9 +312,9 @@ body {
 .compose-submit svg { width: 13px; height: 13px; stroke: white; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 .compose-submit:hover { background: var(--peach-dark); }
 .compose-submit:disabled { opacity: .6; cursor: not-allowed; }
-.comment-list { display: flex; flex-direction: column; gap: 10px; }
-.comment-card { background: var(--bg); border: 1.5px solid var(--border); border-radius: 16px; padding: 13px 15px; transition: border-color .15s; }
-.comment-card:hover { border-color: var(--border-hover); }
+.comment-list { display: flex; flex-direction: column; gap: 1px; }
+.comment-card { background: var(--bg); border: none; border-bottom: 1px solid var(--border); padding: 13px 15px; transition: background .12s; }
+.comment-card:hover { background: var(--peach-light); }
 .comment-item { display: flex; gap: 10px; }
 .comment-avatar { width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); font-size: 13px; font-weight: 800; color: var(--peach-dark); overflow: hidden; }
 .comment-avatar img { width: 100%; height: 100%; object-fit: cover; }
@@ -560,7 +610,31 @@ function setDescriptionContent(el, content) {
 
 let descExpanded = false;
 function toggleDesc() { descExpanded = !descExpanded; const el = document.getElementById('story-description'); const btn = document.getElementById('desc-toggle'); el.classList.toggle('clamped', !descExpanded); btn.classList.toggle('expanded', descExpanded); btn.childNodes[0].textContent = descExpanded ? 'Thu gọn' : 'Đọc thêm'; }
-function showTab(name, btn) { document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); btn.classList.add('active'); document.getElementById('tab-' + name).classList.add('active'); if (name === 'comments' && comments.length === 0) loadComments(); }
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+  if (name === 'comments' && comments.length === 0) loadComments();
+}
+
+// Inject dải họa tiết vào tab-frames sau khi DOM load
+function initTabFrames() {
+  const decoHtml = pat => `<div class="tab-deco-top">${pat}</div>`;
+  const decoBot = pat => `<div class="tab-deco-bot">${pat}</div>`;
+  const pat = '✿ ❀ ✾ ❃ ✿ ❀ ✾ ❃ ✿ ❀ ✾ ❃ ✿ ❀ ✾ ❃ ✿ ❀ ✾ ❃ ✿ ❀ ✾ ❃ ✿';
+  ['tab-chapters','tab-comments','tab-info'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el || el.closest('.tab-frame')) return;
+    // wrap in tab-frame
+    const frame = document.createElement('div');
+    frame.className = 'tab-frame';
+    el.parentNode.insertBefore(frame, el);
+    frame.innerHTML = decoHtml(pat);
+    frame.appendChild(el);
+    frame.insertAdjacentHTML('beforeend', decoBot(pat));
+  });
+}
 function getLib() { return window.plLib || null; }
 function updateBookmarkBtn(active) {
   const btn = document.getElementById('bookmark-btn');
@@ -713,7 +787,20 @@ function renderComposeArea() {
     const avatarHtml = profile.avatar_url
       ? `<img src="${escapeHtml(profile.avatar_url)}" alt="${escapeHtml(name)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
       : `<span style="font-size:13px;font-weight:800;color:var(--peach-dark)">${initial}</span>`;
-    area.innerHTML = `<div class="comment-compose"><div class="compose-avatar">${avatarHtml}</div><div class="compose-body"><textarea class="compose-input" id="comment-input" placeholder="Viết review của bạn..." rows="1" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onkeydown="if(event.key==='Enter'&&!event.shiftKey&&window.innerWidth>600){event.preventDefault();submitComment()}"></textarea><div class="compose-footer"><button class="compose-submit" onclick="submitComment()"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Gửi</button></div></div></div>`;
+    area.innerHTML = `<div class="comment-compose" id="compose-box" onclick="expandCompose()"><div class="compose-avatar">${avatarHtml}</div><div class="compose-body"><textarea class="compose-input" id="comment-input" placeholder="Viết review của bạn..." rows="1" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onkeydown="if(event.key==='Enter'&&!event.shiftKey&&window.innerWidth>600){event.preventDefault();submitComment()}"></textarea><div class="compose-footer"><button class="compose-submit" onclick="submitComment()"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Gửi</button></div></div></div>`;
+    // Collapse when click outside
+    setTimeout(() => {
+      document.addEventListener('click', function collapseHandler(e) {
+        const box = document.getElementById('compose-box');
+        if (box && !box.contains(e.target)) {
+          const input = document.getElementById('comment-input');
+          if (!input?.value?.trim()) {
+            box.classList.remove('expanded');
+          }
+          document.removeEventListener('click', collapseHandler);
+        }
+      });
+    }, 100);
   } else {
     area.innerHTML = `<div class="login-prompt"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><div class="login-prompt-text">Đăng nhập để review và lưu tiến độ đọc</div><button class="login-prompt-btn" onclick="location.href='auth.html?next='+encodeURIComponent(location.href)">Đăng nhập</button></div>`;
   }
@@ -951,6 +1038,29 @@ function updateLikeBtn(commentId) {
   });
 }
 
+function expandCompose() {
+  const box = document.getElementById('compose-box');
+  if (!box) return;
+  box.classList.add('expanded');
+  box.onclick = null;
+  setTimeout(() => {
+    const input = document.getElementById('comment-input');
+    if (input) input.focus();
+    // Re-attach collapse listener
+    document.addEventListener('click', function collapseHandler(e) {
+      const b = document.getElementById('compose-box');
+      if (b && !b.contains(e.target)) {
+        const inp = document.getElementById('comment-input');
+        if (!inp?.value?.trim()) {
+          b.classList.remove('expanded');
+          b.onclick = expandCompose;
+        }
+        document.removeEventListener('click', collapseHandler);
+      }
+    });
+  }, 50);
+}
+
 async function submitComment() {
   if (!currentUser) { showToast('Cần đăng nhập để bình luận'); return; }
   const input = document.getElementById('comment-input'), content = (input?.value || '').trim();
@@ -987,11 +1097,13 @@ async function init() {
   if (currentUser) {
     const { data: prof } = await sb.from('profiles').select('username, avatar_url').eq('id', currentUser.id).maybeSingle();
     currentUserProfile = prof || null;
+    if (currentUser && prof) profilesCache[currentUser.id] = prof;
   }
   if (storyId) await loadStory();
   if (currentUser && ADMIN_EMAILS.includes(currentUser.email)) { const wb = document.getElementById('write-btn'); if (wb) wb.style.display = 'flex'; }
 }
 init();
+document.addEventListener("DOMContentLoaded", initTabFrames);
 
 /* ── FIX: img constrained bằng inline style, không tràn layout ── */
 async function loadNavAvatar() {
