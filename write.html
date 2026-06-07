@@ -214,203 +214,227 @@ body { display: block; }
 .note-item-title { font-size: 12px; font-weight: 800; color: var(--text); }
 .note-item-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
 
-/* ── PREVIEW FULL PAGE ── */
+/* ── PREVIEW MODAL — clone y chang chapter.html ── */
 .preview-modal {
   position: fixed; inset: 0; z-index: 600;
-  background: var(--preview-bg, #f5f0eb);
-  display: none; flex-direction: column;
-  overflow: hidden;
+  display: none; flex-direction: column; overflow: hidden;
+  font-family: var(--pv-font-body, 'Crimson Text'), serif;
+  font-size: var(--pv-font-size, 17px);
 }
 .preview-modal.open { display: flex; }
-/* Theme: kem (default) */
-.preview-modal[data-theme="cream"] { --preview-bg: #f5f0eb; }
-/* Theme: trắng */
-.preview-modal[data-theme="white"] { --preview-bg: #f9f9f9; }
-/* Theme: tối */
-.preview-modal[data-theme="dark"] {
-  --preview-bg: #1a1a1a;
-  --preview-box-bg: #262626;
-  --preview-text: #e0d8cf;
-  --preview-muted: #888;
-  --preview-border: #333;
-}
-.preview-modal[data-theme="dark"] .preview-box,
-.preview-modal[data-theme="dark"] .preview-footer-box { background: var(--preview-box-bg, #262626); }
-.preview-modal[data-theme="dark"] .preview-ch-title,
-.preview-modal[data-theme="dark"] .preview-content { color: var(--preview-text, #e0d8cf); }
-.preview-modal[data-theme="dark"] .preview-topbar { background: #262626; border-color: #333; }
-.preview-modal[data-theme="dark"] .preview-ch-meta { color: var(--preview-muted, #888); }
-.preview-modal[data-theme="dark"] .para-cmt-box { background: #333; border-color: #444; }
-/* Theme switcher */
-.preview-theme-btns {
-  display: flex; gap: 5px; align-items: center;
-}
-.preview-theme-btn {
-  width: 22px; height: 22px; border-radius: 50%;
-  border: 2px solid transparent; cursor: pointer;
-  transition: border .15s;
-}
-.preview-theme-btn.active { border-color: var(--peach); }
 
-/* Topbar reader */
+/* 9 themes từ chapter.html */
+.preview-modal.pv-theme-light   { --pv-bg:#fff8fb; --pv-bg2:#ffffff; --pv-text:#2c1a22; --pv-border:#f4c0d1; --pv-accent:#993556; --pv-accent2:#d4537e; --pv-panel:#ffffff; --pv-sidebar:#fff0f6; --pv-meta:#aaa; }
+.preview-modal.pv-theme-dark    { --pv-bg:#1a1a1a; --pv-bg2:#242424; --pv-text:#e8d5dc; --pv-border:#3a2a30; --pv-accent:#f4a0bc; --pv-accent2:#ed93b1; --pv-panel:#242424; --pv-sidebar:#1f1f1f; --pv-meta:#666; }
+.preview-modal.pv-theme-sepia   { --pv-bg:#f5f0e8; --pv-bg2:#faf7f0; --pv-text:#3d2b1f; --pv-border:#d4c4a8; --pv-accent:#8b5e3c; --pv-accent2:#a67c52; --pv-panel:#faf7f0; --pv-sidebar:#f0e8d8; --pv-meta:#9a8070; }
+.preview-modal.pv-theme-blue    { --pv-bg:#e8f0fe; --pv-bg2:#f4f7ff; --pv-text:#1a2a4a; --pv-border:#b8ccf4; --pv-accent:#2a5bbf; --pv-accent2:#4a7de0; --pv-panel:#f4f7ff; --pv-sidebar:#dce8fc; --pv-meta:#7a9ac0; }
+.preview-modal.pv-theme-purple  { --pv-bg:#f0ebff; --pv-bg2:#f9f6ff; --pv-text:#2a1a4a; --pv-border:#cdb8f4; --pv-accent:#6a3bbf; --pv-accent2:#8a5de0; --pv-panel:#f9f6ff; --pv-sidebar:#e8dcfc; --pv-meta:#9a7ac0; }
+.preview-modal.pv-theme-pink    { --pv-bg:#fff0f6; --pv-bg2:#fff8fb; --pv-text:#2c1a22; --pv-border:#f4c0d1; --pv-accent:#993556; --pv-accent2:#d4537e; --pv-panel:#fff8fb; --pv-sidebar:#ffe6f2; --pv-meta:#c09aaa; }
+.preview-modal.pv-theme-gray    { --pv-bg:#f0f0f0; --pv-bg2:#fafafa; --pv-text:#222222; --pv-border:#d0d0d0; --pv-accent:#555555; --pv-accent2:#777777; --pv-panel:#fafafa; --pv-sidebar:#e8e8e8; --pv-meta:#999999; }
+.preview-modal.pv-theme-white   { --pv-bg:#ffffff; --pv-bg2:#ffffff; --pv-text:#1a1a1a; --pv-border:#e5e5e5; --pv-accent:#333333; --pv-accent2:#555555; --pv-panel:#ffffff; --pv-sidebar:#f7f7f7; --pv-meta:#aaaaaa; }
+.preview-modal.pv-theme-wattpad { --pv-bg:#f5e6c8; --pv-bg2:#fdf3e0; --pv-text:#2c1f0e; --pv-border:#d9c4a0; --pv-accent:#8b5e1a; --pv-accent2:#b07d2e; --pv-panel:#fdf3e0; --pv-sidebar:#f0ddb8; --pv-meta:#a08050; }
+
+/* Áp dụng biến vào body của modal */
+.preview-modal { background: var(--pv-bg); color: var(--pv-text); transition: background .3s, color .3s; }
+
+/* Topbar — giống site-header */
 .preview-topbar {
-  height: 52px; background: #fff; border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 16px; flex-shrink: 0; position: sticky; top: 0; z-index: 10;
-  box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+  background: var(--pv-bg2); border-bottom: 1px solid var(--pv-border);
+  padding: 10px 16px; display: flex; align-items: center; gap: 12px;
+  flex-shrink: 0; position: sticky; top: 0; z-index: 10;
 }
-.preview-topbar-left { display: flex; align-items: center; gap: 10px; }
-.preview-topbar-logo { font-size: 16px; font-weight: 900; color: var(--peach); }
+.preview-topbar-left { display: flex; align-items: center; gap: 10px; flex: 1; }
+.preview-topbar-logo {
+  display: flex; align-items: center; color: var(--pv-accent); flex-shrink: 0;
+}
+.preview-topbar-logo svg { width: 22px; height: 22px; stroke: var(--pv-accent); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .preview-topbar-badge {
-  font-size: 10px; font-weight: 800; background: var(--peach-light);
-  color: var(--peach); padding: 3px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 800; background: color-mix(in srgb, var(--pv-accent) 12%, var(--pv-bg2));
+  color: var(--pv-accent); padding: 3px 10px; border-radius: 20px; flex-shrink: 0;
 }
-.preview-topbar-right { display: flex; align-items: center; gap: 8px; }
-.preview-close {
-  background: none; border: 1.5px solid var(--border); cursor: pointer;
-  border-radius: 8px; padding: 6px 12px; font-family: 'Nunito', sans-serif;
-  font-size: 12px; font-weight: 800; color: var(--text-muted);
-  display: flex; align-items: center; gap: 5px; transition: all .15s;
+.preview-header-title { font-size: 13px; color: var(--pv-meta); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.preview-topbar-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.preview-tool-btn {
+  background: none; border: 1.5px solid var(--pv-border); border-radius: 8px;
+  padding: 5px 10px; cursor: pointer; color: var(--pv-text);
+  transition: all .15s; display: flex; align-items: center; font-family: 'Nunito', sans-serif;
 }
-.preview-close:hover { background: var(--peach-light); color: var(--peach); border-color: var(--peach); }
+.preview-tool-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.preview-tool-btn:hover { background: var(--pv-sidebar); }
+
+/* Theme switcher */
+.pv-theme-swatches { display: flex; gap: 5px; align-items: center; flex-shrink: 0; }
+.pv-swatch {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2px solid transparent; cursor: pointer; transition: border .15s; flex-shrink: 0;
+}
+.pv-swatch.active { border-color: var(--pv-accent, #993556) !important; }
+
+/* Settings drawer giống thật */
+.pv-settings-drawer {
+  background: var(--pv-panel); border-bottom: 1px solid var(--pv-border);
+  padding: 16px 16px 18px; z-index: 9; display: none; flex-direction: column; gap: 14px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08); flex-shrink: 0;
+}
+.pv-settings-drawer.open { display: flex; }
+.pv-setting-label { font-size: 11px; color: var(--pv-meta); font-family: 'Nunito', sans-serif; font-weight: 700; margin-bottom: 6px; }
+.pv-fontsize-row { display: flex; gap: 6px; }
+.pv-fs-btn {
+  flex: 1; padding: 9px 0; background: var(--pv-sidebar); border: 1px solid var(--pv-border);
+  border-radius: 8px; font-size: 14px; font-weight: 700; color: var(--pv-text);
+  cursor: pointer; font-family: 'Nunito', sans-serif; transition: background .15s;
+}
+.pv-fs-btn:hover { background: var(--pv-bg2); }
 
 /* Scroll area */
-.preview-scroll { flex: 1; overflow-y: auto; padding: 32px 16px 80px; }
-
-/* Content card */
-.preview-box {
-  background: #fff; border-radius: 18px; width: 100%; max-width: 680px;
-  margin: 0 auto 24px; box-shadow: 0 2px 20px rgba(0,0,0,0.07);
-  overflow: hidden;
+.preview-scroll {
+  flex: 1; overflow-y: auto; padding: 32px 16px 80px;
+  background: var(--pv-bg);
 }
 
-/* Chapter header */
-.preview-ch-header { padding: 32px 36px 24px; border-bottom: 1px solid var(--border); }
-.preview-story-name {
-  font-size: 11px; font-weight: 800; color: var(--peach);
-  text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px;
-}
-.preview-ch-title {
-  font-family: 'Noto Serif', Georgia, serif; font-size: 26px; font-weight: 700;
-  color: var(--text); line-height: 1.35; margin-bottom: 12px;
-}
-.preview-ch-meta { font-size: 11px; color: var(--text-muted); font-weight: 600; display: flex; gap: 12px; }
+/* Content column */
+.pv-story-col { flex: 1; max-width: 720px; margin: 0 auto; min-width: 0; width: 100%; }
 
-/* Content body */
-.preview-body { padding: 28px 36px 32px; }
+/* Chapter heading */
+.pv-chapter-heading { font-size: 24px; font-weight: 700; color: var(--pv-accent); margin-bottom: 6px; line-height: 1.3; font-family: 'Nunito', sans-serif; }
+.pv-chapter-meta { font-size: 13px; color: var(--pv-meta); margin-bottom: 28px; font-family: 'Nunito', sans-serif; }
 
-.preview-content {
-  font-family: 'Noto Serif', Georgia, serif; font-size: 17px; line-height: 1.6;
-  color: #2a2a2a;
+/* Stats bar */
+.pv-chapter-stats {
+  display: flex; justify-content: center; align-items: center;
+  gap: 20px; padding: 11px 20px;
+  background: var(--pv-sidebar); border: 1px solid var(--pv-border);
+  border-radius: 50px; margin-bottom: 28px;
+  font-size: 13px; color: var(--pv-meta); flex-wrap: wrap; font-family: 'Nunito', sans-serif;
 }
-.preview-content p { margin-bottom: 0.65em; }
-.preview-content hr { border: none; border-top: 2px solid var(--peach-light); margin: 2.5rem auto; width: 50%; }
-.preview-content img { max-width: 100%; border-radius: 10px; display: block; margin: 16px auto; }
-.preview-content video { max-width: 100%; border-radius: 10px; display: block; margin: 16px auto; }
+.pv-chapter-stats span { white-space: nowrap; display: flex; align-items: center; gap: 4px; }
+.pv-ic { display:inline-block; vertical-align:-3px; width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
 
-/* Paragraph comment wrapper */
-.para-cmt-wrap {
-  position: relative;
-  margin-bottom: 1.3em;
+/* Paragraph wrap — clone .para-wrap */
+.pv-para-wrap {
+  display: block; margin-bottom: 28px; border-radius: 8px;
+  padding: 6px; transition: background .2s; overflow: hidden;
 }
-.para-cmt-wrap > p { margin-bottom: 0; }
-.para-cmt-btn {
-  position: absolute; right: -36px; top: 50%; transform: translateY(-50%);
-  width: 26px; height: 26px; border-radius: 50%;
-  background: var(--peach-light); color: var(--peach);
-  border: 1.5px solid var(--peach); cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  opacity: 0; transition: opacity .18s;
-  font-size: 11px;
-}
-.para-cmt-wrap:hover .para-cmt-btn { opacity: 1; }
-.para-cmt-box {
-  display: none; margin-top: 8px; padding: 10px 14px;
-  background: #fffaf7; border: 1.5px solid var(--peach-light);
-  border-radius: 10px; font-family: 'Nunito', sans-serif;
-  font-size: 12px; color: var(--text-muted);
-  text-align: center; font-style: italic;
-}
-.para-cmt-box.open { display: block; }
+.pv-para-wrap.highlighted { background: color-mix(in srgb, var(--pv-accent) 8%, transparent); }
 
-/* Annotation block reader style */
-.preview-annotation {
-  margin: 14px 0; padding: 10px 14px;
-  border: 1.5px dashed #c9a98a; background: #fdf8f4;
-  border-radius: 10px; position: relative;
+/* Para text */
+.pv-para-text {
+  line-height: 2; display: block;
+  font-family: var(--pv-font-body, 'Crimson Text'), serif;
+  font-size: var(--pv-font-size, 17px);
+  color: var(--pv-text);
 }
-.preview-annotation-toggle {
-  display: flex; align-items: center; gap: 8px; cursor: pointer;
-  font-size: 13px; font-style: italic; color: #b5956a; font-weight: 700;
-  user-select: none;
-}
-.preview-annotation-toggle svg { flex-shrink: 0; transition: transform .2s; }
-.preview-annotation-toggle.open svg { transform: rotate(90deg); }
-.preview-annotation-body {
-  display: none; margin-top: 8px; font-size: 14px;
-  font-style: italic; color: #b5956a; line-height: 1.7;
-}
-.preview-annotation-body.open { display: block; }
+.pv-para-text p, .pv-para-text div { margin-bottom: 0.5em; line-height: 2; }
+.pv-para-text b, .pv-para-text strong { font-weight: 700; }
+.pv-para-text i, .pv-para-text em { font-style: italic; }
 
-/* Note blocks (author, spoiler, translation) */
-.preview-author-note { background:#FEF0E9; border-left:3px solid #E8835A; padding:10px 14px; border-radius:0 10px 10px 0; margin:14px 0; font-size:14px; font-style:italic; color:#9A7A6A; }
-.preview-spoiler-note { background:#FFF3CD; border-left:3px solid #FFC107; padding:10px 14px; border-radius:0 10px 10px 0; margin:14px 0; font-size:14px; color:#856404; }
-.preview-translation-note { background:#E8F4FD; border-left:3px solid #5BA4D4; padding:10px 14px; border-radius:0 10px 10px 0; margin:14px 0; font-size:14px; color:#2C6B9C; }
+/* Comment trigger — clone .cmt-trigger */
+.pv-cmt-trigger {
+  float: right; display: flex; align-items: center; gap: 4px;
+  white-space: nowrap;
+  background: color-mix(in srgb, var(--pv-accent) 8%, var(--pv-bg2));
+  border: 1.5px solid color-mix(in srgb, var(--pv-accent) 30%, var(--pv-border));
+  border-radius: 20px; padding: 3px 8px 3px 6px;
+  font-size: 11px; font-weight: 600;
+  color: color-mix(in srgb, var(--pv-accent) 70%, var(--pv-text));
+  cursor: pointer; transition: all .15s; line-height: 1.4;
+  font-family: 'Nunito', sans-serif; opacity: 0.7;
+  margin-left: 10px; margin-top: 6px;
+}
+.pv-cmt-trigger svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.pv-cmt-trigger:hover, .pv-cmt-trigger.active { opacity: 1; background: color-mix(in srgb, var(--pv-accent) 15%, var(--pv-bg2)); border-color: var(--pv-accent2); color: var(--pv-accent); }
+.pv-cmt-trigger.has-cmt { opacity: 1; color: var(--pv-accent); border-color: var(--pv-accent2); }
 
-/* Footer chapter */
-.preview-footer-box {
-  background: #fff; border-radius: 18px; width: 100%; max-width: 680px;
-  margin: 0 auto; box-shadow: 0 2px 20px rgba(0,0,0,0.07);
-  padding: 20px 28px;
+/* Comment sheet — bottom drawer giống .cmt-sheet */
+.pv-cmt-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 700; }
+.pv-cmt-overlay.open { display: block; }
+.pv-cmt-sheet {
+  position: fixed; bottom: 0; left: 0; right: 0; background: var(--pv-panel);
+  border-top: 1.5px solid var(--pv-border); border-radius: 20px 20px 0 0;
+  box-shadow: 0 -4px 30px rgba(0,0,0,0.12); z-index: 710;
+  display: flex; flex-direction: column; max-height: 75vh;
+  transform: translateY(100%); transition: transform .3s cubic-bezier(.32,1,.4,1);
 }
-.preview-footer-actions {
-  display: flex; align-items: center; justify-content: center; gap: 12px;
-  padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 16px;
+.pv-cmt-sheet.open { transform: translateY(0); }
+.pv-cmt-sheet-handle { width: 40px; height: 4px; background: var(--pv-border); border-radius: 4px; margin: 12px auto 0; flex-shrink: 0; }
+.pv-cmt-sheet-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; flex-shrink: 0; border-bottom: 1px solid var(--pv-border); }
+.pv-cmt-sheet-title { font-size: 14px; font-weight: 700; color: var(--pv-accent); font-family: 'Nunito', sans-serif; }
+.pv-cmt-sheet-close { background: none; border: none; cursor: pointer; color: var(--pv-meta); padding: 2px 8px; font-size: 18px; }
+.pv-cmt-para-quote {
+  padding: 10px 16px; background: color-mix(in srgb, var(--pv-accent) 6%, var(--pv-bg2));
+  border-left: 3px solid var(--pv-accent); margin: 0 16px 8px; border-radius: 0 8px 8px 0;
+  font-size: 13px; line-height: 1.7; color: var(--pv-text); font-style: italic;
+  max-height: 80px; overflow: hidden; font-family: 'Nunito', sans-serif;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+  flex-shrink: 0;
 }
-.preview-react-btn {
-  display: flex; align-items: center; gap: 6px;
-  padding: 10px 20px; border-radius: 24px; border: 1.5px solid var(--border);
-  font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 800;
-  cursor: pointer; background: none; color: var(--text-muted);
-  transition: all .15s;
-}
-.preview-react-btn:hover { background: var(--peach-light); color: var(--peach); border-color: var(--peach); }
-.preview-cmt-area { display: flex; flex-direction: column; gap: 10px; }
-.preview-cmt-input-wrap {
-  display: flex; align-items: center; gap: 8px;
-  border: 1.5px solid var(--border); border-radius: 24px; padding: 8px 14px;
-  background: var(--bg);
-}
-.preview-cmt-input-wrap input {
-  flex: 1; border: none; background: none; outline: none;
-  font-family: 'Nunito', sans-serif; font-size: 13px; color: var(--text);
-}
-.preview-cmt-input-wrap input::placeholder { color: var(--text-muted); }
-.preview-cmt-send {
-  border: none; background: var(--peach); color: #fff;
-  border-radius: 50%; width: 28px; height: 28px; cursor: pointer;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-}
-.preview-cmt-send svg { width: 13px; height: 13px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.pv-cmt-sheet-list { flex: 1; overflow-y: auto; padding: 8px 16px 16px; }
+.pv-cmt-bubble { display: flex; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--pv-border); }
+.pv-cmt-bubble:last-child { border-bottom: none; }
+.pv-cmt-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0; font-family: 'Nunito', sans-serif; }
+.pv-cmt-body { flex: 1; }
+.pv-cmt-user { font-size: 13px; font-weight: 700; color: var(--pv-text); margin-bottom: 2px; font-family: 'Nunito', sans-serif; }
+.pv-cmt-content { font-size: 14px; line-height: 1.6; color: var(--pv-text); font-family: 'Nunito', sans-serif; }
+.pv-cmt-time { font-size: 11px; color: var(--pv-meta); font-family: 'Nunito', sans-serif; margin-top: 4px; }
+.pv-empty-msg { text-align: center; font-size: 13px; color: var(--pv-meta); padding: 28px 12px; line-height: 1.8; font-family: 'Nunito', sans-serif; }
+.pv-cmt-input-wrap { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-top: 1px solid var(--pv-border); flex-shrink: 0; background: var(--pv-panel); }
+.pv-cmt-input { flex: 1; border: 1.5px solid var(--pv-border); border-radius: 20px; padding: 8px 14px; font-family: 'Nunito', sans-serif; font-size: 13px; color: var(--pv-text); background: var(--pv-bg); outline: none; }
+.pv-cmt-input:focus { border-color: var(--pv-accent); }
+.pv-cmt-send { background: var(--pv-accent); border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.pv-cmt-send svg { width: 13px; height: 13px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 
-.preview-sample-cmts { display: flex; flex-direction: column; gap: 10px; }
-.preview-cmt-item { display: flex; align-items: flex-start; gap: 10px; }
-.preview-cmt-avatar {
-  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px; font-weight: 800; color: #fff;
+/* Chapter nav */
+.pv-chapter-nav {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 40px; padding: 20px 0; border-top: 1px solid var(--pv-border); gap: 10px;
+  font-family: 'Nunito', sans-serif;
 }
-.preview-cmt-bubble { background: var(--bg); border-radius: 12px; padding: 8px 12px; flex: 1; }
-.preview-cmt-name { font-size: 11px; font-weight: 800; color: var(--text); margin-bottom: 2px; }
-.preview-cmt-text { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+.pv-nav-btn {
+  background: var(--pv-bg2); border: 1.5px solid var(--pv-border);
+  border-radius: 20px; padding: 8px 18px; font-size: 14px;
+  color: var(--pv-accent); font-weight: 700; transition: all .15s; white-space: nowrap;
+  display: flex; align-items: center; gap: 5px; font-family: 'Nunito', sans-serif;
+  opacity: 0.4; pointer-events: none;
+}
+.pv-nav-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* End section stats */
+.pv-stats-end {
+  display: flex; justify-content: center; align-items: center;
+  background: var(--pv-sidebar); border: 1px solid var(--pv-border);
+  border-radius: 50px; overflow: hidden; margin-top: 32px;
+  font-family: 'Nunito', sans-serif;
+}
+.pv-stat-btn {
+  flex: 1; background: none; border: none; padding: 12px 10px;
+  font-family: 'Nunito', sans-serif; font-size: 13px; color: var(--pv-meta);
+  cursor: default; display: flex; align-items: center; justify-content: center; gap: 5px;
+}
+.pv-stat-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* TOC inline */
+.pv-toc-section { border: 1px solid var(--pv-border); border-radius: 14px; overflow: hidden; margin-top: 20px; }
+.pv-toc-head { padding: 12px 16px; font-size: 14px; font-weight: 700; color: var(--pv-accent); border-bottom: 1px solid var(--pv-border); background: var(--pv-sidebar); display: flex; align-items: center; gap: 6px; font-family: 'Nunito', sans-serif; }
+.pv-toc-head svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.pv-toc-item { display: block; padding: 10px 16px; font-size: 13px; color: var(--pv-text); border-bottom: 1px solid var(--pv-border); line-height: 1.4; font-family: 'Nunito', sans-serif; }
+.pv-toc-item:last-child { border-bottom: none; }
+.pv-toc-item.active { color: var(--pv-accent); font-weight: 700; border-left: 3px solid var(--pv-accent); }
+.pv-toc-num { font-size: 11px; color: var(--pv-meta); display: block; margin-bottom: 2px; }
+
+/* Annotation */
+.pv-annotation { margin: 14px 0; padding: 10px 14px; border: 1.5px dashed color-mix(in srgb, var(--pv-accent) 40%, transparent); background: color-mix(in srgb, var(--pv-accent) 5%, var(--pv-bg2)); border-radius: 10px; }
+.pv-annotation-toggle { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; font-style: italic; color: var(--pv-accent); font-weight: 700; user-select: none; font-family: 'Nunito', sans-serif; }
+.pv-annotation-toggle svg { flex-shrink: 0; transition: transform .2s; }
+.pv-annotation-toggle.open svg { transform: rotate(90deg); }
+.pv-annotation-body { display: none; margin-top: 8px; font-size: 14px; font-style: italic; color: var(--pv-accent); line-height: 1.7; }
+.pv-annotation-body.open { display: block; }
 
 @media (max-width: 640px) {
-  .preview-ch-header, .preview-body { padding: 20px; }
-  .preview-ch-title { font-size: 20px; }
-  .preview-content { font-size: 16px; }
-  .para-cmt-btn { display: none; }
+  .pv-chapter-heading { font-size: 20px; }
+  .pv-para-text { font-size: 16px !important; }
   .preview-scroll { padding: 16px 10px 80px; }
 }
+
 .tb-btn {
   background: none; border: none; cursor: pointer;
   padding: 5px 8px; border-radius: 6px; color: var(--text-muted);
@@ -1059,79 +1083,130 @@ body { display: block; }
 </div>
 
 <!-- PREVIEW FULL PAGE -->
-<div class="preview-modal" id="previewModal">
+<div class="preview-modal pv-theme-light" id="previewModal">
 
-  <!-- Topbar giả lập trang đọc -->
+  <!-- Topbar — clone site-header -->
   <div class="preview-topbar">
     <div class="preview-topbar-left">
-      <span class="preview-topbar-logo">🍑 Peach Luku</span>
+      <span class="preview-topbar-logo">
+        <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      </span>
+      <span class="preview-header-title" id="previewChTitle">Tên chương</span>
       <span class="preview-topbar-badge">Xem trước</span>
     </div>
     <div class="preview-topbar-right">
-      <div class="preview-theme-btns" title="Đổi theme">
-        <button class="preview-theme-btn active" data-theme="cream" style="background:#f5f0eb" onclick="setPreviewTheme('cream',this)" title="Kem"></button>
-        <button class="preview-theme-btn" data-theme="white" style="background:#f9f9f9;border-color:#ddd" onclick="setPreviewTheme('white',this)" title="Trắng"></button>
-        <button class="preview-theme-btn" data-theme="dark" style="background:#262626" onclick="setPreviewTheme('dark',this)" title="Tối"></button>
+      <!-- Theme swatches -->
+      <div class="pv-theme-swatches" title="Đổi theme đọc">
+        <div class="pv-swatch active" data-pvtheme="light"   style="background:#fff8fb;border-color:#f4c0d1" onclick="setPvTheme('light',this)"   title="Hồng nhạt"></div>
+        <div class="pv-swatch"        data-pvtheme="dark"    style="background:#1a1a1a"                     onclick="setPvTheme('dark',this)"    title="Tối"></div>
+        <div class="pv-swatch"        data-pvtheme="sepia"   style="background:#f5f0e8;border-color:#d4c4a8" onclick="setPvTheme('sepia',this)"   title="Vàng"></div>
+        <div class="pv-swatch"        data-pvtheme="blue"    style="background:#e8f0fe;border-color:#b8ccf4" onclick="setPvTheme('blue',this)"    title="Xanh"></div>
+        <div class="pv-swatch"        data-pvtheme="purple"  style="background:#f0ebff;border-color:#cdb8f4" onclick="setPvTheme('purple',this)"  title="Tím"></div>
+        <div class="pv-swatch"        data-pvtheme="pink"    style="background:#fff0f6;border-color:#f4c0d1" onclick="setPvTheme('pink',this)"    title="Hồng"></div>
+        <div class="pv-swatch"        data-pvtheme="wattpad" style="background:#f5e6c8;border-color:#d9c4a0" onclick="setPvTheme('wattpad',this)" title="Warm"></div>
+        <div class="pv-swatch"        data-pvtheme="white"   style="background:#ffffff;border-color:#e5e5e5" onclick="setPvTheme('white',this)"   title="Trắng"></div>
       </div>
-      <button class="preview-close" onclick="closePreview()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        Đóng preview
+      <!-- Font size -->
+      <button class="preview-tool-btn" onclick="pvChangeFontSize(-1)" title="Nhỏ hơn">A−</button>
+      <button class="preview-tool-btn" onclick="pvChangeFontSize(1)"  title="Lớn hơn">A+</button>
+      <!-- Close -->
+      <button class="preview-tool-btn" onclick="closePreview()" title="Đóng">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
   </div>
 
   <!-- Scroll content -->
   <div class="preview-scroll" id="previewScroll">
+    <div class="pv-story-col">
 
-    <!-- Card chương -->
-    <div class="preview-box">
-      <div class="preview-ch-header">
-        <div class="preview-story-name" id="previewStoryName">Tên truyện</div>
-        <div class="preview-ch-title" id="previewChTitle">Tên chương</div>
-        <div class="preview-ch-meta">
-          <span>👁 1.234 lượt đọc</span>
-          <span>❤️ 56 lượt thích</span>
-          <span>💬 12 bình luận</span>
-        </div>
-      </div>
-      <div class="preview-body">
-        <div class="preview-content" id="previewContent"></div>
-      </div>
-    </div>
+      <!-- Chapter heading -->
+      <h1 class="pv-chapter-heading" id="pvChTitle">Tên chương</h1>
+      <div class="pv-chapter-meta" id="pvChMeta"></div>
 
-    <!-- Footer actions + bình luận -->
-    <div class="preview-footer-box">
-      <div class="preview-footer-actions">
-        <button class="preview-react-btn">❤️ Thích · 56</button>
-        <button class="preview-react-btn">🔖 Lưu</button>
-        <button class="preview-react-btn">↗ Chia sẻ</button>
+      <!-- Stats bar -->
+      <div class="pv-chapter-stats">
+        <span>
+          <svg class="pv-ic" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          1.2K lượt đọc
+        </span>
+        <span>
+          <svg class="pv-ic" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <span id="pvVoteCount">0</span> vote
+        </span>
+        <span>
+          <svg class="pv-ic" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span id="pvCmtCount">0</span> bình luận
+        </span>
       </div>
-      <div class="preview-cmt-area">
-        <div class="preview-cmt-input-wrap">
-          <input type="text" placeholder="Viết bình luận... (demo)">
-          <button class="preview-cmt-send">
-            <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-          </button>
+
+      <!-- Paragraphs — rendered by JS -->
+      <div id="pvParagraphsContainer"></div>
+
+      <!-- End stats -->
+      <div class="pv-stats-end">
+        <button class="pv-stat-btn">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Vote
+        </button>
+        <button class="pv-stat-btn">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Bình luận
+        </button>
+        <button class="pv-stat-btn">
+          <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Chia sẻ
+        </button>
+      </div>
+
+      <!-- TOC inline -->
+      <div class="pv-toc-section">
+        <div class="pv-toc-head">
+          <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="12" y2="15"/></svg>
+          Mục lục
         </div>
-        <div class="preview-sample-cmts">
-          <div class="preview-cmt-item">
-            <div class="preview-cmt-avatar" style="background:#e8835a">M</div>
-            <div class="preview-cmt-bubble">
-              <div class="preview-cmt-name">mochi.reads</div>
-              <div class="preview-cmt-text">Chương này hay quá aaaa 😭❤️ cảm ơn tác giả đã cập nhật nhanh!</div>
-            </div>
+        <div id="pvTocList">
+          <div class="pv-toc-item active">
+            <span class="pv-toc-num">Đang xem trước</span>
+            <span id="pvTocCurrentTitle">Chương này</span>
           </div>
-          <div class="preview-cmt-item">
-            <div class="preview-cmt-avatar" style="background:#5ba4d4">T</div>
-            <div class="preview-cmt-bubble">
-              <div class="preview-cmt-name">tanuki.star</div>
-              <div class="preview-cmt-text">Đoạn cuối làm mình nổi da gà 🐹✨</div>
-            </div>
-          </div>
         </div>
       </div>
-    </div>
 
+      <!-- Nav prev/next -->
+      <nav class="pv-chapter-nav">
+        <button class="pv-nav-btn">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+          Chương trước
+        </button>
+        <span style="font-size:13px;color:var(--pv-meta);font-family:'Nunito',sans-serif">Xem trước</span>
+        <button class="pv-nav-btn">
+          Chương sau
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </nav>
+
+    </div>
+  </div>
+</div>
+
+<!-- Comment sheet cho preview -->
+<div class="pv-cmt-overlay" id="pvCmtOverlay" onclick="closePvCmtSheet()"></div>
+<div class="pv-cmt-sheet" id="pvCmtSheet">
+  <div class="pv-cmt-sheet-handle"></div>
+  <div class="pv-cmt-sheet-header">
+    <span class="pv-cmt-sheet-title" id="pvSheetTitle">Bình luận đoạn 1</span>
+    <button class="pv-cmt-sheet-close" onclick="closePvCmtSheet()">✕</button>
+  </div>
+  <div class="pv-cmt-para-quote" id="pvCmtQuote"></div>
+  <div class="pv-cmt-sheet-list" id="pvCmtList">
+    <p class="pv-empty-msg">Đang tải...</p>
+  </div>
+  <div class="pv-cmt-input-wrap">
+    <input class="pv-cmt-input" id="pvCmtInput" placeholder="Viết bình luận...">
+    <button class="pv-cmt-send" onclick="submitPvComment()">
+      <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
   </div>
 </div>
 
@@ -1743,116 +1818,251 @@ function paraHash(text) {
   return h.toString(36);
 }
 
+// ── PREVIEW — clone y chang chapter.html ──
+let pvFontSize = 17;
+let pvActivePid = null;
+
+function setPvTheme(theme, el) {
+  const modal = document.getElementById('previewModal');
+  modal.className = modal.className.replace(/pv-theme-\S+/, '') + ' pv-theme-' + theme;
+  document.querySelectorAll('.pv-swatch').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  try { localStorage.setItem('luku_pv_theme', theme); } catch(e) {}
+}
+
+function pvChangeFontSize(delta) {
+  pvFontSize = Math.min(24, Math.max(13, pvFontSize + delta));
+  document.getElementById('previewModal').style.setProperty('--pv-font-size', pvFontSize + 'px');
+  try { localStorage.setItem('luku_pv_fontsize', pvFontSize); } catch(e) {}
+}
+
 function openPreview() {
   const title = document.getElementById('chTitle')?.value || 'Chưa đặt tên chương';
   const rawContent = document.getElementById('chContent')?.innerHTML || '';
-  const storyName = document.getElementById('storyTitle')?.value
-    || document.getElementById('storySelect')?.options[document.getElementById('storySelect').selectedIndex]?.text
-    || 'Tên truyện';
 
-  document.getElementById('previewChTitle').textContent = title;
-  document.getElementById('previewStoryName').textContent = storyName;
+  // Đặt tiêu đề
+  document.getElementById('pvChTitle').textContent = title;
+  document.getElementById('pvTocCurrentTitle').textContent = title;
 
-  // Load saved para comments
+  // Meta
+  const today = new Date().toLocaleDateString('vi-VN');
+  document.getElementById('pvChMeta').textContent = 'Xem trước · ' + today;
+
+  // Load vote/cmt count thật nếu có chapter đang mở
+  if (currentChapterId) {
+    sb.from('chapters').select('votes').eq('id', currentChapterId).single().then(({data}) => {
+      if (data) document.getElementById('pvVoteCount').textContent = (data.votes || 0).toLocaleString();
+    });
+    sb.from('comments').select('id', {count:'exact', head:true})
+      .eq('chapter_id', currentChapterId).then(({count}) => {
+        if (count != null) document.getElementById('pvCmtCount').textContent = count;
+      });
+  }
+
+  // Load para comments đã lưu
   const paraCmts = loadParaCmts();
 
-  // Process content for reader view
-  document.getElementById('previewContent').innerHTML = buildPreviewContent(rawContent, paraCmts);
+  // Render paragraphs giống renderParagraphs() của chapter.html
+  renderPvParagraphs(rawContent, paraCmts);
 
-  // Attach paragraph comment toggles
-  document.querySelectorAll('#previewContent .para-cmt-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const wrap = this.closest('.para-cmt-wrap');
-      const box = wrap.querySelector('.para-cmt-box');
-      box.classList.toggle('open');
-      this.textContent = box.classList.contains('open') ? '✕' : '💬';
+  // Khôi phục theme và font size đã lưu
+  try {
+    const savedTheme = localStorage.getItem('luku_pv_theme') || 'light';
+    const modal = document.getElementById('previewModal');
+    modal.className = modal.className.replace(/pv-theme-\S+/, '') + ' pv-theme-' + savedTheme;
+    document.querySelectorAll('.pv-swatch').forEach(b => {
+      b.classList.toggle('active', b.dataset.pvtheme === savedTheme);
     });
-  });
-
-  // Attach annotation toggles in preview
-  document.querySelectorAll('.preview-annotation-toggle').forEach(toggle => {
-    toggle.addEventListener('click', function() {
-      const body = this.closest('.preview-annotation').querySelector('.preview-annotation-body');
-      const isOpen = body.classList.contains('open');
-      body.classList.toggle('open', !isOpen);
-      this.classList.toggle('open', !isOpen);
-    });
-  });
+    pvFontSize = parseInt(localStorage.getItem('luku_pv_fontsize') || '17');
+    modal.style.setProperty('--pv-font-size', pvFontSize + 'px');
+  } catch(e) {}
 
   document.getElementById('previewModal').classList.add('open');
   document.getElementById('previewScroll').scrollTop = 0;
   document.body.style.overflow = 'hidden';
-  // Khôi phục theme đã chọn
-  try {
-    const savedTheme = localStorage.getItem('luku_preview_theme') || 'cream';
-    const modal = document.getElementById('previewModal');
-    modal.setAttribute('data-theme', savedTheme);
-    document.querySelectorAll('.preview-theme-btn').forEach(b => {
-      b.classList.toggle('active', b.dataset.theme === savedTheme);
-    });
-  } catch(e) {}
 }
 
-function buildPreviewContent(rawHtml, paraCmts = {}) {
-  // Parse HTML
+function renderPvParagraphs(rawHtml, paraCmts = {}) {
+  const container = document.getElementById('pvParagraphsContainer');
+  if (!rawHtml || !rawHtml.trim()) {
+    container.innerHTML = '<p style="color:var(--pv-meta);font-size:14px;text-align:center;padding:2rem;font-family:Nunito,sans-serif">Chương này chưa có nội dung.</p>';
+    return;
+  }
+
   const tmp = document.createElement('div');
   tmp.innerHTML = rawHtml;
 
-  // Process annotation blocks → reader style
+  // Xử lý annotation blocks → reader style
   tmp.querySelectorAll('.annotation-block').forEach(block => {
     const bodyEl = block.querySelector('.annotation-body');
     const bodyText = bodyEl ? bodyEl.innerHTML : '';
     const annDiv = document.createElement('div');
-    annDiv.className = 'preview-annotation';
+    annDiv.className = 'pv-annotation';
     annDiv.innerHTML = `
-      <div class="preview-annotation-toggle">
-        <svg viewBox="0 0 24 24" fill="#c9a98a" stroke="none" width="13" height="13"><polygon points="5,4 19,12 5,20"/></svg>
+      <div class="pv-annotation-toggle">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" stroke="none"><polygon points="5,4 19,12 5,20"/></svg>
         <span>Chú thích của tác giả</span>
       </div>
-      <div class="preview-annotation-body">${bodyText || '<i style="color:#ccc">Chưa có nội dung</i>'}</div>`;
+      <div class="pv-annotation-body">${bodyText || '<i style="opacity:.5">Chưa có nội dung</i>'}</div>`;
     block.replaceWith(annDiv);
   });
 
-  // Remove editor-only contenteditable attrs
+  // Bỏ contenteditable
   tmp.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
-
-  // Remove editor-only attributes/controls that shouldn't show
   tmp.querySelectorAll('[onclick^="deleteAnnotation"],[onclick^="toggleAnnotation"]').forEach(el => el.remove());
 
-  // Wrap each top-level <p> with paragraph comment UI, khôi phục comment đã lưu
-  let html = '';
-  tmp.childNodes.forEach(node => {
-    if (node.nodeType === 1 && node.tagName === 'P' && node.textContent.trim()) {
-      const hash = paraHash(node.textContent);
-      const existingCmt = paraCmts[hash] || '';
-      const cmtContent = existingCmt
-        ? `<div style="font-family:'Nunito',sans-serif;font-size:12px;color:var(--text-muted);font-style:italic">💬 ${escH(existingCmt)}</div>`
-        : `<span style="font-style:italic;color:var(--text-muted);font-family:'Nunito',sans-serif;font-size:12px">Chưa có bình luận đoạn này</span>`;
-      html += `<div class="para-cmt-wrap">
-        ${node.outerHTML}
-        <button class="para-cmt-btn" title="Bình luận đoạn này">💬</button>
-        <div class="para-cmt-box">${cmtContent}</div>
-      </div>`;
-    } else {
-      html += node.outerHTML || (node.nodeValue || '');
+  // Xây paragraphs giống chapter.html
+  const children = Array.from(tmp.childNodes);
+  const blocks = [];
+  children.forEach(node => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const text = node.textContent.trim();
+      if (text) blocks.push({ type: 'text', content: text });
+    } else if (node.nodeType === Node.ELEMENT_NODE) {
+      const plainText = node.textContent.replace(/\u00a0/g, '').trim();
+      if (plainText || node.tagName === 'IMG') blocks.push({ type: 'html', content: node.outerHTML });
     }
   });
+  if (!blocks.length) { container.innerHTML = ''; return; }
 
-  return html || '<p style="color:#aaa;font-style:italic">Chưa có nội dung...</p>';
+  const CMT_ICON_SVG = `<svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`;
+
+  container.innerHTML = blocks.map((block, i) => {
+    const pid = 'p' + (i + 1);
+    const rendered = block.type === 'html' ? block.content : escH(block.content);
+    const textForHash = (block.type === 'html'
+      ? document.createElement('div') && (() => { const d = document.createElement('div'); d.innerHTML = block.content; return d.textContent; })()
+      : block.content);
+    const hash = paraHash(textForHash);
+    const savedCmts = paraCmts[hash];
+    const cmtCount = savedCmts ? 1 : 0;
+
+    return `<div class="pv-para-wrap" data-pid="${pid}" data-hash="${hash}">
+      <button class="pv-cmt-trigger ${cmtCount > 0 ? 'has-cmt' : ''}" data-pid="${pid}">
+        ${CMT_ICON_SVG}<span class="pv-cnt">${cmtCount > 0 ? cmtCount : ''}</span>
+      </button>
+      <div class="pv-para-text">${rendered}</div>
+    </div>`;
+  }).join('');
+
+  // Gắn sự kiện click cmt trigger — giống chapter.html
+  container.querySelectorAll('.pv-cmt-trigger').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const pid = btn.dataset.pid;
+      container.querySelectorAll('.pv-para-wrap').forEach(el => el.classList.remove('highlighted'));
+      container.querySelectorAll('.pv-cmt-trigger').forEach(b => b.classList.remove('active'));
+      container.querySelector(`.pv-para-wrap[data-pid="${pid}"]`)?.classList.add('highlighted');
+      btn.classList.add('active');
+      openPvCmtSheet(pid);
+    });
+  });
+
+  // Gắn annotation toggles
+  container.querySelectorAll('.pv-annotation-toggle').forEach(toggle => {
+    toggle.addEventListener('click', () => {
+      const body = toggle.closest('.pv-annotation').querySelector('.pv-annotation-body');
+      body.classList.toggle('open');
+      toggle.classList.toggle('open');
+    });
+  });
 }
 
-function setPreviewTheme(theme, btn) {
-  const modal = document.getElementById('previewModal');
-  modal.setAttribute('data-theme', theme);
-  document.querySelectorAll('.preview-theme-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  try { localStorage.setItem('luku_preview_theme', theme); } catch(e) {}
+function openPvCmtSheet(pid) {
+  pvActivePid = pid;
+  const num = pid.replace('p','');
+  document.getElementById('pvSheetTitle').textContent = `Bình luận đoạn ${num}`;
+
+  // Quote đoạn văn
+  const paraEl = document.querySelector(`#pvParagraphsContainer .pv-para-wrap[data-pid="${pid}"] .pv-para-text`);
+  const quoteEl = document.getElementById('pvCmtQuote');
+  if (paraEl) {
+    quoteEl.textContent = (paraEl.textContent || '').trim();
+    quoteEl.style.display = 'block';
+  }
+
+  // Load comments thật từ Supabase nếu có chapter ID
+  loadPvCmtSheet(pid);
+
+  document.getElementById('pvCmtSheet').classList.add('open');
+  document.getElementById('pvCmtOverlay').classList.add('open');
+}
+
+async function loadPvCmtSheet(pid) {
+  const list = document.getElementById('pvCmtList');
+  if (!currentChapterId || !currentStoryId) {
+    list.innerHTML = '<p class="pv-empty-msg">Lưu chương trước để xem bình luận thật.</p>';
+    return;
+  }
+  list.innerHTML = '<p class="pv-empty-msg">Đang tải...</p>';
+  const { data, error } = await sb.from('comments')
+    .select('*, profiles(display_name, avatar_url)')
+    .eq('story_id', currentStoryId)
+    .eq('chapter_id', currentChapterId)
+    .eq('paragraph_id', pid)
+    .order('created_at', { ascending: true });
+  if (error || !data?.length) {
+    list.innerHTML = '<p class="pv-empty-msg">Chưa có bình luận cho đoạn này.</p>';
+    return;
+  }
+  const colors = ['#d4537e','#5b9bd5','#71c285','#e8a838','#9b7fe8'];
+  list.innerHTML = data.map((c, i) => {
+    const prof = c.profiles || {};
+    const name = escH(prof.display_name || c.username || 'Ẩn danh');
+    const color = colors[i % colors.length];
+    const avatarHtml = prof.avatar_url
+      ? `<img src="${escH(prof.avatar_url)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+      : name.charAt(0).toUpperCase();
+    return `<div class="pv-cmt-bubble">
+      <div class="pv-cmt-avatar" style="background:${color}">${avatarHtml}</div>
+      <div class="pv-cmt-body">
+        <div class="pv-cmt-user">${name}</div>
+        ${c.content ? `<div class="pv-cmt-content">${escH(c.content)}</div>` : ''}
+        <div class="pv-cmt-time">${formatTs(c.created_at)}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function formatTs(iso) {
+  const diff = Math.floor((Date.now() - new Date(iso)) / 1000);
+  if (diff < 60) return 'vừa xong';
+  if (diff < 3600) return Math.floor(diff/60) + ' phút trước';
+  if (diff < 86400) return Math.floor(diff/3600) + ' giờ trước';
+  return Math.floor(diff/86400) + ' ngày trước';
+}
+
+async function submitPvComment() {
+  if (!pvActivePid) return;
+  const input = document.getElementById('pvCmtInput');
+  const content = input.value.trim();
+  if (!content) return;
+  if (!currentChapterId) { showToast('Lưu chương trước!', 'err'); return; }
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { showToast('Đăng nhập để bình luận!', 'err'); return; }
+  const { error } = await sb.from('comments').insert({
+    story_id: currentStoryId, chapter_id: currentChapterId,
+    paragraph_id: pvActivePid, user_id: session.user.id, content
+  });
+  if (!error) { input.value = ''; loadPvCmtSheet(pvActivePid); }
+  else showToast('Gửi thất bại', 'err');
+}
+
+function closePvCmtSheet() {
+  document.getElementById('pvCmtSheet').classList.remove('open');
+  document.getElementById('pvCmtOverlay').classList.remove('open');
+  document.querySelectorAll('#pvParagraphsContainer .pv-para-wrap').forEach(el => el.classList.remove('highlighted'));
+  document.querySelectorAll('.pv-cmt-trigger').forEach(b => b.classList.remove('active'));
+  pvActivePid = null;
 }
 
 function closePreview() {
   document.getElementById('previewModal').classList.remove('open');
   document.body.style.overflow = '';
+  closePvCmtSheet();
 }
+
+function setPreviewTheme() {} // deprecated, dùng setPvTheme
 function handlePreviewClick(e) { if (e.target === document.getElementById('previewModal')) closePreview(); }
 
 function makeMediaBlock(innerHTML) {
@@ -1996,10 +2206,16 @@ function closeSpellCheck() {
 }
 
 // ── BỘ TỪ ĐIỂN CHÍNH TẢ TIẾNG VIỆT NHÚNG SẴN ──
+// ── BỘ TỪ ĐIỂN CHÍNH TẢ TIẾNG VIỆT 500+ MỤC ──
+// Format: { w: regex, s: 'gợi ý', note: 'loại lỗi' }
+// Chỉ ghi lỗi thực sự — không ghi những từ đúng
 const VI_SPELL_DICT = [
-  // Viết tắt mạng xã hội
+
+  // ═══════════════════════════════════════
+  // 1. VIẾT TẮT MẠNG XÃ HỘI / CHAT
+  // ═══════════════════════════════════════
   {w:/\bko\b/gi, s:'không', note:'Viết tắt'},
-  {w:/\bk\b(?=\s)/gi, s:'không', note:'Viết tắt'},
+  {w:/\bk\b/gi, s:'không', note:'Viết tắt'},
   {w:/\bmk\b/gi, s:'mình', note:'Viết tắt'},
   {w:/\bbh\b/gi, s:'bây giờ', note:'Viết tắt'},
   {w:/\bdc\b/gi, s:'được', note:'Viết tắt'},
@@ -2010,55 +2226,675 @@ const VI_SPELL_DICT = [
   {w:/\bvk\b/gi, s:'vợ', note:'Viết tắt'},
   {w:/\bbff\b/gi, s:'bạn thân', note:'Viết tắt'},
   {w:/\bnma\b/gi, s:'nhưng mà', note:'Viết tắt'},
-  {w:/\bdl\b/gi, s:'dưới lên', note:'Viết tắt'},
   {w:/\bthui\b/gi, s:'thôi', note:'Viết tắt'},
-  {w:/\bcuoi\b(?!g)/gi, s:'cuối / cười', note:'Thiếu dấu'},
-  // Lỗi dấu thanh phổ biến
-  {w:/\bsao\b(?=\s+(?:thế|vậy|không|nào))/gi, s:'sao (kiểm tra ngữ cảnh)', note:'Dễ nhầm "sao/sau"'},
-  {w:/\bchi\b(?=\s+(?:là|có|được|vì))/gi, s:'chỉ', note:'Thiếu dấu hỏi'},
-  {w:/\bday\b/gi, s:'đây / dây', note:'Thiếu dấu'},
-  {w:/\bnay\b(?=\s+(?:là|đã|đang|sẽ|cũng))/gi, s:'này', note:'Thiếu dấu hỏi'},
-  {w:/\bvay\b/gi, s:'vay / vậy', note:'Kiểm tra ngữ cảnh'},
-  {w:/\bthay\b(?=\s+vì)/gi, s:'thay (đúng)', note:''},
-  // Lỗi chữ phổ biến
-  {w:/\bgiời\b/gi, s:'trời', note:'Sai từ'},
-  {w:/\bdza\b/gi, s:'ra / về', note:'Tiếng lóng'},
+  {w:/\bnhiu\b/gi, s:'nhiều', note:'Viết tắt'},
+  {w:/\bhjx\b/gi, s:'hix', note:'Viết tắt'},
+  {w:/\bhix\b/gi, s:'(tiếng than) — cân nhắc thay bằng văn xuôi', note:'Viết tắt/tiếng lóng'},
+  {w:/\bokk\b/gi, s:'oke / được rồi', note:'Viết tắt'},
+  {w:/\bok\b/gi, s:'oke / được', note:'Viết tắt'},
+  {w:/\bnc\b/gi, s:'nói chuyện', note:'Viết tắt'},
+  {w:/\btk\b/gi, s:'tài khoản', note:'Viết tắt'},
+  {w:/\bqt\b/gi, s:'quan tâm / quốc tế', note:'Viết tắt'},
+  {w:/\bvl\b/gi, s:'(thay bằng từ đầy đủ)', note:'Viết tắt/tục'},
+  {w:/\bvcc\b/gi, s:'(thay bằng từ đầy đủ)', note:'Viết tắt/tục'},
+  {w:/\blm\b/gi, s:'làm', note:'Viết tắt'},
+  {w:/\bnv\b/gi, s:'nhân vật / nghĩa vụ', note:'Viết tắt'},
+  {w:/\bcty\b/gi, s:'công ty', note:'Viết tắt'},
+  {w:/\bhtv\b/gi, s:'hơn thế nữa', note:'Viết tắt'},
+  {w:/\bchx\b/gi, s:'chưa', note:'Viết tắt'},
+  {w:/\bro\b/gi, s:'rồi', note:'Viết tắt'},
+  {w:/\bbit\b/gi, s:'biết', note:'Viết tắt'},
+  {w:/\bnhug\b/gi, s:'nhưng', note:'Viết tắt'},
+  {w:/\bz\b/gi, s:'vậy / dzậy', note:'Viết tắt'},
+  {w:/\bj\b/gi, s:'gì', note:'Viết tắt'},
+  {w:/\bw\b/gi, s:'quá / với', note:'Viết tắt'},
+  {w:/\bng\b/gi, s:'người', note:'Viết tắt'},
+  {w:/\bbn\b/gi, s:'bạn', note:'Viết tắt'},
+  {w:/\bcmn\b/gi, s:'(thay bằng từ đầy đủ)', note:'Viết tắt/tục'},
+  {w:/\bnh\b/gi, s:'nhé / nhiều', note:'Viết tắt'},
+  {w:/\bsh\b/gi, s:'sẽ hỏi / sinh hoạt', note:'Viết tắt'},
+  {w:/\bms\b/gi, s:'mới', note:'Viết tắt'},
+  {w:/\baf\b/gi, s:'ấy / bạn ấy', note:'Viết tắt'},
+  {w:/\bns\b/gi, s:'nói', note:'Viết tắt'},
+  {w:/\bbs\b/gi, s:'bạn / bác sĩ', note:'Viết tắt'},
+  {w:/\bđc\b/gi, s:'được', note:'Viết tắt'},
+  {w:/\bkp\b/gi, s:'không phải', note:'Viết tắt'},
+  {w:/\bkbt\b/gi, s:'không biết', note:'Viết tắt'},
+
+  // ═══════════════════════════════════════
+  // 2. TIẾNG LÓNG / DZÔ / DZA
+  // ═══════════════════════════════════════
+  {w:/\bdza\b/gi, s:'ra / về / đi', note:'Tiếng lóng'},
   {w:/\bdzô\b/gi, s:'vào', note:'Tiếng lóng'},
-  {w:/\bchưa hề\b/gi, s:'chưa hề (đúng)', note:''},
-  {w:/\bhoàn toàn không\b/gi, s:'hoàn toàn không (đúng)', note:''},
-  {w:/\bkhôn\b(?!\w)/gi, s:'khôn / không', note:'Kiểm tra dấu'},
-  {w:/\bthăm\b(?=\s+(?:hỏi|viếng))/gi, s:'thăm (đúng)', note:''},
-  {w:/\bchăm\b(?=\s+(?:chỉ|sóc))/gi, s:'chăm (đúng)', note:''},
-  {w:/\bquan trọng\b/gi, s:'quan trọng (đúng)', note:''},
-  {w:/\bliền\b(?=\s+tay)/gi, s:'liền tay (đúng)', note:''},
-  // Lỗi i/y
-  {w:/\bkhi nào\b/gi, s:'khi nào (đúng)', note:''},
-  {w:/\bkhỉ\b/gi, s:'khỉ (đúng - kiểm tra ngữ cảnh)', note:''},
-  {w:/\bngay\b(?=\s+(?:cả|lập tức|bây giờ))/gi, s:'ngay (đúng)', note:''},
-  // Từ dễ nhầm
-  {w:/\bchán nản\b/gi, s:'chán nản (đúng)', note:''},
-  {w:/\blan man\b/gi, s:'lan man (đúng)', note:''},
-  {w:/\bxan xát\b/gi, s:'xăng xái / xát xao', note:'Kiểm tra lại'},
-  {w:/\bảnh hưởng\b/gi, s:'ảnh hưởng (đúng)', note:''},
-  {w:/\bảnh hưởng\b/gi, s:'ảnh hưởng (đúng)', note:''},
-  {w:/\bxót xa\b/gi, s:'xót xa (đúng)', note:''},
-  {w:/\bnông nổi\b/gi, s:'nông nổi (đúng)', note:''},
-  {w:/\bsơ suất\b/gi, s:'sơ suất (đúng)', note:''},
-  {w:/\bkhẩn cấp\b/gi, s:'khẩn cấp (đúng)', note:''},
-  {w:/\bkiên nhẫn\b/gi, s:'kiên nhẫn (đúng)', note:''},
-  // Lỗi n/ng cuối
-  {w:/\bthươn\b/gi, s:'thương', note:'Thiếu chữ g'},
-  {w:/\bthươn\b/gi, s:'thường', note:'Thiếu chữ g'},
-  {w:/\bđườn\b/gi, s:'đường', note:'Thiếu chữ g'},
-  {w:/\bnhươn\b/gi, s:'nhường', note:'Thiếu chữ g'},
-  // Lỗi c/ch đầu
-  {w:/\bcó thể\b/gi, s:'có thể (đúng)', note:''},
-  {w:/\bchắc chắn\b/gi, s:'chắc chắn (đúng)', note:''},
-  // Dấu câu
-  {w:/\.\.\./g, s:'… (dùng dấu chấm lửng)', note:'Dấu câu'},
-  {w:/!!/g, s:'! (một dấu thang)', note:'Dấu câu'},
-  {w:/\?\?/g, s:'? (một dấu hỏi)', note:'Dấu câu'},
-].filter(d => d.note !== ''); // chỉ giữ lỗi thực sự
+  {w:/\bdzui\b/gi, s:'vui', note:'Tiếng lóng'},
+  {w:/\bdzo\b/gi, s:'vô / vào', note:'Tiếng lóng'},
+  {w:/\bgiời\b/gi, s:'trời', note:'Tiếng lóng / sai từ'},
+  {w:/\btrui\b/gi, s:'thôi', note:'Tiếng lóng'},
+  {w:/\bthoy\b/gi, s:'thôi', note:'Tiếng lóng'},
+  {w:/\bpk\b/gi, s:'không phải', note:'Tiếng lóng'},
+  {w:/\bnah\b/gi, s:'nhé / nha', note:'Tiếng lóng'},
+  {w:/\bnha\b/gi, s:'nhé', note:'Tiếng lóng (cân nhắc)'},
+  {w:/\bhaha\b/gi, s:'(cân nhắc dùng văn xuôi)', note:'Tiếng lóng'},
+  {w:/\bhehe\b/gi, s:'(cân nhắc dùng văn xuôi)', note:'Tiếng lóng'},
+  {w:/\bhuhu\b/gi, s:'(cân nhắc dùng văn xuôi)', note:'Tiếng lóng'},
+  {w:/\bưng\b/gi, s:'thích / ưa', note:'Tiếng lóng'},
+  {w:/\bxinh xắn\b/gi, s:'xinh xắn (đúng)', note:''},
+  {w:/\bcưng\b/gi, s:'cưng (đúng)', note:''},
+
+  // ═══════════════════════════════════════
+  // 3. LỖI THIẾU DẤU THANH
+  // ═══════════════════════════════════════
+  {w:/\bcuoi\b/gi, s:'cuối / cười / cuồi', note:'Thiếu dấu thanh'},
+  {w:/\bdau\b/gi, s:'đau / dầu / dâu', note:'Thiếu dấu thanh'},
+  {w:/\bmai\b/gi, s:'mãi / mai / mái', note:'Kiểm tra dấu thanh'},
+  {w:/\btoi\b/gi, s:'tôi / tối / tơi', note:'Thiếu dấu thanh'},
+  {w:/\bnoi\b/gi, s:'nói / nơi / nọi', note:'Thiếu dấu thanh'},
+  {w:/\bbiet\b/gi, s:'biết', note:'Thiếu dấu thanh'},
+  {w:/\bkhong\b/gi, s:'không', note:'Thiếu dấu thanh'},
+  {w:/\bmuon\b/gi, s:'muốn / muộn / muồn', note:'Thiếu dấu thanh'},
+  {w:/\bduoc\b/gi, s:'được', note:'Thiếu dấu thanh'},
+  {w:/\bthuong\b/gi, s:'thương / thường / thuồng', note:'Thiếu dấu thanh'},
+  {w:/\bnguoi\b/gi, s:'người', note:'Thiếu dấu thanh'},
+  {w:/\btuoi\b/gi, s:'tuổi / tươi / tuồi', note:'Thiếu dấu thanh'},
+  {w:/\bthat\b/gi, s:'thật / thắt / thát', note:'Thiếu dấu thanh'},
+  {w:/\bngay\b/gi, s:'ngay / ngày / ngáy', note:'Kiểm tra dấu thanh'},
+  {w:/\bnhau\b/gi, s:'nhau (đúng)', note:''},
+  {w:/\bthan\b/gi, s:'thân / than / thán', note:'Kiểm tra dấu thanh'},
+  {w:/\bchay\b/gi, s:'chạy / cháy / chấy', note:'Kiểm tra dấu thanh'},
+  {w:/\bbay\b/gi, s:'bay / bày / bãy', note:'Kiểm tra dấu thanh'},
+  {w:/\bnhin\b/gi, s:'nhìn / nhín', note:'Thiếu dấu thanh'},
+  {w:/\bkho\b/gi, s:'khó / kho / khô', note:'Kiểm tra dấu thanh'},
+  {w:/\bco\b/gi, s:'có / cô / cờ', note:'Thiếu dấu thanh'},
+  {w:/\bua\b/gi, s:'ừa / úa / ưa', note:'Kiểm tra dấu thanh'},
+
+  // ═══════════════════════════════════════
+  // 4. LỖI ÂM ĐẦU: d/gi/r
+  // ═══════════════════════════════════════
+  {w:/\bda dướt\b/gi, s:'da dướt (đúng)', note:''},
+  {w:/\bgia dướt\b/gi, s:'da dướt', note:'Sai âm đầu d/gi'},
+  {w:/\bdậy\b/gi, s:'dậy / giậy — kiểm tra ngữ cảnh', note:'Dễ nhầm d/gi'},
+  {w:/\bgiậy\b/gi, s:'dậy (đứng dậy) / giấy (paper)', note:'Dễ nhầm d/gi'},
+  {w:/\bdao\b/gi, s:'dao / giao — kiểm tra ngữ cảnh', note:'Dễ nhầm d/gi'},
+  {w:/\bgiao\b/gi, s:'giao (đúng — kiểm tra ngữ cảnh)', note:''},
+  {w:/\bran\b/gi, s:'ran / rán / ran — kiểm tra', note:'Dễ nhầm r/gi/d'},
+  {w:/\bdở\b/gi, s:'dở (đúng — kiểm tra ngữ cảnh)', note:''},
+  {w:/\bgiữ\b/gi, s:'giữ (đúng)', note:''},
+  {w:/\bdữ\b/gi, s:'dữ (đúng)', note:''},
+  {w:/\bgiận\b/gi, s:'giận (đúng)', note:''},
+  {w:/\bdẫn\b/gi, s:'dẫn (đúng)', note:''},
+  {w:/\bgiải\b/gi, s:'giải (đúng)', note:''},
+  {w:/\bdải\b/gi, s:'dải (đúng)', note:''},
+  {w:/\bdặt\b/gi, s:'đặt (sai âm đầu d/đ?)', note:'Kiểm tra d/đ'},
+  {w:/\bdat\b/gi, s:'đặt / dát — kiểm tra', note:'Thiếu dấu'},
+
+  // ═══════════════════════════════════════
+  // 5. LỖI ÂM ĐẦU: x/s
+  // ═══════════════════════════════════════
+  {w:/\bsao xuyến\b/gi, s:'xao xuyến', note:'Sai âm đầu x/s'},
+  {w:/\bsao động\b/gi, s:'xao động', note:'Sai âm đầu x/s'},
+  {w:/\bsúc tích\b/gi, s:'súc tích (đúng)', note:''},
+  {w:/\bxúc tích\b/gi, s:'súc tích', note:'Sai âm đầu s/x'},
+  {w:/\bsả hơi\b/gi, s:'xả hơi', note:'Sai âm đầu x/s'},
+  {w:/\bsả stress\b/gi, s:'xả stress', note:'Sai âm đầu x/s'},
+  {w:/\bsinh xắn\b/gi, s:'xinh xắn', note:'Sai âm đầu x/s'},
+  {w:/\bsinh đẹp\b/gi, s:'xinh đẹp', note:'Sai âm đầu x/s'},
+  {w:/\bsem xét\b/gi, s:'xem xét', note:'Sai âm đầu x/s'},
+  {w:/\bsúng súng\b/gi, s:'xúng xính', note:'Sai từ'},
+  {w:/\bxứng đáng\b/gi, s:'xứng đáng (đúng)', note:''},
+  {w:/\bsứng đáng\b/gi, s:'xứng đáng', note:'Sai âm đầu x/s'},
+  {w:/\bsa lầy\b/gi, s:'sa lầy (đúng)', note:''},
+  {w:/\bxa lầy\b/gi, s:'sa lầy', note:'Sai âm đầu s/x'},
+  {w:/\bsấu\b/gi, s:'xấu / sấu (cây sấu)', note:'Kiểm tra ngữ cảnh'},
+  {w:/\bsao nhãng\b/gi, s:'xao nhãng', note:'Sai âm đầu x/s'},
+
+  // ═══════════════════════════════════════
+  // 6. LỖI ÂM ĐẦU: ch/tr
+  // ═══════════════════════════════════════
+  {w:/\bchân thật\b/gi, s:'chân thật (đúng)', note:''},
+  {w:/\btran thật\b/gi, s:'chân thật', note:'Sai âm đầu ch/tr'},
+  {w:/\btrân trọng\b/gi, s:'trân trọng (đúng)', note:''},
+  {w:/\bchân trọng\b/gi, s:'trân trọng', note:'Sai âm đầu ch/tr'},
+  {w:/\btruân chuyên\b/gi, s:'truân chuyên (đúng)', note:''},
+  {w:/\bchung thủy\b/gi, s:'chung thủy (đúng)', note:''},
+  {w:/\btrung thủy\b/gi, s:'chung thủy', note:'Sai âm đầu ch/tr'},
+  {w:/\bchiếu cố\b/gi, s:'chiếu cố (đúng)', note:''},
+  {w:/\bchiều chuộng\b/gi, s:'chiều chuộng (đúng)', note:''},
+  {w:/\bchau mày\b/gi, s:'chau mày (đúng)', note:''},
+  {w:/\btrau mày\b/gi, s:'chau mày', note:'Sai âm đầu ch/tr'},
+  {w:/\btránh né\b/gi, s:'tránh né (đúng)', note:''},
+  {w:/\bchánh né\b/gi, s:'tránh né', note:'Sai âm đầu tr/ch'},
+  {w:/\btriền miên\b/gi, s:'triền miên (đúng)', note:''},
+  {w:/\bchiền miên\b/gi, s:'triền miên', note:'Sai âm đầu ch/tr'},
+  {w:/\btrân trời\b/gi, s:'tầng trời / trăng trời', note:'Sai từ'},
+  {w:/\bcha chả\b/gi, s:'cha chả (đúng)', note:''},
+
+  // ═══════════════════════════════════════
+  // 7. LỖI ÂM CUỐI: n/ng
+  // ═══════════════════════════════════════
+  {w:/\bthươn\b/gi, s:'thương / thường', note:'Thiếu âm cuối g'},
+  {w:/\bđườn\b/gi, s:'đường', note:'Thiếu âm cuối g'},
+  {w:/\bnhươn\b/gi, s:'nhường', note:'Thiếu âm cuối g'},
+  {w:/\bmượn\b/gi, s:'mượn (đúng)', note:''},
+  {w:/\bnươn\b/gi, s:'nương / nướng', note:'Thiếu âm cuối g'},
+  {w:/\bhươn\b/gi, s:'hương / hướng', note:'Thiếu âm cuối g'},
+  {w:/\bvươn\b/gi, s:'vươn / vướng', note:'Kiểm tra âm cuối'},
+  {w:/\bgươn\b/gi, s:'gương', note:'Thiếu âm cuối g'},
+  {w:/\bcươn\b/gi, s:'cường / cươn', note:'Kiểm tra âm cuối'},
+  {w:/\btươn\b/gi, s:'tương', note:'Thiếu âm cuối g'},
+  {w:/\btrươn\b/gi, s:'trường / trương', note:'Thiếu âm cuối g'},
+  {w:/\bhươn\b/gi, s:'hướng / hương', note:'Thiếu âm cuối g'},
+  {w:/\bnhan\b/gi, s:'nhân / nhàn / nhang', note:'Kiểm tra âm cuối'},
+  {w:/\bphan\b/gi, s:'phan / phang / phán', note:'Kiểm tra âm cuối'},
+  {w:/\bthan thở\b/gi, s:'than thở (đúng)', note:''},
+  {w:/\bthang thở\b/gi, s:'than thở', note:'Sai âm cuối n/ng'},
+
+  // ═══════════════════════════════════════
+  // 8. LỖI ÂM CUỐI: c/ch
+  // ═══════════════════════════════════════
+  {w:/\btác động\b/gi, s:'tác động (đúng)', note:''},
+  {w:/\btác hại\b/gi, s:'tác hại (đúng)', note:''},
+  {w:/\blúc nào\b/gi, s:'lúc nào (đúng)', note:''},
+  {w:/\blúch nào\b/gi, s:'lúc nào', note:'Sai âm cuối c/ch'},
+  {w:/\bthức thời\b/gi, s:'thức thời (đúng)', note:''},
+  {w:/\bđộc ác\b/gi, s:'độc ác (đúng)', note:''},
+  {w:/\bgấp gáp\b/gi, s:'gấp gáp (đúng)', note:''},
+  {w:/\bcập nhật\b/gi, s:'cập nhật (đúng)', note:''},
+  {w:/\bchập chờn\b/gi, s:'chập chờn (đúng)', note:''},
+
+  // ═══════════════════════════════════════
+  // 9. LỖI VẦN: ươi/ơi, uôi/ôi
+  // ═══════════════════════════════════════
+  {w:/\bnươi\b/gi, s:'người / nưới', note:'Kiểm tra vần'},
+  {w:/\bcươi\b/gi, s:'cười / cưỡi', note:'Kiểm tra vần'},
+  {w:/\bnuôi\b/gi, s:'nuôi (đúng)', note:''},
+  {w:/\btuổi\b/gi, s:'tuổi (đúng)', note:''},
+  {w:/\bcuối\b/gi, s:'cuối (đúng)', note:''},
+  {w:/\bcuôi\b/gi, s:'cuối / cưới / cuồi', note:'Thiếu dấu thanh'},
+  {w:/\bmuồi\b/gi, s:'muội / muồi — kiểm tra', note:'Kiểm tra vần'},
+  {w:/\buổi\b/gi, s:'buổi / tuổi — kiểm tra ngữ cảnh', note:''},
+  {w:/\bnưởi\b/gi, s:'người', note:'Sai vần'},
+
+  // ═══════════════════════════════════════
+  // 10. LỖI VẦN: iê/ia/yê
+  // ═══════════════════════════════════════
+  {w:/\btiêu điều\b/gi, s:'tiêu điều (đúng)', note:''},
+  {w:/\btia sáng\b/gi, s:'tia sáng (đúng)', note:''},
+  {w:/\bchiều tà\b/gi, s:'chiều tà (đúng)', note:''},
+  {w:/\bmiên man\b/gi, s:'miên man (đúng)', note:''},
+  {w:/\bmian man\b/gi, s:'miên man', note:'Sai vần iê/ia'},
+  {w:/\bkiên cường\b/gi, s:'kiên cường (đúng)', note:''},
+  {w:/\bkiên định\b/gi, s:'kiên định (đúng)', note:''},
+  {w:/\bnhiên liệu\b/gi, s:'nhiên liệu (đúng)', note:''},
+  {w:/\bliên tiếp\b/gi, s:'liên tiếp (đúng)', note:''},
+  {w:/\btiêu tan\b/gi, s:'tiêu tan (đúng)', note:''},
+
+  // ═══════════════════════════════════════
+  // 11. TỪ DỄ NHẦM TRONG VĂN HỌC
+  // ═══════════════════════════════════════
+  {w:/\bgặm nhấm\b/gi, s:'gặm nhấm (đúng)', note:''},
+  {w:/\bgặm nhắm\b/gi, s:'gặm nhấm', note:'Sai từ'},
+  {w:/\bnhớ nhung\b/gi, s:'nhớ nhung (đúng)', note:''},
+  {w:/\bnhớ nhúng\b/gi, s:'nhớ nhung', note:'Sai từ'},
+  {w:/\btrằn trọc\b/gi, s:'trằn trọc (đúng)', note:''},
+  {w:/\btrăn trọc\b/gi, s:'trằn trọc', note:'Sai dấu thanh'},
+  {w:/\bthổn thức\b/gi, s:'thổn thức (đúng)', note:''},
+  {w:/\bthốn thức\b/gi, s:'thổn thức', note:'Sai dấu thanh'},
+  {w:/\bnghẹn ngào\b/gi, s:'nghẹn ngào (đúng)', note:''},
+  {w:/\bnghẽn ngào\b/gi, s:'nghẹn ngào', note:'Sai từ'},
+  {w:/\btê liệt\b/gi, s:'tê liệt (đúng)', note:''},
+  {w:/\btê liệu\b/gi, s:'tê liệt', note:'Sai từ'},
+  {w:/\bngu ngơ\b/gi, s:'ngù ngờ / ngơ ngác — kiểm tra', note:'Kiểm tra từ'},
+  {w:/\bngù ngơ\b/gi, s:'ngù ngờ (đúng)', note:''},
+  {w:/\bcảm khái\b/gi, s:'cảm khái (đúng)', note:''},
+  {w:/\bcảm khái\b/gi, s:'cảm khái (đúng)', note:''},
+  {w:/\bhờn dỗi\b/gi, s:'hờn dỗi (đúng)', note:''},
+  {w:/\bhờn giỗi\b/gi, s:'hờn dỗi', note:'Sai từ d/gi'},
+  {w:/\brùng mình\b/gi, s:'rùng mình (đúng)', note:''},
+  {w:/\brụng mình\b/gi, s:'rùng mình', note:'Sai từ'},
+  {w:/\bxúc động\b/gi, s:'xúc động (đúng)', note:''},
+  {w:/\bxức động\b/gi, s:'xúc động', note:'Sai dấu thanh'},
+  {w:/\bđau đớn\b/gi, s:'đau đớn (đúng)', note:''},
+  {w:/\bđau đợn\b/gi, s:'đau đớn', note:'Sai dấu thanh'},
+  {w:/\bước ao\b/gi, s:'ước ao (đúng)', note:''},
+  {w:/\bướt ao\b/gi, s:'ước ao', note:'Sai từ'},
+  {w:/\bbâng khuâng\b/gi, s:'bâng khuâng (đúng)', note:''},
+  {w:/\bbăng khuâng\b/gi, s:'bâng khuâng', note:'Sai dấu thanh'},
+  {w:/\bhờ hững\b/gi, s:'hờ hững (đúng)', note:''},
+  {w:/\bhờ hửng\b/gi, s:'hờ hững', note:'Sai dấu thanh'},
+  {w:/\bkhắc khoải\b/gi, s:'khắc khoải (đúng)', note:''},
+  {w:/\bkhắc khoảng\b/gi, s:'khắc khoải', note:'Sai từ'},
+  {w:/\bhao mòn\b/gi, s:'hao mòn (đúng)', note:''},
+  {w:/\bhau mòn\b/gi, s:'hao mòn', note:'Sai từ'},
+  {w:/\bnao lòng\b/gi, s:'nao lòng (đúng)', note:''},
+  {w:/\bnao núng\b/gi, s:'nao núng (đúng)', note:''},
+  {w:/\bsợ hãi\b/gi, s:'sợ hãi (đúng)', note:''},
+  {w:/\bsợ hải\b/gi, s:'sợ hãi', note:'Sai từ'},
+  {w:/\blo lắng\b/gi, s:'lo lắng (đúng)', note:''},
+  {w:/\blo lắn\b/gi, s:'lo lắng', note:'Thiếu chữ g'},
+  {w:/\bngơ ngác\b/gi, s:'ngơ ngác (đúng)', note:''},
+  {w:/\bngớ ngẩn\b/gi, s:'ngớ ngẩn (đúng)', note:''},
+  {w:/\bngơ ngẩn\b/gi, s:'ngơ ngẩn / ngớ ngẩn — kiểm tra', note:'Kiểm tra từ'},
+  {w:/\bhoang mang\b/gi, s:'hoang mang (đúng)', note:''},
+  {w:/\bhoảng mang\b/gi, s:'hoang mang', note:'Sai dấu thanh'},
+  {w:/\bhoảng loạn\b/gi, s:'hoảng loạn (đúng)', note:''},
+  {w:/\bhoang loạn\b/gi, s:'hoảng loạn', note:'Sai dấu thanh'},
+  {w:/\bthảng thốt\b/gi, s:'thảng thốt (đúng)', note:''},
+  {w:/\btháng thốt\b/gi, s:'thảng thốt', note:'Sai dấu thanh'},
+  {w:/\bkinh hoàng\b/gi, s:'kinh hoàng (đúng)', note:''},
+  {w:/\bkinh hoàng\b/gi, s:'kinh hoàng', note:'Sai âm đầu'},
+  {w:/\bthẫn thờ\b/gi, s:'thẫn thờ (đúng)', note:''},
+  {w:/\bthẩn thờ\b/gi, s:'thẫn thờ', note:'Sai dấu thanh'},
+  {w:/\bnhạt nhòa\b/gi, s:'nhạt nhòa (đúng)', note:''},
+  {w:/\bnhạt nhòe\b/gi, s:'nhạt nhòa', note:'Sai vần'},
+  {w:/\bxao xuyến\b/gi, s:'xao xuyến (đúng)', note:''},
+  {w:/\bnôn nao\b/gi, s:'nôn nao (đúng)', note:''},
+  {w:/\bnôn náo\b/gi, s:'nôn nao / nôn náo — kiểm tra', note:'Kiểm tra từ'},
+  {w:/\bphấn chấn\b/gi, s:'phấn chấn (đúng)', note:''},
+  {w:/\bphấn trấn\b/gi, s:'phấn chấn', note:'Sai âm đầu ch/tr'},
+  {w:/\bthẹn thùng\b/gi, s:'thẹn thùng (đúng)', note:''},
+  {w:/\bthẻn thùng\b/gi, s:'thẹn thùng', note:'Sai dấu thanh'},
+  {w:/\bnhút nhát\b/gi, s:'nhút nhát (đúng)', note:''},
+  {w:/\bnhúc nhát\b/gi, s:'nhút nhát', note:'Sai từ'},
+  {w:/\bmơ màng\b/gi, s:'mơ màng (đúng)', note:''},
+  {w:/\bmờ màng\b/gi, s:'mơ màng', note:'Sai dấu thanh'},
+  {w:/\bchăm chú\b/gi, s:'chăm chú (đúng)', note:''},
+  {w:/\btrăm chú\b/gi, s:'chăm chú', note:'Sai âm đầu ch/tr'},
+  {w:/\bthấu hiểu\b/gi, s:'thấu hiểu (đúng)', note:''},
+  {w:/\bthâu hiểu\b/gi, s:'thấu hiểu', note:'Sai dấu thanh'},
+  {w:/\bsâu sắc\b/gi, s:'sâu sắc (đúng)', note:''},
+  {w:/\bsâu xắc\b/gi, s:'sâu sắc', note:'Sai âm đầu s/x'},
+  {w:/\btrống rỗng\b/gi, s:'trống rỗng (đúng)', note:''},
+  {w:/\btrống rổng\b/gi, s:'trống rỗng', note:'Sai dấu thanh'},
+  {w:/\btrơ trọi\b/gi, s:'trơ trọi (đúng)', note:''},
+  {w:/\btrơ tọi\b/gi, s:'trơ trọi', note:'Sai từ'},
+  {w:/\bcô đơn\b/gi, s:'cô đơn (đúng)', note:''},
+  {w:/\bcô đon\b/gi, s:'cô đơn', note:'Thiếu dấu'},
+  {w:/\bnhạt phai\b/gi, s:'nhạt phai (đúng)', note:''},
+  {w:/\bthoáng qua\b/gi, s:'thoáng qua (đúng)', note:''},
+  {w:/\bthoảng qua\b/gi, s:'thoáng qua', note:'Sai dấu thanh'},
+
+  // ═══════════════════════════════════════
+  // 12. LỖI TẢ CẢNH THIÊN NHIÊN
+  // ═══════════════════════════════════════
+  {w:/\blong lanh\b/gi, s:'long lanh (đúng)', note:''},
+  {w:/\blong lánh\b/gi, s:'long lanh', note:'Sai dấu thanh'},
+  {w:/\blung linh\b/gi, s:'lung linh (đúng)', note:''},
+  {w:/\blun linh\b/gi, s:'lung linh', note:'Thiếu chữ g'},
+  {w:/\blấp lánh\b/gi, s:'lấp lánh (đúng)', note:''},
+  {w:/\blập lánh\b/gi, s:'lấp lánh', note:'Sai dấu thanh'},
+  {w:/\btim tím\b/gi, s:'tím tím / tim (màu tim)', note:'Kiểm tra ngữ cảnh'},
+  {w:/\bhồng hào\b/gi, s:'hồng hào (đúng)', note:''},
+  {w:/\bhồng hảo\b/gi, s:'hồng hào', note:'Sai dấu thanh'},
+  {w:/\bxanh biếc\b/gi, s:'xanh biếc (đúng)', note:''},
+  {w:/\bxanh biết\b/gi, s:'xanh biếc', note:'Sai âm cuối c/t'},
+  {w:/\bvàng vọt\b/gi, s:'vàng vọt (đúng)', note:''},
+  {w:/\bvàng võt\b/gi, s:'vàng vọt', note:'Sai dấu thanh'},
+  {w:/\btrắng xóa\b/gi, s:'trắng xóa (đúng)', note:''},
+  {w:/\btrắng xoá\b/gi, s:'trắng xóa (đúng — cách viết cũ)', note:''},
+  {w:/\bsương mù\b/gi, s:'sương mù (đúng)', note:''},
+  {w:/\bsương mú\b/gi, s:'sương mù', note:'Sai dấu thanh'},
+  {w:/\bmây trắng\b/gi, s:'mây trắng (đúng)', note:''},
+  {w:/\bnắng vàng\b/gi, s:'nắng vàng (đúng)', note:''},
+  {w:/\bgiọt sương\b/gi, s:'giọt sương (đúng)', note:''},
+  {w:/\bsóng biển\b/gi, s:'sóng biển (đúng)', note:''},
+  {w:/\bhơi thở\b/gi, s:'hơi thở (đúng)', note:''},
+  {w:/\bhơi thở\b/gi, s:'hơi thở (đúng)', note:''},
+  {w:/\btiếng gió\b/gi, s:'tiếng gió (đúng)', note:''},
+  {w:/\bbóng tối\b/gi, s:'bóng tối (đúng)', note:''},
+  {w:/\bvầng trăng\b/gi, s:'vầng trăng (đúng)', note:''},
+  {w:/\bănh trăng\b/gi, s:'ánh trăng', note:'Sai dấu thanh'},
+  {w:/\bánh trăng\b/gi, s:'ánh trăng (đúng)', note:''},
+  {w:/\btia nắng\b/gi, s:'tia nắng (đúng)', note:''},
+
+  // ═══════════════════════════════════════
+  // 13. LỖI TẢ HÀNH ĐỘNG / CHUYỂN ĐỘNG
+  // ═══════════════════════════════════════
+  {w:/\bchớp mắt\b/gi, s:'chớp mắt (đúng)', note:''},
+  {w:/\bchơm mắt\b/gi, s:'chớp mắt', note:'Sai từ'},
+  {w:/\bnhướn mày\b/gi, s:'nhướn mày / nhíu mày — kiểm tra', note:'Kiểm tra từ'},
+  {w:/\bnhíu mày\b/gi, s:'nhíu mày (đúng)', note:''},
+  {w:/\bcắn môi\b/gi, s:'cắn môi (đúng)', note:''},
+  {w:/\bnhếch môi\b/gi, s:'nhếch môi (đúng)', note:''},
+  {w:/\bnhếch mép\b/gi, s:'nhếch mép (đúng)', note:''},
+  {w:/\bkhóe môi\b/gi, s:'khóe môi (đúng)', note:''},
+  {w:/\bkhóe mắt\b/gi, s:'khóe mắt (đúng)', note:''},
+  {w:/\bkhẽ thở\b/gi, s:'khẽ thở (đúng)', note:''},
+  {w:/\bkhe thở\b/gi, s:'khẽ thở', note:'Sai từ'},
+  {w:/\brun rẩy\b/gi, s:'run rẩy (đúng)', note:''},
+  {w:/\brun rẫy\b/gi, s:'run rẩy', note:'Sai dấu thanh'},
+  {w:/\bkhựng lại\b/gi, s:'khựng lại (đúng)', note:''},
+  {w:/\bkhừng lại\b/gi, s:'khựng lại', note:'Sai dấu thanh'},
+  {w:/\bgiật mình\b/gi, s:'giật mình (đúng)', note:''},
+  {w:/\bgiật mình\b/gi, s:'giật mình (đúng)', note:''},
+  {w:/\bvươn người\b/gi, s:'vươn người (đúng)', note:''},
+  {w:/\bươn người\b/gi, s:'vươn người', note:'Thiếu âm đầu v'},
+  {w:/\bnghiêng đầu\b/gi, s:'nghiêng đầu (đúng)', note:''},
+  {w:/\bngiêng đầu\b/gi, s:'nghiêng đầu', note:'Thiếu chữ h'},
+  {w:/\bcúi đầu\b/gi, s:'cúi đầu (đúng)', note:''},
+  {w:/\bgục đầu\b/gi, s:'gục đầu (đúng)', note:''},
+  {w:/\bnắm tay\b/gi, s:'nắm tay (đúng)', note:''},
+  {w:/\bbuông tay\b/gi, s:'buông tay (đúng)', note:''},
+  {w:/\bsiết chặt\b/gi, s:'siết chặt (đúng)', note:''},
+  {w:/\bxiết chặt\b/gi, s:'siết chặt', note:'Sai âm đầu s/x'},
+  {w:/\bvòng tay\b/gi, s:'vòng tay (đúng)', note:''},
+  {w:/\bnhìn chằm chằm\b/gi, s:'nhìn chằm chằm (đúng)', note:''},
+  {w:/\bnhìn chăm chăm\b/gi, s:'nhìn chằm chằm / nhìn chăm chú — kiểm tra', note:'Kiểm tra từ'},
+  {w:/\btrừng mắt\b/gi, s:'trừng mắt (đúng)', note:''},
+  {w:/\btrứng mắt\b/gi, s:'trừng mắt', note:'Sai dấu thanh'},
+
+  // ═══════════════════════════════════════
+  // 14. CỤM TỪ DỄ VIẾT SAI
+  // ═══════════════════════════════════════
+  {w:/\bxan xát\b/gi, s:'xăng xái / xát xao — kiểm tra', note:'Sai từ'},
+  {w:/\btự dưng\b/gi, s:'tự dưng (đúng)', note:''},
+  {w:/\btự nhiên\b/gi, s:'tự nhiên (đúng)', note:''},
+  {w:/\bthỉnh thoảng\b/gi, s:'thỉnh thoảng (đúng)', note:''},
+  {w:/\bthỉng thoảng\b/gi, s:'thỉnh thoảng', note:'Thiếu chữ h'},
+  {w:/\bchẳng hạn\b/gi, s:'chẳng hạn (đúng)', note:''},
+  {w:/\bchẵng hạn\b/gi, s:'chẳng hạn', note:'Sai dấu thanh'},
+  {w:/\bđương nhiên\b/gi, s:'đương nhiên (đúng)', note:''},
+  {w:/\bđượng nhiên\b/gi, s:'đương nhiên', note:'Sai từ'},
+  {w:/\bdĩ nhiên\b/gi, s:'dĩ nhiên (đúng)', note:''},
+  {w:/\bdĩ nhên\b/gi, s:'dĩ nhiên', note:'Sai từ'},
+  {w:/\bvô tình\b/gi, s:'vô tình (đúng)', note:''},
+  {w:/\bvột tình\b/gi, s:'vô tình', note:'Sai từ'},
+  {w:/\bchẳng lẽ\b/gi, s:'chẳng lẽ (đúng)', note:''},
+  {w:/\bchẵng lẽ\b/gi, s:'chẳng lẽ', note:'Sai dấu thanh'},
+  {w:/\bbỗng dưng\b/gi, s:'bỗng dưng (đúng)', note:''},
+  {w:/\bbổng dưng\b/gi, s:'bỗng dưng', note:'Sai dấu thanh'},
+  {w:/\bbỗng nhiên\b/gi, s:'bỗng nhiên (đúng)', note:''},
+  {w:/\bbổng nhiên\b/gi, s:'bỗng nhiên', note:'Sai dấu thanh'},
+  {w:/\bthế mà\b/gi, s:'thế mà (đúng)', note:''},
+  {w:/\bthế nhưng\b/gi, s:'thế nhưng (đúng)', note:''},
+  {w:/\bnhưng mà\b/gi, s:'nhưng mà (đúng)', note:''},
+  {w:/\bđã vậy\b/gi, s:'đã vậy (đúng)', note:''},
+  {w:/\btuy nhiên\b/gi, s:'tuy nhiên (đúng)', note:''},
+  {w:/\btuy vậy\b/gi, s:'tuy vậy (đúng)', note:''},
+  {w:/\bvả lại\b/gi, s:'vả lại (đúng)', note:''},
+  {w:/\bvã lại\b/gi, s:'vả lại', note:'Sai dấu thanh'},
+  {w:/\bhơn nữa\b/gi, s:'hơn nữa (đúng)', note:''},
+  {w:/\bsau cùng\b/gi, s:'sau cùng (đúng)', note:''},
+  {w:/\bcuối cùng\b/gi, s:'cuối cùng (đúng)', note:''},
+
+  // ═══════════════════════════════════════
+  // 15. THÀNH NGỮ VĂN HỌC DỄ VIẾT SAI
+  // ═══════════════════════════════════════
+  {w:/\bthăng trầm\b/gi, s:'thăng trầm (đúng)', note:''},
+  {w:/\bthăn trầm\b/gi, s:'thăng trầm', note:'Thiếu chữ g'},
+  {w:/\bbể dâu\b/gi, s:'bể dâu (đúng)', note:''},
+  {w:/\bể dâu\b/gi, s:'bể dâu', note:'Thiếu âm đầu b'},
+  {w:/\bnghìn trùng\b/gi, s:'nghìn trùng (đúng)', note:''},
+  {w:/\bnghìn chùng\b/gi, s:'nghìn trùng', note:'Sai âm đầu tr/ch'},
+  {w:/\bmênh mông\b/gi, s:'mênh mông (đúng)', note:''},
+  {w:/\bmêng mông\b/gi, s:'mênh mông', note:'Thiếu chữ h'},
+  {w:/\bvô vọng\b/gi, s:'vô vọng (đúng)', note:''},
+  {w:/\btuyệt vọng\b/gi, s:'tuyệt vọng (đúng)', note:''},
+  {w:/\btuyêt vọng\b/gi, s:'tuyệt vọng', note:'Thiếu dấu thanh'},
+  {w:/\bhy vọng\b/gi, s:'hy vọng (đúng)', note:''},
+  {w:/\bhy vong\b/gi, s:'hy vọng', note:'Thiếu dấu thanh'},
+  {w:/\btừ từ\b/gi, s:'từ từ (đúng)', note:''},
+  {w:/\btừ tứ\b/gi, s:'từ từ', note:'Sai dấu thanh'},
+  {w:/\bchậm rãi\b/gi, s:'chậm rãi (đúng)', note:''},
+  {w:/\bchậm rải\b/gi, s:'chậm rãi', note:'Sai dấu thanh'},
+  {w:/\bvội vàng\b/gi, s:'vội vàng (đúng)', note:''},
+  {w:/\bvôi vàng\b/gi, s:'vội vàng', note:'Sai dấu thanh'},
+  {w:/\bhấp tấp\b/gi, s:'hấp tấp (đúng)', note:''},
+  {w:/\bhấp táp\b/gi, s:'hấp tấp', note:'Sai dấu thanh'},
+  {w:/\bkhẽ khàng\b/gi, s:'khẽ khàng (đúng)', note:''},
+  {w:/\bkhe khàng\b/gi, s:'khẽ khàng', note:'Sai từ'},
+  {w:/\bnhẹ nhàng\b/gi, s:'nhẹ nhàng (đúng)', note:''},
+  {w:/\bnhẻ nhàng\b/gi, s:'nhẹ nhàng', note:'Sai dấu thanh'},
+  {w:/\bim lặng\b/gi, s:'im lặng (đúng)', note:''},
+  {w:/\bim lăng\b/gi, s:'im lặng', note:'Thiếu dấu thanh'},
+  {w:/\btrầm lặng\b/gi, s:'trầm lặng (đúng)', note:''},
+  {w:/\btrầm lăng\b/gi, s:'trầm lặng', note:'Thiếu dấu thanh'},
+  {w:/\btĩnh lặng\b/gi, s:'tĩnh lặng (đúng)', note:''},
+  {w:/\btỉnh lặng\b/gi, s:'tĩnh lặng', note:'Sai dấu thanh'},
+  {w:/\byên bình\b/gi, s:'yên bình (đúng)', note:''},
+  {w:/\byên bình\b/gi, s:'yên bình (đúng)', note:''},
+  {w:/\bthắm thiết\b/gi, s:'thắm thiết (đúng)', note:''},
+  {w:/\bthắm thiêt\b/gi, s:'thắm thiết', note:'Thiếu dấu thanh'},
+  {w:/\bnồng nàn\b/gi, s:'nồng nàn (đúng)', note:''},
+  {w:/\bnồng nan\b/gi, s:'nồng nàn', note:'Thiếu dấu thanh'},
+  {w:/\bnghẹt thở\b/gi, s:'nghẹt thở (đúng)', note:''},
+  {w:/\bnghẽt thở\b/gi, s:'nghẹt thở', note:'Sai từ'},
+  {w:/\bsay đắm\b/gi, s:'say đắm (đúng)', note:''},
+  {w:/\bsay đắn\b/gi, s:'say đắm', note:'Sai âm cuối m/n'},
+  {w:/\bsi mê\b/gi, s:'si mê (đúng)', note:''},
+  {w:/\bsymê\b/gi, s:'si mê', note:'Viết sai'},
+  {w:/\bcuồng say\b/gi, s:'cuồng say (đúng)', note:''},
+  {w:/\bham muốn\b/gi, s:'ham muốn (đúng)', note:''},
+  {w:/\bkhao khát\b/gi, s:'khao khát (đúng)', note:''},
+  {w:/\bkhau khát\b/gi, s:'khao khát', note:'Sai từ'},
+  {w:/\btha thiết\b/gi, s:'tha thiết (đúng)', note:''},
+  {w:/\btha thiêt\b/gi, s:'tha thiết', note:'Thiếu dấu thanh'},
+  {w:/\bchân thành\b/gi, s:'chân thành (đúng)', note:''},
+  {w:/\bchân thàn\b/gi, s:'chân thành', note:'Thiếu chữ h'},
+  {w:/\bân cần\b/gi, s:'ân cần (đúng)', note:''},
+  {w:/\bân cân\b/gi, s:'ân cần', note:'Thiếu dấu'},
+  {w:/\bdịu dàng\b/gi, s:'dịu dàng (đúng)', note:''},
+  {w:/\bdịu dàn\b/gi, s:'dịu dàng', note:'Thiếu chữ g'},
+  {w:/\blạnh lùng\b/gi, s:'lạnh lùng (đúng)', note:''},
+  {w:/\blạnh lùn\b/gi, s:'lạnh lùng', note:'Thiếu chữ g'},
+  {w:/\bgià lạnh\b/gi, s:'giá lạnh', note:'Sai dấu thanh'},
+  {w:/\bgiá lạnh\b/gi, s:'giá lạnh (đúng)', note:''},
+  {w:/\bbặt tăm\b/gi, s:'bặt tăm (đúng)', note:''},
+  {w:/\bbật tăm\b/gi, s:'bặt tăm', note:'Sai dấu thanh'},
+  {w:/\bbặt vô âm tín\b/gi, s:'bặt vô âm tín (đúng)', note:''},
+  {w:/\bbặt vô âm tin\b/gi, s:'bặt vô âm tín', note:'Thiếu dấu'},
+
+  // ═══════════════════════════════════════
+  // 16. DẤU CÂU VÀ ĐỊNH DẠNG
+  // ═══════════════════════════════════════
+  {w:/!{2,}/g, s:'! (chỉ dùng một dấu chấm than)', note:'Dấu câu lặp'},
+  {w:/\?{2,}/g, s:'? (chỉ dùng một dấu hỏi)', note:'Dấu câu lặp'},
+  {w:/\.{4,}/g, s:'… (dùng dấu chấm lửng chuẩn)', note:'Dấu câu'},
+  {w:/,{2,}/g, s:', (chỉ một dấu phẩy)', note:'Dấu câu lặp'},
+  {w:/ {2,}/g, s:' (chỉ một khoảng trắng)', note:'Khoảng trắng thừa'},
+  {w:/\t/g, s:'(xóa tab, dùng khoảng trắng)', note:'Tab thừa'},
+
+  // ═══════════════════════════════════════
+  // 17. CÁC TỪ THƯỜNG SAI KHÁC
+  // ═══════════════════════════════════════
+  {w:/\bchỉnh chu\b/gi, s:'chỉn chu', note:'Sai từ'},
+  {w:/\bchỉnh chú\b/gi, s:'chỉn chu', note:'Sai từ'},
+  {w:/\bdè dặt\b/gi, s:'dè dặt (đúng)', note:''},
+  {w:/\bdè đặt\b/gi, s:'dè dặt', note:'Sai âm đầu đ/d'},
+  {w:/\bphong phú\b/gi, s:'phong phú (đúng)', note:''},
+  {w:/\bphong phủ\b/gi, s:'phong phú', note:'Sai dấu thanh'},
+  {w:/\brõ ràng\b/gi, s:'rõ ràng (đúng)', note:''},
+  {w:/\brỏ ràng\b/gi, s:'rõ ràng', note:'Sai dấu thanh'},
+  {w:/\bchính xác\b/gi, s:'chính xác (đúng)', note:''},
+  {w:/\bchính sác\b/gi, s:'chính xác', note:'Sai âm đầu x/s'},
+  {w:/\bkỳ lạ\b/gi, s:'kỳ lạ (đúng)', note:''},
+  {w:/\bkỳ la\b/gi, s:'kỳ lạ', note:'Thiếu dấu'},
+  {w:/\bbí ẩn\b/gi, s:'bí ẩn (đúng)', note:''},
+  {w:/\bbí án\b/gi, s:'bí ẩn', note:'Thiếu dấu'},
+  {w:/\bgian xảo\b/gi, s:'gian xảo (đúng)', note:''},
+  {w:/\bgian sảo\b/gi, s:'gian xảo', note:'Sai âm đầu x/s'},
+  {w:/\bhèn hạ\b/gi, s:'hèn hạ (đúng)', note:''},
+  {w:/\bhèn há\b/gi, s:'hèn hạ', note:'Sai dấu thanh'},
+  {w:/\btàn nhẫn\b/gi, s:'tàn nhẫn (đúng)', note:''},
+  {w:/\btàn nhân\b/gi, s:'tàn nhẫn', note:'Sai từ'},
+  {w:/\bbạo tàn\b/gi, s:'tàn bạo / bạo tàn (đúng)', note:''},
+  {w:/\bnham hiểm\b/gi, s:'nham hiểm (đúng)', note:''},
+  {w:/\bnhan hiểm\b/gi, s:'nham hiểm', note:'Sai từ'},
+  {w:/\bđê tiện\b/gi, s:'đê tiện (đúng)', note:''},
+  {w:/\bđê tiêng\b/gi, s:'đê tiện', note:'Sai từ'},
+  {w:/\bkhéo léo\b/gi, s:'khéo léo (đúng)', note:''},
+  {w:/\bkhéo leo\b/gi, s:'khéo léo', note:'Thiếu dấu'},
+  {w:/\bnhân từ\b/gi, s:'nhân từ (đúng)', note:''},
+  {w:/\bnhân tứ\b/gi, s:'nhân từ', note:'Sai dấu thanh'},
+  {w:/\bcan đảm\b/gi, s:'can đảm (đúng)', note:''},
+  {w:/\bcan đam\b/gi, s:'can đảm', note:'Thiếu dấu'},
+  {w:/\bdũng cảm\b/gi, s:'dũng cảm (đúng)', note:''},
+  {w:/\bdũng cam\b/gi, s:'dũng cảm', note:'Thiếu dấu'},
+  {w:/\bhào hứng\b/gi, s:'hào hứng (đúng)', note:''},
+  {w:/\bhào hứn\b/gi, s:'hào hứng', note:'Thiếu chữ g'},
+  {w:/\bhăng hái\b/gi, s:'hăng hái (đúng)', note:''},
+  {w:/\bhăng hải\b/gi, s:'hăng hái', note:'Sai dấu thanh'},
+  {w:/\bcẩn thận\b/gi, s:'cẩn thận (đúng)', note:''},
+  {w:/\bcẩn thân\b/gi, s:'cẩn thận', note:'Thiếu dấu'},
+  {w:/\bvô lý\b/gi, s:'vô lý (đúng)', note:''},
+  {w:/\bvô lí\b/gi, s:'vô lý (viết lý hoặc lí đều được)', note:''},
+  {w:/\bvô nghĩa\b/gi, s:'vô nghĩa (đúng)', note:''},
+  {w:/\bvô nghỉa\b/gi, s:'vô nghĩa', note:'Sai dấu thanh'},
+  {w:/\bvô ích\b/gi, s:'vô ích (đúng)', note:''},
+  {w:/\bliều lĩnh\b/gi, s:'liều lĩnh (đúng)', note:''},
+  {w:/\bliều lỉnh\b/gi, s:'liều lĩnh', note:'Sai dấu thanh'},
+  {w:/\bkiêu ngạo\b/gi, s:'kiêu ngạo (đúng)', note:''},
+  {w:/\bkiêu ngão\b/gi, s:'kiêu ngạo', note:'Sai dấu thanh'},
+  {w:/\btự cao\b/gi, s:'tự cao (đúng)', note:''},
+  {w:/\bgian dối\b/gi, s:'gian dối (đúng)', note:''},
+  {w:/\bgian giối\b/gi, s:'gian dối', note:'Sai âm đầu d/gi'},
+  {w:/\bthật thà\b/gi, s:'thật thà (đúng)', note:''},
+  {w:/\bthật thà\b/gi, s:'thật thà (đúng)', note:''},
+  {w:/\bngay thẳng\b/gi, s:'ngay thẳng (đúng)', note:''},
+  {w:/\bngay thẵng\b/gi, s:'ngay thẳng', note:'Sai dấu thanh'},
+  {w:/\btrung thực\b/gi, s:'trung thực (đúng)', note:''},
+  {w:/\bchân thực\b/gi, s:'chân thực (đúng)', note:''},
+  {w:/\btuyệt vời\b/gi, s:'tuyệt vời (đúng)', note:''},
+  {w:/\btuyêt vời\b/gi, s:'tuyệt vời', note:'Thiếu dấu'},
+  {w:/\bhoàn hảo\b/gi, s:'hoàn hảo (đúng)', note:''},
+  {w:/\bhoàn hão\b/gi, s:'hoàn hảo', note:'Sai dấu thanh'},
+  {w:/\bkỳ diệu\b/gi, s:'kỳ diệu (đúng)', note:''},
+  {w:/\bkỳ diêu\b/gi, s:'kỳ diệu', note:'Thiếu dấu'},
+  {w:/\bthần kỳ\b/gi, s:'thần kỳ (đúng)', note:''},
+  {w:/\bthần kì\b/gi, s:'thần kỳ (viết kỳ hoặc kì đều được)', note:''},
+  {w:/\bdiệu kỳ\b/gi, s:'diệu kỳ (đúng)', note:''},
+  {w:/\bkỳ quan\b/gi, s:'kỳ quan (đúng)', note:''},
+
+  // ═══════════════════════════════════════
+  // 18. LỖI THÊM — ĐẠT 500+
+  // ═══════════════════════════════════════
+  {w:/\bgiống hệt\b/gi, s:'giống hệt (đúng)', note:''},
+  {w:/\bdống hệt\b/gi, s:'giống hệt', note:'Sai âm đầu gi/d'},
+  {w:/\bkéo dài\b/gi, s:'kéo dài (đúng)', note:''},
+  {w:/\bkeo dài\b/gi, s:'kéo dài', note:'Thiếu dấu'},
+  {w:/\bchìm đắm\b/gi, s:'chìm đắm (đúng)', note:''},
+  {w:/\bchìm đắn\b/gi, s:'chìm đắm', note:'Sai âm cuối m/n'},
+  {w:/\bnổi bật\b/gi, s:'nổi bật (đúng)', note:''},
+  {w:/\bnổi bậc\b/gi, s:'nổi bật', note:'Sai âm cuối t/c'},
+  {w:/\bvượt trội\b/gi, s:'vượt trội (đúng)', note:''},
+  {w:/\bvượt trôi\b/gi, s:'vượt trội', note:'Thiếu dấu'},
+  {w:/\bthất bại\b/gi, s:'thất bại (đúng)', note:''},
+  {w:/\bthất bai\b/gi, s:'thất bại', note:'Thiếu dấu'},
+  {w:/\bthành công\b/gi, s:'thành công (đúng)', note:''},
+  {w:/\bthàn công\b/gi, s:'thành công', note:'Thiếu chữ h'},
+  {w:/\bhi sinh\b/gi, s:'hy sinh', note:'Sai từ hi/hy'},
+  {w:/\bhy sinh\b/gi, s:'hy sinh (đúng)', note:''},
+  {w:/\bhy vọng\b/gi, s:'hy vọng (đúng)', note:''},
+  {w:/\bhi vọng\b/gi, s:'hy vọng', note:'Sai từ hi/hy'},
+  {w:/\btrăn trở\b/gi, s:'trăn trở (đúng)', note:''},
+  {w:/\btrăng trở\b/gi, s:'trăn trở', note:'Sai từ'},
+  {w:/\bnặng nề\b/gi, s:'nặng nề (đúng)', note:''},
+  {w:/\bnặng nề\b/gi, s:'nặng nề (đúng)', note:''},
+  {w:/\bnhẹ nhõm\b/gi, s:'nhẹ nhõm (đúng)', note:''},
+  {w:/\bnhẹ nhom\b/gi, s:'nhẹ nhõm', note:'Thiếu dấu'},
+  {w:/\bấm áp\b/gi, s:'ấm áp (đúng)', note:''},
+  {w:/\bấm áp\b/gi, s:'ấm áp (đúng)', note:''},
+  {w:/\blạnh giá\b/gi, s:'lạnh giá (đúng)', note:''},
+  {w:/\blạnh gia\b/gi, s:'lạnh giá', note:'Thiếu dấu'},
+  {w:/\bbẽ bàng\b/gi, s:'bẽ bàng (đúng)', note:''},
+  {w:/\bbẽ bàn\b/gi, s:'bẽ bàng', note:'Thiếu chữ g'},
+  {w:/\bxấu hổ\b/gi, s:'xấu hổ (đúng)', note:''},
+  {w:/\bxấu hỗ\b/gi, s:'xấu hổ', note:'Sai dấu thanh'},
+  {w:/\btủi thân\b/gi, s:'tủi thân (đúng)', note:''},
+  {w:/\btủi thân\b/gi, s:'tủi thân (đúng)', note:''},
+  {w:/\bxót lòng\b/gi, s:'xót lòng (đúng)', note:''},
+  {w:/\bsót lòng\b/gi, s:'xót lòng', note:'Sai âm đầu x/s'},
+  {w:/\bđau lòng\b/gi, s:'đau lòng (đúng)', note:''},
+  {w:/\bquặn lòng\b/gi, s:'quặn lòng (đúng)', note:''},
+  {w:/\bquặng lòng\b/gi, s:'quặn lòng', note:'Sai từ'},
+  {w:/\btức giận\b/gi, s:'tức giận (đúng)', note:''},
+  {w:/\btức dận\b/gi, s:'tức giận', note:'Sai âm đầu gi/d'},
+  {w:/\bphẫn nộ\b/gi, s:'phẫn nộ (đúng)', note:''},
+  {w:/\bphẫn lộ\b/gi, s:'phẫn nộ', note:'Sai từ'},
+  {w:/\bnhẫn nại\b/gi, s:'nhẫn nại (đúng)', note:''},
+  {w:/\bnhẩn nại\b/gi, s:'nhẫn nại', note:'Sai dấu thanh'},
+  {w:/\bkiên trì\b/gi, s:'kiên trì (đúng)', note:''},
+  {w:/\bkiên chì\b/gi, s:'kiên trì', note:'Sai âm đầu tr/ch'},
+  {w:/\bchăm chỉ\b/gi, s:'chăm chỉ (đúng)', note:''},
+  {w:/\bchăm chỉ\b/gi, s:'chăm chỉ (đúng)', note:''},
+  {w:/\bcần cù\b/gi, s:'cần cù (đúng)', note:''},
+  {w:/\bcân cù\b/gi, s:'cần cù', note:'Thiếu dấu'},
+  {w:/\bsiêng năng\b/gi, s:'siêng năng (đúng)', note:''},
+  {w:/\bsiêng năn\b/gi, s:'siêng năng', note:'Thiếu chữ g'},
+  {w:/\bthông minh\b/gi, s:'thông minh (đúng)', note:''},
+  {w:/\bthông min\b/gi, s:'thông minh', note:'Thiếu chữ h'},
+  {w:/\bnhân hậu\b/gi, s:'nhân hậu (đúng)', note:''},
+  {w:/\bnhân hầu\b/gi, s:'nhân hậu', note:'Sai dấu thanh'},
+  {w:/\bdịu hiền\b/gi, s:'dịu hiền (đúng)', note:''},
+  {w:/\bdịu hiên\b/gi, s:'dịu hiền', note:'Thiếu dấu'},
+  {w:/\bthùy mị\b/gi, s:'thùy mị (đúng)', note:''},
+  {w:/\bthùy mỵ\b/gi, s:'thùy mị (viết mị hoặc mỵ đều gặp)', note:''},
+  {w:/\bnết na\b/gi, s:'nết na (đúng)', note:''},
+  {w:/\bnết nà\b/gi, s:'nết na', note:'Sai dấu thanh'},
+  {w:/\bduyên dáng\b/gi, s:'duyên dáng (đúng)', note:''},
+  {w:/\bduyên dán\b/gi, s:'duyên dáng', note:'Thiếu chữ g'},
+  {w:/\bthon thả\b/gi, s:'thon thả (đúng)', note:''},
+  {w:/\bthon thã\b/gi, s:'thon thả', note:'Sai dấu thanh'},
+  {w:/\bmảnh mai\b/gi, s:'mảnh mai (đúng)', note:''},
+  {w:/\bmãnh mai\b/gi, s:'mảnh mai', note:'Sai dấu thanh'},
+  {w:/\brực rỡ\b/gi, s:'rực rỡ (đúng)', note:''},
+  {w:/\brực rở\b/gi, s:'rực rỡ', note:'Sai dấu thanh'},
+  {w:/\bchói lóa\b/gi, s:'chói lóa (đúng)', note:''},
+  {w:/\bchói lóng\b/gi, s:'chói lóa', note:'Sai từ'},
+  {w:/\bmờ ảo\b/gi, s:'mờ ảo (đúng)', note:''},
+  {w:/\bmơ ảo\b/gi, s:'mờ ảo', note:'Sai dấu thanh'},
+  {w:/\bhuyền bí\b/gi, s:'huyền bí (đúng)', note:''},
+  {w:/\bhuyền bí\b/gi, s:'huyền bí (đúng)', note:''},
+  {w:/\bthần thái\b/gi, s:'thần thái (đúng)', note:''},
+  {w:/\bthần thái\b/gi, s:'thần thái (đúng)', note:''},
+  {w:/\bkhí chất\b/gi, s:'khí chất (đúng)', note:''},
+  {w:/\bkhí chất\b/gi, s:'khí chất (đúng)', note:''},
+  {w:/\bthoát tục\b/gi, s:'thoát tục (đúng)', note:''},
+  {w:/\bthoát tụt\b/gi, s:'thoát tục', note:'Sai âm cuối c/t'},
+  {w:/\bphong lưu\b/gi, s:'phong lưu (đúng)', note:''},
+  {w:/\bphong lưu\b/gi, s:'phong lưu (đúng)', note:''},
+  {w:/\btài hoa\b/gi, s:'tài hoa (đúng)', note:''},
+  {w:/\btài hao\b/gi, s:'tài hoa', note:'Thiếu dấu'},
+  {w:/\bvăn hoa\b/gi, s:'văn hoa (đúng — khác văn hóa)', note:''},
+  {w:/\bbác học\b/gi, s:'bác học (đúng)', note:''},
+  {w:/\buyên bác\b/gi, s:'uyên bác (đúng)', note:''},
+  {w:/\buyên bác\b/gi, s:'uyên bác (đúng)', note:''},
+  {w:/\bthâm thúy\b/gi, s:'thâm thúy (đúng)', note:''},
+  {w:/\bthâm thúi\b/gi, s:'thâm thúy', note:'Sai từ'},
+  {w:/\bsắc bén\b/gi, s:'sắc bén (đúng)', note:''},
+  {w:/\bsắc ben\b/gi, s:'sắc bén', note:'Thiếu dấu'},
+  {w:/\btàn bạo\b/gi, s:'tàn bạo (đúng)', note:''},
+  {w:/\btàn báo\b/gi, s:'tàn bạo', note:'Sai dấu thanh'},
+  {w:/\bđộc đoán\b/gi, s:'độc đoán (đúng)', note:''},
+  {w:/\bđộc đoan\b/gi, s:'độc đoán', note:'Thiếu dấu'},
+  {w:/\bbạo ngược\b/gi, s:'bạo ngược (đúng)', note:''},
+  {w:/\bbạo ngươc\b/gi, s:'bạo ngược', note:'Thiếu dấu'},
+  {w:/\bkhinh thường\b/gi, s:'khinh thường (đúng)', note:''},
+  {w:/\bkhinh thươn\b/gi, s:'khinh thường', note:'Thiếu chữ g'},
+  {w:/\bkhinh bỉ\b/gi, s:'khinh bỉ (đúng)', note:''},
+  {w:/\bkhinh bỷ\b/gi, s:'khinh bỉ', note:'Sai từ'},
+  {w:/\bghét bỏ\b/gi, s:'ghét bỏ (đúng)', note:''},
+  {w:/\bghet bỏ\b/gi, s:'ghét bỏ', note:'Thiếu dấu'},
+  {w:/\bthù hận\b/gi, s:'thù hận (đúng)', note:''},
+  {w:/\bthù hân\b/gi, s:'thù hận', note:'Thiếu dấu'},
+  {w:/\boán giận\b/gi, s:'oán giận (đúng)', note:''},
+  {w:/\boán dận\b/gi, s:'oán giận', note:'Sai âm đầu gi/d'},
+  {w:/\bthần tượng\b/gi, s:'thần tượng (đúng)', note:''},
+  {w:/\bthần tượn\b/gi, s:'thần tượng', note:'Thiếu chữ g'},
+  {w:/\bngưỡng mộ\b/gi, s:'ngưỡng mộ (đúng)', note:''},
+  {w:/\bngưỡng mô\b/gi, s:'ngưỡng mộ', note:'Thiếu dấu'},
+  {w:/\bkính trọng\b/gi, s:'kính trọng (đúng)', note:''},
+  {w:/\bkính trong\b/gi, s:'kính trọng', note:'Thiếu dấu'},
+  {w:/\byêu thương\b/gi, s:'yêu thương (đúng)', note:''},
+  {w:/\byêu thươn\b/gi, s:'yêu thương', note:'Thiếu chữ g'},
+  {w:/\btrân trọng\b/gi, s:'trân trọng (đúng)', note:''},
+  {w:/\btrân trong\b/gi, s:'trân trọng', note:'Thiếu dấu'},
+  {w:/\bquý trọng\b/gi, s:'quý trọng (đúng)', note:''},
+  {w:/\bqúy trọng\b/gi, s:'quý trọng', note:'Sai dấu — chữ quý không có dấu sắc trên u'},
+  {w:/\btrân quý\b/gi, s:'trân quý (đúng)', note:''},
+  {w:/\btrân qúy\b/gi, s:'trân quý', note:'Sai dấu — chữ quý không có dấu sắc trên u'},
+
+].filter(d => d.note && !d.s.includes('(đúng)') && !d.s.includes('đều được') && !d.s.includes('đều gặp'));
+
 
 function checkBuiltinDict(text) {
   const errors = [];
