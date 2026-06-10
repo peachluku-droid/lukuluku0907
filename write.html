@@ -465,6 +465,15 @@ body { display: block; }
 }
 .dtb-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .dtb-btn:hover { background: var(--peach-light); color: var(--peach); }
+.dtb-btn.active { background: var(--peach-light); color: var(--peach); border-color: var(--peach); font-weight: 900; }
+.panel-btn.active { background: var(--peach-light); color: var(--peach); border-color: var(--peach); }
+.desktop-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 2px; padding: 6px 12px; border-bottom: 1px solid var(--border); background: var(--bg); }
+.dtb-word-count {
+  margin-left: auto; font-size: 12px; font-weight: 700;
+  color: var(--text-muted); padding: 4px 10px;
+  background: var(--peach-light); border-radius: 20px;
+  white-space: nowrap; font-family: 'Nunito', sans-serif;
+}
 @media (max-width: 768px) { .desktop-toolbar { display: none; } }
 
 /* Content */
@@ -888,9 +897,9 @@ body { display: block; }
       <!-- DESKTOP TOOLBAR (ẩn trên mobile, hiện trên laptop) -->
       <div class="desktop-toolbar" id="desktopToolbar">
         <div class="desktop-tb-group">
-          <button class="dtb-btn" onclick="fmt('bold')" title="Đậm"><b>B</b></button>
-          <button class="dtb-btn" onclick="fmt('italic')" title="Nghiêng"><i>I</i></button>
-          <button class="dtb-btn" onclick="fmt('underline')" title="Gạch chân"><u>U</u></button>
+          <button class="dtb-btn" id="dtbBold"      onclick="fmt('bold')"      title="Đậm"><b>B</b></button>
+          <button class="dtb-btn" id="dtbItalic"    onclick="fmt('italic')"    title="Nghiêng"><i>I</i></button>
+          <button class="dtb-btn" id="dtbUnderline" onclick="fmt('underline')" title="Gạch chân"><u>U</u></button>
         </div>
         <div class="dtb-sep"></div>
         <div class="desktop-tb-group">
@@ -940,6 +949,8 @@ body { display: block; }
             <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
         </div>
+        <!-- Fix lỗi 3: Word count trên desktop -->
+        <div class="dtb-word-count" id="dtbWordCount">0 từ</div>
       </div>
 
       <div class="content-scroll">
@@ -954,9 +965,9 @@ body { display: block; }
         <!-- Format panel -->
         <div class="slide-panel" id="formatPanel">
           <div class="panel-row">
-            <button class="panel-btn" onclick="fmt('bold')"><b>B</b></button>
-            <button class="panel-btn" onclick="fmt('italic')"><i>I</i></button>
-            <button class="panel-btn" onclick="fmt('underline')"><u>U</u></button>
+            <button class="panel-btn" id="mobileBtnB" onclick="fmt('bold')"><b>B</b></button>
+            <button class="panel-btn" id="mobileBtnI" onclick="fmt('italic')"><i>I</i></button>
+            <button class="panel-btn" id="mobileBtnU" onclick="fmt('underline')"><u>U</u></button>
             <div class="panel-sep"></div>
             <button class="panel-btn" onclick="fmt('justifyLeft')">
               <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg>
@@ -1340,7 +1351,11 @@ function showApp() {
   document.getElementById('app').style.display = 'flex';
   document.getElementById('menuBtn').style.display = 'flex';
   setupFocusRecovery();
-  // loadStories() sẽ được gọi sau khi currentUser đã được gán trong init()
+  // Khởi tạo paste handler và selection tracker
+  setTimeout(() => {
+    initPasteHandler();
+    initSelectionListener();
+  }, 300);
 }
 
 // ── STORIES ──
@@ -1653,7 +1668,128 @@ async function publishChapter() {
 }
 
 // ── EDITOR TOOLS ──
-function fmt(cmd) { document.execCommand(cmd, false, null); document.getElementById('chContent').focus(); }
+
+// Fix lỗi 1: Paste sạch — strip toàn bộ font/color/style từ clipboard
+function initPasteHandler() {
+  const ed = document.getElementById('chContent');
+  if (!ed) return;
+  ed.addEventListener('paste', function(e) {
+    e.preventDefault();
+    const clipData = e.clipboardData || window.clipboardData;
+
+    // Ưu tiên lấy text/html để giữ cấu trúc đoạn, nhưng strip style
+    let html = clipData.getData('text/html');
+    if (html) {
+      const tmp = document.createElement('div');
+      tmp.innerHTML = html;
+
+      // Xóa toàn bộ style inline, font, color
+      tmp.querySelectorAll('*').forEach(el => {
+        el.removeAttribute('style');
+        el.removeAttribute('color');
+        el.removeAttribute('face');
+        el.removeAttribute('size');
+        el.removeAttribute('bgcolor');
+        el.removeAttribute('class');
+        el.removeAttribute('id');
+        el.removeAttribute('data-font');
+        // Giữ lại: b, i, u, strong, em, p, br, div, hr
+        // Loại bỏ span wrapper thừa (flatten)
+        if (el.tagName === 'SPAN') {
+          const parent = el.parentNode;
+          while (el.firstChild) parent.insertBefore(el.firstChild, el);
+          parent.removeChild(el);
+        }
+      });
+
+      // Loại bỏ các tag không cần thiết giữ lại cấu trúc
+      tmp.querySelectorAll('font,center,table,thead,tbody,tr,td,th,colgroup,col,caption,section,article,aside,header,footer,nav,figure,figcaption,dl,dt,dd').forEach(el => {
+        const parent = el.parentNode;
+        while (el.firstChild) parent.insertBefore(el.firstChild, el);
+        parent.removeChild(el);
+      });
+
+      // Loại bỏ các attribute script/event
+      tmp.querySelectorAll('*').forEach(el => {
+        Array.from(el.attributes).forEach(attr => {
+          if (attr.name.startsWith('on') || attr.name === 'href' && el.tagName !== 'A') {
+            el.removeAttribute(attr.name);
+          }
+        });
+      });
+
+      const clean = tmp.innerHTML.trim();
+      document.execCommand('insertHTML', false, clean || clipData.getData('text/plain'));
+    } else {
+      // Chỉ có text thuần
+      const text = clipData.getData('text/plain') || '';
+      const escaped = text
+        .split('\n')
+        .map(line => line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'))
+        .join('<br>');
+      document.execCommand('insertHTML', false, escaped);
+    }
+    updateWordCount();
+    isDirty = true;
+    setSaveStatus('Chưa lưu');
+    saveLocalDraft();
+  });
+}
+
+// Fix lỗi 2: Toggle B/I/U đúng — kiểm tra trạng thái trước khi apply
+function fmt(cmd) {
+  const ed = document.getElementById('chContent');
+  ed.focus();
+
+  // Kiểm tra trạng thái hiện tại
+  const isActive = document.queryCommandState(cmd);
+
+  // Nếu đang active thì tắt, nếu không thì bật
+  document.execCommand(cmd, false, null);
+
+  // Cập nhật trạng thái nút active (desktop toolbar)
+  const cmdToBtn = { bold: 'dtbBold', italic: 'dtbItalic', underline: 'dtbUnderline' };
+  const btnId = cmdToBtn[cmd];
+  if (btnId) {
+    const btn = document.getElementById(btnId);
+    if (btn) btn.classList.toggle('active', !isActive);
+  }
+
+  // Cập nhật nút mobile format panel
+  const mobileMap = { bold: 'mobileBtnB', italic: 'mobileBtnI', underline: 'mobileBtnU' };
+  const mBtnId = mobileMap[cmd];
+  if (mBtnId) {
+    const mBtn = document.getElementById(mBtnId);
+    if (mBtn) mBtn.classList.toggle('active', !isActive);
+  }
+
+  ed.focus();
+}
+
+// Theo dõi trạng thái selection để cập nhật nút active
+function initSelectionListener() {
+  const ed = document.getElementById('chContent');
+  if (!ed) return;
+  function updateBtnStates() {
+    const cmds = ['bold','italic','underline'];
+    const desktopMap = { bold:'dtbBold', italic:'dtbItalic', underline:'dtbUnderline' };
+    const mobileMap  = { bold:'mobileBtnB', italic:'mobileBtnI', underline:'mobileBtnU' };
+    cmds.forEach(cmd => {
+      const active = document.queryCommandState(cmd);
+      const dBtn = document.getElementById(desktopMap[cmd]);
+      const mBtn = document.getElementById(mobileMap[cmd]);
+      if (dBtn) dBtn.classList.toggle('active', active);
+      if (mBtn) mBtn.classList.toggle('active', active);
+    });
+  }
+  ed.addEventListener('keyup', updateBtnStates);
+  ed.addEventListener('mouseup', updateBtnStates);
+  ed.addEventListener('touchend', updateBtnStates);
+  document.addEventListener('selectionchange', () => {
+    if (document.activeElement === ed) updateBtnStates();
+  });
+}
+
 function clearFormat() { document.execCommand('removeFormat', false, null); }
 function insertHR() {
   document.getElementById('chContent').focus();
@@ -3152,7 +3288,11 @@ function onContentInput() {
 function updateWordCount() {
   const text = document.getElementById('chContent').innerText || '';
   const words = text.trim() ? text.trim().split(/\s+/).length : 0;
-  document.getElementById('wordCount').textContent = `${words.toLocaleString()} từ`;
+  const label = `${words.toLocaleString()} từ`;
+  document.getElementById('wordCount').textContent = label;
+  // Fix lỗi 3: sync desktop word count
+  const dtb = document.getElementById('dtbWordCount');
+  if (dtb) dtb.textContent = label;
 }
 
 // ── UI HELPERS ──
