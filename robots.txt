@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+Allow: /index.html
+Allow: /story.html
+Allow: /chapter.html
+Allow: /search.html
+Allow: /library.html
+
+Disallow: /write.html
+Disallow: /profile.html
+Disallow: /auth.html
+Disallow: /admin
+Disallow: /*?*debug=
+Disallow: /*?*preview=
+Disallow: /*?*sort=
+Disallow: /*?*status=
+
+Sitemap: https://peachluku.com/sitemap.xml
