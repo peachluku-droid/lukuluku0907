@@ -3,19 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Web đọc truyện chữ cute & thơm 🍑">
+<link rel="canonical" href="https://peachluku.com/search.html">
+<meta name="description" content="Tìm kiếm truyện chữ tiếng Việt tại Peach Luku — ngôn tình, fantasy, slice of life và nhiều thể loại khác">
 <meta name="robots" content="index, follow">
 <meta property="og:site_name" content="Peach Luku">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://peachluku.com">
-<meta property="og:title" content="Peach Luku">
-<meta property="og:description" content="Web đọc truyện chữ cute & thơm 🍑">
+<meta property="og:url" content="https://peachluku.com/search.html">
+<meta property="og:title" content="Tìm kiếm truyện — Peach Luku">
+<meta property="og:description" content="Tìm kiếm truyện chữ tiếng Việt tại Peach Luku — ngôn tình, fantasy, slice of life và nhiều thể loại khác">
 <meta property="og:image" content="https://jnlqzqtavfptkfvnndxq.supabase.co/storage/v1/object/public/avatars/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="vi_VN">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Peach Luku">
-<meta name="twitter:description" content="Web đọc truyện chữ cute & thơm 🍑">
+<meta name="twitter:title" content="Tìm kiếm truyện — Peach Luku">
+<meta name="twitter:description" content="Tìm kiếm truyện chữ tiếng Việt tại Peach Luku">
 <meta name="twitter:image" content="https://jnlqzqtavfptkfvnndxq.supabase.co/storage/v1/object/public/avatars/og-cover.png">
-<title>Khám phá — Peach Luku</title>
+<title>Tìm kiếm truyện — Peach Luku</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://jnlqzqtavfptkfvnndxq.supabase.co">
+<script src="/seo.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -927,6 +935,31 @@ async function signOut(e) {
 }
 
 loadNavAvatar();
+
+// SEO: noindex trang có ?q= (kết quả search) và ?tag= để tránh duplicate
+// CollectionPage JSON-LD chỉ cho trang gốc /search.html
+(function () {
+  if (!window.PlSEO) return;
+  const p = new URLSearchParams(location.search);
+  const q   = p.get('q');
+  const tag = p.get('tag');
+  if (q || tag) {
+    // Trang kết quả → noindex, canonical về trang gốc
+    PlSEO.noindex();
+    const label = q ? `Tìm kiếm "${q}"` : `Thể loại #${tag}`;
+    document.title = label + ' — Peach Luku';
+  } else {
+    PlSEO.injectCollectionPageJsonLd(
+      'Tìm kiếm truyện — Peach Luku',
+      'https://peachluku.com/search.html',
+      'Tìm kiếm truyện chữ tiếng Việt tại Peach Luku — ngôn tình, fantasy, slice of life và nhiều thể loại khác'
+    );
+    PlSEO.injectBreadcrumb([
+      { name: 'Peach Luku', url: 'https://peachluku.com/' },
+      { name: 'Tìm kiếm', url: 'https://peachluku.com/search.html' },
+    ]);
+  }
+}());
 
 </script>
 <script src="navbar.js"></script>
