@@ -3,22 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Web đọc truyện chữ cute & thơm 🍑">
+<!-- SEO -->
+<link rel="canonical" href="https://peachluku.com/">
+<meta name="description" content="Peach Luku — Đọc truyện chữ tiếng Việt online miễn phí. Kho truyện ngôn tình, fantasy, slice of life cute &amp; thơm 🍑">
 <meta name="robots" content="index, follow">
+<meta name="keywords" content="đọc truyện online, truyện chữ tiếng việt, truyện ngôn tình, peach luku, đọc truyện miễn phí">
+<!-- Open Graph -->
 <meta property="og:site_name" content="Peach Luku">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://peachluku.com">
-<meta property="og:title" content="Peach Luku">
-<meta property="og:description" content="Web đọc truyện chữ cute & thơm 🍑">
+<meta property="og:url" content="https://peachluku.com/">
+<meta property="og:title" content="Peach Luku — Đọc Truyện Chữ Online">
+<meta property="og:description" content="Kho truyện chữ tiếng Việt miễn phí. Ngôn tình, fantasy, slice of life — cute &amp; thơm 🍑">
 <meta property="og:image" content="https://jnlqzqtavfptkfvnndxq.supabase.co/storage/v1/object/public/avatars/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="vi_VN">
+<!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Peach Luku">
-<meta name="twitter:description" content="Web đọc truyện chữ cute & thơm 🍑">
+<meta name="twitter:title" content="Peach Luku — Đọc Truyện Chữ Online">
+<meta name="twitter:description" content="Kho truyện chữ tiếng Việt miễn phí. Ngôn tình, fantasy, slice of life — cute &amp; thơm 🍑">
 <meta name="twitter:image" content="https://jnlqzqtavfptkfvnndxq.supabase.co/storage/v1/object/public/avatars/og-cover.png">
+<!-- PWA -->
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#E8835A">
-<title>Peach Luku — Web Đọc Truyện</title>
+<title>Peach Luku — Đọc Truyện Chữ Online</title>
+<!-- Preconnect để giảm latency font + Supabase -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://jnlqzqtavfptkfvnndxq.supabase.co">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&family=Pacifico&display=swap" rel="stylesheet">
+<script src="/seo.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1363,5 +1378,12 @@ async function renderRankModal() {
 </div>
 
 <script src="navbar.js"></script>
+<script>
+// SEO: WebSite JSON-LD + Breadcrumb cho trang chủ
+if (window.PlSEO) {
+  PlSEO.injectWebSiteJsonLd();
+  PlSEO.injectBreadcrumb([{ name: 'Peach Luku', url: 'https://peachluku.com/' }]);
+}
+</script>
 </body>
 </html>
