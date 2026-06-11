@@ -3,18 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Web đọc truyện chữ cute & thơm 🍑">
+<!-- SEO: meta được cập nhật động bởi setChapterMeta() sau khi load dữ liệu -->
+<link rel="canonical" href="https://peachluku.com/chapter.html">
+<meta name="description" content="Đọc truyện chữ tiếng Việt online tại Peach Luku">
 <meta name="robots" content="index, follow">
+<!-- Open Graph -->
 <meta property="og:site_name" content="Peach Luku">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Peach Luku">
-<meta property="og:description" content="Web đọc truyện chữ cute & thơm 🍑">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://peachluku.com/chapter.html">
+<meta property="og:title" content="Peach Luku — Đọc Truyện">
+<meta property="og:description" content="Đọc truyện chữ tiếng Việt online tại Peach Luku">
 <meta property="og:image" content="https://jnlqzqtavfptkfvnndxq.supabase.co/storage/v1/object/public/avatars/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="vi_VN">
+<!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Peach Luku">
-<meta name="twitter:description" content="Web đọc truyện chữ cute & thơm 🍑">
+<meta name="twitter:title" content="Peach Luku — Đọc Truyện">
+<meta name="twitter:description" content="Đọc truyện chữ tiếng Việt online tại Peach Luku">
 <meta name="twitter:image" content="https://jnlqzqtavfptkfvnndxq.supabase.co/storage/v1/object/public/avatars/og-cover.png">
 <title>Peach Luku — Đọc truyện</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://jnlqzqtavfptkfvnndxq.supabase.co">
+<script src="/seo.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Nunito:wght@400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;600&family=Source+Code+Pro:wght@400&display=swap" rel="stylesheet">
 <style>
@@ -844,7 +856,13 @@ async function loadChapter() {
   }
   chapterData = ch
   document.title = `Chương ${ch.chapter_number} — ${ch.title || ''} · Peach Luku`
-  setChapterMeta(ch, null)
+
+  // Fetch story info để có title + cover cho SEO (chạy song song với render)
+  sb.from('stories').select('title, cover_url, author').eq('id', STORY_ID).maybeSingle()
+    .then(({ data: storyInfo }) => {
+      setChapterMeta(ch, storyInfo?.title || null, storyInfo?.cover_url || null)
+    })
+    .catch(() => setChapterMeta(ch, null, null))
   document.getElementById('header-title').textContent = `${ch.title || 'Chương ' + ch.chapter_number}`
   document.getElementById('chapter-heading').textContent = ch.title || `Chương ${ch.chapter_number}`
   document.getElementById('chapter-meta').textContent =
@@ -1233,15 +1251,38 @@ async function initChapterUser() {
   // username hiện từ profile, không cần nameRow nữa
 }
 
-function setChapterMeta(ch, storyTitle) {
-  const title = 'Chương ' + ch.chapter_number + (ch.title ? ' — ' + ch.title : '') + ' · ' + (storyTitle || 'Peach Luku')
+function setChapterMeta(ch, storyTitle, storyCover) {
+  const canonicalUrl = 'https://peachluku.com/chapter.html?story='
+    + encodeURIComponent(STORY_ID)
+    + '&chapter='
+    + encodeURIComponent(ch.id)
+
+  const chTitle  = 'Chương ' + ch.chapter_number + (ch.title ? ' — ' + ch.title : '')
+  const pageTitle = chTitle + ' · ' + (storyTitle || 'Peach Luku')
+
+  // Description từ nội dung chương (không expose toàn bộ)
   const tmp = document.createElement('div')
   tmp.innerHTML = ch.content || ''
-  const desc = (tmp.textContent || '').replace(/\s+/g,' ').trim().slice(0, 160) || 'Web đọc truyện chữ cute & thơm'
-  document.title = title
-  _setMeta('description', desc); _setMeta('og:title', title)
-  _setMeta('og:description', desc); _setMeta('og:url', location.href)
-  _setMeta('twitter:title', title); _setMeta('twitter:description', desc)
+  const desc = (tmp.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 160)
+    || 'Đọc truyện online tại Peach Luku'
+
+  document.title = pageTitle
+
+  if (window.PlSEO) {
+    PlSEO.updateMeta({
+      title: pageTitle.replace(' — Peach Luku', '').replace(' · Peach Luku', ''),
+      description: desc,
+      image: storyCover || undefined,
+      url: canonicalUrl,
+      type: 'article',
+    })
+    PlSEO.injectChapterJsonLd(ch, storyTitle, storyCover, STORY_ID)
+  } else {
+    _setMeta('description', desc)
+    _setMeta('og:title', pageTitle); _setMeta('og:description', desc)
+    _setMeta('og:url', canonicalUrl)
+    _setMeta('twitter:title', pageTitle); _setMeta('twitter:description', desc)
+  }
 }
 function _setMeta(k, v) {
   const el = document.querySelector('[property="'+k+'"]') || document.querySelector('[name="'+k+'"]')
