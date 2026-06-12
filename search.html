@@ -680,7 +680,8 @@ function renderResults() {
   if (authorFilter) {
     stories = stories.filter(s =>
       (s.author || '').toLowerCase() === authorFilter.toLowerCase() ||
-      (s.uploader_name || '').toLowerCase() === authorFilter.toLowerCase()
+      (s.uploader_name || '').toLowerCase() === authorFilter.toLowerCase() ||
+      (s.uploader_username || '').toLowerCase() === authorFilter.toLowerCase()
     );
   }
   if (searchQuery && !authorFilter) {
@@ -689,6 +690,8 @@ function renderResults() {
       (s.title || '').toLowerCase().includes(q) ||
       (s.author || '').toLowerCase().includes(q) ||
       (s.uploader_name || '').toLowerCase().includes(q) ||
+      (s.uploader_username || '').toLowerCase().includes(q) ||
+      (s.user_id || '').toLowerCase().includes(q) ||
       (s.description || '').toLowerCase().includes(q)
     );
   }
@@ -784,13 +787,13 @@ async function init() {
   const [{ data: stories }, { data: chapters }, { data: profiles }] = await Promise.all([
     sb.from('stories').select('*').order('created_at', { ascending: false }),
     sb.from('chapters').select('story_id'),
-    sb.from('profiles').select('id, display_name')
+    sb.from('profiles').select('id, display_name, username')
   ]);
 
   const profileMap = {};
-  (profiles || []).forEach(p => { profileMap[p.id] = p.display_name || ''; });
+  (profiles || []).forEach(p => { profileMap[p.id] = { display_name: p.display_name || '', username: p.username || '' }; });
 
-  allStories = (stories || []).map(s => ({ ...s, uploader_name: profileMap[s.user_id] || '' }));
+  allStories = (stories || []).map(s => ({ ...s, uploader_name: (profileMap[s.user_id] && profileMap[s.user_id].display_name) || '', uploader_username: (profileMap[s.user_id] && profileMap[s.user_id].username) || '' }));
   chapterCounts = {};
   if (chapters) chapters.forEach(c => { chapterCounts[c.story_id] = (chapterCounts[c.story_id] || 0) + 1; });
 
