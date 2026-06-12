@@ -682,13 +682,17 @@ function renderResults() {
     });
   }
   if (authorFilter) {
-    filtered = filtered.filter(s => (s.author || '').toLowerCase() === authorFilter.toLowerCase());
+    stories = stories.filter(s =>
+      (s.author || '').toLowerCase() === authorFilter.toLowerCase() ||
+      (s.uploader_name || '').toLowerCase() === authorFilter.toLowerCase()
+    );
   }
   if (searchQuery && !authorFilter) {
     const q = searchQuery.toLowerCase();
     stories = stories.filter(s =>
       (s.title || '').toLowerCase().includes(q) ||
       (s.author || '').toLowerCase().includes(q) ||
+      (s.uploader_name || '').toLowerCase().includes(q) ||
       (s.description || '').toLowerCase().includes(q)
     );
   }
@@ -782,11 +786,11 @@ async function init() {
     </div>`;
 
   const [{ data: stories }, { data: chapters }] = await Promise.all([
-    sb.from('stories').select('*').order('created_at', { ascending: false }),
+    sb.from('stories').select('*, profiles(display_name)').order('created_at', { ascending: false }),
     sb.from('chapters').select('story_id')
   ]);
 
-  allStories = stories || [];
+  allStories = (stories || []).map(s => ({ ...s, uploader_name: (s.profiles && s.profiles.display_name) || '' }));
   chapterCounts = {};
   if (chapters) chapters.forEach(c => { chapterCounts[c.story_id] = (chapterCounts[c.story_id] || 0) + 1; });
 
