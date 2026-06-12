@@ -197,14 +197,10 @@ body {
   transition: background .3s;
 }
 .search-box { position: relative; max-width: 680px; margin: 0 auto; }
-.search-icon {
-  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
-  pointer-events: none; color: var(--text-muted); display: flex; align-items: center;
-}
-.search-icon svg { stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; width: 17px; height: 17px; }
+.search-icon { display: none; }
 .search-input {
   width: 100%;
-  padding: 12px 52px 12px 44px;
+  padding: 12px 52px 12px 20px;
   border: 1.5px solid var(--border-hover);
   border-radius: 28px;
   background: var(--bg);
@@ -218,13 +214,13 @@ body {
 .search-input::placeholder { color: var(--text-muted); font-weight: 400; }
 .search-btn {
   position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
-  background: var(--peach); border: none; border-radius: 50%;
+  background: none; border: none; border-radius: 50%;
   width: 36px; height: 36px; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  transition: background .15s;
+  transition: color .15s;
 }
-.search-btn:hover { background: var(--peach-dark); }
-.search-btn svg { stroke: white; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; width: 16px; height: 16px; }
+.search-btn:hover { background: none; }
+.search-btn svg { stroke: var(--peach); fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; width: 18px; height: 18px; }
 .clear-btn {
   position: absolute; right: 50px; top: 50%; transform: translateY(-50%);
   background: none; border: none; cursor: pointer;
@@ -785,12 +781,16 @@ async function init() {
         </div>`).join('')}
     </div>`;
 
-  const [{ data: stories }, { data: chapters }] = await Promise.all([
-    sb.from('stories').select('*, profiles(display_name)').order('created_at', { ascending: false }),
-    sb.from('chapters').select('story_id')
+  const [{ data: stories }, { data: chapters }, { data: profiles }] = await Promise.all([
+    sb.from('stories').select('*').order('created_at', { ascending: false }),
+    sb.from('chapters').select('story_id'),
+    sb.from('profiles').select('id, display_name')
   ]);
 
-  allStories = (stories || []).map(s => ({ ...s, uploader_name: (s.profiles && s.profiles.display_name) || '' }));
+  const profileMap = {};
+  (profiles || []).forEach(p => { profileMap[p.id] = p.display_name || ''; });
+
+  allStories = (stories || []).map(s => ({ ...s, uploader_name: profileMap[s.user_id] || '' }));
   chapterCounts = {};
   if (chapters) chapters.forEach(c => { chapterCounts[c.story_id] = (chapterCounts[c.story_id] || 0) + 1; });
 
