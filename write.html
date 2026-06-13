@@ -435,6 +435,20 @@ body { display: block; }
   .pv-chapter-heading { font-size: 20px; }
   .pv-para-text { font-size: 16px !important; }
   .preview-scroll { padding: 16px 10px 80px; }
+
+  /* Fix nút đóng preview bị khuất trên mobile */
+  .preview-topbar { flex-wrap: wrap; gap: 8px; padding: 8px 10px; }
+  .preview-topbar-right { width: 100%; justify-content: space-between; }
+  .pv-theme-swatches { flex-wrap: wrap; gap: 4px; flex: 1; }
+  /* Nút X to, nổi bật, đặt đầu hàng */
+  .preview-topbar-right > .preview-tool-btn:last-child {
+    background: var(--pv-accent) !important;
+    color: #fff !important;
+    border-color: var(--pv-accent) !important;
+    padding: 6px 16px !important;
+    font-weight: 800;
+    order: -1;
+  }
 }
 
 .tb-btn {
@@ -1654,20 +1668,40 @@ async function saveDraft() {
       if (scroll) localStorage.setItem('luku_scroll_' + currentChapterId, scroll.scrollTop);
     }
   } catch(e) {}
+
   setSaveStatus('Đang lưu...');
-  if (currentChapterId) {
-    const { error } = await sb.from('chapters').update({ title, content, audio_url: currentAudioUrl, updated_at: new Date().toISOString() }).eq('id', currentChapterId);
-    if (error) { showToast('Lưu thất bại!', 'err'); setSaveStatus(''); return; }
-  } else {
-    const { data: existing } = await sb.from('chapters').select('chapter_number').eq('story_id', currentStoryId).order('chapter_number', { ascending: false }).limit(1);
-    const nextNum = existing?.length ? existing[0].chapter_number + 1 : 1;
-    const { data, error } = await sb.from('chapters').insert({
-      story_id: currentStoryId, title, content, audio_url: currentAudioUrl,
-      chapter_number: nextNum, is_published: false, user_id: session.user.id
-    }).select().single();
-    if (error) { showToast('Lưu thất bại: ' + error.message, 'err'); setSaveStatus(''); return; }
-    currentChapterId = data.id;
+
+  // Hàm thử lưu có retry
+  async function tryUpsert(retries = 2) {
+    let error;
+    if (currentChapterId) {
+      ({ error } = await sb.from('chapters').update({ title, content, audio_url: currentAudioUrl, updated_at: new Date().toISOString() }).eq('id', currentChapterId));
+    } else {
+      const { data: existing } = await sb.from('chapters').select('chapter_number').eq('story_id', currentStoryId).order('chapter_number', { ascending: false }).limit(1);
+      const nextNum = existing?.length ? existing[0].chapter_number + 1 : 1;
+      const { data, error: insertErr } = await sb.from('chapters').insert({
+        story_id: currentStoryId, title, content, audio_url: currentAudioUrl,
+        chapter_number: nextNum, is_published: false, user_id: session.user.id
+      }).select().single();
+      error = insertErr;
+      if (!error) currentChapterId = data.id;
+    }
+    if (error && retries > 0) {
+      await new Promise(r => setTimeout(r, 1200));
+      return tryUpsert(retries - 1);
+    }
+    return error;
   }
+
+  const error = await tryUpsert();
+  if (error) {
+    // Lưu Supabase thất bại — giữ nguyên local draft làm backup
+    saveLocalDraft();
+    showToast('Lưu thất bại! Đã giữ bản nháp cục bộ.', 'err');
+    setSaveStatus('Lưu thất bại ✗');
+    return;
+  }
+
   isDirty = false;
   setSaveStatus('Đã lưu ✓');
   showToast('Đã lưu bản thảo!', 'ok');
