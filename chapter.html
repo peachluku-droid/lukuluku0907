@@ -120,7 +120,7 @@ body {
 .chapter-meta { font-size: 13px; color: var(--meta); margin-bottom: 36px; text-align: center; }
 
 .para-wrap {
-  display: block; margin-bottom: 28px; border-radius: 8px;
+  display: block; margin-bottom: 14px; border-radius: 8px;
   padding: 6px; transition: background .2s; overflow: hidden;
 }
 .para-wrap.highlighted { background: color-mix(in srgb, var(--accent) 8%, transparent); }
@@ -128,7 +128,7 @@ body {
   display: block;
   font-weight: var(--font-weight, 400);
   font-style: var(--font-style, normal);
-  line-height: 1.4;
+  line-height: 1.3;
 }
 .para-text * {
   font-family: inherit !important;
@@ -944,6 +944,35 @@ function renderParagraphs(content) {
     })
   })
 }
+
+// Tiêu đề chương xuống dòng bình thường khi đủ chữ một dòng
+
+// Lướt lên/xuống ở đầu/cuối trang để chuyển chương trước/sau
+;(function setupSwipeChapterNav() {
+  let touchStartY = null
+  document.addEventListener('touchstart', (e) => {
+    touchStartY = e.touches[0].clientY
+  }, { passive: true })
+  document.addEventListener('touchend', (e) => {
+    if (touchStartY === null) return
+    const deltaY = e.changedTouches[0].clientY - touchStartY
+    touchStartY = null
+    const threshold = 70
+    const scrollEl = document.scrollingElement || document.documentElement
+    const atTop = scrollEl.scrollTop <= 2
+    const atBottom = scrollEl.scrollTop + scrollEl.clientHeight >= scrollEl.scrollHeight - 2
+    const btnPrev = document.getElementById('btn-prev')
+    const btnNext = document.getElementById('btn-next')
+    // Lướt xuống (kéo tay xuống) khi đang ở đầu trang -> chương trước
+    if (deltaY > threshold && atTop && btnPrev && !btnPrev.classList.contains('disabled')) {
+      location.href = btnPrev.href
+    }
+    // Lướt lên (kéo tay lên) khi đang ở cuối trang -> chương sau
+    else if (deltaY < -threshold && atBottom && btnNext && !btnNext.classList.contains('disabled')) {
+      location.href = btnNext.href
+    }
+  }, { passive: true })
+})()
 
 async function loadToc() {
   const { data } = await sb.from('chapters')
