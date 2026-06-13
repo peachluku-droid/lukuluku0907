@@ -536,6 +536,7 @@ window.sb = sb; // Export cho navbar.js
 
 let allStories = [];
 let chapterCounts = {};
+let profileMap = {};
 let searchQuery = '';
 let authorFilter = '';
 let activeGenre = 'all';
@@ -685,27 +686,22 @@ function removeFilter(key) {
 }
 
 
-async function renderProfileResult(q) {
+function renderProfileResult(q) {
   const profileArea = document.getElementById('profileArea');
   if (!profileArea) return;
   if (!q || q.length < 2) { profileArea.innerHTML = ''; return; }
   const ql = q.toLowerCase();
-  // Find matching profiles from profileMap
   const matched = Object.entries(profileMap).filter(([id, p]) =>
     (p.username || '').toLowerCase().includes(ql) ||
     (p.display_name || '').toLowerCase().includes(ql)
   );
   if (!matched.length) { profileArea.innerHTML = ''; return; }
-  // Fetch avatar for matched profiles
-  const ids = matched.map(([id]) => id);
-  const { data: profData } = await sb.from('profiles').select('id, display_name, username, avatar_url').in('id', ids);
-  if (!profData || !profData.length) { profileArea.innerHTML = ''; return; }
-  profileArea.innerHTML = profData.map(p => {
+  profileArea.innerHTML = matched.map(([id, p]) => {
     const initials = (p.display_name || p.username || '?')[0].toUpperCase();
     const avatarHtml = p.avatar_url
       ? `<img src="${escapeHtml(p.avatar_url)}" alt="avatar">`
       : initials;
-    return `<a class="profile-result-card" href="profile.html?user=${escapeHtml(p.id)}">
+    return `<a class="profile-result-card" href="profile.html?user=${escapeHtml(id)}">
       <div class="profile-result-avatar">${avatarHtml}</div>
       <div class="profile-result-info">
         <div class="profile-result-name">${escapeHtml(p.display_name || p.username || 'Người dùng')}</div>
@@ -842,11 +838,11 @@ async function init() {
   const [{ data: stories }, { data: chapters }, { data: profiles }] = await Promise.all([
     sb.from('stories').select('*').order('created_at', { ascending: false }),
     sb.from('chapters').select('story_id'),
-    sb.from('profiles').select('id, display_name, username')
+    sb.from('profiles').select('id, display_name, username, avatar_url')
   ]);
 
-  const profileMap = {};
-  (profiles || []).forEach(p => { profileMap[p.id] = { display_name: p.display_name || '', username: p.username || '' }; });
+  profileMap = {};
+  (profiles || []).forEach(p => { profileMap[p.id] = { display_name: p.display_name || '', username: p.username || '', avatar_url: p.avatar_url || '' }; });
 
   allStories = (stories || []).map(s => ({ ...s, uploader_name: (profileMap[s.user_id] && profileMap[s.user_id].display_name) || '', uploader_username: (profileMap[s.user_id] && profileMap[s.user_id].username) || '' }));
   chapterCounts = {};
