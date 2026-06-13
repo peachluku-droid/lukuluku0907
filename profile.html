@@ -929,13 +929,50 @@ async function changePassword() {
   document.getElementById('pw-new').value = '';
 }
 
+function compressImage(file, maxDim = 600, quality = 0.8) {
+  return new Promise((resolve) => {
+    if (!file.type.startsWith('image/') || file.type === 'image/gif') return resolve(file);
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = (e) => { img.src = e.target.result; };
+    img.onload = () => {
+      let { width, height } = img;
+      if (width > maxDim || height > maxDim) {
+        if (width > height) { height = Math.round(height * maxDim / width); width = maxDim; }
+        else { width = Math.round(width * maxDim / height); height = maxDim; }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width; canvas.height = height;
+      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+      const mime = supportsWebP() ? 'image/webp' : 'image/jpeg';
+      canvas.toBlob((blob) => resolve(blob || file), mime, quality);
+    };
+    img.onerror = () => resolve(file);
+    reader.readAsDataURL(file);
+  });
+}
+let _webpSupport = null;
+function supportsWebP() {
+  if (_webpSupport !== null) return _webpSupport;
+  const c = document.createElement('canvas');
+  c.width = c.height = 1;
+  _webpSupport = c.toDataURL('image/webp').indexOf('image/webp') === 5;
+  return _webpSupport;
+}
+function imgExtFor(blob, file) {
+  if (blob.type === 'image/webp') return 'webp';
+  if (blob.type === 'image/jpeg') return 'jpg';
+  return (file.name.split('.').pop() || 'jpg');
+}
 /* ── Avatar upload ── */
 document.getElementById('avatar-file').addEventListener('change', async e => {
   const file = e.target.files[0];
   if (!file || !currentUser) return;
   document.getElementById('upload-hint').style.display = 'block';
-  const path = `avatars/${currentUser.id}/avatar_${Date.now()}`;
-  const { error: upErr } = await sb.storage.from('avatars').upload(path, file, { upsert: true });
+  const compressed = await compressImage(file);
+  const ext = imgExtFor(compressed, file);
+  const path = `avatars/${currentUser.id}/avatar_${Date.now()}.${ext}`;
+  const { error: upErr } = await sb.storage.from('avatars').upload(path, compressed, { upsert: true, contentType: compressed.type || file.type, cacheControl: '31536000' });
   if (upErr) { showToast('Lỗi upload!'); document.getElementById('upload-hint').style.display='none'; return; }
   const url = sb.storage.from('avatars').getPublicUrl(path).data.publicUrl;
   await sb.from('profiles').update({ avatar_url: url }).eq('id', currentUser.id);
