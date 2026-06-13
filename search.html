@@ -848,8 +848,8 @@ async function init() {
   chapterCounts = {};
   if (chapters) chapters.forEach(c => { chapterCounts[c.story_id] = (chapterCounts[c.story_id] || 0) + 1; });
 
-  // Re-render nếu user đã gõ trước khi data load xong
-  if (searchQuery) renderResults();
+  // Luôn render lại sau khi data load xong (xóa skeleton)
+  renderResults();
 
   const genres = new Set();
   allStories.forEach(s => {
