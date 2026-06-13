@@ -612,6 +612,7 @@ body { display: block; }
 .panel-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .panel-btn:hover { background: var(--peach-light); border-color: var(--peach); color: var(--peach); }
 .panel-btn-wide { flex: 1; justify-content: center; min-width: 110px; font-size: 12px; }
+#audioPanelBtn.has-audio { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); }
 .panel-sep { width: 1px; height: 22px; background: var(--border); margin: 0 2px; }
 .more-list { display: flex; flex-direction: column; }
 .more-list-item {
@@ -1004,6 +1005,10 @@ body { display: block; }
             <button class="panel-btn panel-btn-wide" onclick="insertVideo()">
               <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
               Video
+            </button>
+            <button class="panel-btn panel-btn-wide" onclick="insertAudio()" id="audioPanelBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+              Audio chương
             </button>
             <button class="panel-btn panel-btn-wide" onclick="insertYoutube()">
               <svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#fff"/></svg>
@@ -1464,9 +1469,10 @@ async function saveStoryInfo() {
 
   let cover_url = undefined;
   if (coverFile) {
-    const ext = coverFile.name.split('.').pop();
+    const compressed = await compressImage(coverFile, 600, 0.8);
+    const ext = imgExtFor(compressed, coverFile);
     const path = `covers/${currentStoryId}_${Date.now()}.${ext}`;
-    const { error: upErr } = await sb.storage.from('avatars').upload(path, coverFile, { upsert: true });
+    const { error: upErr } = await sb.storage.from('avatars').upload(path, compressed, { upsert: true, contentType: compressed.type || coverFile.type, cacheControl: '31536000' });
     if (!upErr) cover_url = sb.storage.from('avatars').getPublicUrl(path).data.publicUrl;
     coverFile = null;
   }
@@ -1589,6 +1595,8 @@ async function openChapter(id) {
   if (!data) return;
   document.getElementById('chTitle').value = data.title || '';
   document.getElementById('chContent').innerHTML = data.content || '';
+  currentAudioUrl = data.audio_url || null;
+  updateAudioBtnState();
   wrapLegacyMedia();
   showEditor();
   updateWordCount();
@@ -1616,6 +1624,8 @@ function newChapter() {
   currentChapterId = null;
   document.getElementById('chTitle').value = '';
   document.getElementById('chContent').innerHTML = '';
+  currentAudioUrl = null;
+  updateAudioBtnState();
   showEditor();
   document.getElementById('chTitle').focus();
   closeSidebar();
@@ -1646,13 +1656,13 @@ async function saveDraft() {
   } catch(e) {}
   setSaveStatus('Đang lưu...');
   if (currentChapterId) {
-    const { error } = await sb.from('chapters').update({ title, content, updated_at: new Date().toISOString() }).eq('id', currentChapterId);
+    const { error } = await sb.from('chapters').update({ title, content, audio_url: currentAudioUrl, updated_at: new Date().toISOString() }).eq('id', currentChapterId);
     if (error) { showToast('Lưu thất bại!', 'err'); setSaveStatus(''); return; }
   } else {
     const { data: existing } = await sb.from('chapters').select('chapter_number').eq('story_id', currentStoryId).order('chapter_number', { ascending: false }).limit(1);
     const nextNum = existing?.length ? existing[0].chapter_number + 1 : 1;
     const { data, error } = await sb.from('chapters').insert({
-      story_id: currentStoryId, title, content,
+      story_id: currentStoryId, title, content, audio_url: currentAudioUrl,
       chapter_number: nextNum, is_published: false, user_id: session.user.id
     }).select().single();
     if (error) { showToast('Lưu thất bại: ' + error.message, 'err'); setSaveStatus(''); return; }
@@ -2266,6 +2276,77 @@ function insertAtSavedPos(html) {
   _savedRange = null;
 }
 
+// ── Nén ảnh trước khi upload (giảm dung lượng, đỡ nặng máy) ──
+let _webpSupport = null;
+function supportsWebP() {
+  if (_webpSupport !== null) return _webpSupport;
+  const c = document.createElement('canvas');
+  c.width = c.height = 1;
+  _webpSupport = c.toDataURL('image/webp').indexOf('image/webp') === 5;
+  return _webpSupport;
+}
+// Nén ảnh: ưu tiên WebP (q=0.8), fallback JPEG nếu browser không hỗ trợ.
+// Resize theo maxDim (giữ tỉ lệ gốc), KHÔNG upscale ảnh nhỏ hơn maxDim.
+function compressImage(file, maxDim = 1000, quality = 0.8) {
+  return new Promise((resolve) => {
+    if (!file.type.startsWith('image/') || file.type === 'image/gif') return resolve(file);
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = (e) => { img.src = e.target.result; };
+    img.onload = () => {
+      let { width, height } = img;
+      if (width > maxDim || height > maxDim) {
+        if (width > height) { height = Math.round(height * maxDim / width); width = maxDim; }
+        else { width = Math.round(width * maxDim / height); height = maxDim; }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width; canvas.height = height;
+      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+      const mime = supportsWebP() ? 'image/webp' : 'image/jpeg';
+      canvas.toBlob((blob) => resolve(blob || file), mime, quality);
+    };
+    img.onerror = () => resolve(file);
+    reader.readAsDataURL(file);
+  });
+}
+function imgExtFor(blob, file) {
+  if (blob.type === 'image/webp') return 'webp';
+  if (blob.type === 'image/jpeg') return 'jpg';
+  return (file.name.split('.').pop() || 'jpg');
+}
+
+let currentAudioUrl = null;
+function updateAudioBtnState() {
+  const btn = document.getElementById('audioPanelBtn');
+  if (btn) btn.classList.toggle('has-audio', !!currentAudioUrl);
+}
+function insertAudio() {
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = 'audio/*';
+  input.onchange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 20 * 1024 * 1024) { showToast('File audio tối đa 20MB', 'err'); return; }
+    showToast('Đang tải audio lên...', 'ok');
+    const ext = file.name.split('.').pop();
+    const path = `chapters/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+    const { error } = await sb.storage.from('chapter-audio').upload(path, file, { contentType: file.type });
+    if (error) { showToast('Tải audio thất bại: ' + error.message, 'err'); return; }
+    currentAudioUrl = sb.storage.from('chapter-audio').getPublicUrl(path).data.publicUrl;
+    updateAudioBtnState();
+    isDirty = true;
+    showToast('Đã thêm audio cho chương! Bấm Lưu để hoàn tất.', 'ok');
+  };
+  input.click();
+}
+function removeAudio() {
+  if (!confirm('Xoá audio của chương này?')) return;
+  currentAudioUrl = null;
+  updateAudioBtnState();
+  isDirty = true;
+}
+
+
 function insertImage() {
   saveEditorSelection();
   const input = document.createElement('input');
@@ -2273,13 +2354,15 @@ function insertImage() {
   input.onchange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      insertAtSavedPos(makeMediaBlock(
-        `<img src="${ev.target.result}" style="max-width:100%;border-radius:8px;display:block;" />`
-      ));
-    };
-    reader.readAsDataURL(file);
+    const compressed = await compressImage(file, 1000, 0.8);
+    const ext = imgExtFor(compressed, file);
+    const path = `chapters/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+    const { error } = await sb.storage.from('chapter-images').upload(path, compressed, { contentType: compressed.type || file.type, cacheControl: '31536000' });
+    if (error) { showToast('Tải ảnh thất bại: ' + error.message, 'err'); return; }
+    const url = sb.storage.from('chapter-images').getPublicUrl(path).data.publicUrl;
+    insertAtSavedPos(makeMediaBlock(
+      `<img src="${url}" loading="lazy" decoding="async" style="max-width:100%;border-radius:8px;display:block;" />`
+    ));
   };
   input.click();
 }
