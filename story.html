@@ -235,6 +235,10 @@ body {
   position: relative;
   background: var(--bg2);
 }
+/* Đảm bảo tất cả tab đều dùng border-radius 14px như description-box */
+#tab-chapters, #tab-comments, #tab-info {
+  border-radius: 14px;
+}
 /* Dải họa tiết trên và dưới */
 .tab-deco-top, .tab-deco-bot { display: none; }
 /* Bo trong cho comment cards */
@@ -280,29 +284,34 @@ body {
 .comment-section { padding: 0; }
 .comment-compose {
   display: flex; gap: 10px; margin-bottom: 0;
-  background: var(--peach-light);
-  border: 1.5px solid var(--peach-mid);
-  border-radius: 14px;
-  padding: 10px 12px;
-  margin: 10px;
-  width: fit-content;
-  max-width: calc(55% - 20px);
-  min-width: 200px;
-  transition: max-width .3s ease, background .2s;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 22px;
+  padding: 7px 15px;
+  margin: 10px 12px;
+  width: calc(55% - 24px);
+  min-width: 180px;
+  transition: width .3s ease, border-color .15s, background .2s;
   cursor: text;
   overflow: hidden;
+  align-items: center;
 }
+.comment-compose:focus-within { border-color: var(--peach); }
 .comment-compose.expanded {
-  max-width: calc(100% - 20px);
-  width: calc(100% - 20px);
+  width: calc(100% - 24px);
   cursor: default;
+  border-radius: 14px;
+  padding: 10px 12px;
+  align-items: flex-start;
+  background: var(--peach-light);
+  border-color: var(--peach-mid);
 }
 .comment-compose .compose-footer { display: none; }
 .comment-compose.expanded .compose-footer { display: flex; }
 .comment-compose .compose-input { pointer-events: none; }
 .comment-compose.expanded .compose-input { pointer-events: auto; }
 .comment-compose.expanded:focus-within { background: var(--peach-light); }
-.compose-avatar { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); }
+.compose-avatar { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); }
 .compose-avatar svg { width: 14px; height: 14px; stroke: var(--peach-mid); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .compose-body { flex: 1; min-width: 0; }
 .compose-input { width: 100%; border: none; background: none; outline: none; font-family: 'Nunito', sans-serif; font-size: 13.5px; color: var(--text); resize: none; min-height: 38px; max-height: 120px; line-height: 1.5; }
@@ -698,7 +707,21 @@ async function loadStory() {
     document.title = story.title + ' — Peach Luku';
     setStoryMeta(story);
     document.getElementById('story-title').textContent = story.title || 'Không có tiêu đề';
-    document.getElementById('story-author').textContent = story.author || 'Ẩn danh';
+    // Load profile người đăng (user_id) thay vì tên tác giả nhập tay
+    if (story.user_id) {
+      const { data: uploaderProf } = await sb.from('profiles').select('username, avatar_url').eq('id', story.user_id).maybeSingle();
+      if (uploaderProf) {
+        document.getElementById('story-author').textContent = uploaderProf.username || story.author || 'Ẩn danh';
+        const avEl = document.getElementById('author-avatar');
+        if (uploaderProf.avatar_url) {
+          avEl.innerHTML = `<img src="${escapeHtml(uploaderProf.avatar_url)}" alt="${escapeHtml(uploaderProf.username || '')}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+        }
+      } else {
+        document.getElementById('story-author').textContent = story.author || 'Ẩn danh';
+      }
+    } else {
+      document.getElementById('story-author').textContent = story.author || 'Ẩn danh';
+    }
     setDescriptionContent(document.getElementById('story-description'), story.description);
     document.getElementById('story-views').textContent = formatViews(story.total_views || 0);
     document.getElementById('story-votes').textContent = formatViews(totalVotes);
