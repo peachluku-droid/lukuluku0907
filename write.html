@@ -1627,7 +1627,15 @@ async function saveDraft() {
   if (!session) { showToast('Phiên hết hạn, tải lại trang!', 'err'); return; }
   if (!currentStoryId) { showToast('Chọn truyện trước!', 'err'); return; }
   const title = document.getElementById('chTitle').value.trim();
-  const content = document.getElementById('chContent').innerHTML;
+  // Gán data-pid cố định vào từng đoạn trước khi lưu
+  const ed = document.getElementById('chContent');
+  let pidCounter = 0;
+  ed.querySelectorAll('p, div:not(#chContent)').forEach(el => {
+    if (!el.dataset.pid) {
+      el.dataset.pid = 'pid_' + Date.now() + '_' + (pidCounter++);
+    }
+  });
+  const content = ed.innerHTML;
 
   // Lưu vị trí scroll trước khi save
   try {
@@ -1679,58 +1687,37 @@ function initPasteHandler() {
     e.preventDefault();
     const clipData = e.clipboardData || window.clipboardData;
 
-    // Ưu tiên lấy text/html để giữ cấu trúc đoạn, nhưng strip style
-    let html = clipData.getData('text/html');
-    if (html) {
+    // Luôn lấy plain text để đảm bảo không bị lỗi font/style từ nền tảng khác
+    // Nếu có HTML thì dùng textContent để extract text thuần, giữ nguyên xuống dòng
+    let pasteHtml = '';
+    const rawHtml = clipData.getData('text/html');
+    if (rawHtml) {
       const tmp = document.createElement('div');
-      tmp.innerHTML = html;
-
-      // Xóa toàn bộ style inline, font, color
-      tmp.querySelectorAll('*').forEach(el => {
-        el.removeAttribute('style');
-        el.removeAttribute('color');
-        el.removeAttribute('face');
-        el.removeAttribute('size');
-        el.removeAttribute('bgcolor');
-        el.removeAttribute('class');
-        el.removeAttribute('id');
-        el.removeAttribute('data-font');
-        // Giữ lại: b, i, u, strong, em, p, br, div, hr
-        // Loại bỏ span wrapper thừa (flatten)
-        if (el.tagName === 'SPAN') {
-          const parent = el.parentNode;
-          while (el.firstChild) parent.insertBefore(el.firstChild, el);
-          parent.removeChild(el);
+      tmp.innerHTML = rawHtml;
+      // Chuyển block elements thành newline trước khi lấy text
+      tmp.querySelectorAll('p, div, br, h1, h2, h3, h4, h5, h6, li, tr').forEach(el => {
+        if (el.tagName === 'BR') {
+          el.replaceWith('\n');
+        } else {
+          el.insertAdjacentText('beforebegin', '');
+          el.insertAdjacentText('afterend', '\n');
         }
       });
-
-      // Loại bỏ các tag không cần thiết giữ lại cấu trúc
-      tmp.querySelectorAll('font,center,table,thead,tbody,tr,td,th,colgroup,col,caption,section,article,aside,header,footer,nav,figure,figcaption,dl,dt,dd').forEach(el => {
-        const parent = el.parentNode;
-        while (el.firstChild) parent.insertBefore(el.firstChild, el);
-        parent.removeChild(el);
-      });
-
-      // Loại bỏ các attribute script/event
-      tmp.querySelectorAll('*').forEach(el => {
-        Array.from(el.attributes).forEach(attr => {
-          if (attr.name.startsWith('on') || attr.name === 'href' && el.tagName !== 'A') {
-            el.removeAttribute(attr.name);
-          }
-        });
-      });
-
-      const clean = tmp.innerHTML.trim();
-      document.execCommand('insertHTML', false, clean || clipData.getData('text/plain'));
-    } else {
-      // Chỉ có text thuần
-      const text = clipData.getData('text/plain') || '';
-      const escaped = text
+      const lines = tmp.textContent
         .split('\n')
-        .map(line => line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'))
-        .join('<br>');
-      document.execCommand('insertHTML', false, escaped);
+        .map(l => l.trim())
+        .filter((l, i, arr) => l || (arr[i-1] !== '' )); // giữ 1 dòng trống, bỏ nhiều dòng trống liên tiếp
+      pasteHtml = lines
+        .map(l => l ? `<p>${l.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</p>` : '<p><br></p>')
+        .join('');
+    } else {
+      const text = clipData.getData('text/plain') || '';
+      const lines = text.split('\n').map(l => l.trim());
+      pasteHtml = lines
+        .map(l => l ? `<p>${l.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</p>` : '<p><br></p>')
+        .join('');
     }
+    document.execCommand('insertHTML', false, pasteHtml);
     updateWordCount();
     isDirty = true;
     setSaveStatus('Chưa lưu');
