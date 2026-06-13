@@ -120,12 +120,15 @@ body {
 .chapter-meta { font-size: 13px; color: var(--meta); margin-bottom: 36px; text-align: center; }
 
 .para-wrap {
-  display: block; margin-bottom: 14px; border-radius: 8px;
-  padding: 6px; transition: background .2s; overflow: hidden;
+  display: block; margin-bottom: 2px; border-radius: 8px;
+  padding: 2px 6px; transition: background .2s; overflow: hidden;
 }
 .para-wrap.highlighted { background: color-mix(in srgb, var(--accent) 8%, transparent); }
 .para-text {
-  display: block;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0 6px;
   font-weight: var(--font-weight, 400);
   font-style: var(--font-style, normal);
   line-height: 1.3;
@@ -800,6 +803,11 @@ function toggleCmtOverview() {
   if (!vis) { renderCmtOverview(); el.scrollIntoView({ behavior:'smooth', block:'nearest' }) }
 }
 
+function stripHtml(html) {
+  const tmp = document.createElement('div')
+  tmp.innerHTML = html
+  return tmp.textContent || ''
+}
 function escapeHtml(str) {
   if (!str) return ''
   const d = document.createElement('div'); d.textContent = str; return d.innerHTML
@@ -890,6 +898,7 @@ function renderParagraphs(content) {
     return
   }
   const isHtml = /<[a-z][\s\S]*>/i.test(content)
+  content = content.replace(/<img(?![^>]*loading=)/gi, '<img loading="lazy" decoding="async"')
   let paragraphs = []
   if (isHtml) {
     const tmp = document.createElement('div')
@@ -1012,23 +1021,29 @@ async function loadVotes() {
   document.getElementById('vote-count').textContent = votes
   document.getElementById('vote-count-end').textContent = votes
   document.getElementById('view-count').textContent = formatViews(data.views || 0)
-  const voted = chCurrentUser
-    ? (await sb.from('chapter_votes').select('id').eq('chapter_id', CHAPTER_UUID).eq('voter_ip', chCurrentUser.id).maybeSingle()).data
-    : null
-  if (voted) document.getElementById('vote-btn').classList.add('voted')
+  const btn = document.getElementById('vote-btn')
+  if (chCurrentUser) {
+    const { count } = await sb.from('chapter_votes').select('id', { count: 'exact', head: true })
+      .eq('chapter_id', CHAPTER_UUID).eq('voter_ip', chCurrentUser.id)
+    const used = count || 0
+    btn.dataset.voteCount = used
+    if (used >= 3) btn.classList.add('voted')
+    else btn.classList.remove('voted')
+  }
 }
 
 async function submitVote() {
   const btn = document.getElementById('vote-btn')
   if (!chCurrentUser) { alert('Vui lòng đăng nhập để vote!'); return }
-  // Kiểm tra đã vote chưa (theo user_id thực từ Supabase)
-  const { data: existing } = await sb.from('chapter_votes')
-    .select('id').eq('chapter_id', CHAPTER_UUID).eq('voter_ip', chCurrentUser.id).maybeSingle()
-  if (existing) { btn.classList.add('voted'); showToast && showToast('Bạn đã vote rồi!'); return }
   if (!CHAPTER_UUID) return
+  // Mỗi tài khoản được vote tối đa 3 lần / chương
+  const { count } = await sb.from('chapter_votes').select('id', { count: 'exact', head: true })
+    .eq('chapter_id', CHAPTER_UUID).eq('voter_ip', chCurrentUser.id)
+  const used = count || 0
+  if (used >= 3) { btn.classList.add('voted'); showToast && showToast('Bạn đã vote tối đa 3 lần cho chương này!'); return }
   const { error } = await sb.from('chapter_votes').insert({ chapter_id: CHAPTER_UUID, voter_ip: chCurrentUser.id })
   if (!error) await sb.rpc('increment_votes', { chapter_id: CHAPTER_UUID })
-  btn.classList.add('voted')
+  if (used + 1 >= 3) btn.classList.add('voted')
   loadVotes()
 }
 
@@ -1037,10 +1052,6 @@ async function countView() {
   // Chỉ tính view khi chương đã được đăng (is_published = true)
   const { data: chCheck } = await sb.from('chapters').select('is_published').eq('id', CHAPTER_UUID).single();
   if (!chCheck?.is_published) return;
-  const key = `viewed_${STORY_ID}_ch${CHAPTER_UUID}`;
-  const lastViewed = parseInt(localStorage.getItem(key) || '0');
-  const COOLDOWN = 10 * 60 * 1000; // 10 phút
-  if (Date.now() - lastViewed < COOLDOWN) return; // Còn trong cooldown
 
   let hasScrolled = false;
   let readTimer = null;
@@ -1051,7 +1062,7 @@ async function countView() {
   }
   window.addEventListener('scroll', onScroll, { passive: true });
 
-  // Sau 10 giây, kiểm tra đã scroll chưa
+  // Sau 30 giây, kiểm tra đã scroll chưa
   readTimer = setTimeout(async () => {
     window.removeEventListener('scroll', onScroll);
     if (!hasScrolled || viewCounted) return;
@@ -1060,12 +1071,11 @@ async function countView() {
     const { data } = await sb.from('chapters').select('views').eq('id', CHAPTER_UUID).single();
     if (!data) return;
     await sb.from('chapters').update({ views: (data.views || 0) + 1 }).eq('id', CHAPTER_UUID);
-    localStorage.setItem(key, Date.now().toString());
 
     // Cập nhật hiển thị
     const el = document.getElementById('view-count');
     if (el) el.textContent = formatViews((data.views || 0) + 1);
-  }, 10000); // 10 giây
+  }, 30000); // 30 giây
 }
 
 async function loadAllCounts() {
@@ -1168,7 +1178,7 @@ async function loadSheetComments(pid) {
       <div class="cmt-body">
         <div class="cmt-user">${name}</div>
         ${c.content ? `<div class="cmt-content">${escapeHtml(c.content)}</div>` : ''}
-        ${c.image_url ? `<img class="cmt-img" src="${c.image_url}" alt="" onclick="openLightbox('${c.image_url}')">` : ''}
+        ${c.image_url ? `<img class="cmt-img" src="${c.image_url}" alt="" loading="lazy" decoding="async" onclick="openLightbox('${c.image_url}')">` : ''}
         <div class="cmt-footer">
           <span class="cmt-time">${formatTime(c.created_at)}</span>
           ${chCurrentUser ? `<button class="cmt-reply-btn" onclick="replyTo('${name}', ${c.id})">Trả lời</button>` : ''}
@@ -1212,11 +1222,47 @@ function removeImg() {
   document.getElementById('img-preview-container').innerHTML = ''
   document.getElementById('sheet-img-input').value = ''
 }
+let _webpSupport = null;
+function supportsWebP() {
+  if (_webpSupport !== null) return _webpSupport;
+  const c = document.createElement('canvas');
+  c.width = c.height = 1;
+  _webpSupport = c.toDataURL('image/webp').indexOf('image/webp') === 5;
+  return _webpSupport;
+}
+function compressImage(file, maxDim = 1000, quality = 0.8) {
+  return new Promise((resolve) => {
+    if (!file.type.startsWith('image/') || file.type === 'image/gif') return resolve(file);
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = (e) => { img.src = e.target.result; };
+    img.onload = () => {
+      let { width, height } = img;
+      if (width > maxDim || height > maxDim) {
+        if (width > height) { height = Math.round(height * maxDim / width); width = maxDim; }
+        else { width = Math.round(width * maxDim / height); height = maxDim; }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width; canvas.height = height;
+      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+      const mime = supportsWebP() ? 'image/webp' : 'image/jpeg';
+      canvas.toBlob((blob) => resolve(blob || file), mime, quality);
+    };
+    img.onerror = () => resolve(file);
+    reader.readAsDataURL(file);
+  });
+}
+function imgExtFor(blob, file) {
+  if (blob.type === 'image/webp') return 'webp';
+  if (blob.type === 'image/jpeg') return 'jpg';
+  return (file.name.split('.').pop() || 'jpg');
+}
 async function uploadImg(file) {
-  const ext = file.name.split('.').pop()
+  const compressed = await compressImage(file, 1000, 0.8);
+  const ext = imgExtFor(compressed, file);
   const path = `comments/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`
-  const { error } = await sb.storage.from('comment-images').upload(path, file, { contentType: file.type })
-  if (error) return null
+  const { error } = await sb.storage.from('comment-images').upload(path, compressed, { contentType: compressed.type || file.type, cacheControl: '31536000' })
+  if (error) { console.error('uploadImg error:', error); return null }
   return sb.storage.from('comment-images').getPublicUrl(path).data.publicUrl
 }
 async function submitSheetComment() {
