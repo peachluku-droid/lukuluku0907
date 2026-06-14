@@ -3,11 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- SEO: meta được cập nhật động bởi setStoryMeta() sau khi load dữ liệu -->
 <link rel="canonical" href="https://peachluku.com/story.html">
 <meta name="description" content="Đọc truyện chữ tiếng Việt online tại Peach Luku">
 <meta name="robots" content="index, follow">
-<!-- Open Graph -->
 <meta property="og:site_name" content="Peach Luku">
 <meta property="og:type" content="book">
 <meta property="og:url" content="https://peachluku.com/story.html">
@@ -17,7 +15,6 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="vi_VN">
-<!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Peach Luku — Đọc Truyện">
 <meta name="twitter:description" content="Đọc truyện chữ tiếng Việt online tại Peach Luku">
@@ -114,7 +111,6 @@ body.theme-wattpad {
   --shadow: rgba(242,101,34,0.08); --green: #4caf7d; --green-light: #f0fff6;
 }
 
-/* ── Nav avatar fix ── */
 .user-nav-btn, #nav-user-btn {
   width: 34px; height: 34px; border-radius: 50%; overflow: hidden;
   display: flex; align-items: center; justify-content: center;
@@ -217,7 +213,6 @@ body {
 .description-text p, .description-text div { margin-bottom: 0.3em; line-height: 1.78; }
 .description-text b, .description-text strong { font-weight: 700; }
 .description-text i, .description-text em { font-style: italic; }
-
 .read-more-btn { background: none; border: none; cursor: pointer; color: var(--peach); font-size: 12.5px; font-weight: 700; padding: 4px 0; margin-top: 5px; font-family: 'Nunito', sans-serif; display: flex; align-items: center; gap: 4px; }
 .read-more-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; transition: transform .15s; }
 .read-more-btn.expanded svg { transform: rotate(180deg); }
@@ -231,23 +226,10 @@ body {
 .tab-btn.active .tab-count { background: var(--peach); color: white; }
 .tab-content { display: none; }
 .tab-content.active { display: block; margin: 12px 0 1.4rem; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; background: var(--bg2); }
-.tab-frame { margin: 12px 0 1.4rem; border-radius: 14px; border: 1px solid var(--border); overflow: hidden;
-  position: relative;
-  background: var(--bg2);
-}
-/* Đảm bảo tất cả tab đều dùng border-radius 14px như description-box */
-#tab-chapters, #tab-comments, #tab-info {
-  border-radius: 14px;
-}
-/* Dải họa tiết trên và dưới */
+.tab-frame { margin: 12px 0 1.4rem; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; position: relative; background: var(--bg2); }
+#tab-chapters, #tab-comments, #tab-info { border-radius: 14px; }
 .tab-deco-top, .tab-deco-bot { display: none; }
-/* Bo trong cho comment cards */
-.comment-card {
-  margin: 8px 10px;
-  border-radius: 14px !important;
-  border: 1px solid var(--peach-mid) !important;
-  border-bottom: 1px solid var(--peach-mid) !important;
-}
+.comment-card { margin: 8px 10px; border-radius: 14px !important; border: 1px solid var(--peach-mid) !important; border-bottom: 1px solid var(--peach-mid) !important; }
 .comment-card:last-child { margin-bottom: 8px; }
 .chapter-controls { display: flex; justify-content: space-between; align-items: center; padding: .9rem 1.2rem .7rem; flex-wrap: wrap; gap: .6rem; background: var(--bg2); }
 .chapter-count-label { font-size: 13.5px; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 6px; }
@@ -282,16 +264,17 @@ body {
 .skel-line.w40 { width: 40%; }
 @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 .comment-section { padding: 0; }
+
+/* ── FIX 1: Ô compose review full-width khớp ô tìm chương ── */
 .comment-compose {
-  display: flex; gap: 10px; margin-bottom: 0;
+  display: flex; gap: 10px;
   background: var(--bg);
   border: 1.5px solid var(--border);
   border-radius: 22px;
   padding: 7px 15px;
   margin: 10px 12px;
-  width: calc(55% - 24px);
-  min-width: 180px;
-  transition: width .3s ease, border-color .15s, background .2s;
+  width: calc(100% - 24px);   /* full width như chapter-search-bar */
+  transition: border-color .15s, background .2s;
   cursor: text;
   overflow: hidden;
   align-items: center;
@@ -311,6 +294,7 @@ body {
 .comment-compose .compose-input { pointer-events: none; }
 .comment-compose.expanded .compose-input { pointer-events: auto; }
 .comment-compose.expanded:focus-within { background: var(--peach-light); }
+
 .compose-avatar { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); }
 .compose-avatar svg { width: 14px; height: 14px; stroke: var(--peach-mid); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .compose-body { flex: 1; min-width: 0; }
@@ -399,43 +383,22 @@ body {
 .profile-dropdown-item:hover { background: var(--peach-light); color: var(--peach); }
 .profile-dropdown-item svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; opacity: .7; }
 .profile-dropdown-divider { height: 1px; background: var(--border); margin: 4px 8px; }
-
-
-.dd-auth-row {
-  display: flex; align-items: center; gap: 6px;
-  padding: 6px 10px; margin: 2px 0;
-}
-.dd-auth-btn {
-  flex: 1; display: flex; align-items: center; justify-content: center; gap: 5px;
-  padding: 7px 6px; border-radius: 9px;
-  font-size: 12px; font-weight: 800; color: var(--peach);
-  text-decoration: none; background: var(--peach-light);
-  transition: background .15s, color .15s;
-}
+.dd-auth-row { display: flex; align-items: center; gap: 6px; padding: 6px 10px; margin: 2px 0; }
+.dd-auth-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 7px 6px; border-radius: 9px; font-size: 12px; font-weight: 800; color: var(--peach); text-decoration: none; background: var(--peach-light); transition: background .15s, color .15s; }
 .dd-auth-btn:hover { background: var(--peach); color: #fff; }
 .dd-auth-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; opacity:1; }
 .dd-auth-sep { color: var(--text-muted); font-size: 13px; flex-shrink: 0; }
-
-
-/* Profile button tròn */
 .profile-menu-btn {
-  border-radius: 50% !important;
-  width: 34px !important; height: 34px !important;
-  border: 2px solid var(--border-hover) !important;
-  background: var(--peach-light) !important;
-  color: var(--peach-dark) !important;
-  font-weight: 800; font-size: 14px;
-  overflow: hidden; padding: 0 !important;
-  flex-shrink: 0;
+  border-radius: 50% !important; width: 34px !important; height: 34px !important;
+  border: 2px solid var(--border-hover) !important; background: var(--peach-light) !important;
+  color: var(--peach-dark) !important; font-weight: 800; font-size: 14px;
+  overflow: hidden; padding: 0 !important; flex-shrink: 0;
 }
 .profile-menu-btn:hover { border-color: var(--peach) !important; background: var(--peach-light) !important; }
 .profile-menu-btn svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
 </style>
 </head>
 <body class="theme-light">
-
-
 
 <div class="theme-drawer" id="theme-drawer">
   <div class="theme-drawer-title">Giao diện</div>
@@ -582,7 +545,7 @@ const SUPABASE_URL = 'https://jnlqzqtavfptkfvnndxq.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ojRrfSwxK_B6-TGSXaYGxQ_DKERN0-f';
 if (!window._sb) window._sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const sb = window._sb;
-window.sb = sb; // Export cho navbar.js
+window.sb = sb;
 const urlParams = new URLSearchParams(window.location.search);
 const storyId = urlParams.get('story');
 
@@ -606,13 +569,10 @@ function timeAgo(ts) { const diff = Date.now() - new Date(ts).getTime(); const m
 function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2300); }
 function setDescriptionContent(el, content) {
   if (!content) { el.textContent = 'Chưa có mô tả.'; return; }
-  // Chỉ coi là HTML nếu có tag thực sự: <p>, <br>, <div>, <span>, <b>, <i>...
-  // Không phải ký tự < đơn lẻ trong text thuần
   const isHtml = /<(p|br|div|span|b|i|em|strong|ul|ol|li|h[1-6])(\s|>|\/)/i.test(content);
   if (isHtml) {
     el.innerHTML = content;
   } else {
-    // Plain text: giữ xuống dòng
     el.innerHTML = content
       .split('\n')
       .map(line => '<span>' + line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</span>')
@@ -630,24 +590,6 @@ function showTab(name, btn) {
   if (name === 'comments' && comments.length === 0) loadComments();
 }
 
-// Inject dải họa tiết vào tab-frames sau khi DOM load
-function initTabFrames() {
-  const decoHtml = pat => `<div class="tab-deco-top">${pat}</div>`;
-  const decoBot = pat => `<div class="tab-deco-bot">${pat}</div>`;
-  const pat = '✿ ❀ ✾ ❃ ✿ ❀ ✾ ❃ ✿ ❀ ✾ ❃ ✿ ❀ ✾ ❃ ✿ ❀ ✾ ❃ ✿ ❀ ✾ ❃ ✿';
-  ['tab-chapters','tab-comments','tab-info'].forEach(id => {
-    const el = document.getElementById(id);
-    if (!el || el.closest('.tab-frame')) return;
-    // wrap in tab-frame
-    const frame = document.createElement('div');
-    frame.className = 'tab-frame';
-    el.parentNode.insertBefore(frame, el);
-    frame.innerHTML = decoHtml(pat);
-    frame.appendChild(el);
-    frame.insertAdjacentHTML('beforeend', decoBot(pat));
-  });
-}
-function getLib() { return window.plLib || null; }
 function updateBookmarkBtn(active) {
   const btn = document.getElementById('bookmark-btn');
   const txt = document.getElementById('bookmark-text');
@@ -701,13 +643,11 @@ async function loadStory() {
     if (error || !story) throw error || new Error('Not found');
     storyData = story;
 
-    // Tổng vote = cộng votes của tất cả chương
     const totalVotes = (chapVotes || []).reduce((sum, c) => sum + (c.votes || 0), 0);
 
     document.title = story.title + ' — Peach Luku';
     setStoryMeta(story);
     document.getElementById('story-title').textContent = story.title || 'Không có tiêu đề';
-    // Load profile người đăng (user_id) thay vì tên tác giả nhập tay
     if (story.user_id) {
       const { data: uploaderProf } = await sb.from('profiles').select('username, avatar_url').eq('id', story.user_id).maybeSingle();
       if (uploaderProf) {
@@ -730,20 +670,25 @@ async function loadStory() {
     if (isDone) { chip.className = 'status-chip done'; chip.innerHTML = `<svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><polyline points="20 6 9 17 4 12"/></svg> Hoàn thành`; }
     else { chip.className = 'status-chip ongoing'; chip.innerHTML = `<svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 1 .5 4"/></svg> Đang ra`; }
     if (story.cover_url) { document.getElementById('story-cover').innerHTML = `<img src="${escapeHtml(story.cover_url)}" alt="${escapeHtml(story.title)}">`;  document.getElementById('cover-blur').style.backgroundImage = `url('${escapeHtml(story.cover_url)}')`; }
-    // Ẩn dòng thể loại, chỉ hiển thị tags
     document.getElementById('story-genres').style.display = 'none';
     if (story.tags) {
       const tags = story.tags.split(',').map(t => t.trim()).filter(Boolean);
       const tagsHtml = tags.map(t => `<a class="genre-tag" href="search.html?tag=${encodeURIComponent(t)}">${escapeHtml(t)}</a>`).join('');
       document.getElementById('tags-row').insertAdjacentHTML('beforeend', tagsHtml);
     }
-    const updated = story.updated_at ? new Date(story.updated_at).toLocaleDateString('vi-VN') : '—';
+
     const created = story.created_at ? new Date(story.created_at).toLocaleDateString('vi-VN') : '—';
+
+    // Render info-grid với placeholder updated (sẽ cập nhật sau khi load chapters)
     document.getElementById('info-grid').innerHTML = [
-      { label: 'Tác giả', val: story.author || 'Ẩn danh' }, { label: 'Trạng thái', val: isDone ? 'Hoàn thành' : 'Đang ra' },
-      { label: 'Đăng lần đầu', val: created }, { label: 'Cập nhật', val: updated },
-      { label: 'Lượt xem', val: formatViews(story.total_views || 0) }, { label: 'Bình chọn', val: formatViews(totalVotes) },
-    ].map(i => `<div style="background:var(--bg);border-radius:12px;padding:11px 13px"><div style="font-size:10.5px;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">${i.label}</div><div style="font-size:14px;font-weight:700">${escapeHtml(i.val)}</div></div>`).join('');
+      { label: 'Tác giả', val: story.author || 'Ẩn danh' },
+      { label: 'Trạng thái', val: isDone ? 'Hoàn thành' : 'Đang ra' },
+      { label: 'Đăng lần đầu', val: created },
+      { label: 'Cập nhật', val: '—', id: 'info-updated' },
+      { label: 'Lượt xem', val: formatViews(story.total_views || 0) },
+      { label: 'Bình chọn', val: formatViews(totalVotes) },
+    ].map(i => `<div style="background:var(--bg);border-radius:12px;padding:11px 13px"${i.id ? ` id="${i.id}"` : ''}><div style="font-size:10.5px;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">${i.label}</div><div style="font-size:14px;font-weight:700" ${i.id ? `id="${i.id}-val"` : ''}>${escapeHtml(i.val)}</div></div>`).join('');
+
     if (currentUser) {
       const [{ data: bm }, { data: fl }] = await Promise.all([
         sb.from("bookmarks").select("story_id").eq("user_id", currentUser.id).eq("story_id", storyId).maybeSingle(),
@@ -753,7 +698,6 @@ async function loadStory() {
       updateFollowBtn(!!fl);
     }
     await loadChapters();
-    // JSON-LD Book + Breadcrumb — inject sau khi có đủ dữ liệu story + chapters
     if (window.PlSEO) PlSEO.injectBookJsonLd(story, allChapters, totalVotes);
     await loadCommentCount();
   } catch (err) {
@@ -768,16 +712,44 @@ async function loadChapters() {
   document.getElementById('story-chapters').textContent = count;
   document.getElementById('chapter-count-label').textContent = count + ' chương';
   document.getElementById('tc-chapters').textContent = count;
+
+  // ── FIX 2: Ngày cập nhật lấy từ created_at của chapter MỚI NHẤT ──
+  // Đảm bảo hiển thị đúng sau khi gỡ/đăng lại chương
+  if (allChapters.length > 0) {
+    const latestChapter = allChapters.reduce((a, b) =>
+      new Date(a.created_at) > new Date(b.created_at) ? a : b
+    );
+    const latestDate = new Date(latestChapter.created_at).toLocaleDateString('vi-VN');
+    // Cập nhật ô "Cập nhật" trong info-grid
+    const updatedValEl = document.getElementById('info-updated-val');
+    if (updatedValEl) updatedValEl.textContent = latestDate;
+
+    // Nếu là chủ truyện: sync updated_at trên DB nếu chapter mới hơn
+    if (currentUser && storyData && currentUser.id === storyData.user_id) {
+      const storyUpdatedAt = storyData.updated_at ? new Date(storyData.updated_at) : new Date(0);
+      if (new Date(latestChapter.created_at) > storyUpdatedAt) {
+        await sb.from('stories').update({ updated_at: latestChapter.created_at }).eq('id', storyId);
+        storyData.updated_at = latestChapter.created_at;
+      }
+    }
+  } else {
+    // Không có chapter: dùng story.updated_at
+    const fallbackDate = storyData?.updated_at
+      ? new Date(storyData.updated_at).toLocaleDateString('vi-VN')
+      : '—';
+    const updatedValEl = document.getElementById('info-updated-val');
+    if (updatedValEl) updatedValEl.textContent = fallbackDate;
+  }
+
   const readBtn = document.getElementById('read-btn'), readTxt = document.getElementById('read-btn-text');
   let bmEntry = null;
   try { const bm = JSON.parse(localStorage.getItem('pl_bookmarks') || '{}'); bmEntry = bm[storyId]; } catch {}
   if (bmEntry?.lastChapterId) { readBtn.href = `chapter.html?story=${storyId}&chapter=${bmEntry.lastChapterId}`; readTxt.textContent = `Tiếp chương ${bmEntry.lastChapterNum || ''}`; }
   else if (allChapters.length > 0) { readBtn.href = `chapter.html?story=${storyId}&chapter=${allChapters[0].id}`; readTxt.textContent = 'Đọc từ đầu'; }
   else { readBtn.style.opacity = '.5'; readTxt.textContent = 'Chưa có chương'; }
-  // Nếu là chủ truyện -> đổi nút thành Chỉnh sửa
   if (currentUser && storyData && currentUser.id === storyData.user_id) {
     readBtn.href = 'write.html?story=' + storyId;
-    readBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg><span>Chỉnh sửa</span>'; 
+    readBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg><span>Chỉnh sửa</span>';
   }
   renderChapters();
 }
@@ -816,7 +788,6 @@ function renderComposeArea() {
       ? `<img src="${escapeHtml(profile.avatar_url)}" alt="${escapeHtml(name)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
       : `<span style="font-size:13px;font-weight:800;color:var(--peach-dark)">${initial}</span>`;
     area.innerHTML = `<div class="comment-compose" id="compose-box" onclick="expandCompose()"><div class="compose-avatar">${avatarHtml}</div><div class="compose-body"><textarea class="compose-input" id="comment-input" placeholder="Viết review của bạn..." rows="1" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onkeydown="if(event.key==='Enter'&&!event.shiftKey&&window.innerWidth>600){event.preventDefault();submitComment()}"></textarea><div class="compose-footer"><button class="compose-submit" onclick="submitComment()"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Gửi</button></div></div></div>`;
-    // Collapse when click outside
     setTimeout(() => {
       document.addEventListener('click', function collapseHandler(e) {
         const box = document.getElementById('compose-box');
@@ -834,7 +805,6 @@ function renderComposeArea() {
   }
 }
 
-// --- likes cache: commentId -> { count, liked } ---
 const likesCache = {};
 
 async function loadComments(append = false) {
@@ -843,9 +813,7 @@ async function loadComments(append = false) {
   const { data, count } = await sb.from('comments').select('*', { count: 'exact' }).eq('story_id', storyId).is('parent_id', null).order('created_at', { ascending: false }).range(from, from + COMMENTS_PER_PAGE - 1);
   if (!append) comments = data || []; else comments = [...comments, ...(data || [])];
   commentTotal = count || commentTotal;
-  // Load likes cho các comment
   const ids = (data || []).map(c => c.id);
-  // Fetch profiles for display names and avatars
   const userIds = [...new Set((data || []).map(c => c.user_id).filter(Boolean))];
   await fetchProfiles(userIds);
   if (ids.length) {
@@ -856,7 +824,6 @@ async function loadComments(append = false) {
     });
   }
   renderComments();
-  // Load reply counts for all comments
   if (ids.length) {
     const { data: replyCounts } = await sb.from('comments').select('parent_id').in('parent_id', ids).not('parent_id', 'is', null);
     if (replyCounts) {
@@ -872,7 +839,7 @@ async function loadComments(append = false) {
   commentsPage++;
 }
 
-const profilesCache = {}; // user_id -> { display_name, avatar_url }
+const profilesCache = {};
 
 async function fetchProfiles(userIds) {
   const missing = [...new Set(userIds)].filter(id => id && !profilesCache[id]);
@@ -955,7 +922,6 @@ async function toggleReplyBox(parentId, tagName = null) {
     sec.style.display = 'flex';
     sec.style.flexDirection = 'column';
     await loadReplies(parentId);
-    // Focus và tag tên nếu có
     const input = document.getElementById('reply-input-' + parentId);
     if (input && tagName) {
       if (!input.value.startsWith('@' + tagName)) input.value = '@' + tagName + ' ';
@@ -964,10 +930,8 @@ async function toggleReplyBox(parentId, tagName = null) {
       input.focus();
     }
   } else {
-    // Đã mở → ẩn đi
     sec.style.display = 'none';
     const lbl = document.getElementById('reply-label-' + parentId);
-    // Restore label text from count
     const count = sec.querySelectorAll('.reply-item').length;
     if (lbl) lbl.textContent = count > 0 ? `Xem ${count} trả lời` : 'Trả lời';
   }
@@ -978,13 +942,10 @@ async function loadReplies(parentId) {
   sec.innerHTML = '<div style="font-size:12px;color:var(--text-muted);padding:4px 0">Đang tải...</div>';
   const { data } = await sb.from('comments').select('*').eq('parent_id', parentId).order('created_at', { ascending: true });
   const replies = data || [];
-  // Update reply count label
   const labelEl = document.getElementById('reply-label-' + parentId);
   if (labelEl) labelEl.textContent = replies.length > 0 ? `Xem ${replies.length} trả lời` : 'Trả lời';
-  // Fetch profiles for replies
   const rUserIds = [...new Set(replies.map(r => r.user_id).filter(Boolean))];
   await fetchProfiles(rUserIds);
-  // Load likes for replies
   if (replies.length) {
     const ids = replies.map(r => r.id);
     const { data: likesData } = await sb.from('comment_likes').select('comment_id, user_id').in('comment_id', ids);
@@ -1001,10 +962,7 @@ async function loadReplies(parentId) {
       <button class="reply-submit" onclick="submitReply('${parentId}')">Gửi</button>
     </div>
   </div>` : '';
-  if (!replies.length) {
-    sec.innerHTML = composeBox;
-    return;
-  }
+  if (!replies.length) { sec.innerHTML = composeBox; return; }
   sec.innerHTML = replies.map(r => {
     const rname = displayName(r.user_id, r.user_email);
     const isOwn = currentUser && r.user_id === currentUser.id;
@@ -1046,7 +1004,6 @@ async function submitReply(parentId) {
 async function toggleLike(commentId, parentId = null) {
   if (!currentUser) { showToast('Cần đăng nhập để thả tim'); return; }
   const lk = likesCache[commentId] || { count: 0, liked: false };
-  // Optimistic UI
   likesCache[commentId] = { count: lk.liked ? lk.count - 1 : lk.count + 1, liked: !lk.liked };
   updateLikeBtn(commentId);
   if (lk.liked) {
@@ -1074,7 +1031,6 @@ function expandCompose() {
   setTimeout(() => {
     const input = document.getElementById('comment-input');
     if (input) input.focus();
-    // Re-attach collapse listener
     document.addEventListener('click', function collapseHandler(e) {
       const b = document.getElementById('compose-box');
       if (b && !b.contains(e.target)) {
@@ -1121,7 +1077,6 @@ const ADMIN_EMAILS = ['peachluku@gmail.com'];
 async function init() {
   const { data: { session } } = await sb.auth.getSession();
   currentUser = session?.user || null;
-  // Load profile để dùng avatar trong compose area
   if (currentUser) {
     const { data: prof } = await sb.from('profiles').select('username, avatar_url').eq('id', currentUser.id).maybeSingle();
     currentUserProfile = prof || null;
@@ -1131,42 +1086,66 @@ async function init() {
   if (currentUser && ADMIN_EMAILS.includes(currentUser.email)) { const wb = document.getElementById('write-btn'); if (wb) wb.style.display = 'flex'; }
 }
 init();
-// initTabFrames disabled - flower borders removed
 
-/* ── FIX: img constrained bằng inline style, không tràn layout ── */
 async function loadNavAvatar() {
   const { data: { session } } = await sb.auth.getSession();
   const btn = document.getElementById('nav-user-btn');
   if (!btn) return;
+  const loggedIn = document.querySelectorAll('.dd-logged-in');
+  const loggedOut = document.querySelectorAll('.dd-logged-out');
   if (!session) {
-    btn.href = 'auth.html?next=' + encodeURIComponent(location.pathname + location.search);
+    loggedIn.forEach(el => el.style.display = 'none');
+    loggedOut.forEach(el => el.style.display = 'flex');
     btn.title = 'Đăng nhập';
     return;
   }
-  btn.href = 'profile.html';
+  loggedIn.forEach(el => el.style.display = 'flex');
+  loggedOut.forEach(el => el.style.display = 'none');
   btn.title = 'Hồ sơ của tôi';
   const { data: prof } = await sb.from('profiles').select('username, avatar_url').eq('id', session.user.id).maybeSingle();
   if (prof?.avatar_url) {
-    btn.innerHTML = '<img src="' + prof.avatar_url + '" alt="avatar" style="width:34px;height:34px;border-radius:50%;object-fit:cover;display:block;">';
+    btn.innerHTML = '';
+    const img = document.createElement('img');
+    img.src = prof.avatar_url;
+    img.alt = 'avatar';
+    img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;display:block';
+    btn.appendChild(img);
+    btn.classList.add('has-avatar');
   } else {
-    btn.textContent = (prof?.username || session.user.email || 'U')[0].toUpperCase();
+    const initials = (prof?.username || session.user.email || 'U')[0].toUpperCase();
+    btn.innerHTML = initials;
+    btn.style.fontSize = '14px';
+    btn.style.fontWeight = '800';
   }
 }
+
+function toggleProfileMenu(e) {
+  e.preventDefault(); e.stopPropagation();
+  const dd = document.getElementById('profileDropdown');
+  dd.classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  const wrap = document.getElementById('profileMenuWrap');
+  if (wrap && !wrap.contains(e.target)) {
+    const dd = document.getElementById('profileDropdown');
+    if (dd) dd.classList.remove('open');
+  }
+});
+
+async function signOut(e) {
+  e.preventDefault();
+  await sb.auth.signOut();
+  location.href = 'index.html';
+}
+
 loadNavAvatar();
 
 function setStoryMeta(story) {
   if (!storyId) return;
   const canonicalUrl = 'https://peachluku.com/story.html?story=' + encodeURIComponent(storyId);
   if (window.PlSEO) {
-    PlSEO.updateMeta({
-      title: story.title || 'Truyện',
-      description: story.description,
-      image: story.cover_url,
-      url: canonicalUrl,
-      type: 'book',
-    });
+    PlSEO.updateMeta({ title: story.title || 'Truyện', description: story.description, image: story.cover_url, url: canonicalUrl, type: 'book' });
   } else {
-    // fallback
     const title = (story.title || 'Truyện') + ' — Peach Luku';
     const desc  = story.description ? story.description.replace(/<[^>]+>/g, '').slice(0, 160) : 'Web đọc truyện chữ cute & thơm 🍑';
     const img   = story.cover_url || 'https://jnlqzqtavfptkfvnndxq.supabase.co/storage/v1/object/public/avatars/og-cover.png';
@@ -1194,64 +1173,6 @@ function _setMeta(k, v) { const el = document.querySelector('[property="'+k+'"]'
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', injectWatermark); else injectWatermark();
   document.addEventListener('DOMContentLoaded', function() { document.querySelectorAll('meta[name="description"],meta[property="og:description"]').forEach(m => m.removeAttribute('content')); });
 })();
-
-/* ── PROFILE DROPDOWN ── */
-function toggleProfileMenu(e) {
-  e.preventDefault(); e.stopPropagation();
-  const dd = document.getElementById('profileDropdown');
-  dd.classList.toggle('open');
-}
-document.addEventListener('click', e => {
-  const wrap = document.getElementById('profileMenuWrap');
-  if (wrap && !wrap.contains(e.target)) {
-    const dd = document.getElementById('profileDropdown');
-    if (dd) dd.classList.remove('open');
-  }
-});
-
-async function loadNavAvatar() {
-  const { data: { session } } = await sb.auth.getSession();
-  const btn = document.getElementById('nav-user-btn');
-  if (!btn) return;
-  const loggedIn = document.querySelectorAll('.dd-logged-in');
-  const loggedOut = document.querySelectorAll('.dd-logged-out');
-  if (!session) {
-    loggedIn.forEach(el => el.style.display = 'none');
-    loggedOut.forEach(el => el.style.display = 'flex');
-    btn.title = 'Đăng nhập';
-    return;
-  }
-  loggedIn.forEach(el => el.style.display = 'flex');
-  loggedOut.forEach(el => el.style.display = 'none');
-  btn.title = 'Hồ sơ của tôi';
-  const { data: prof } = await sb.from('profiles')
-    .select('username, avatar_url')
-    .eq('id', session.user.id)
-    .maybeSingle();
-  if (prof?.avatar_url) {
-    btn.innerHTML = '';
-    const img = document.createElement('img');
-    img.src = prof.avatar_url;
-    img.alt = 'avatar';
-    img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;display:block';
-    btn.appendChild(img);
-    btn.classList.add('has-avatar');
-  } else {
-    const initials = (prof?.username || session.user.email || 'U')[0].toUpperCase();
-    btn.innerHTML = initials;
-    btn.style.fontSize = '14px';
-    btn.style.fontWeight = '800';
-  }
-}
-
-async function signOut(e) {
-  e.preventDefault();
-  await sb.auth.signOut();
-  location.href = 'index.html';
-}
-
-loadNavAvatar();
-
 </script>
 <script src="navbar.js"></script>
 </body>
