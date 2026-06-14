@@ -32,14 +32,13 @@
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-body.theme-light  { --bg:#fff8fb; --bg2:#ffffff; --text:#2c1a22; --border:#f4c0d1; --accent:#993556; --accent2:#d4537e; --panel:#ffffff; --sidebar:#fff0f6; --meta:#aaa; }
-body.theme-dark   { --bg:#1a1a1a; --bg2:#242424; --text:#e8d5dc; --border:#3a2a30; --accent:#f4a0bc; --accent2:#ed93b1; --panel:#242424; --sidebar:#1f1f1f; --meta:#666; }
+body.theme-light  { --bg:#ffffff; --bg2:#ffffff; --text:#000000; --border:#e0e0e0; --accent:#993556; --accent2:#d4537e; --panel:#ffffff; --sidebar:#f5f5f5; --meta:#999; }
+body.theme-dark   { --bg:#000000; --bg2:#111111; --text:#ffffff; --border:#333333; --accent:#f4a0bc; --accent2:#ed93b1; --panel:#111111; --sidebar:#0a0a0a; --meta:#888; }
 body.theme-sepia  { --bg:#f5f0e8; --bg2:#faf7f0; --text:#3d2b1f; --border:#d4c4a8; --accent:#8b5e3c; --accent2:#a67c52; --panel:#faf7f0; --sidebar:#f0e8d8; --meta:#9a8070; }
 body.theme-blue   { --bg:#e8f0fe; --bg2:#f4f7ff; --text:#1a2a4a; --border:#b8ccf4; --accent:#2a5bbf; --accent2:#4a7de0; --panel:#f4f7ff; --sidebar:#dce8fc; --meta:#7a9ac0; }
 body.theme-purple { --bg:#f0ebff; --bg2:#f9f6ff; --text:#2a1a4a; --border:#cdb8f4; --accent:#6a3bbf; --accent2:#8a5de0; --panel:#f9f6ff; --sidebar:#e8dcfc; --meta:#9a7ac0; }
 body.theme-pink   { --bg:#fff0f6; --bg2:#fff8fb; --text:#2c1a22; --border:#f4c0d1; --accent:#993556; --accent2:#d4537e; --panel:#fff8fb; --sidebar:#ffe6f2; --meta:#c09aaa; }
-body.theme-gray   { --bg:#f0f0f0; --bg2:#fafafa; --text:#222222; --border:#d0d0d0; --accent:#555555; --accent2:#777777; --panel:#fafafa; --sidebar:#e8e8e8; --meta:#999999; }
-body.theme-white  { --bg:#ffffff; --bg2:#ffffff; --text:#1a1a1a; --border:#e5e5e5; --accent:#333333; --accent2:#555555; --panel:#ffffff; --sidebar:#f7f7f7; --meta:#aaaaaa; }
+
 body.theme-wattpad{ --bg:#f5e6c8; --bg2:#fdf3e0; --text:#2c1f0e; --border:#d9c4a0; --accent:#8b5e1a; --accent2:#b07d2e; --panel:#fdf3e0; --sidebar:#f0ddb8; --meta:#a08050; }
 
 body {
@@ -136,9 +135,9 @@ body {
   font-size: inherit !important;
   background: transparent !important;
 }
-.para-text p { margin: 0; padding: 0; }
-.para-text p + p { margin-top: 0; }
-.para-text div { margin: 0; }
+.para-text p { margin: 0 0 0.6em 0; padding: 0; }
+.para-text p:last-child { margin-bottom: 0; }
+.para-text div { margin: 0 0 0.4em 0; }
 .para-text b, .para-text strong { font-weight: 700; }
 .para-text i, .para-text em { font-style: italic; }
 .para-text span { white-space: pre-wrap; }
@@ -260,14 +259,13 @@ body {
 .theme-swatches { display: flex; gap: 8px; flex-wrap: wrap; }
 .swatch { width: 38px; height: 38px; border-radius: 6px; border: 2.5px solid transparent; cursor: pointer; transition: border-color .15s; flex-shrink: 0; }
 .swatch.active { border-color: var(--accent) !important; }
-.swatch-light  { background:#ffffff; border-color:#ddd; }
+.swatch-light  { background:#ffffff; border-color:#ccc; }
 .swatch-dark   { background:#1a1a1a; }
 .swatch-sepia  { background:#f5f0e8; border-color:#ddd; }
 .swatch-blue   { background:#e8f0fe; border-color:#ddd; }
 .swatch-purple { background:#f0ebff; border-color:#ddd; }
 .swatch-pink   { background:#fff0f6; border-color:#ddd; }
-.swatch-gray   { background:#f0f0f0; border-color:#ddd; }
-.swatch-white  { background:#ffffff; border-color:#ccc; }
+
 .swatch-wattpad{ background:#f5e6c8; border-color:#d9c4a0; }
 .fontsize-row { display: flex; gap: 8px; }
 .fs-btn {
@@ -488,8 +486,7 @@ body {
       <div class="swatch swatch-blue"         onclick="setTheme('blue',this)"   title="Xanh"></div>
       <div class="swatch swatch-purple"       onclick="setTheme('purple',this)" title="Tím"></div>
       <div class="swatch swatch-pink"         onclick="setTheme('pink',this)"   title="Hồng"></div>
-      <div class="swatch swatch-gray"         onclick="setTheme('gray',this)"   title="Xám"></div>
-      <div class="swatch swatch-white"        onclick="setTheme('white',this)"  title="Trắng tinh"></div>
+
       <div class="swatch swatch-wattpad"      onclick="setTheme('wattpad',this)" title="Warm"></div>
     </div>
   </div>
@@ -1182,7 +1179,7 @@ async function loadSheetComments(pid) {
         <div class="cmt-footer">
           <span class="cmt-time">${formatTime(c.created_at)}</span>
           ${chCurrentUser ? `<button class="cmt-reply-btn" onclick="replyTo('${name}', ${c.id})">Trả lời</button>` : ''}
-          ${isOwn ? `<button class="cmt-reply-btn" style="color:#e84040" onclick="deleteComment(${c.id}, '${pid}')">Xoá</button>` : ''}
+          ${isOwn ? `<button class="cmt-reply-btn" style="color:#e84040" onclick="deleteComment('${c.id}', '${pid}')">Xoá</button>` : ''}
         </div>
       </div>
     </div>`
@@ -1411,7 +1408,6 @@ async function loadNavAvatar() {
   }
 }
 loadNavAvatar()
-initChapterUser()
 
 ;(function() {
   'use strict';
@@ -1425,7 +1421,8 @@ initChapterUser()
       user-select: none !important;
       -webkit-touch-callout: none !important;
     }
-    img { -webkit-user-drag: none !important; user-drag: none !important; pointer-events: none; }
+    img:not(.cmt-img):not(#lightbox-img):not(.img-preview) { -webkit-user-drag: none !important; user-drag: none !important; pointer-events: none; }
+    .cmt-img { cursor: pointer; }
     ::selection { background: transparent !important; }
     ::-moz-selection { background: transparent !important; }
   `;
@@ -1446,7 +1443,9 @@ initChapterUser()
     if (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' 
       || t.closest('.cmt-sheet-input') || t.closest('.sheet-input-bar') 
       || t.closest('.sheet-name') || t.closest('#sheet-cmt-input')
-      || t.closest('.cmt-sheet') || t.id === 'sheet-cmt-input') return true;
+      || t.closest('.cmt-sheet') || t.id === 'sheet-cmt-input'
+      || t.id === 'sheet-img-input' || t.closest('.img-preview-wrap')
+      || t.closest('.sheet-img-btn') || t.closest('.sheet-emoji-btn')) return true;
     e.preventDefault(); return false;
   });
   function injectWatermark() {
