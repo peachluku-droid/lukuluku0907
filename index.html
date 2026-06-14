@@ -87,16 +87,6 @@ body.theme-purple {
   --card: #f9f6ff; --text: #2a1a4a; --text-muted: #9a7ac0;
   --border: rgba(106,59,191,0.18); --border-hover: #8a5de0;
 }
-body.theme-gray {
-  --peach: #555555; --peach-light: #e8e8e8; --peach-mid: #777777;
-  --peach-dark: #333333; --peach-darker: #111111;
-  --gold: #666666; --gold-light: #f0f0f0;
-  --bg: #f0f0f0; --bg2: #fafafa;
-  --card: #fafafa; --text: #222222; --text-muted: #888888;
-  --border: rgba(85,85,85,0.18); --border-hover: #777777;
-}
-
-
 body.theme-warm {
   --peach: #f26522; --peach-light: #fff3e0; --peach-mid: #f8863a;
   --peach-dark: #c04a00; --peach-darker: #8a3000;
@@ -104,15 +94,6 @@ body.theme-warm {
   --bg: #faf5ee; --bg2: #fff9f2;
   --card: #fff9f2; --text: #2c1f0e; --text-muted: #a08050;
   --border: rgba(242,101,34,0.18); --border-hover: #f8863a;
-}
-
-body.theme-greenpastel {
-  --peach: #4caf82; --peach-light: #e8f8f0; --peach-mid: #6dcba0;
-  --peach-dark: #2e7d5a; --peach-darker: #1a5040;
-  --gold: #52b06e; --gold-light: #f0faf4;
-  --bg: #f0faf5; --bg2: #f8fdfb;
-  --card: #f8fdfb; --text: #1a3028; --text-muted: #6a9a82;
-  --border: rgba(76,175,130,0.18); --border-hover: #6dcba0;
 }
 
 html, body {
@@ -242,6 +223,7 @@ body {
   display: flex; align-items: center; gap: 10px;
   overflow: hidden;
   max-width: calc(100% - 4rem - 2px);
+  border-radius: 16px;
 }
 .notice-badge {
   background: var(--peach);
@@ -261,6 +243,7 @@ body {
   padding-left: 100%;
 }
 .notice-banner:hover .notice-scroll-text { animation-play-state: paused; }
+@media (max-width: 600px) { .notice-banner { margin: 10px 0.8rem; max-width: calc(100% - 1.6rem - 2px); } }
 @keyframes scroll-left {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-100%); }
@@ -299,6 +282,7 @@ body {
 
 /* ─── SECTION COMMON ──────────────────────── */
 .section { padding: 1.1rem 2rem; }
+@media (max-width: 600px) { .section { padding: 0.8rem 0.8rem; } }
 .sec-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
 .sec-title { font-size: 14px; font-weight: 800; display: flex; align-items: center; gap: 6px; color: var(--text); }
 .sec-title svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; color: var(--peach); }
@@ -314,7 +298,7 @@ body {
 /* ─── PHẦN GỘP: ĐIỆN THOẠI, BIỂN CẢ VÀ GẬY ── */
 /* TOP RANK GRID (2 cột dạng card ngang) */
 .top-rank-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-@media (max-width: 600px) { .top-rank-grid { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { .top-rank-grid { grid-template-columns: 1fr 1fr; gap: 8px; } }
 .top-rank-card {
   background: var(--card); border: 1px solid var(--border);
   border-radius: 14px; padding: 10px 12px;
@@ -675,6 +659,167 @@ footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
 .rank-modal-meta svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .rank-modal-views { font-size: 12px; font-weight: 800; color: var(--peach); white-space: nowrap; }
 
+
+/* ── CUSTOM OVERRIDES ── */
+
+/* 1. Nút thông báo: ẩn text/nền, giữ icon */
+.nav-notif-btn { background: none !important; box-shadow: none !important; padding: 0 !important; }
+.nav-notif-btn span:not(.notif-dot) { display: none !important; }
+
+/* 1b. Notice banner: ẩn badge (chữ + nền cam), chỉ giữ icon loa */
+.notice-badge { background: none !important; padding: 0 !important; font-size: 0 !important; display: flex !important; }
+.notice-badge svg { stroke: var(--peach) !important; width: 16px !important; height: 16px !important; font-size: initial; }
+
+/* 2. Ẩn Theo dõi & Bookmark trong dropdown */
+.profile-dropdown-item[href*="follow"],
+.profile-dropdown-item[href*="bookmark"] { display: none !important; }
+
+/* 3. Màu nền ô chat theo theme */
+body.theme-blue   .chat-box { background: #d4ebfc !important; border-color: #a8d4f5 !important; }
+body.theme-pink   .chat-box { background: #fcd4d4 !important; border-color: #f5a8a8 !important; }
+body.theme-purple .chat-box { background: #f1d4fc !important; border-color: #d9a8f5 !important; }
+body.theme-sepia  .chat-box { background: #f4ecd8 !important; border-color: #c9b98a !important; }
+
+/* 4. Chat title: SVG outline + text */
+.chat-panel-title { font-size: 0 !important; display: flex !important; align-items: center !important; gap: 6px !important; }
+.chat-panel-title::after { content: 'CHỖ NHIỀU CHUYỆN'; font-size: 13px; font-weight: 900; color: #fff; letter-spacing: .3px; }
+.chat-panel-title svg { display: inline-block !important; font-size: initial; width: 15px !important; height: 15px !important; stroke: #fff !important; fill: none !important; stroke-width: 2 !important; flex-shrink: 0; }
+
+/* 5. Ô tìm kiếm: ẩn icon kính lúp đầu */
+.inline-search-icon { display: none !important; }
+.inline-search-input { padding-left: 16px !important; }
+
+/* 6. Nút tìm kiếm cuối: bỏ nền */
+.inline-search-btn { background: none !important; }
+.inline-search-btn:hover { background: none !important; }
+.inline-search-btn svg { stroke: var(--peach) !important; width: 18px !important; height: 18px !important; }
+
+/* ── WAVEFORM HERO ── */
+.hero {
+  background: var(--bg) !important;
+  padding: 1.6rem 2rem 0.8rem !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+.hero-logo img {
+  width: 120px !important; height: 120px !important;
+  opacity: .9;
+  filter: drop-shadow(0 2px 8px rgba(201,123,99,0.18)) !important;
+}
+.hero-body h1 {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: var(--text-muted) !important;
+  letter-spacing: .2px;
+  margin-bottom: 6px !important;
+  opacity: .7;
+}
+.hero-waveform {
+  width: 100%;
+  max-width: 460px;
+  height: 36px;
+  margin: 0 auto;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+}
+.hero-waveform::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+}
+.waveform-svg {
+  width: 100%;
+  height: 100%;
+  transition: opacity .4s;
+}
+.waveform-line {
+  fill: none;
+  stroke: #c97b63;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.waveform-bg {
+  stroke-width: 1;
+  opacity: .18;
+}
+.waveform-main {
+  stroke-width: 1.6;
+  opacity: .65;
+  filter: drop-shadow(0 0 3px rgba(201,123,99,0.3));
+  transition: opacity .4s, filter .4s;
+}
+/* idle: chậm, mờ hơn */
+.hero-waveform.idle .waveform-main {
+  opacity: .35;
+  filter: none;
+}
+.hero-waveform.idle #waveAnim { dur: 9s; }
+/* playing: sáng, nhanh hơn */
+.hero-waveform.playing .waveform-main {
+  opacity: .8;
+  filter: drop-shadow(0 0 5px rgba(201,123,99,0.5));
+}
+@media (max-width: 600px) {
+  .hero { padding: 1.2rem 0.8rem 0.6rem !important; }
+  .hero-logo img { width: 80px !important; height: 80px !important; }
+  .hero-body h1 { font-size: 12px !important; }
+  .hero-waveform { max-width: 240px; height: 28px; }
+}
+
+/* ── EXPANDABLE SEARCH (cạnh "Mới cập nhật") ── */
+.sec-search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  position: relative;
+}
+.sec-search-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  color: var(--text-muted);
+  border-radius: 50%;
+  transition: color .15s, background .15s;
+  flex-shrink: 0;
+  z-index: 1;
+}
+.sec-search-btn:hover { color: var(--peach); background: var(--peach-light); }
+.sec-search-btn svg {
+  width: 15px; height: 15px;
+  stroke: currentColor; fill: none;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.sec-search-input {
+  width: 0;
+  opacity: 0;
+  border: none;
+  outline: none;
+  padding: 5px 0;
+  font-family: 'Nunito', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  background: transparent;
+  color: var(--text);
+  border-bottom: 1.5px solid transparent;
+  transition: width .3s cubic-bezier(.4,0,.2,1), opacity .25s, border-color .2s, padding .3s;
+  pointer-events: none;
+}
+.sec-search-input.open {
+  width: 140px;
+  opacity: 1;
+  border-bottom-color: var(--peach);
+  padding: 5px 8px;
+  pointer-events: auto;
+}
+@media (max-width: 600px) {
+  .sec-search-input.open { width: 110px; }
+}
 </style>
 </head>
 <body class="theme-light">
@@ -692,9 +837,7 @@ footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
     <div><div class="swatch" style="background:#e8f0fe;border:2px solid #4a7de0" onclick="setTheme('blue',this)" title="Blue"></div><div class="swatch-label">Blue</div></div>
     <div><div class="swatch" style="background:#fff0f6;border:2px solid #e876a0" onclick="setTheme('pink',this)" title="Pink"></div><div class="swatch-label">Pink</div></div>
     <div><div class="swatch" style="background:#f0ebff;border:2px solid #8a5de0" onclick="setTheme('purple',this)" title="Purple"></div><div class="swatch-label">Purple</div></div>
-    <div><div class="swatch" style="background:#f0f0f0;border:2px solid #777" onclick="setTheme('gray',this)" title="Gray"></div><div class="swatch-label">Gray</div></div>
     <div><div class="swatch" style="background:#faf5ee;border:2px solid #f26522" onclick="setTheme('warm',this)" title="Warm"></div><div class="swatch-label">Warm</div></div>
-    <div><div class="swatch" style="background:#f0faf5;border:2px solid #6dcba0" onclick="setTheme('greenpastel',this)" title="Green Pastel"></div><div class="swatch-label">Green</div></div>
     
   </div>
 </div>
@@ -704,7 +847,7 @@ footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
   <div class="notif-panel-head">
     <div class="notif-panel-title">
       <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-      Thông báo chương mới
+      Thông báo của bạn
     </div>
     <button class="notif-close-btn" onclick="closeNotifPanel()">
       <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -720,14 +863,35 @@ footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
   <div class="hero-logo"><img id="heroImg" src="" alt="Peach Luku mascot"></div>
   <div class="hero-body">
     <h1>Nơi thắp sáng truyện sẽ gầy của bạn!!</h1>
-    <div class="inline-search" style="margin-top:14px">
-      <span class="inline-search-icon">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      </span>
-      <input type="text" class="inline-search-input" id="heroSearchInput" placeholder="Tìm truyện, tác giả..." autocomplete="off"/>
-      <button class="inline-search-btn" onclick="goSearch()" title="Tìm kiếm">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      </button>
+    <div class="hero-waveform" id="heroWaveform" onclick="toggleAmbient()" title="Nhấn để phát nhạc">
+      <svg class="waveform-svg" id="waveformSvg" viewBox="0 0 800 70" xmlns="http://www.w3.org/2000/svg">
+        <!-- lớp đáy mờ -->
+        <path class="waveform-line waveform-bg" d="
+          M0,35 C40,35 50,18 80,18 C110,18 120,35 160,35
+          C200,35 210,52 240,52 C270,52 280,35 320,35
+          C360,35 370,12 400,12 C430,12 440,35 480,35
+          C520,35 530,50 560,50 C590,50 600,35 640,35
+          C680,35 690,20 720,20 C750,20 760,35 800,35
+        "/>
+        <!-- lớp chính animate -->
+        <path class="waveform-line waveform-main" id="waveformPath" d="
+          M0,35 C40,35 50,18 80,18 C110,18 120,35 160,35
+          C200,35 210,52 240,52 C270,52 280,35 320,35
+          C360,35 370,12 400,12 C430,12 440,35 480,35
+          C520,35 530,50 560,50 C590,50 600,35 640,35
+          C680,35 690,20 720,20 C750,20 760,35 800,35
+        ">
+          <animate id="waveAnim" attributeName="d" dur="6s" repeatCount="indefinite" calcMode="spline"
+            keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"
+            keyTimes="0;0.5;1"
+            values="
+              M0,35 C40,35 50,18 80,18 C110,18 120,35 160,35 C200,35 210,52 240,52 C270,52 280,35 320,35 C360,35 370,12 400,12 C430,12 440,35 480,35 C520,35 530,50 560,50 C590,50 600,35 640,35 C680,35 690,20 720,20 C750,20 760,35 800,35;
+              M0,35 C40,35 50,24 80,24 C110,24 120,35 160,35 C200,35 210,46 240,46 C270,46 280,35 320,35 C360,35 370,18 400,18 C430,18 440,35 480,35 C520,35 530,44 560,44 C590,44 600,35 640,35 C680,35 690,26 720,26 C750,26 760,35 800,35;
+              M0,35 C40,35 50,18 80,18 C110,18 120,35 160,35 C200,35 210,52 240,52 C270,52 280,35 320,35 C360,35 370,12 400,12 C430,12 440,35 480,35 C520,35 530,50 560,50 C590,50 600,35 640,35 C680,35 690,20 720,20 C750,20 760,35 800,35
+            "
+          />
+        </path>
+      </svg>
     </div>
   </div>
 </div>
@@ -755,7 +919,7 @@ footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
       <span class="chat-online-count" id="chatOnlineCount"></span>
     </div>
     <div class="chat-list" id="chatList">
-      <div class="chat-empty">Đang tải... 🐹</div>
+      <div class="chat-empty">Đang tải...</div>
     </div>
     <div id="chatInputArea"></div>
   </div>
@@ -789,6 +953,13 @@ footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
     <div class="sec-title" style="font-size:13px">
       <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
       Mới cập nhật
+    </div>
+    <div class="sec-search-wrap" id="secSearchWrap">
+      <button class="sec-search-btn" id="secSearchToggle" onclick="toggleSecSearch()" title="Tìm kiếm" aria-label="Tìm kiếm">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <input class="sec-search-input" id="secSearchInput" type="text" placeholder="Tìm truyện..." autocomplete="off"
+        onkeydown="if(event.key==='Enter')goSearchSec()" onblur="collapseSecSearch()"/>
     </div>
   </div>
 
@@ -847,7 +1018,7 @@ document.addEventListener('click', e => {
   const saved = localStorage.getItem('plTheme') || 'light';
   document.body.className = 'theme-' + saved;
   const swatches = document.querySelectorAll('.swatch');
-  const labels = ['light','dark','sepia','blue','pink','purple','gray','warm','greenpastel'];
+  const labels = ['light','dark','sepia','blue','pink','purple','warm'];
   swatches.forEach((s, i) => {
     if (labels[i] === saved) s.classList.add('active');
     else s.classList.remove('active');
@@ -875,9 +1046,34 @@ function escapeHtml(s) {
 
 /* ── SEARCH ── */
 function goSearch() {
-  const q = document.getElementById('heroSearchInput').value.trim();
+  const q = document.getElementById('heroSearchInput')?.value.trim();
   if (q) location.href = 'search.html?q=' + encodeURIComponent(q);
   else location.href = 'search.html';
+}
+function toggleSecSearch() {
+  const input = document.getElementById('secSearchInput');
+  const wrap = document.getElementById('secSearchWrap');
+  if (input.classList.contains('open')) {
+    goSearchSec();
+  } else {
+    input.classList.add('open');
+    setTimeout(() => input.focus(), 50);
+  }
+}
+function goSearchSec() {
+  const q = document.getElementById('secSearchInput')?.value.trim();
+  if (q) location.href = 'search.html?q=' + encodeURIComponent(q);
+  else collapseSecSearch();
+}
+function collapseSecSearch() {
+  const input = document.getElementById('secSearchInput');
+  // Delay nhỏ để cho click event trên button xử lý trước
+  setTimeout(() => {
+    if (!document.activeElement?.closest('#secSearchWrap')) {
+      input.classList.remove('open');
+      input.value = '';
+    }
+  }, 150);
 }
 document.addEventListener('DOMContentLoaded', function() {
   const inp = document.getElementById('heroSearchInput');
@@ -892,7 +1088,7 @@ async function loadStories() {
   document.getElementById('dien-thoai-list').style.display = '';
 
   if (!stories || stories.length === 0) {
-    document.getElementById('dien-thoai-list').innerHTML = '<p style="padding:12px;font-size:13px;color:var(--text-muted);grid-column:1/-1">Chưa có truyện nào 🐹</p>';
+    document.getElementById('dien-thoai-list').innerHTML = '<p style="padding:12px;font-size:13px;color:var(--text-muted);grid-column:1/-1">Chưa có truyện nào</p>';
     document.getElementById('top-rank-grid').innerHTML = '';
     return;
   }
@@ -943,7 +1139,7 @@ async function loadStories() {
 
   document.getElementById('dien-thoai-list').innerHTML = sortedByLatestChapter.map((s) => {
     const ch = chCounts[s.id] || 0;
-    const tags = (s.genre || '').split(',').map(g => g.trim()).filter(Boolean).slice(0, 2);
+    const tags = (s.tags || '').split(',').map(g => g.trim()).filter(Boolean).slice(0, 2);
     const statusBadge = s.status === 'full'
       ? '<span class="status-badge status-full">Full</span>'
       : s.status === 'on'
@@ -958,7 +1154,7 @@ async function loadStories() {
       </div>
       <div class="new-update-info">
         <div class="new-update-title">${escapeHtml(s.title)}</div>
-        ${tags.length ? `<div class="new-update-tags">${tags.map(g => `<span class="new-update-tag" data-genre="${encodeURIComponent(g)}" onclick="event.stopPropagation();location.href='search.html?genre='+this.dataset.genre">#${escapeHtml(g)}</span>`).join('')}</div>` : ''}
+        ${tags.length ? `<div class="new-update-tags">${tags.map(g => `<span class="new-update-tag" data-genre="${encodeURIComponent(g)}" onclick="event.stopPropagation();location.href='search.html?genre='+this.dataset.genre">${escapeHtml(g)}</span>`).join('')}</div>` : ''}
       </div>
     </a>`;
   }).join('');
@@ -1006,33 +1202,116 @@ document.addEventListener('click', e => {
 async function loadNotifications() {
   const listEl = document.getElementById('notifList');
   try {
-    const { data: chapters } = await sb.from('chapters')
-      .select('id, title, story_id, created_at, stories(title, cover_url)')
-      .order('created_at', { ascending: false })
-      .limit(20);
-    if (!chapters || chapters.length === 0) {
-      listEl.innerHTML = '<div class="notif-empty">Chưa có chương mới nào 🐹</div>';
+    // Lấy session hiện tại
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) {
+      listEl.innerHTML = '<div class="notif-empty">Đăng nhập để xem thông báo cá nhân</div>';
       return;
     }
+    const userId = session.user.id;
+
+    // Lấy danh sách truyện user đang follow/library
+    const [followRes, libraryRes] = await Promise.all([
+      sb.from('follows').select('story_id').eq('user_id', userId),
+      sb.from('library').select('story_id').eq('user_id', userId)
+    ]);
+
+    const followIds = (followRes.data || []).map(r => r.story_id);
+    const libraryIds = (libraryRes.data || []).map(r => r.story_id);
+    const trackedIds = [...new Set([...followIds, ...libraryIds])];
+
+    const items = [];
+
+    // 1. Chương mới từ truyện đang theo dõi/lưu
+    if (trackedIds.length > 0) {
+      const { data: chapters } = await sb.from('chapters')
+        .select('id, title, story_id, created_at, stories(title, cover_url)')
+        .in('story_id', trackedIds)
+        .order('created_at', { ascending: false })
+        .limit(15);
+      if (chapters) {
+        chapters.forEach(ch => {
+          const story = ch.stories || {};
+          const ts = ch.created_at ? new Date(ch.created_at) : null;
+          const timeStr = ts ? ts.toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric' }) : '';
+          items.push({ type: 'chapter', ch, story, timeStr });
+        });
+      }
+    }
+
+    // 2. Ai đó follow user
+    const { data: newFollowers } = await sb.from('follows')
+      .select('follower_id, created_at, profiles!follows_follower_id_fkey(display_name, avatar_url)')
+      .eq('followed_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(5);
+    if (newFollowers) {
+      newFollowers.forEach(f => {
+        const prof = f.profiles || {};
+        const ts = f.created_at ? new Date(f.created_at) : null;
+        const timeStr = ts ? ts.toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric' }) : '';
+        items.push({ type: 'follow', prof, timeStr });
+      });
+    }
+
+    // 3. Bình luận/reply liên quan user
+    const { data: comments } = await sb.from('comments')
+      .select('id, body, created_at, story_id, stories(title, cover_url)')
+      .eq('reply_to_user_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(5);
+    if (comments) {
+      comments.forEach(c => {
+        const story = c.stories || {};
+        const ts = c.created_at ? new Date(c.created_at) : null;
+        const timeStr = ts ? ts.toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric' }) : '';
+        items.push({ type: 'comment', c, story, timeStr });
+      });
+    }
+
+    if (items.length === 0) {
+      listEl.innerHTML = '<div class="notif-empty">Chưa có thông báo nào</div>';
+      return;
+    }
+
     document.getElementById('notifDot').style.display = 'block';
-    listEl.innerHTML = chapters.map(ch => {
-      const story = ch.stories || {};
-      const ts = ch.created_at ? new Date(ch.created_at) : null;
-      const timeStr = ts ? ts.toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric' }) : '';
-      return `
-      <a class="notif-item" href="chapter.html?chapter=${ch.id}">
-        <div class="notif-cover">
-          ${story.cover_url ? `<img src="${escapeHtml(story.cover_url)}" alt="" loading="lazy">` : ''}
-        </div>
-        <div class="notif-body">
-          <div class="notif-story-name">${escapeHtml(story.title || 'Truyện')}</div>
-          <div class="notif-ch-name">${escapeHtml(ch.title || 'Chương mới')}</div>
-          <div class="notif-time">${timeStr}</div>
-        </div>
-      </a>`;
+    listEl.innerHTML = items.map(item => {
+      if (item.type === 'chapter') {
+        const { ch, story, timeStr } = item;
+        return `<a class="notif-item" href="chapter.html?chapter=${ch.id}">
+          <div class="notif-cover">${story.cover_url ? `<img src="${escapeHtml(story.cover_url)}" alt="" loading="lazy">` : ''}</div>
+          <div class="notif-body">
+            <div class="notif-story-name">${escapeHtml(story.title || 'Truyện')}</div>
+            <div class="notif-ch-name">📖 ${escapeHtml(ch.title || 'Chương mới')}</div>
+            <div class="notif-time">${timeStr}</div>
+          </div>
+        </a>`;
+      } else if (item.type === 'follow') {
+        const { prof, timeStr } = item;
+        return `<div class="notif-item">
+          <div class="notif-cover" style="display:flex;align-items:center;justify-content:center;font-size:20px">${prof.avatar_url ? `<img src="${escapeHtml(prof.avatar_url)}" alt="" loading="lazy" style="border-radius:50%">` : '👤'}</div>
+          <div class="notif-body">
+            <div class="notif-story-name">${escapeHtml(prof.display_name || 'Ai đó')} đã follow bạn</div>
+            <div class="notif-ch-name">👥 Người theo dõi mới</div>
+            <div class="notif-time">${timeStr}</div>
+          </div>
+        </div>`;
+      } else if (item.type === 'comment') {
+        const { c, story, timeStr } = item;
+        return `<a class="notif-item" href="story.html?story=${c.story_id}">
+          <div class="notif-cover">${story.cover_url ? `<img src="${escapeHtml(story.cover_url)}" alt="" loading="lazy">` : ''}</div>
+          <div class="notif-body">
+            <div class="notif-story-name">💬 ${escapeHtml(story.title || 'Truyện')}</div>
+            <div class="notif-ch-name">${escapeHtml((c.body||'').substring(0, 40))}${(c.body||'').length > 40 ? '...' : ''}</div>
+            <div class="notif-time">${timeStr}</div>
+          </div>
+        </a>`;
+      }
+      return '';
     }).join('');
   } catch(err) {
-    listEl.innerHTML = '<div class="notif-empty">Không thể tải thông báo 🐹</div>';
+    console.error('Notif error:', err);
+    listEl.innerHTML = '<div class="notif-empty">Không thể tải thông báo</div>';
   }
 }
 
@@ -1101,13 +1380,78 @@ async function loadNoticeText() {
     if (data?.value) {
       el.innerHTML = data.value;
     } else {
-      el.textContent = 'Chào mừng đến với Peach Luku! 🐹';
+      el.textContent = 'Chào mừng đến với Peach Luku!';
     }
   } catch {
-    el.textContent = 'Chào mừng đến với Peach Luku! 🐹';
+    el.textContent = 'Chào mừng đến với Peach Luku!';
   }
 }
 loadNoticeText();
+
+/* ── AMBIENT AUDIO ── */
+(function() {
+  // 🎵 Thay URL này bằng link mp3 thật từ Supabase Storage
+  const AMBIENT_URL = '';
+
+  let audio = null;
+  let isPlaying = false;
+  const waveform = document.getElementById('heroWaveform');
+  const anim = document.getElementById('waveAnim');
+
+  // Bắt đầu ở idle
+  waveform.classList.add('idle');
+
+  window.toggleAmbient = function() {
+    if (!AMBIENT_URL) {
+      // Chưa có nhạc — toggle animation thôi
+      isPlaying = !isPlaying;
+      waveform.classList.toggle('playing', isPlaying);
+      waveform.classList.toggle('idle', !isPlaying);
+      if (anim) anim.setAttribute('dur', isPlaying ? '3s' : '7s');
+      return;
+    }
+
+    if (!audio) {
+      audio = new Audio(AMBIENT_URL);
+      audio.loop = true;
+      audio.volume = 0.35;
+      audio.addEventListener('ended', () => {});
+    }
+
+    if (isPlaying) {
+      audio.pause();
+      isPlaying = false;
+    } else {
+      audio.play().catch(() => {});
+      isPlaying = true;
+    }
+
+    waveform.classList.toggle('playing', isPlaying);
+    waveform.classList.toggle('idle', !isPlaying);
+    if (anim) anim.setAttribute('dur', isPlaying ? '3s' : '7s');
+  };
+})();
+
+/* ── ĐỔI CHỮ custom ── */
+(function replaceTexts() {
+  const map = {
+    'Gợi ý truyện':             'Gợi ý truyện edit',
+    'Dịch QT':                  'Nhúng truyện QT',
+    'Truyện nuôi dưỡng tâm hồn': 'Top gay',
+  };
+  function walk(node) {
+    if (node.nodeType === 3) {
+      let v = node.nodeValue;
+      Object.entries(map).forEach(([f, t]) => { if (v.includes(f)) v = v.replaceAll(f, t); });
+      if (v !== node.nodeValue) node.nodeValue = v;
+    } else if (node.nodeType === 1 && !['SCRIPT','STYLE'].includes(node.tagName)) {
+      node.childNodes.forEach(walk);
+    }
+  }
+  walk(document.body);
+  new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(walk)))
+    .observe(document.body, { childList: true, subtree: true });
+})();
 
 /* ── TOGGLE TOP RANK ── */
 function toggleTopRank(btn) {
@@ -1265,13 +1609,13 @@ async function loadChatMessages() {
       .select('id, content, created_at, user_id, recalled, profiles(display_name, avatar_url)')
       .order('created_at', { ascending: true }).limit(60);
     if (!data || data.length === 0) {
-      list.innerHTML = '<div class="chat-empty">Chưa có tin nhắn nào 🐹<br>Hãy là người đầu tiên!</div>';
+      list.innerHTML = '<div class="chat-empty">Chưa có tin nhắn nào<br>Hãy là người đầu tiên!</div>';
       return;
     }
     list.innerHTML = data.map(renderChatMsg).join('');
     list.scrollTop = list.scrollHeight;
   } catch(e) {
-    list.innerHTML = '<div class="chat-empty">Không thể tải chat 🐹</div>';
+    list.innerHTML = '<div class="chat-empty">Không thể tải chat</div>';
   }
 }
 function subscribeChatRealtime() {
@@ -1326,7 +1670,7 @@ async function renderRankModal() {
       .select('id, title, author, cover_url, total_views, tags')
       .order('total_views', { ascending: false });
     if (!stories || stories.length === 0) {
-      body.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:13px">Chưa có truyện nào 🐹</div>';
+      body.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:13px">Chưa có truyện nào</div>';
       return;
     }
     const numClass = (i) => i===0?'top1':i===1?'top2':i===2?'top3':'topn';
@@ -1351,7 +1695,7 @@ async function renderRankModal() {
         </div>
       </a>`).join('');
   } catch(e) {
-    body.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:13px">Không thể tải 🐹</div>';
+    body.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:13px">Không thể tải</div>';
   }
 }
 
