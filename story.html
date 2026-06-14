@@ -225,35 +225,37 @@ body {
 .tab-count { font-size: 10px; font-weight: 800; background: var(--peach-light); color: var(--peach-dark); padding: 1px 5px; border-radius: 8px; min-width: 16px; text-align: center; }
 .tab-btn.active .tab-count { background: var(--peach); color: white; }
 .tab-content { display: none; }
-.tab-content.active { display: block; margin: 12px 0 1.4rem; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; background: var(--bg2); }
-.tab-frame { margin: 12px 0 1.4rem; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; position: relative; background: var(--bg2); }
+.tab-content.active { display: block; margin: 12px 0 1.4rem; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; background: var(--bg); }
+.tab-frame { margin: 12px 0 1.4rem; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; position: relative; background: var(--bg); }
 #tab-chapters, #tab-comments, #tab-info { border-radius: 14px; }
 .tab-deco-top, .tab-deco-bot { display: none; }
 .comment-card { margin: 8px 10px; border-radius: 14px !important; border: 1px solid var(--peach-mid) !important; border-bottom: 1px solid var(--peach-mid) !important; }
 .comment-card:last-child { margin-bottom: 8px; }
-.chapter-controls { display: flex; justify-content: space-between; align-items: center; padding: .9rem 1.2rem .7rem; flex-wrap: wrap; gap: .6rem; background: var(--bg2); }
+.chapter-controls { display: flex; justify-content: space-between; align-items: center; padding: .9rem 1.2rem .7rem; flex-wrap: wrap; gap: .6rem; background: var(--bg); }
 .chapter-count-label { font-size: 13.5px; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 6px; }
 .chapter-count-label svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; color: var(--text-muted); }
 .sort-btn { padding: 5px 12px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 16px; font-size: 12px; font-weight: 700; color: var(--text); cursor: pointer; transition: all .15s; font-family: 'Nunito', sans-serif; display: flex; align-items: center; gap: 5px; }
 .sort-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: transform .2s; }
 .sort-btn:hover { background: var(--peach-light); border-color: var(--border-hover); }
-.chapter-search-bar { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 22px; padding: 7px 15px; margin: 0 1.2rem .7rem; transition: border-color .15s; }
+.chapter-search-bar { display: flex; align-items: center; gap: 8px; background: var(--bg2); border: 1.5px solid var(--border); border-radius: 22px; padding: 7px 15px; margin: 0 1.2rem .7rem; transition: border-color .15s; }
 .chapter-search-bar:focus-within { border-color: var(--peach); }
 .chapter-search-bar svg { width: 14px; height: 14px; stroke: var(--text-muted); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 .chapter-search-bar input { border: none; background: none; outline: none; font-size: 13px; color: var(--text); flex: 1; font-family: 'Nunito', sans-serif; }
 .chapter-search-bar input::placeholder { color: var(--text-muted); }
-.chapter-list { padding: 0 1.2rem 1.5rem; display: flex; flex-direction: column; }
+.chapter-list { padding: 0 1.2rem 1rem; display: flex; flex-direction: column; }
 .chapter-item { display: flex; align-items: center; gap: 12px; padding: 12px 4px; border-bottom: 1px solid var(--border); text-decoration: none; color: var(--text); transition: all .12s; border-radius: 0; }
 .chapter-item:last-child { border-bottom: none; }
 .chapter-item:hover { background: var(--peach-light); margin: 0 -8px; padding-left: 12px; padding-right: 12px; border-radius: 10px; border-bottom-color: transparent; }
-.chapter-num-badge { width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0; background: var(--peach-light); color: var(--peach-dark); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; }
+.chapter-num-badge { width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0; background: var(--peach-light); color: var(--peach-dark); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; align-self: center; }
 .chapter-item.read .chapter-num-badge { background: var(--green-light); color: var(--green); }
-.chapter-info { flex: 1; min-width: 0; }
-.chapter-name { font-weight: 700; font-size: 13.5px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chapter-info { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+.chapter-name { font-weight: 700; font-size: 13.5px; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .chapter-item.read .chapter-name { color: var(--text-muted); }
-.chapter-meta { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
+.chapter-meta { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; justify-content: space-between; }
+.chapter-meta-left { display: flex; align-items: center; gap: 4px; }
+.chapter-meta-right { display: flex; align-items: center; gap: 4px; }
 .chapter-meta svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.chapter-arrow { color: var(--text-muted); flex-shrink: 0; }
+.chapter-arrow { color: var(--text-muted); flex-shrink: 0; align-self: center; }
 .chapter-arrow svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .skel-ch { display: flex; gap: 12px; padding: 12px 4px; align-items: center; border-bottom: 1px solid var(--border); }
 .skel { animation: shimmer 1.4s infinite; background: linear-gradient(90deg, var(--border) 25%, var(--peach-light) 50%, var(--border) 75%); background-size: 200% 100%; border-radius: 6px; }
@@ -267,13 +269,12 @@ body {
 
 /* ── FIX 1: Ô compose review full-width khớp ô tìm chương ── */
 .comment-compose {
-  display: flex; gap: 10px;
+  display: flex; gap: 8px;
   background: var(--bg);
   border: 1.5px solid var(--border);
   border-radius: 22px;
   padding: 7px 15px;
-  margin: 10px 12px;
-  width: calc(100% - 24px);   /* full width như chapter-search-bar */
+  margin: 10px 1.2rem;     /* khớp margin trái/phải với chapter-search-bar */
   transition: border-color .15s, background .2s;
   cursor: text;
   overflow: hidden;
@@ -281,7 +282,6 @@ body {
 }
 .comment-compose:focus-within { border-color: var(--peach); }
 .comment-compose.expanded {
-  width: calc(100% - 24px);
   cursor: default;
   border-radius: 14px;
   padding: 10px 12px;
@@ -763,7 +763,9 @@ function renderChapters(filtered = null) {
   try { const h = JSON.parse(localStorage.getItem('pl_history') || '[]'); const entry = h.find(x => x.storyId === storyId); if (entry) readChapterIds.add(entry.chapterId); } catch {}
   listEl.innerHTML = sorted.map(ch => {
     const num = ch.chapter_number || '?', isRead = readChapterIds.has(ch.id);
-    return `<a class="chapter-item${isRead ? ' read' : ''}" href="chapter.html?story=${storyId}&chapter=${ch.id}"><div class="chapter-num-badge">${num}</div><div class="chapter-info"><div class="chapter-name">${escapeHtml(ch.title || `Chương ${num}`)}</div><div class="chapter-meta"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${ch.created_at ? timeAgo(ch.created_at) : ''}${ch.views ? `<svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> ${formatViews(ch.views)}` : ''}</div></div><span class="chapter-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span></a>`;
+    // Dùng updated_at nếu có (sau khi gỡ/đăng lại), fallback về created_at
+    const chTime = ch.updated_at && ch.updated_at !== ch.created_at ? ch.updated_at : ch.created_at;
+    return `<a class="chapter-item${isRead ? ' read' : ''}" href="chapter.html?story=${storyId}&chapter=${ch.id}"><div class="chapter-num-badge">${num}</div><div class="chapter-info"><div class="chapter-name">${escapeHtml(ch.title || `Chương ${num}`)}</div><div class="chapter-meta"><div class="chapter-meta-left"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${chTime ? timeAgo(chTime) : ''}</div>${ch.views ? `<div class="chapter-meta-right"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>${formatViews(ch.views)}</div>` : ''}</div></div><span class="chapter-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span></a>`;
   }).join('');
 }
 
