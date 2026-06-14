@@ -21,16 +21,6 @@
 
   // ── 1. Inject CSS ──────────────────────────────────────────────────────────
   const CSS = `
-/* ─── THEME VARIABLES (greenpastel) ────────────── */
-body.theme-greenpastel {
-  --peach:#4caf82;--peach-light:#e8f8f0;--peach-mid:#6dcba0;
-  --peach-dark:#2e7d5a;--peach-darker:#1a5040;
-  --gold:#52b06e;--gold-light:#f0faf4;
-  --bg:#f0faf5;--bg2:#f8fdfb;--card:#f8fdfb;
-  --text:#1a3028;--text-muted:#6a9a82;
-  --border:rgba(76,175,130,0.18);--border-hover:#6dcba0;
-}
-
 /* ─── TOPBAR ─────────────────────────────────────────────── */
 .topbar {
   background: var(--bg2);
@@ -398,14 +388,6 @@ body.theme-greenpastel {
           <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           Tìm kiếm
         </a>
-        <a class="profile-dropdown-item dd-logged-in" href="profile.html" style="display:none">
-          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          Theo dõi
-        </a>
-        <a class="profile-dropdown-item dd-logged-in" href="profile.html" style="display:none">
-          <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-          Bookmark
-        </a>
         <div class="dd-auth-row dd-logged-out">
           <a class="dd-auth-btn" href="#" onclick="openAuthModal('login');return false;">
             <svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
@@ -421,9 +403,9 @@ body.theme-greenpastel {
           <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           Đăng xuất
         </a>
-        <a class="profile-dropdown-item" href="https://www.google.com/search?q=dich+truyen+QT" target="_blank">
+        <a class="profile-dropdown-item" href="#" onclick="return false">
           <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-          Dịch QT
+          Nhúng truyện QT
         </a>
         <a class="profile-dropdown-item" href="#" onclick="openSuggestForm(event)">
           <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
@@ -449,9 +431,7 @@ body.theme-greenpastel {
     <div><div class="swatch" style="background:#e8f0fe;border:2px solid #4a7de0" data-theme="blue" title="Blue"></div><div class="swatch-label">Blue</div></div>
     <div><div class="swatch" style="background:#fff0f6;border:2px solid #e876a0" data-theme="pink" title="Pink"></div><div class="swatch-label">Pink</div></div>
     <div><div class="swatch" style="background:#f0ebff;border:2px solid #8a5de0" data-theme="purple" title="Purple"></div><div class="swatch-label">Purple</div></div>
-    <div><div class="swatch" style="background:#f0f0f0;border:2px solid #777" data-theme="gray" title="Gray"></div><div class="swatch-label">Gray</div></div>
     <div><div class="swatch" style="background:#faf5ee;border:2px solid #f26522" data-theme="warm" title="Warm"></div><div class="swatch-label">Warm</div></div>
-    <div><div class="swatch" style="background:#f0faf5;border:2px solid #6dcba0" data-theme="greenpastel" title="Green Pastel"></div><div class="swatch-label">Green</div></div>
   </div>
 </div>
 
