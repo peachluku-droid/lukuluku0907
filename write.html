@@ -435,20 +435,6 @@ body { display: block; }
   .pv-chapter-heading { font-size: 20px; }
   .pv-para-text { font-size: 16px !important; }
   .preview-scroll { padding: 16px 10px 80px; }
-
-  /* Fix nút đóng preview bị khuất trên mobile */
-  .preview-topbar { flex-wrap: wrap; gap: 8px; padding: 8px 10px; }
-  .preview-topbar-right { width: 100%; justify-content: space-between; }
-  .pv-theme-swatches { flex-wrap: wrap; gap: 4px; flex: 1; }
-  /* Nút X to, nổi bật, đặt đầu hàng */
-  .preview-topbar-right > .preview-tool-btn:last-child {
-    background: var(--pv-accent) !important;
-    color: #fff !important;
-    border-color: var(--pv-accent) !important;
-    padding: 6px 16px !important;
-    font-weight: 800;
-    order: -1;
-  }
 }
 
 .tb-btn {
@@ -520,8 +506,20 @@ body { display: block; }
 .content-editable p {
   margin-top: 0;
   margin-bottom: 0.5em;
+  font-family: 'Noto Serif', Georgia, serif !important;
+  font-size: 19px !important;
+  line-height: 1.4 !important;
+  color: #1a1a1a !important;
 }
 .content-editable p:last-child { margin-bottom: 0; }
+/* Reset mọi span inline style do browser/paste tạo ra */
+.content-editable span {
+  font-family: inherit !important;
+  font-size: inherit !important;
+  color: inherit !important;
+  background: none !important;
+  line-height: inherit !important;
+}
 .content-editable hr { border: none; border-top: 2px solid var(--peach-light); margin: 2rem auto; width: 50%; }
 
 /* Bottom bar */
@@ -1372,6 +1370,8 @@ function showApp() {
   document.getElementById('app').style.display = 'flex';
   document.getElementById('menuBtn').style.display = 'flex';
   setupFocusRecovery();
+  // Đặt paragraph separator là <p> thay vì <div> (Chrome default)
+  try { document.execCommand('defaultParagraphSeparator', false, 'p'); } catch(e) {}
   // Khởi tạo paste handler và selection tracker
   setTimeout(() => {
     initPasteHandler();
@@ -1609,6 +1609,8 @@ async function openChapter(id) {
   if (!data) return;
   document.getElementById('chTitle').value = data.title || '';
   document.getElementById('chContent').innerHTML = data.content || '';
+  // Clean inline styles cũ có thể đã bị lưu từ trước khi fix
+  setTimeout(() => cleanEditorContent(), 0);
   currentAudioUrl = data.audio_url || null;
   updateAudioBtnState();
   wrapLegacyMedia();
@@ -1647,10 +1649,25 @@ function newChapter() {
 
 // ── SAVE / PUBLISH ──
 async function saveDraft() {
-  const { data: { session } } = await sb.auth.getSession();
+  // Lấy session và tự refresh nếu cần
+  let session;
+  try {
+    const { data: s1 } = await sb.auth.getSession();
+    if (s1?.session) {
+      session = s1.session;
+    } else {
+      const { data: s2 } = await sb.auth.refreshSession();
+      session = s2?.session;
+    }
+  } catch(e) {}
   if (!session) { showToast('Phiên hết hạn, tải lại trang!', 'err'); return; }
   if (!currentStoryId) { showToast('Chọn truyện trước!', 'err'); return; }
   const title = document.getElementById('chTitle').value.trim();
+  if (!title) { showToast('Nhập tên chương trước khi lưu!', 'err'); document.getElementById('chTitle').focus(); return; }
+
+  // Clean toàn bộ inline style/font do browser hoặc paste để lại
+  cleanEditorContent();
+
   // Gán data-pid cố định vào từng đoạn trước khi lưu
   const ed = document.getElementById('chContent');
   let pidCounter = 0;
@@ -1661,47 +1678,33 @@ async function saveDraft() {
   });
   const content = ed.innerHTML;
 
-  // Lưu vị trí scroll trước khi save
+  // Kiểm tra content size (Supabase mặc định giới hạn request ~10MB, nhưng nên giới hạn sớm)
+  const contentSize = new Blob([content]).size;
+  if (contentSize > 5 * 1024 * 1024) {
+    showToast('Nội dung quá lớn (>' + Math.round(contentSize/1024/1024) + 'MB). Hãy chia nhỏ chương!', 'err');
+    setSaveStatus('');
+    return;
+  }
   try {
     if (currentChapterId) {
       const scroll = document.querySelector('.content-scroll');
       if (scroll) localStorage.setItem('luku_scroll_' + currentChapterId, scroll.scrollTop);
     }
   } catch(e) {}
-
   setSaveStatus('Đang lưu...');
-
-  // Hàm thử lưu có retry
-  async function tryUpsert(retries = 2) {
-    let error;
-    if (currentChapterId) {
-      ({ error } = await sb.from('chapters').update({ title, content, audio_url: currentAudioUrl, updated_at: new Date().toISOString() }).eq('id', currentChapterId));
-    } else {
-      const { data: existing } = await sb.from('chapters').select('chapter_number').eq('story_id', currentStoryId).order('chapter_number', { ascending: false }).limit(1);
-      const nextNum = existing?.length ? existing[0].chapter_number + 1 : 1;
-      const { data, error: insertErr } = await sb.from('chapters').insert({
-        story_id: currentStoryId, title, content, audio_url: currentAudioUrl,
-        chapter_number: nextNum, is_published: false, user_id: session.user.id
-      }).select().single();
-      error = insertErr;
-      if (!error) currentChapterId = data.id;
-    }
-    if (error && retries > 0) {
-      await new Promise(r => setTimeout(r, 1200));
-      return tryUpsert(retries - 1);
-    }
-    return error;
+  if (currentChapterId) {
+    const { error } = await sb.from('chapters').update({ title, content, audio_url: currentAudioUrl, updated_at: new Date().toISOString() }).eq('id', currentChapterId);
+    if (error) { showToast('Lưu thất bại: ' + (error.message || error.code || JSON.stringify(error)), 'err'); setSaveStatus(''); console.error('saveDraft update error:', error); return; }
+  } else {
+    const { data: existing } = await sb.from('chapters').select('chapter_number').eq('story_id', currentStoryId).order('chapter_number', { ascending: false }).limit(1);
+    const nextNum = existing?.length ? existing[0].chapter_number + 1 : 1;
+    const { data, error } = await sb.from('chapters').insert({
+      story_id: currentStoryId, title, content, audio_url: currentAudioUrl,
+      chapter_number: nextNum, is_published: false, user_id: session.user.id
+    }).select().single();
+    if (error) { showToast('Lưu thất bại: ' + error.message, 'err'); setSaveStatus(''); return; }
+    currentChapterId = data.id;
   }
-
-  const error = await tryUpsert();
-  if (error) {
-    // Lưu Supabase thất bại — giữ nguyên local draft làm backup
-    saveLocalDraft();
-    showToast('Lưu thất bại! Đã giữ bản nháp cục bộ.', 'err');
-    setSaveStatus('Lưu thất bại ✗');
-    return;
-  }
-
   isDirty = false;
   setSaveStatus('Đã lưu ✓');
   showToast('Đã lưu bản thảo!', 'ok');
@@ -1762,6 +1765,8 @@ function initPasteHandler() {
         .join('');
     }
     document.execCommand('insertHTML', false, pasteHtml);
+    // Clean lại sau khi paste để đảm bảo không còn inline style nào
+    setTimeout(() => cleanEditorContent(), 0);
     updateWordCount();
     isDirty = true;
     setSaveStatus('Chưa lưu');
@@ -1769,7 +1774,61 @@ function initPasteHandler() {
   });
 }
 
-// Fix lỗi 2: Toggle B/I/U đúng — kiểm tra trạng thái trước khi apply
+// ── CLEAN EDITOR CONTENT ──
+// Strip toàn bộ inline style/font/color do browser hoặc paste để lại
+// Giữ nguyên: bold/italic/underline (qua <b><i><u>/<strong><em>), link, và các block đặc biệt
+function cleanEditorContent() {
+  const ed = document.getElementById('chContent');
+  if (!ed) return;
+
+  // Danh sách attribute được phép giữ trên các element thông thường
+  const KEEP_ATTRS = new Set(['data-pid', 'href', 'target', 'rel', 'src', 'alt',
+    'data-vid', 'data-yt', 'id', 'class', 'contenteditable', 'data-delete-media']);
+
+  function cleanNode(node) {
+    if (node.nodeType !== Node.ELEMENT_NODE) return;
+
+    // Bỏ qua các block đặc biệt (media, annotation)
+    if (node.classList && (
+      node.classList.contains('media-block') ||
+      node.classList.contains('annotation-block') ||
+      node.classList.contains('annotation-toggle') ||
+      node.classList.contains('annotation-body') ||
+      node.dataset.vid || node.dataset.yt
+    )) return;
+
+    // Xóa style inline
+    if (node.hasAttribute('style')) node.removeAttribute('style');
+
+    // Xóa font tag (browser cũ)
+    if (node.tagName === 'FONT') {
+      const parent = node.parentNode;
+      while (node.firstChild) parent.insertBefore(node.firstChild, node);
+      parent.removeChild(node);
+      return; // đã thay thế node, không cần duyệt con
+    }
+
+    // Xóa span không có class (chỉ là wrapper style từ paste/browser)
+    if (node.tagName === 'SPAN' && !node.className) {
+      const parent = node.parentNode;
+      while (node.firstChild) parent.insertBefore(node.firstChild, node);
+      parent.removeChild(node);
+      return;
+    }
+
+    // Xóa attribute không cần thiết
+    Array.from(node.attributes).forEach(attr => {
+      if (!KEEP_ATTRS.has(attr.name)) node.removeAttribute(attr.name);
+    });
+
+    // Đệ quy con (clone list để tránh live NodeList bug)
+    Array.from(node.childNodes).forEach(child => cleanNode(child));
+  }
+
+  Array.from(ed.childNodes).forEach(child => cleanNode(child));
+}
+
+
 function fmt(cmd) {
   const ed = document.getElementById('chContent');
   ed.focus();
@@ -3370,6 +3429,7 @@ async function restoreLocalDraftIfNeeded() {
     currentChapterId = d.chapterId || null;
     document.getElementById('chTitle').value = d.title || '';
     document.getElementById('chContent').innerHTML = d.content || '';
+    setTimeout(() => cleanEditorContent(), 0);
     wrapLegacyMedia();
     showEditor();
     updateWordCount();
