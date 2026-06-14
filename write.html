@@ -264,6 +264,28 @@ body { display: block; }
 .preview-tool-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .preview-tool-btn:hover { background: var(--pv-sidebar); }
 
+/* Nút đóng preview — luôn hiển thị, không bị đẩy ra ngoài */
+.preview-close-btn {
+  flex-shrink: 0;
+  background: none;
+  border: 1.5px solid var(--pv-border);
+  border-radius: 8px;
+  padding: 6px 8px;
+  cursor: pointer;
+  color: var(--pv-text);
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+  touch-action: manipulation;
+}
+.preview-close-btn:hover { background: var(--pv-sidebar); }
+
+/* Mobile: ẩn bớt swatches để tránh overflow */
+@media (max-width: 480px) {
+  .pv-theme-swatches .pv-swatch:nth-child(n+5) { display: none; }
+  .preview-topbar-right { gap: 4px; }
+  .preview-tool-btn { padding: 5px 7px; font-size: 12px; }
+}
+
 /* Theme switcher */
 .pv-theme-swatches { display: flex; gap: 5px; align-items: center; flex-shrink: 0; }
 .pv-swatch {
@@ -312,21 +334,28 @@ body { display: block; }
 .pv-chapter-stats span { white-space: nowrap; display: flex; align-items: center; gap: 4px; }
 .pv-ic { display:inline-block; vertical-align:-3px; width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
 
-/* Paragraph wrap — clone .para-wrap */
+/* Paragraph wrap — khoảng cách khớp với editor */
 .pv-para-wrap {
-  display: block; margin-bottom: 28px; border-radius: 8px;
+  display: block; margin-bottom: 0; border-radius: 8px;
   padding: 6px; transition: background .2s; overflow: hidden;
 }
 .pv-para-wrap.highlighted { background: color-mix(in srgb, var(--pv-accent) 8%, transparent); }
 
-/* Para text */
+/* Para text — khớp chính xác với .content-editable của editor */
 .pv-para-text {
-  line-height: 2; display: block;
-  font-family: var(--pv-font-body, 'Crimson Text'), serif;
-  font-size: var(--pv-font-size, 17px);
+  display: block;
+  font-family: 'Noto Serif', Georgia, serif;
+  font-size: var(--pv-font-size, 19px);
+  line-height: 1.4;
   color: var(--pv-text);
 }
-.pv-para-text p, .pv-para-text div { margin-bottom: 0.5em; line-height: 2; }
+.pv-para-text p, .pv-para-text div {
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  line-height: 1.4;
+  font-family: 'Noto Serif', Georgia, serif;
+  font-size: var(--pv-font-size, 19px);
+}
 .pv-para-text b, .pv-para-text strong { font-weight: 700; }
 .pv-para-text i, .pv-para-text em { font-style: italic; }
 
@@ -433,7 +462,7 @@ body { display: block; }
 
 @media (max-width: 640px) {
   .pv-chapter-heading { font-size: 20px; }
-  .pv-para-text { font-size: 16px !important; }
+  .pv-para-text { font-size: var(--pv-font-size, 17px) !important; }
   .preview-scroll { padding: 16px 10px 80px; }
 }
 
@@ -1139,11 +1168,11 @@ body { display: block; }
       <!-- Font size -->
       <button class="preview-tool-btn" onclick="pvChangeFontSize(-1)" title="Nhỏ hơn">A−</button>
       <button class="preview-tool-btn" onclick="pvChangeFontSize(1)"  title="Lớn hơn">A+</button>
-      <!-- Close -->
-      <button class="preview-tool-btn" onclick="closePreview()" title="Đóng">
-        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
     </div>
+    <!-- Nút đóng — tách riêng, luôn hiển thị kể cả mobile -->
+    <button class="preview-close-btn" onclick="closePreview()" title="Đóng" style="flex-shrink:0;margin-left:6px;">
+      <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
   </div>
 
   <!-- Scroll content -->
@@ -1693,13 +1722,13 @@ async function saveDraft() {
   } catch(e) {}
   setSaveStatus('Đang lưu...');
   if (currentChapterId) {
-    const { error } = await sb.from('chapters').update({ title, content, audio_url: currentAudioUrl, updated_at: new Date().toISOString() }).eq('id', currentChapterId);
+    const { error } = await sb.from('chapters').update({ title, content, updated_at: new Date().toISOString() }).eq('id', currentChapterId);
     if (error) { showToast('Lưu thất bại: ' + (error.message || error.code || JSON.stringify(error)), 'err'); setSaveStatus(''); console.error('saveDraft update error:', error); return; }
   } else {
     const { data: existing } = await sb.from('chapters').select('chapter_number').eq('story_id', currentStoryId).order('chapter_number', { ascending: false }).limit(1);
     const nextNum = existing?.length ? existing[0].chapter_number + 1 : 1;
     const { data, error } = await sb.from('chapters').insert({
-      story_id: currentStoryId, title, content, audio_url: currentAudioUrl,
+      story_id: currentStoryId, title, content,
       chapter_number: nextNum, is_published: false, user_id: session.user.id
     }).select().single();
     if (error) { showToast('Lưu thất bại: ' + error.message, 'err'); setSaveStatus(''); return; }
@@ -2047,7 +2076,7 @@ function paraHash(text) {
 }
 
 // ── PREVIEW — clone y chang chapter.html ──
-let pvFontSize = 17;
+let pvFontSize = 19;
 let pvActivePid = null;
 
 function setPvTheme(theme, el) {
@@ -2101,7 +2130,7 @@ function openPreview() {
     document.querySelectorAll('.pv-swatch').forEach(b => {
       b.classList.toggle('active', b.dataset.pvtheme === savedTheme);
     });
-    pvFontSize = parseInt(localStorage.getItem('luku_pv_fontsize') || '17');
+    pvFontSize = parseInt(localStorage.getItem('luku_pv_fontsize') || '19');
     modal.style.setProperty('--pv-font-size', pvFontSize + 'px');
   } catch(e) {}
 
