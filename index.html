@@ -559,26 +559,30 @@ footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
 .chat-recall-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
 .chat-input-row {
-  display: flex; gap: 8px; align-items: center;
+  display: flex; align-items: center;
   padding: 10px 12px; border-top: 1px solid var(--border);
   background: var(--bg);
 }
+.chat-input-wrap {
+  flex: 1; position: relative; display: flex; align-items: center;
+}
 .chat-input {
-  flex: 1; background: var(--bg2); border: 1.5px solid var(--border);
-  border-radius: 20px; padding: 8px 14px;
+  width: 100%; background: var(--bg2); border: 1.5px solid var(--border);
+  border-radius: 20px; padding: 8px 38px 8px 14px;
   font-family: "Nunito", sans-serif; font-size: 13px; color: var(--text);
-  outline: none; transition: border .15s;
+  outline: none; transition: border .15s; box-sizing: border-box;
 }
 .chat-input:focus { border-color: var(--peach-mid); }
 .chat-input::placeholder { color: var(--text-muted); }
 .chat-send-btn {
-  width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
-  background: var(--peach); border: none; cursor: pointer;
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  transition: background .15s;
+  padding: 4px; border-radius: 50%; transition: color .15s;
+  color: var(--peach);
 }
-.chat-send-btn:hover { background: var(--peach-dark); }
-.chat-send-btn svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.chat-send-btn:hover { color: var(--peach-dark); }
+.chat-send-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 .chat-login-hint {
   font-size: 12px; color: var(--text-muted); text-align: center;
   padding: 10px 14px; border-top: 1px solid var(--border);
@@ -675,10 +679,12 @@ footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
 .profile-dropdown-item[href*="bookmark"] { display: none !important; }
 
 /* 3. Màu nền ô chat theo theme */
-body.theme-blue   .chat-box { background: #d4ebfc !important; border-color: #a8d4f5 !important; }
-body.theme-pink   .chat-box { background: #fcd4d4 !important; border-color: #f5a8a8 !important; }
-body.theme-purple .chat-box { background: #f1d4fc !important; border-color: #d9a8f5 !important; }
-body.theme-sepia  .chat-box { background: #f4ecd8 !important; border-color: #c9b98a !important; }
+body.theme-blue   .chat-box { border-color: #a8d4f5 !important; }
+body.theme-pink   .chat-box { border-color: #f5a8a8 !important; }
+body.theme-purple .chat-box { border-color: #d9a8f5 !important; }
+body.theme-sepia  .chat-box { border-color: #c9b98a !important; }
+/* chat-list và input-row luôn trắng bất kể theme */
+.chat-list, .chat-input-row, .chat-login-hint { background: #fff !important; }
 
 /* 4. Chat title: SVG outline + text */
 .chat-panel-title { font-size: 0 !important; display: flex !important; align-items: center !important; gap: 6px !important; }
@@ -1108,7 +1114,7 @@ async function loadStories() {
   const allRanked = [...stories].sort((a,b) => (b.total_views||0)-(a.total_views||0));
   document.getElementById('top-rank-grid').innerHTML = allRanked.map((s,i) => {
     const ch = chCounts[s.id] || 0;
-    const hiddenClass = i >= 3 ? 'rank-hidden' : '';
+    const hiddenClass = i >= 4 ? 'rank-hidden' : '';
     return `
     <a class="top-rank-card ${hiddenClass}" href="story.html?story=${s.id}">
       <div class="rank-badge ${rankClasses[i]||'rank-n'}">${i+1}</div>
@@ -1202,7 +1208,6 @@ document.addEventListener('click', e => {
 async function loadNotifications() {
   const listEl = document.getElementById('notifList');
   try {
-    // Lấy session hiện tại
     const { data: { session } } = await sb.auth.getSession();
     if (!session) {
       listEl.innerHTML = '<div class="notif-empty">Đăng nhập để xem thông báo cá nhân</div>';
@@ -1210,69 +1215,74 @@ async function loadNotifications() {
     }
     const userId = session.user.id;
 
-    // Lấy danh sách truyện user đang follow/library
+    // 1. Truyện user đang follow (bảng `follows`, cột user_id + story_id)
+    // 2. Truyện user đã lưu (bảng `library`, cột user_id + story_id)
     const [followRes, libraryRes] = await Promise.all([
       sb.from('follows').select('story_id').eq('user_id', userId),
       sb.from('library').select('story_id').eq('user_id', userId)
     ]);
 
-    const followIds = (followRes.data || []).map(r => r.story_id);
+    const followIds  = (followRes.data  || []).map(r => r.story_id);
     const libraryIds = (libraryRes.data || []).map(r => r.story_id);
     const trackedIds = [...new Set([...followIds, ...libraryIds])];
 
     const items = [];
 
-    // 1. Chương mới từ truyện đang theo dõi/lưu
+    // ── Chương mới từ truyện đang theo dõi / đã lưu ──
     if (trackedIds.length > 0) {
       const { data: chapters } = await sb.from('chapters')
         .select('id, title, story_id, created_at, stories(title, cover_url)')
         .in('story_id', trackedIds)
         .order('created_at', { ascending: false })
         .limit(15);
-      if (chapters) {
-        chapters.forEach(ch => {
-          const story = ch.stories || {};
-          const ts = ch.created_at ? new Date(ch.created_at) : null;
-          const timeStr = ts ? ts.toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric' }) : '';
-          items.push({ type: 'chapter', ch, story, timeStr });
-        });
-      }
-    }
-
-    // 2. Ai đó follow user
-    const { data: newFollowers } = await sb.from('follows')
-      .select('follower_id, created_at, profiles!follows_follower_id_fkey(display_name, avatar_url)')
-      .eq('followed_id', userId)
-      .order('created_at', { ascending: false })
-      .limit(5);
-    if (newFollowers) {
-      newFollowers.forEach(f => {
-        const prof = f.profiles || {};
-        const ts = f.created_at ? new Date(f.created_at) : null;
-        const timeStr = ts ? ts.toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric' }) : '';
-        items.push({ type: 'follow', prof, timeStr });
+      (chapters || []).forEach(ch => {
+        const story = ch.stories || {};
+        const timeStr = ch.created_at
+          ? new Date(ch.created_at).toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric' })
+          : '';
+        items.push({ type: 'chapter', ch, story, timeStr });
       });
     }
 
-    // 3. Bình luận/reply liên quan user
+    // ── Ai đó follow user (bảng `user_follows`, cột follower_id + following_id) ──
+    const { data: newFollowers } = await sb.from('user_follows')
+      .select('follower_id, created_at, profiles!user_follows_follower_id_fkey(display_name, avatar_url)')
+      .eq('following_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(5);
+    (newFollowers || []).forEach(f => {
+      const prof = f.profiles || {};
+      const timeStr = f.created_at
+        ? new Date(f.created_at).toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric' })
+        : '';
+      items.push({ type: 'follow', prof, timeStr });
+    });
+
+    // ── Reply / bình luận liên quan user (bảng `comments`, cột reply_to_user_id) ──
     const { data: comments } = await sb.from('comments')
       .select('id, body, created_at, story_id, stories(title, cover_url)')
       .eq('reply_to_user_id', userId)
       .order('created_at', { ascending: false })
       .limit(5);
-    if (comments) {
-      comments.forEach(c => {
-        const story = c.stories || {};
-        const ts = c.created_at ? new Date(c.created_at) : null;
-        const timeStr = ts ? ts.toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric' }) : '';
-        items.push({ type: 'comment', c, story, timeStr });
-      });
-    }
+    (comments || []).forEach(c => {
+      const story = c.stories || {};
+      const timeStr = c.created_at
+        ? new Date(c.created_at).toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric' })
+        : '';
+      items.push({ type: 'comment', c, story, timeStr });
+    });
 
     if (items.length === 0) {
       listEl.innerHTML = '<div class="notif-empty">Chưa có thông báo nào</div>';
       return;
     }
+
+    // Sắp xếp tất cả theo thời gian mới nhất
+    items.sort((a, b) => {
+      const ta = a.ch?.created_at || a.timeStr || '';
+      const tb = b.ch?.created_at || b.timeStr || '';
+      return tb.localeCompare(ta);
+    });
 
     document.getElementById('notifDot').style.display = 'block';
     listEl.innerHTML = items.map(item => {
@@ -1289,7 +1299,7 @@ async function loadNotifications() {
       } else if (item.type === 'follow') {
         const { prof, timeStr } = item;
         return `<div class="notif-item">
-          <div class="notif-cover" style="display:flex;align-items:center;justify-content:center;font-size:20px">${prof.avatar_url ? `<img src="${escapeHtml(prof.avatar_url)}" alt="" loading="lazy" style="border-radius:50%">` : '👤'}</div>
+          <div class="notif-cover" style="display:flex;align-items:center;justify-content:center;font-size:20px">${prof.avatar_url ? `<img src="${escapeHtml(prof.avatar_url)}" alt="" loading="lazy" style="border-radius:50%;width:100%;height:100%;object-fit:cover">` : '👤'}</div>
           <div class="notif-body">
             <div class="notif-story-name">${escapeHtml(prof.display_name || 'Ai đó')} đã follow bạn</div>
             <div class="notif-ch-name">👥 Người theo dõi mới</div>
@@ -1302,7 +1312,7 @@ async function loadNotifications() {
           <div class="notif-cover">${story.cover_url ? `<img src="${escapeHtml(story.cover_url)}" alt="" loading="lazy">` : ''}</div>
           <div class="notif-body">
             <div class="notif-story-name">💬 ${escapeHtml(story.title || 'Truyện')}</div>
-            <div class="notif-ch-name">${escapeHtml((c.body||'').substring(0, 40))}${(c.body||'').length > 40 ? '...' : ''}</div>
+            <div class="notif-ch-name">${escapeHtml((c.body || '').substring(0, 40))}${(c.body || '').length > 40 ? '...' : ''}</div>
             <div class="notif-time">${timeStr}</div>
           </div>
         </a>`;
@@ -1464,7 +1474,7 @@ function toggleTopRank(btn) {
   } else {
     // Thu gọn lại, ẩn từ thứ 4 trở đi
     const all = document.querySelectorAll('.top-rank-card');
-    all.forEach((c, i) => { if (i >= 3) c.classList.add('rank-hidden'); });
+    all.forEach((c, i) => { if (i >= 4) c.classList.add('rank-hidden'); });
     btn.innerHTML = 'Xem tất cả <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2"><polyline points="9 18 15 12 9 6"/></svg>';
   }
 }
@@ -1589,11 +1599,13 @@ async function initChat() {
     chatProfile = prof;
     document.getElementById('chatInputArea').innerHTML = `
       <div class="chat-input-row">
-        <input class="chat-input" id="chatInput" placeholder="Nói gì đi..." maxlength="300"
-          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatMsg();}"/>
-        <button class="chat-send-btn" onclick="sendChatMsg()">
+        <div class="chat-input-wrap">
+          <input class="chat-input" id="chatInput" placeholder="Nói gì đi..." maxlength="300"
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatMsg();}"/>
+          <button class="chat-send-btn" onclick="sendChatMsg()">
           <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        </button>
+          </button>
+        </div>
       </div>`;
   } else {
     document.getElementById('chatInputArea').innerHTML = `
