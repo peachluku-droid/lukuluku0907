@@ -39,7 +39,7 @@ body.theme-blue   { --bg:#e8f0fe; --bg2:#f4f7ff; --text:#1a2a4a; --border:#b8ccf
 body.theme-purple { --bg:#f0ebff; --bg2:#f9f6ff; --text:#2a1a4a; --border:#cdb8f4; --accent:#6a3bbf; --accent2:#8a5de0; --panel:#f9f6ff; --sidebar:#e8dcfc; --meta:#9a7ac0; }
 body.theme-pink   { --bg:#fff0f6; --bg2:#fff8fb; --text:#2c1a22; --border:#f4c0d1; --accent:#993556; --accent2:#d4537e; --panel:#fff8fb; --sidebar:#ffe6f2; --meta:#c09aaa; }
 
-body.theme-wattpad{ --bg:#f5e6c8; --bg2:#fdf3e0; --text:#2c1f0e; --border:#d9c4a0; --accent:#8b5e1a; --accent2:#b07d2e; --panel:#fdf3e0; --sidebar:#f0ddb8; --meta:#a08050; }
+body.theme-wattpad{ --bg:#FBF0D9; --bg2:#fdf3e0; --text:#4A3525; --border:#d9c4a0; --accent:#8b5e1a; --accent2:#b07d2e; --panel:#fdf3e0; --sidebar:#f0ddb8; --meta:#a08050; }
 
 body {
   font-family: var(--font-body, 'Noto Serif', Georgia, serif);
@@ -119,8 +119,8 @@ body {
 .chapter-meta { font-size: 13px; color: var(--meta); margin-bottom: 36px; text-align: center; }
 
 .para-wrap {
-  display: block; margin-bottom: 2px; border-radius: 8px;
-  padding: 2px 6px; transition: background .2s;
+  display: block; margin-bottom: 1px; border-radius: 8px;
+  padding: 1px 6px; transition: background .2s;
   /* overflow: hidden xóa vì clip float */
 }
 .para-wrap.highlighted { background: color-mix(in srgb, var(--accent) 8%, transparent); }
@@ -128,16 +128,16 @@ body {
   display: block;
   font-weight: var(--font-weight, 400);
   font-style: var(--font-style, normal);
-  line-height: 1.8;
+  line-height: 1.4;
 }
 .para-text * {
   font-family: inherit !important;
   font-size: inherit !important;
   background: transparent !important;
 }
-.para-text p { margin: 0 0 0.6em 0; padding: 0; }
+.para-text p { margin: 0 0 0.3em 0; padding: 0; }
 .para-text p:last-child { margin-bottom: 0; }
-.para-text div { margin: 0 0 0.4em 0; }
+.para-text div { margin: 0 0 0.2em 0; }
 .para-text b, .para-text strong { font-weight: 700; }
 .para-text i, .para-text em { font-style: italic; }
 .para-text span { white-space: pre-wrap; }
@@ -155,7 +155,7 @@ body {
   color: var(--text-muted);
   cursor: pointer; transition: all .15s; line-height: 1.4;
   font-family: 'Nunito', sans-serif; opacity: 0.55;
-  margin-left: 8px; margin-top: 4px; margin-bottom: 2px;
+  margin-left: 8px; margin-top: 2px; margin-bottom: 2px;
 }
 .cmt-trigger svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .cmt-trigger:hover { opacity: 1; background: color-mix(in srgb, var(--accent) 15%, var(--bg2)); border-color: var(--accent2); color: var(--accent); }
@@ -435,7 +435,7 @@ body {
 <body class="theme-light">
 
 <header class="site-header">
-  <a href="index.html" class="header-logo" title="Về trang chủ">
+  <a href="#" class="header-logo" title="Trang truyện" id="header-logo-link" onclick="if(STORY_ID)location.href='story.html?story='+STORY_ID;else location.href='index.html';return false;">
     <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
   </a>
   <span class="header-title" id="header-title">Đang tải...</span>
@@ -933,8 +933,8 @@ function renderParagraphs(content) {
     const rendered = block.type === 'html' ? block.content : escapeHtml(block.content)
     return `
     <div class="para-wrap" data-pid="${pid}">
-      <button class="cmt-trigger" data-pid="${pid}">${CMT_ICON}<span class="cnt">0</span></button>
       <div class="para-text">${rendered}</div>
+      <button class="cmt-trigger" data-pid="${pid}">${CMT_ICON}<span class="cnt">0</span></button>
       <div style="clear:both"></div>
     </div>`
   }).join('')
