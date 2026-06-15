@@ -126,6 +126,8 @@ body {
   font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text);
   transition: background .3s, color .3s; line-height: 1.6;
   margin: 0; min-height: 100vh;
+  /* +2 cỡ chữ base: 16px → 18px */
+  font-size: 18px;
 }
 .page-wrapper {
   max-width: 720px; margin: 0 auto; min-height: 100vh;
@@ -158,12 +160,12 @@ body {
 .icon-btn svg { width: 19px; height: 19px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .theme-drawer { position: fixed; top: 58px; right: .75rem; z-index: 300; background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 12px 14px; width: 210px; box-shadow: 0 8px 28px rgba(0,0,0,0.12); display: none; }
 .theme-drawer.open { display: block; }
-.theme-drawer-title { font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 9px; text-transform: uppercase; letter-spacing: .5px; }
+.theme-drawer-title { font-size: 13px; font-weight: 800; color: var(--text-muted); margin-bottom: 9px; text-transform: uppercase; letter-spacing: .5px; }
 .theme-swatches { display: grid; grid-template-columns: repeat(4,1fr); gap: 7px; }
 .swatch { width: 36px; height: 36px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: all .15s; }
 .swatch.active { border-color: var(--peach); box-shadow: 0 0 0 2px var(--bg2), 0 0 0 4px var(--peach); }
 .swatch:hover { transform: scale(1.12); }
-.swatch-label { font-size: 9px; text-align: center; color: var(--text-muted); margin-top: 3px; font-weight: 700; }
+.swatch-label { font-size: 11px; text-align: center; color: var(--text-muted); margin-top: 3px; font-weight: 700; }
 .cover-hero { position: relative; width: 100%; background: var(--peach-light); display: flex; justify-content: center; padding: 2rem 1.5rem 2.5rem; overflow: hidden; }
 .cover-hero-blur { position: absolute; inset: 0; filter: blur(22px) saturate(1.4); opacity: 0.32; background-size: cover; background-position: center; transform: scale(1.1); }
 .cover-book { position: relative; width: 154px; height: 230px; border-radius: 10px; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.28); background: var(--peach-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -171,26 +173,32 @@ body {
 .cover-book-ph { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
 .cover-book-ph svg { width: 52px; height: 52px; stroke: var(--peach-mid); fill: none; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
 .story-body { background: var(--bg2); padding: 1.2rem 1.2rem 0; margin-bottom: 0; }
-.story-title-main { font-size: 20px; font-weight: 800; color: var(--text); line-height: 1.3; margin-bottom: 0.7rem; text-align: center; }
+/* +2 cỡ: 20px → 22px */
+.story-title-main { font-size: 22px; font-weight: 800; color: var(--text); line-height: 1.3; margin-bottom: 0.7rem; text-align: center; }
 .author-row { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 1rem; cursor: pointer; }
 .author-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--peach-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; border: 2px solid var(--border); }
 .author-avatar svg { width: 16px; height: 16px; stroke: var(--peach-mid); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .author-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.author-name { font-size: 14px; font-weight: 700; }
+/* +2 cỡ: 14px → 16px */
+.author-name { font-size: 16px; font-weight: 700; }
 .author-row:hover .author-name { color: var(--peach); text-decoration: underline; }
 .stats-row { display: flex; gap: 0; margin-bottom: 1.2rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: .7rem 0; }
 .stat-block { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; position: relative; }
 .stat-block + .stat-block::before { content: ''; position: absolute; left: 0; top: 10%; bottom: 10%; width: 1px; background: var(--border); }
 .stat-icon { color: var(--text-muted); display: flex; align-items: center; margin-bottom: 1px; }
-.stat-icon svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.stat-val { font-size: 15px; font-weight: 800; color: var(--text); }
-.stat-label { font-size: 10.5px; color: var(--text-muted); font-weight: 600; }
+.stat-icon svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+/* +2 cỡ: 15px → 17px */
+.stat-val { font-size: 17px; font-weight: 800; color: var(--text); }
+/* +2 cỡ: 10.5px → 12.5px */
+.stat-label { font-size: 12.5px; color: var(--text-muted); font-weight: 600; }
 .action-row { display: flex; gap: 8px; margin-bottom: 1.2rem; }
-.btn-read { flex: 1; background: var(--text); color: var(--bg2); border: none; border-radius: 28px; padding: 13px 16px; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; transition: opacity .2s, transform .1s; text-decoration: none; font-family: 'Nunito', sans-serif; }
+/* +2 cỡ: 14px → 16px */
+.btn-read { flex: 1; background: var(--text); color: var(--bg2); border: none; border-radius: 28px; padding: 13px 16px; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; transition: opacity .2s, transform .1s; text-decoration: none; font-family: 'Nunito', sans-serif; }
 .btn-read svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 .btn-read:hover { opacity: .82; }
 .btn-read:active { transform: scale(.97); }
-.btn-secondary-action { background: var(--bg2); color: var(--text); border: 1.5px solid var(--border-hover); border-radius: 28px; padding: 13px 14px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background .15s, transform .1s; font-family: 'Nunito', sans-serif; white-space: nowrap; }
+/* +2 cỡ: 13px → 15px */
+.btn-secondary-action { background: var(--bg2); color: var(--text); border: 1.5px solid var(--border-hover); border-radius: 28px; padding: 13px 14px; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background .15s, transform .1s; font-family: 'Nunito', sans-serif; white-space: nowrap; }
 .btn-secondary-action svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 .btn-secondary-action:hover { background: var(--peach-light); }
 .btn-secondary-action.active { background: var(--peach-light); color: var(--peach-dark); border-color: var(--peach-mid); }
@@ -199,82 +207,105 @@ body {
 #bookmark-btn.active svg { stroke: var(--peach); fill: var(--peach); }
 .btn-secondary-action:active { transform: scale(.97); }
 .tags-row { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 1.2rem; align-items: center; }
-.status-chip { padding: 5px 13px; border-radius: 20px; font-size: 11.5px; font-weight: 800; display: flex; align-items: center; gap: 5px; }
-.status-chip svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+/* +2 cỡ: 11.5px → 13.5px */
+.status-chip { padding: 5px 13px; border-radius: 20px; font-size: 13.5px; font-weight: 800; display: flex; align-items: center; gap: 5px; }
+.status-chip svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 .status-chip.done { background: var(--green-light); color: var(--green); }
 .status-chip.ongoing { background: var(--gold-light); color: var(--gold); }
-.genre-tag { padding: 5px 13px; background: var(--peach-light); color: var(--peach-dark); border-radius: 20px; font-size: 11.5px; font-weight: 700; cursor: pointer; text-decoration: none; transition: background .12s; }
+/* +2 cỡ: 11.5px → 13.5px */
+.genre-tag { padding: 5px 13px; background: var(--peach-light); color: var(--peach-dark); border-radius: 20px; font-size: 13.5px; font-weight: 700; cursor: pointer; text-decoration: none; transition: background .12s; }
 .genre-tag:hover { background: var(--peach-mid); color: white; }
 .description-box { background: var(--bg); border: 1px solid var(--border); border-radius: 14px; padding: .9rem 1rem; margin-bottom: 1.4rem; }
-.description-label { font-size: 10.5px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 5px; }
-.description-text { font-size: 13.5px; line-height: 1.78; color: var(--text); }
+/* +2 cỡ: 10.5px → 12.5px */
+.description-label { font-size: 12.5px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 5px; }
+/* +2 cỡ: 13.5px → 15.5px */
+.description-text { font-size: 15.5px; line-height: 1.78; color: var(--text); }
 .description-text.clamped { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
 .description-text * { font-family: inherit !important; font-size: inherit !important; color: inherit !important; background: transparent !important; }
 .description-text p, .description-text div { margin-bottom: 0.3em; line-height: 1.78; }
 .description-text b, .description-text strong { font-weight: 700; }
 .description-text i, .description-text em { font-style: italic; }
-.read-more-btn { background: none; border: none; cursor: pointer; color: var(--peach); font-size: 12.5px; font-weight: 700; padding: 4px 0; margin-top: 5px; font-family: 'Nunito', sans-serif; display: flex; align-items: center; gap: 4px; }
-.read-more-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; transition: transform .15s; }
+/* +2 cỡ: 12.5px → 14.5px */
+.read-more-btn { background: none; border: none; cursor: pointer; color: var(--peach); font-size: 14.5px; font-weight: 700; padding: 4px 0; margin-top: 5px; font-family: 'Nunito', sans-serif; display: flex; align-items: center; gap: 4px; }
+.read-more-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; transition: transform .15s; }
 .read-more-btn.expanded svg { transform: rotate(180deg); }
 .content-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); background: var(--bg2); position: sticky; top: 56px; z-index: 90; transition: background .3s; }
-.tab-btn { flex: 1; background: none; border: none; padding: 12px 0; font-size: 13px; font-weight: 700; color: var(--text-muted); cursor: pointer; position: relative; transition: color .15s; font-family: 'Nunito', sans-serif; display: flex; align-items: center; justify-content: center; gap: 5px; }
-.tab-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+/* +2 cỡ: 13px → 15px */
+.tab-btn { flex: 1; background: none; border: none; padding: 12px 0; font-size: 15px; font-weight: 700; color: var(--text-muted); cursor: pointer; position: relative; transition: color .15s; font-family: 'Nunito', sans-serif; display: flex; align-items: center; justify-content: center; gap: 5px; }
+.tab-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 .tab-btn:hover { color: var(--peach); }
 .tab-btn.active { color: var(--peach); }
 .tab-btn.active::after { content: ''; position: absolute; bottom: -2px; left: 15%; right: 15%; height: 2.5px; background: var(--peach); border-radius: 2px; }
-.tab-count { font-size: 10px; font-weight: 800; background: var(--peach-light); color: var(--peach-dark); padding: 1px 5px; border-radius: 8px; min-width: 16px; text-align: center; }
+/* +2 cỡ: 10px → 12px */
+.tab-count { font-size: 12px; font-weight: 800; background: var(--peach-light); color: var(--peach-dark); padding: 1px 5px; border-radius: 8px; min-width: 18px; text-align: center; }
 .tab-btn.active .tab-count { background: var(--peach); color: white; }
+
+/* ── Tab content: chỉ #tab-chapters có viền + bo góc như description-box ── */
 .tab-content { display: none; }
-.tab-content.active { display: block; margin: 12px 0 1.4rem; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; background: var(--bg); }
+.tab-content.active { display: block; }
+#tab-chapters { margin: 12px 0 1.4rem; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; background: var(--bg); }
+#tab-comments, #tab-info { margin: 12px 0 1.4rem; }
+
 .tab-frame { margin: 12px 0 1.4rem; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; position: relative; background: var(--bg); }
-#tab-chapters, #tab-comments, #tab-info { border-radius: 14px; }
 .tab-deco-top, .tab-deco-bot { display: none; }
 .comment-card { margin: 8px 10px; border-radius: 14px !important; border: 1px solid var(--peach-mid) !important; border-bottom: 1px solid var(--peach-mid) !important; }
 .comment-card:last-child { margin-bottom: 8px; }
 .chapter-controls { display: flex; justify-content: space-between; align-items: center; padding: .9rem 1.2rem .7rem; flex-wrap: wrap; gap: .6rem; background: var(--bg); }
-.chapter-count-label { font-size: 13.5px; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 6px; }
-.chapter-count-label svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; color: var(--text-muted); }
-.sort-btn { padding: 5px 12px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 16px; font-size: 12px; font-weight: 700; color: var(--text); cursor: pointer; transition: all .15s; font-family: 'Nunito', sans-serif; display: flex; align-items: center; gap: 5px; }
-.sort-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: transform .2s; }
+/* +2 cỡ: 13.5px → 15.5px */
+.chapter-count-label { font-size: 15.5px; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 6px; }
+.chapter-count-label svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; color: var(--text-muted); }
+/* +2 cỡ: 12px → 14px */
+.sort-btn { padding: 5px 12px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 16px; font-size: 14px; font-weight: 700; color: var(--text); cursor: pointer; transition: all .15s; font-family: 'Nunito', sans-serif; display: flex; align-items: center; gap: 5px; }
+.sort-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: transform .2s; }
 .sort-btn:hover { background: var(--peach-light); border-color: var(--border-hover); }
 .chapter-search-bar { display: flex; align-items: center; gap: 8px; background: var(--bg2); border: 1.5px solid var(--border); border-radius: 22px; padding: 7px 15px; margin: 0 1.2rem .7rem; transition: border-color .15s; }
 .chapter-search-bar:focus-within { border-color: var(--peach); }
-.chapter-search-bar svg { width: 14px; height: 14px; stroke: var(--text-muted); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
-.chapter-search-bar input { border: none; background: none; outline: none; font-size: 13px; color: var(--text); flex: 1; font-family: 'Nunito', sans-serif; }
+.chapter-search-bar svg { width: 15px; height: 15px; stroke: var(--text-muted); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+/* +2 cỡ: 13px → 15px */
+.chapter-search-bar input { border: none; background: none; outline: none; font-size: 15px; color: var(--text); flex: 1; font-family: 'Nunito', sans-serif; }
 .chapter-search-bar input::placeholder { color: var(--text-muted); }
 .chapter-list { padding: 0 1.2rem 1rem; display: flex; flex-direction: column; }
 .chapter-item { display: flex; align-items: center; gap: 12px; padding: 12px 4px; border-bottom: 1px solid var(--border); text-decoration: none; color: var(--text); transition: all .12s; border-radius: 0; }
 .chapter-item:last-child { border-bottom: none; }
 .chapter-item:hover { background: var(--peach-light); margin: 0 -8px; padding-left: 12px; padding-right: 12px; border-radius: 10px; border-bottom-color: transparent; }
-.chapter-num-badge { width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0; background: var(--peach-light); color: var(--peach-dark); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; align-self: center; }
+
+/* ── Badge số chương: căn giữa hoàn toàn, line-height: 1 chống trồi chữ ── */
+.chapter-num-badge {
+  width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
+  background: var(--peach-light); color: var(--peach-dark);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; line-height: 1;
+}
 .chapter-item.read .chapter-num-badge { background: var(--green-light); color: var(--green); }
+
 .chapter-info { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
-.chapter-name { font-weight: 700; font-size: 13.5px; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* +2 cỡ: 13.5px → 15.5px */
+.chapter-name { font-weight: 700; font-size: 15.5px; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .chapter-item.read .chapter-name { color: var(--text-muted); }
-.chapter-meta { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; justify-content: space-between; }
+.chapter-meta { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; justify-content: space-between; }
 .chapter-meta-left { display: flex; align-items: center; gap: 4px; }
-.chapter-meta-right { display: flex; align-items: center; gap: 4px; }
-.chapter-meta svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+/* meta-right chứa cả thời gian + lượt xem, sát phải */
+.chapter-meta-right { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+.chapter-meta svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .chapter-arrow { color: var(--text-muted); flex-shrink: 0; align-self: center; }
 .chapter-arrow svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .skel-ch { display: flex; gap: 12px; padding: 12px 4px; align-items: center; border-bottom: 1px solid var(--border); }
 .skel { animation: shimmer 1.4s infinite; background: linear-gradient(90deg, var(--border) 25%, var(--peach-light) 50%, var(--border) 75%); background-size: 200% 100%; border-radius: 6px; }
-.skel-sq { width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0; }
+.skel-sq { width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0; }
 .skel-lines { flex: 1; display: flex; flex-direction: column; gap: 6px; }
-.skel-line { height: 11px; }
+.skel-line { height: 13px; }
 .skel-line.w70 { width: 70%; }
 .skel-line.w40 { width: 40%; }
 @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 .comment-section { padding: 0; }
 
-/* ── FIX 1: Ô compose review full-width khớp ô tìm chương ── */
 .comment-compose {
   display: flex; gap: 8px;
   background: var(--bg);
   border: 1.5px solid var(--border);
   border-radius: 22px;
   padding: 7px 15px;
-  margin: 10px 1.2rem;     /* khớp margin trái/phải với chapter-search-bar */
+  margin: 10px 1.2rem;
   transition: border-color .15s, background .2s;
   cursor: text;
   overflow: hidden;
@@ -295,73 +326,89 @@ body {
 .comment-compose.expanded .compose-input { pointer-events: auto; }
 .comment-compose.expanded:focus-within { background: var(--peach-light); }
 
-.compose-avatar { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); }
-.compose-avatar svg { width: 14px; height: 14px; stroke: var(--peach-mid); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.compose-avatar { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); }
+.compose-avatar svg { width: 15px; height: 15px; stroke: var(--peach-mid); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .compose-body { flex: 1; min-width: 0; }
-.compose-input { width: 100%; border: none; background: none; outline: none; font-family: 'Nunito', sans-serif; font-size: 13.5px; color: var(--text); resize: none; min-height: 38px; max-height: 120px; line-height: 1.5; }
+/* +2 cỡ: 13.5px → 15.5px */
+.compose-input { width: 100%; border: none; background: none; outline: none; font-family: 'Nunito', sans-serif; font-size: 15.5px; color: var(--text); resize: none; min-height: 38px; max-height: 120px; line-height: 1.5; }
 .compose-input::placeholder { color: var(--text-muted); }
 .compose-footer { display: flex; align-items: center; justify-content: flex-end; margin-top: 8px; }
-.compose-submit { background: var(--peach-dark); color: white; border: none; border-radius: 20px; padding: 6px 16px; font-family: 'Nunito', sans-serif; font-size: 12.5px; font-weight: 700; cursor: pointer; transition: background .15s; display: flex; align-items: center; gap: 5px; }
-.compose-submit svg { width: 13px; height: 13px; stroke: white; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+/* +2 cỡ: 12.5px → 14.5px */
+.compose-submit { background: var(--peach-dark); color: white; border: none; border-radius: 20px; padding: 6px 16px; font-family: 'Nunito', sans-serif; font-size: 14.5px; font-weight: 700; cursor: pointer; transition: background .15s; display: flex; align-items: center; gap: 5px; }
+.compose-submit svg { width: 14px; height: 14px; stroke: white; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 .compose-submit:hover { background: var(--peach-dark); }
 .compose-submit:disabled { opacity: .6; cursor: not-allowed; }
 .comment-list { display: flex; flex-direction: column; gap: 1px; }
 .comment-card { background: var(--bg); border: none; border-bottom: 1px solid var(--border); padding: 13px 15px; transition: background .12s; }
 .comment-card:hover { background: var(--peach-light); }
 .comment-item { display: flex; gap: 10px; }
-.comment-avatar { width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); font-size: 13px; font-weight: 800; color: var(--peach-dark); overflow: hidden; }
+.comment-avatar { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); font-size: 14px; font-weight: 800; color: var(--peach-dark); overflow: hidden; }
 .comment-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .comment-bubble { flex: 1; min-width: 0; }
 .comment-header { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; flex-wrap: wrap; }
-.comment-name { font-size: 13px; font-weight: 800; }
-.comment-time { font-size: 11px; color: var(--text-muted); font-weight: 600; }
-.comment-text { font-size: 13.5px; line-height: 1.65; color: var(--text); word-break: break-word; }
+/* +2 cỡ: 13px → 15px */
+.comment-name { font-size: 15px; font-weight: 800; }
+/* +2 cỡ: 11px → 13px */
+.comment-time { font-size: 13px; color: var(--text-muted); font-weight: 600; }
+/* +2 cỡ: 13.5px → 15.5px */
+.comment-text { font-size: 15.5px; line-height: 1.65; color: var(--text); word-break: break-word; }
 .comment-actions { display: flex; align-items: center; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
-.comment-action-btn { background: none; border: none; cursor: pointer; font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; color: var(--text-muted); display: flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 20px; transition: all .12s; }
-.comment-action-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+/* +2 cỡ: 12px → 14px */
+.comment-action-btn { background: none; border: none; cursor: pointer; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700; color: var(--text-muted); display: flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 20px; transition: all .12s; }
+.comment-action-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .comment-action-btn:hover { background: var(--peach-light); color: var(--peach-dark); }
 .comment-action-btn.liked { color: #e05a7a; }
 .comment-action-btn.liked svg { fill: #e05a7a; stroke: #e05a7a; }
 .comment-action-btn.delete-btn:hover { background: #fff0f0; color: #c0392b; }
 .replies-section { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; padding-left: 44px; }
 .reply-item { display: flex; gap: 9px; }
-.reply-avatar { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); font-size: 11px; font-weight: 800; color: var(--peach-dark); overflow: hidden; }
+.reply-avatar { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); font-size: 12px; font-weight: 800; color: var(--peach-dark); overflow: hidden; }
 .reply-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .reply-bubble { flex: 1; min-width: 0; }
 .reply-header { display: flex; align-items: center; gap: 7px; margin-bottom: 3px; }
-.reply-name { font-size: 12.5px; font-weight: 800; }
-.reply-time { font-size: 10.5px; color: var(--text-muted); font-weight: 600; }
-.reply-text { font-size: 13px; line-height: 1.6; color: var(--text); word-break: break-word; }
+/* +2 cỡ: 12.5px → 14.5px */
+.reply-name { font-size: 14.5px; font-weight: 800; }
+/* +2 cỡ: 10.5px → 12.5px */
+.reply-time { font-size: 12.5px; color: var(--text-muted); font-weight: 600; }
+/* +2 cỡ: 13px → 15px */
+.reply-text { font-size: 15px; line-height: 1.6; color: var(--text); word-break: break-word; }
 .reply-actions { display: flex; align-items: center; gap: 6px; margin-top: 5px; }
 .reply-compose { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); display: flex; gap: 9px; align-items: flex-start; }
-.reply-compose-avatar { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); font-size: 11px; font-weight: 800; color: var(--peach-dark); overflow: hidden; margin-top: 2px; }
+.reply-compose-avatar { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); font-size: 12px; font-weight: 800; color: var(--peach-dark); overflow: hidden; margin-top: 2px; }
 .reply-compose-body { flex: 1; display: flex; gap: 8px; align-items: flex-end; }
-.reply-input { flex: 1; border: 1.5px solid var(--border); background: var(--bg2); outline: none; font-family: 'Nunito', sans-serif; font-size: 13px; color: var(--text); resize: none; min-height: 34px; max-height: 80px; line-height: 1.5; border-radius: 12px; padding: 6px 10px; transition: border-color .15s; }
+/* +2 cỡ: 13px → 15px */
+.reply-input { flex: 1; border: 1.5px solid var(--border); background: var(--bg2); outline: none; font-family: 'Nunito', sans-serif; font-size: 15px; color: var(--text); resize: none; min-height: 36px; max-height: 80px; line-height: 1.5; border-radius: 12px; padding: 6px 10px; transition: border-color .15s; }
 .reply-input:focus { border-color: var(--peach); }
 .reply-input::placeholder { color: var(--text-muted); }
-.reply-submit { background: var(--peach-dark); color: white; border: none; border-radius: 20px; padding: 6px 13px; font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: opacity .15s; flex-shrink: 0; }
+/* +2 cỡ: 12px → 14px */
+.reply-submit { background: var(--peach-dark); color: white; border: none; border-radius: 20px; padding: 6px 13px; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: opacity .15s; flex-shrink: 0; }
 .reply-submit:hover { opacity: .85; }
 .reply-submit:disabled { opacity: .5; cursor: not-allowed; }
-.load-more-btn { width: 100%; margin-top: 16px; padding: 11px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: all .15s; display: flex; align-items: center; justify-content: center; gap: 6px; }
-.load-more-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+/* +2 cỡ: 13px → 15px */
+.load-more-btn { width: 100%; margin-top: 16px; padding: 11px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: all .15s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.load-more-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .load-more-btn:hover { background: var(--peach-light); color: var(--peach-dark); border-color: var(--peach-mid); }
+/* +2 cỡ comment empty */
 .comment-empty { text-align: center; padding: 2.5rem 1rem; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-.comment-empty svg { width: 44px; height: 44px; stroke: var(--peach-mid); fill: none; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
-.comment-empty-title { font-size: 14px; font-weight: 800; }
-.comment-empty-sub { font-size: 12.5px; color: var(--text-muted); }
+.comment-empty svg { width: 46px; height: 46px; stroke: var(--peach-mid); fill: none; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+.comment-empty-title { font-size: 16px; font-weight: 800; }
+.comment-empty-sub { font-size: 14.5px; color: var(--text-muted); }
 .login-prompt { background: var(--peach-light); border: 1.5px solid var(--border-hover); border-radius: 14px; padding: 14px 16px; margin-bottom: 1.4rem; display: flex; align-items: center; gap: 12px; }
 .login-prompt svg { width: 20px; height: 20px; stroke: var(--peach-dark); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
-.login-prompt-text { flex: 1; font-size: 13px; color: var(--peach-dark); font-weight: 700; }
-.login-prompt-btn { background: var(--peach); color: white; border: none; border-radius: 20px; padding: 6px 14px; font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; transition: background .15s; white-space: nowrap; }
+/* +2 cỡ: 13px → 15px */
+.login-prompt-text { flex: 1; font-size: 15px; color: var(--peach-dark); font-weight: 700; }
+/* +2 cỡ: 12px → 14px */
+.login-prompt-btn { background: var(--peach); color: white; border: none; border-radius: 20px; padding: 6px 14px; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: background .15s; white-space: nowrap; }
 .login-prompt-btn:hover { background: var(--peach-dark); }
 .empty-state { text-align: center; padding: 3rem 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-.empty-state svg { width: 46px; height: 46px; stroke: var(--peach-mid); fill: none; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
-.empty-state-text { font-size: 14px; color: var(--text-muted); font-weight: 600; }
-.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--text); color: var(--bg2); padding: 10px 20px; border-radius: 22px; font-size: 13px; font-weight: 700; z-index: 999; opacity: 0; transition: transform .25s, opacity .25s; white-space: nowrap; pointer-events: none; max-width: 90vw; text-align: center; }
+.empty-state svg { width: 48px; height: 48px; stroke: var(--peach-mid); fill: none; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+/* +2 cỡ: 14px → 16px */
+.empty-state-text { font-size: 16px; color: var(--text-muted); font-weight: 600; }
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--text); color: var(--bg2); padding: 10px 20px; border-radius: 22px; font-size: 15px; font-weight: 700; z-index: 999; opacity: 0; transition: transform .25s, opacity .25s; white-space: nowrap; pointer-events: none; max-width: 90vw; text-align: center; }
 .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 @media (max-width: 480px) {
-  .story-title-main { font-size: 18px; }
-  .tab-btn { font-size: 12px; padding: 11px 0; gap: 3px; }
+  .story-title-main { font-size: 20px; }
+  .tab-btn { font-size: 14px; padding: 11px 0; gap: 3px; }
   .tab-btn svg { display: none; }
 }
 
@@ -374,20 +421,22 @@ body {
   display: none; flex-direction: column; gap: 2px;
 }
 .profile-dropdown.open { display: flex; }
+/* +2 cỡ: 13px → 15px */
 .profile-dropdown-item {
   display: flex; align-items: center; gap: 9px;
   padding: 9px 12px; border-radius: 10px;
-  font-size: 13px; font-weight: 700; color: var(--text);
+  font-size: 15px; font-weight: 700; color: var(--text);
   text-decoration: none; transition: all .15s;
 }
 .profile-dropdown-item:hover { background: var(--peach-light); color: var(--peach); }
-.profile-dropdown-item svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; opacity: .7; }
+.profile-dropdown-item svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; opacity: .7; }
 .profile-dropdown-divider { height: 1px; background: var(--border); margin: 4px 8px; }
 .dd-auth-row { display: flex; align-items: center; gap: 6px; padding: 6px 10px; margin: 2px 0; }
-.dd-auth-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 7px 6px; border-radius: 9px; font-size: 12px; font-weight: 800; color: var(--peach); text-decoration: none; background: var(--peach-light); transition: background .15s, color .15s; }
+/* +2 cỡ: 12px → 14px */
+.dd-auth-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 7px 6px; border-radius: 9px; font-size: 14px; font-weight: 800; color: var(--peach); text-decoration: none; background: var(--peach-light); transition: background .15s, color .15s; }
 .dd-auth-btn:hover { background: var(--peach); color: #fff; }
-.dd-auth-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; opacity:1; }
-.dd-auth-sep { color: var(--text-muted); font-size: 13px; flex-shrink: 0; }
+.dd-auth-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; opacity:1; }
+.dd-auth-sep { color: var(--text-muted); font-size: 15px; flex-shrink: 0; }
 .profile-menu-btn {
   border-radius: 50% !important; width: 34px !important; height: 34px !important;
   border: 2px solid var(--border-hover) !important; background: var(--peach-light) !important;
@@ -550,7 +599,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const storyId = urlParams.get('story');
 
 if (!storyId) {
-  document.body.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;text-align:center;padding:2rem;gap:12px"><svg viewBox="0 0 24 24" width="56" height="56" style="stroke:var(--peach-mid);fill:none;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div style="font-size:18px;font-weight:800">Không tìm thấy truyện</div><div style="font-size:13px;color:var(--text-muted)">ID truyện không hợp lệ</div><a href="index.html" style="margin-top:8px;padding:10px 24px;background:var(--peach);color:white;border-radius:24px;text-decoration:none;font-weight:700;font-size:13px">Về trang chủ</a></div>`;
+  document.body.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;text-align:center;padding:2rem;gap:12px"><svg viewBox="0 0 24 24" width="56" height="56" style="stroke:var(--peach-mid);fill:none;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div style="font-size:20px;font-weight:800">Không tìm thấy truyện</div><div style="font-size:15px;color:var(--text-muted)">ID truyện không hợp lệ</div><a href="index.html" style="margin-top:8px;padding:10px 24px;background:var(--peach);color:white;border-radius:24px;text-decoration:none;font-weight:700;font-size:15px">Về trang chủ</a></div>`;
 }
 
 let allChapters = [], currentSort = 'asc', storyData = null, currentUser = null, currentUserProfile = null;
@@ -667,8 +716,8 @@ async function loadStory() {
     document.getElementById('story-votes').textContent = formatViews(totalVotes);
     const isDone = story.status === 'completed' || story.status === 'done' || story.completed;
     const chip = document.getElementById('story-status-chip');
-    if (isDone) { chip.className = 'status-chip done'; chip.innerHTML = `<svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><polyline points="20 6 9 17 4 12"/></svg> Hoàn thành`; }
-    else { chip.className = 'status-chip ongoing'; chip.innerHTML = `<svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 1 .5 4"/></svg> Đang ra`; }
+    if (isDone) { chip.className = 'status-chip done'; chip.innerHTML = `<svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><polyline points="20 6 9 17 4 12"/></svg> Hoàn thành`; }
+    else { chip.className = 'status-chip ongoing'; chip.innerHTML = `<svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 1 .5 4"/></svg> Đang ra`; }
     if (story.cover_url) { document.getElementById('story-cover').innerHTML = `<img src="${escapeHtml(story.cover_url)}" alt="${escapeHtml(story.title)}">`;  document.getElementById('cover-blur').style.backgroundImage = `url('${escapeHtml(story.cover_url)}')`; }
     document.getElementById('story-genres').style.display = 'none';
     if (story.tags) {
@@ -679,7 +728,6 @@ async function loadStory() {
 
     const created = story.created_at ? new Date(story.created_at).toLocaleDateString('vi-VN') : '—';
 
-    // Render info-grid với placeholder updated (sẽ cập nhật sau khi load chapters)
     document.getElementById('info-grid').innerHTML = [
       { label: 'Tác giả', val: story.author || 'Ẩn danh' },
       { label: 'Trạng thái', val: isDone ? 'Hoàn thành' : 'Đang ra' },
@@ -687,7 +735,7 @@ async function loadStory() {
       { label: 'Cập nhật', val: '—', id: 'info-updated' },
       { label: 'Lượt xem', val: formatViews(story.total_views || 0) },
       { label: 'Bình chọn', val: formatViews(totalVotes) },
-    ].map(i => `<div style="background:var(--bg);border-radius:12px;padding:11px 13px"${i.id ? ` id="${i.id}"` : ''}><div style="font-size:10.5px;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">${i.label}</div><div style="font-size:14px;font-weight:700" ${i.id ? `id="${i.id}-val"` : ''}>${escapeHtml(i.val)}</div></div>`).join('');
+    ].map(i => `<div style="background:var(--bg);border-radius:12px;padding:11px 13px"${i.id ? ` id="${i.id}"` : ''}><div style="font-size:12.5px;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">${i.label}</div><div style="font-size:16px;font-weight:700" ${i.id ? `id="${i.id}-val"` : ''}>${escapeHtml(i.val)}</div></div>`).join('');
 
     if (currentUser) {
       const [{ data: bm }, { data: fl }] = await Promise.all([
@@ -701,7 +749,7 @@ async function loadStory() {
     if (window.PlSEO) PlSEO.injectBookJsonLd(story, allChapters, totalVotes);
     await loadCommentCount();
   } catch (err) {
-    document.body.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;text-align:center;padding:2rem;gap:12px"><svg viewBox="0 0 24 24" width="52" height="52" style="stroke:var(--peach-mid);fill:none;stroke-width:1.3"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div style="font-size:17px;font-weight:800">Không thể tải truyện</div><div style="font-size:13px;color:var(--text-muted)">${escapeHtml(err?.message || '')}</div><a href="index.html" style="margin-top:8px;padding:10px 24px;background:var(--peach);color:white;border-radius:24px;text-decoration:none;font-weight:700;font-size:13px">Về trang chủ</a></div>`;
+    document.body.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;text-align:center;padding:2rem;gap:12px"><svg viewBox="0 0 24 24" width="52" height="52" style="stroke:var(--peach-mid);fill:none;stroke-width:1.3"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div style="font-size:19px;font-weight:800">Không thể tải truyện</div><div style="font-size:15px;color:var(--text-muted)">${escapeHtml(err?.message || '')}</div><a href="index.html" style="margin-top:8px;padding:10px 24px;background:var(--peach);color:white;border-radius:24px;text-decoration:none;font-weight:700;font-size:15px">Về trang chủ</a></div>`;
   }
 }
 
@@ -713,18 +761,14 @@ async function loadChapters() {
   document.getElementById('chapter-count-label').textContent = count + ' chương';
   document.getElementById('tc-chapters').textContent = count;
 
-  // ── FIX 2: Ngày cập nhật lấy từ created_at của chapter MỚI NHẤT ──
-  // Đảm bảo hiển thị đúng sau khi gỡ/đăng lại chương
   if (allChapters.length > 0) {
     const latestChapter = allChapters.reduce((a, b) =>
       new Date(a.created_at) > new Date(b.created_at) ? a : b
     );
     const latestDate = new Date(latestChapter.created_at).toLocaleDateString('vi-VN');
-    // Cập nhật ô "Cập nhật" trong info-grid
     const updatedValEl = document.getElementById('info-updated-val');
     if (updatedValEl) updatedValEl.textContent = latestDate;
 
-    // Nếu là chủ truyện: sync updated_at trên DB nếu chapter mới hơn
     if (currentUser && storyData && currentUser.id === storyData.user_id) {
       const storyUpdatedAt = storyData.updated_at ? new Date(storyData.updated_at) : new Date(0);
       if (new Date(latestChapter.created_at) > storyUpdatedAt) {
@@ -733,7 +777,6 @@ async function loadChapters() {
       }
     }
   } else {
-    // Không có chapter: dùng story.updated_at
     const fallbackDate = storyData?.updated_at
       ? new Date(storyData.updated_at).toLocaleDateString('vi-VN')
       : '—';
@@ -763,9 +806,23 @@ function renderChapters(filtered = null) {
   try { const h = JSON.parse(localStorage.getItem('pl_history') || '[]'); const entry = h.find(x => x.storyId === storyId); if (entry) readChapterIds.add(entry.chapterId); } catch {}
   listEl.innerHTML = sorted.map(ch => {
     const num = ch.chapter_number || '?', isRead = readChapterIds.has(ch.id);
-    // Dùng updated_at nếu có (sau khi gỡ/đăng lại), fallback về created_at
     const chTime = ch.updated_at && ch.updated_at !== ch.created_at ? ch.updated_at : ch.created_at;
-    return `<a class="chapter-item${isRead ? ' read' : ''}" href="chapter.html?story=${storyId}&chapter=${ch.id}"><div class="chapter-num-badge">${num}</div><div class="chapter-info"><div class="chapter-name">${escapeHtml(ch.title || `Chương ${num}`)}</div><div class="chapter-meta"><div class="chapter-meta-left"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${chTime ? timeAgo(chTime) : ''}</div>${ch.views ? `<div class="chapter-meta-right"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>${formatViews(ch.views)}</div>` : ''}</div></div><span class="chapter-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span></a>`;
+    // ── thời gian + lượt xem đều nằm bên phải ──
+    return `<a class="chapter-item${isRead ? ' read' : ''}" href="chapter.html?story=${storyId}&chapter=${ch.id}">
+      <div class="chapter-num-badge">${num}</div>
+      <div class="chapter-info">
+        <div class="chapter-name">${escapeHtml(ch.title || `Chương ${num}`)}</div>
+        <div class="chapter-meta">
+          <div class="chapter-meta-left"></div>
+          <div class="chapter-meta-right">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            ${chTime ? timeAgo(chTime) : ''}
+            ${ch.views ? `&nbsp;·&nbsp;<svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>${formatViews(ch.views)}` : ''}
+          </div>
+        </div>
+      </div>
+      <span class="chapter-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
+    </a>`;
   }).join('');
 }
 
@@ -788,7 +845,7 @@ function renderComposeArea() {
     const initial = name[0].toUpperCase();
     const avatarHtml = profile.avatar_url
       ? `<img src="${escapeHtml(profile.avatar_url)}" alt="${escapeHtml(name)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
-      : `<span style="font-size:13px;font-weight:800;color:var(--peach-dark)">${initial}</span>`;
+      : `<span style="font-size:14px;font-weight:800;color:var(--peach-dark)">${initial}</span>`;
     area.innerHTML = `<div class="comment-compose" id="compose-box" onclick="expandCompose()"><div class="compose-avatar">${avatarHtml}</div><div class="compose-body"><textarea class="compose-input" id="comment-input" placeholder="Viết review của bạn..." rows="1" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onkeydown="if(event.key==='Enter'&&!event.shiftKey&&window.innerWidth>600){event.preventDefault();submitComment()}"></textarea><div class="compose-footer"><button class="compose-submit" onclick="submitComment()"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Gửi</button></div></div></div>`;
     setTimeout(() => {
       document.addEventListener('click', function collapseHandler(e) {
@@ -810,7 +867,7 @@ function renderComposeArea() {
 const likesCache = {};
 
 async function loadComments(append = false) {
-  if (!append) { commentsPage = 0; comments = []; document.getElementById('comment-list').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:13px;font-weight:600">Đang tải bình luận...</div>'; }
+  if (!append) { commentsPage = 0; comments = []; document.getElementById('comment-list').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:15px;font-weight:600">Đang tải bình luận...</div>'; }
   const from = commentsPage * COMMENTS_PER_PAGE;
   const { data, count } = await sb.from('comments').select('*', { count: 'exact' }).eq('story_id', storyId).is('parent_id', null).order('created_at', { ascending: false }).range(from, from + COMMENTS_PER_PAGE - 1);
   if (!append) comments = data || []; else comments = [...comments, ...(data || [])];
@@ -850,7 +907,7 @@ async function fetchProfiles(userIds) {
   (data || []).forEach(p => profilesCache[p.id] = p);
 }
 
-function avatarHtml(userId, email, size = 34, fsize = 13) {
+function avatarHtml(userId, email, size = 36, fsize = 14) {
   const p = profilesCache[userId] || {};
   const name = p.username || email?.split('@')[0] || 'U';
   if (p.avatar_url) return `<img src="${p.avatar_url}" alt="${name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
@@ -941,7 +998,7 @@ async function toggleReplyBox(parentId, tagName = null) {
 
 async function loadReplies(parentId) {
   const sec = document.getElementById('replies-' + parentId);
-  sec.innerHTML = '<div style="font-size:12px;color:var(--text-muted);padding:4px 0">Đang tải...</div>';
+  sec.innerHTML = '<div style="font-size:13px;color:var(--text-muted);padding:4px 0">Đang tải...</div>';
   const { data } = await sb.from('comments').select('*').eq('parent_id', parentId).order('created_at', { ascending: true });
   const replies = data || [];
   const labelEl = document.getElementById('reply-label-' + parentId);
@@ -956,7 +1013,7 @@ async function loadReplies(parentId) {
       likesCache[id] = { count: rows.length, liked: currentUser ? rows.some(l => l.user_id === currentUser.id) : false };
     });
   }
-  const composeAv = currentUser ? `<div class="reply-compose-avatar">${avatarHtml(currentUser.id, currentUser.email, 28, 11)}</div>` : '';
+  const composeAv = currentUser ? `<div class="reply-compose-avatar">${avatarHtml(currentUser.id, currentUser.email, 30, 12)}</div>` : '';
   const composeBox = currentUser ? `<div class="reply-compose" id="reply-compose-${parentId}">
     ${composeAv}
     <div class="reply-compose-body">
@@ -971,7 +1028,7 @@ async function loadReplies(parentId) {
     const isAdmin = currentUser && ADMIN_EMAILS.includes(currentUser.email);
     const lk = likesCache[r.id] || { count: 0, liked: false };
     return `<div class="reply-item" id="cmt-${r.id}" onclick="event.stopPropagation();tagReply('${parentId}','${escapeHtml(rname)}')" style="cursor:pointer">
-      <div class="reply-avatar">${avatarHtml(r.user_id, r.user_email, 28, 11)}</div>
+      <div class="reply-avatar">${avatarHtml(r.user_id, r.user_email, 30, 12)}</div>
       <div class="reply-bubble">
         <div class="reply-header"><span class="reply-name" style="cursor:pointer" onclick="toggleReplyBox('${parentId}','${escapeHtml(rname)}')" title="Trả lời ${escapeHtml(rname)}">@${escapeHtml(rname)}</span><span class="reply-time">${timeAgo(r.created_at)}</span></div>
         <div class="reply-text">${escapeHtml(r.content)}</div>
@@ -1057,7 +1114,7 @@ async function submitComment() {
   if (error) {
     showToast('Gửi thất bại: ' + error.message);
     const btnNow = document.querySelector('.compose-submit');
-    if (btnNow) { btnNow.disabled = false; btnNow.innerHTML = '<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:white;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Gửi'; }
+    if (btnNow) { btnNow.disabled = false; btnNow.innerHTML = '<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:white;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Gửi'; }
   } else {
     showToast('Đã gửi bình luận');
     await loadComments();
@@ -1171,7 +1228,7 @@ function _setMeta(k, v) { const el = document.querySelector('[property="'+k+'"]'
   document.addEventListener('cut', e => { e.preventDefault(); return false; });
   document.addEventListener('dragstart', e => { e.preventDefault(); return false; });
   document.addEventListener('selectstart', e => { const t = e.target; if (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.closest('.comment-compose') || t.closest('.chapter-search-bar')) return true; e.preventDefault(); return false; });
-  function injectWatermark() { if (document.getElementById('__pl_wm')) return; const wm = document.createElement('div'); wm.id = '__pl_wm'; wm.style.cssText = 'position:fixed;bottom:18px;right:18px;font-size:11px;color:var(--text-muted,#aaa);font-family:"Nunito",sans-serif;font-weight:700;pointer-events:none;z-index:9999;opacity:0.45;letter-spacing:.3px;'; wm.textContent = '© Peach Luku'; document.body.appendChild(wm); }
+  function injectWatermark() { if (document.getElementById('__pl_wm')) return; const wm = document.createElement('div'); wm.id = '__pl_wm'; wm.style.cssText = 'position:fixed;bottom:18px;right:18px;font-size:13px;color:var(--text-muted,#aaa);font-family:"Nunito",sans-serif;font-weight:700;pointer-events:none;z-index:9999;opacity:0.45;letter-spacing:.3px;'; wm.textContent = '© Peach Luku'; document.body.appendChild(wm); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', injectWatermark); else injectWatermark();
   document.addEventListener('DOMContentLoaded', function() { document.querySelectorAll('meta[name="description"],meta[property="og:description"]').forEach(m => m.removeAttribute('content')); });
 })();
