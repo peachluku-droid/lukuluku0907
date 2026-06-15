@@ -219,17 +219,17 @@ body {
 /* +2 cỡ: 10.5px → 12.5px */
 .description-label { font-size: 12.5px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 5px; }
 /* +2 cỡ: 13.5px → 15.5px */
-.description-text { font-size: 15.5px; line-height: 1.78; color: var(--text); }
+.description-text { font-size: 15.5px; line-height: 1.45; color: var(--text); }
 .description-text.clamped { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
 .description-text * { font-family: inherit !important; font-size: inherit !important; color: inherit !important; background: transparent !important; }
-.description-text p, .description-text div { margin-bottom: 0.3em; line-height: 1.78; }
+.description-text p, .description-text div { margin-bottom: 0.2em; line-height: 1.45; }
 .description-text b, .description-text strong { font-weight: 700; }
 .description-text i, .description-text em { font-style: italic; }
 /* +2 cỡ: 12.5px → 14.5px */
 .read-more-btn { background: none; border: none; cursor: pointer; color: var(--peach); font-size: 14.5px; font-weight: 700; padding: 4px 0; margin-top: 5px; font-family: 'Nunito', sans-serif; display: flex; align-items: center; gap: 4px; }
 .read-more-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; transition: transform .15s; }
 .read-more-btn.expanded svg { transform: rotate(180deg); }
-.content-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); background: var(--bg2); position: sticky; top: 56px; z-index: 90; transition: background .3s; }
+.content-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); background: var(--bg2); position: sticky; top: 56px; z-index: 90; transition: background .3s; margin: 0 -1.2rem; padding: 0 1.2rem; }
 /* +2 cỡ: 13px → 15px */
 .tab-btn { flex: 1; background: none; border: none; padding: 12px 0; font-size: 15px; font-weight: 700; color: var(--text-muted); cursor: pointer; position: relative; transition: color .15s; font-family: 'Nunito', sans-serif; display: flex; align-items: center; justify-content: center; gap: 5px; }
 .tab-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
@@ -240,11 +240,12 @@ body {
 .tab-count { font-size: 12px; font-weight: 800; background: var(--peach-light); color: var(--peach-dark); padding: 1px 5px; border-radius: 8px; min-width: 18px; text-align: center; }
 .tab-btn.active .tab-count { background: var(--peach); color: white; }
 
-/* ── Tab content: chỉ #tab-chapters có viền + bo góc như description-box ── */
+/* ── Tab content: tất cả tab đều có viền + bo góc + margin khớp description-box ── */
 .tab-content { display: none; }
 .tab-content.active { display: block; }
 #tab-chapters { margin: 12px 0 1.4rem; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; background: var(--bg); }
-#tab-comments, #tab-info { margin: 12px 0 1.4rem; }
+#tab-comments { margin: 12px 0 1.4rem; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; background: var(--bg); }
+#tab-info { margin: 12px 0 1.4rem; border-radius: 14px; border: 1px solid var(--border); background: var(--bg); }
 
 .tab-frame { margin: 12px 0 1.4rem; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; position: relative; background: var(--bg); }
 .tab-deco-top, .tab-deco-bot { display: none; }
@@ -475,7 +476,7 @@ body {
 
 <div class="story-body">
   <h1 class="story-title-main" id="story-title">Đang tải...</h1>
-  <div class="author-row" onclick="searchByAuthor()" title="Xem truyện cùng tác giả">
+  <div class="author-row" onclick="goToAuthorProfile()" title="Xem hồ sơ tác giả">
     <div class="author-avatar" id="author-avatar">
       <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
     </div>
@@ -675,6 +676,15 @@ function searchByAuthor() {
   const author = storyData?.author;
   if (!author) return;
   location.href = 'search.html?author=' + encodeURIComponent(author);
+}
+
+function goToAuthorProfile() {
+  // Nếu có user_id của người đăng → đến trang profile
+  if (storyData?.user_id) {
+    location.href = 'profile.html?id=' + encodeURIComponent(storyData.user_id);
+  } else if (storyData?.author) {
+    location.href = 'search.html?author=' + encodeURIComponent(storyData.author);
+  }
 }
 
 function shareStory() {
