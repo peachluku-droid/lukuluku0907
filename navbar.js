@@ -127,6 +127,9 @@
 .swatch.active { border-color: var(--peach); box-shadow: 0 0 0 2px var(--bg2), 0 0 0 4px var(--peach); }
 .swatch:hover { transform: scale(1.12); }
 .swatch-label { font-size: 10px; text-align: center; color: var(--text-muted); margin-top: 3px; font-weight: 700; }
+.swatch-locked { position: relative; cursor: not-allowed; opacity: 0.6; display: flex; align-items: center; justify-content: center; }
+.swatch-locked:hover { transform: scale(1.05); opacity: 0.75; }
+.swatch-lock-icon { width: 16px; height: 16px; flex-shrink: 0; }
 
 /* Notif panel */
 .notif-panel {
@@ -428,10 +431,10 @@
     <div><div class="swatch" style="background:#FDF6F2;border:2px solid #F2A882" data-theme="light" title="Light"></div><div class="swatch-label">Light</div></div>
     <div><div class="swatch" style="background:#1a1a1a" data-theme="dark" title="Dark"></div><div class="swatch-label">Dark</div></div>
     <div><div class="swatch" style="background:#f5f0e8;border:2px solid #A67C52" data-theme="sepia" title="Sepia"></div><div class="swatch-label">Sepia</div></div>
-    <div><div class="swatch" style="background:#e8f0fe;border:2px solid #4a7de0" data-theme="blue" title="Blue"></div><div class="swatch-label">Blue</div></div>
-    <div><div class="swatch" style="background:#fff0f6;border:2px solid #e876a0" data-theme="pink" title="Pink"></div><div class="swatch-label">Pink</div></div>
-    <div><div class="swatch" style="background:#f0ebff;border:2px solid #8a5de0" data-theme="purple" title="Purple"></div><div class="swatch-label">Purple</div></div>
-    <div><div class="swatch" style="background:#faf5ee;border:2px solid #f26522" data-theme="warm" title="Warm"></div><div class="swatch-label">Warm</div></div>
+    <div><div class="swatch swatch-locked" style="background:#e8f0fe;border:2px solid #4a7de0" data-theme="blue" title="Chỉ Admin" data-locked="true"><svg class="swatch-lock-icon" viewBox="0 0 24 24" fill="none" stroke="#4a7de0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="swatch-label">Blue</div></div>
+    <div><div class="swatch swatch-locked" style="background:#fff0f6;border:2px solid #e876a0" data-theme="pink" title="Chỉ Admin" data-locked="true"><svg class="swatch-lock-icon" viewBox="0 0 24 24" fill="none" stroke="#e876a0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="swatch-label">Pink</div></div>
+    <div><div class="swatch swatch-locked" style="background:#f0ebff;border:2px solid #8a5de0" data-theme="purple" title="Chỉ Admin" data-locked="true"><svg class="swatch-lock-icon" viewBox="0 0 24 24" fill="none" stroke="#8a5de0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="swatch-label">Purple</div></div>
+    <div><div class="swatch swatch-locked" style="background:#faf5ee;border:2px solid #f26522" data-theme="warm" title="Chỉ Admin" data-locked="true"><svg class="swatch-lock-icon" viewBox="0 0 24 24" fill="none" stroke="#f26522" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="swatch-label">Warm</div></div>
   </div>
 </div>
 
@@ -624,6 +627,7 @@
     document.querySelectorAll('.swatch[data-theme]').forEach(s => {
       s.classList.toggle('active', s.dataset.theme === savedTheme);
       s.addEventListener('click', function () {
+        if (this.dataset.locked === 'true') return; // Chỉ Admin mới dùng được
         setTheme(this.dataset.theme, this);
       });
     });
@@ -754,29 +758,106 @@
     const listEl = document.getElementById('notifList');
     if (!listEl) return;
     try {
-      const _sb2 = window.sb || window.supabase; if (!_sb2) { listEl.innerHTML = '<div class="notif-empty">Chưa kết nối dữ liệu 🐹</div>'; return; }
-      const { data: chapters } = await _sb2.from('chapters')
-        .select('id, title, story_id, created_at, stories(title, cover_url)')
-        .order('created_at', { ascending: false })
-        .limit(20);
-      if (!chapters || chapters.length === 0) {
-        listEl.innerHTML = '<div class="notif-empty">Chưa có chương mới nào 🐹</div>';
+      const _sb = window.sb || window.supabase;
+      if (!_sb) { listEl.innerHTML = '<div class="notif-empty">Chưa kết nối dữ liệu 🐹</div>'; return; }
+
+      // Cần đăng nhập
+      const { data: { session } } = await _sb.auth.getSession();
+      if (!session) {
+        listEl.innerHTML = '<div class="notif-empty">Đăng nhập để xem thông báo</div>';
         return;
       }
+      const userId = session.user.id;
+
+      // 1. Lấy danh sách truyện đang theo dõi + đã lưu
+      const [followRes, bookmarkRes] = await Promise.all([
+        _sb.from('follows').select('story_id').eq('user_id', userId),
+        _sb.from('bookmarks').select('story_id').eq('user_id', userId)
+      ]);
+      const followIds   = (followRes.data   || []).map(r => r.story_id);
+      const bookmarkIds = (bookmarkRes.data || []).map(r => r.story_id);
+      const trackedIds  = [...new Set([...followIds, ...bookmarkIds])];
+
+      const items = [];
+
+      // 2. Chương mới từ truyện đang theo dõi / đã lưu
+      if (trackedIds.length > 0) {
+        const { data: chapters } = await _sb.from('chapters')
+          .select('id, title, story_id, created_at, stories(title, cover_url)')
+          .in('story_id', trackedIds)
+          .order('created_at', { ascending: false })
+          .limit(15);
+        (chapters || []).forEach(ch => {
+          items.push({ type: 'chapter', ts: ch.created_at, ch, story: ch.stories || {} });
+        });
+      }
+
+      // 3. Ai đó follow mình
+      const { data: followers } = await _sb.from('user_follows')
+        .select('follower_id, created_at, profiles!user_follows_follower_id_fkey(display_name, avatar_url)')
+        .eq('following_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(5);
+      (followers || []).forEach(f => {
+        items.push({ type: 'follow', ts: f.created_at, prof: f.profiles || {} });
+      });
+
+      // 4. Reply comment
+      const { data: replies } = await _sb.from('comments')
+        .select('id, body, created_at, story_id, stories(title, cover_url)')
+        .eq('reply_to_user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(5);
+      (replies || []).forEach(c => {
+        items.push({ type: 'comment', ts: c.created_at, c, story: c.stories || {} });
+      });
+
+      if (items.length === 0) {
+        listEl.innerHTML = '<div class="notif-empty">Chưa có thông báo nào 🐹</div>';
+        return;
+      }
+
+      // Sắp xếp mới nhất lên trước
+      items.sort((a, b) => (b.ts || '').localeCompare(a.ts || ''));
       document.getElementById('notifDot').style.display = 'block';
-      listEl.innerHTML = chapters.map(ch => {
-        const story = ch.stories || {};
-        const ts = ch.created_at ? new Date(ch.created_at) : null;
-        const timeStr = ts ? ts.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '';
-        return `
-<a class="notif-item" href="chapter.html?story=${ch.story_id}&chapter=${ch.id}">
-  ${story.cover_url ? `<img class="notif-cover" src="${story.cover_url}" alt="">` : ''}
-  <div class="notif-info">
-    <div class="notif-story-title">${story.title || 'Truyện'}</div>
-    <div class="notif-ch-title">${ch.title || 'Chương mới'}</div>
-    <div class="notif-time">${timeStr}</div>
-  </div>
-</a>`;
+
+      listEl.innerHTML = items.map(item => {
+        const timeStr = item.ts
+          ? new Date(item.ts).toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric' })
+          : '';
+        if (item.type === 'chapter') {
+          const { ch, story } = item;
+          return `<a class="notif-item" href="chapter.html?chapter=${ch.id}">
+            ${story.cover_url ? `<img class="notif-cover" src="${story.cover_url}" alt="" loading="lazy">` : ''}
+            <div class="notif-info">
+              <div class="notif-story-title">${story.title || 'Truyện'}</div>
+              <div class="notif-ch-title">📖 ${ch.title || 'Chương mới'}</div>
+              <div class="notif-time">${timeStr}</div>
+            </div>
+          </a>`;
+        }
+        if (item.type === 'follow') {
+          const { prof } = item;
+          return `<div class="notif-item">
+            ${prof.avatar_url ? `<img class="notif-cover" src="${prof.avatar_url}" alt="" style="border-radius:50%" loading="lazy">` : '<div class="notif-cover" style="background:#f3e4e7;display:flex;align-items:center;justify-content:center;font-size:18px">👤</div>'}
+            <div class="notif-info">
+              <div class="notif-story-title">👋 ${prof.display_name || 'Ai đó'} đã theo dõi bạn</div>
+              <div class="notif-time">${timeStr}</div>
+            </div>
+          </div>`;
+        }
+        if (item.type === 'comment') {
+          const { c, story } = item;
+          return `<a class="notif-item" href="story.html?id=${c.story_id}">
+            ${story.cover_url ? `<img class="notif-cover" src="${story.cover_url}" alt="" loading="lazy">` : ''}
+            <div class="notif-info">
+              <div class="notif-story-title">💬 Có người reply bình luận của bạn</div>
+              <div class="notif-ch-title">${story.title || ''}</div>
+              <div class="notif-time">${timeStr}</div>
+            </div>
+          </a>`;
+        }
+        return '';
       }).join('');
     } catch (err) {
       listEl.innerHTML = '<div class="notif-empty">Không tải được thông báo 🐹</div>';
