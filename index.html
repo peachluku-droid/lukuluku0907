@@ -212,6 +212,9 @@ body {
 .swatch.active { border-color: var(--peach); box-shadow: 0 0 0 2px var(--bg2), 0 0 0 4px var(--peach); }
 .swatch:hover { transform: scale(1.12); }
 .swatch-label { font-size: 10px; text-align: center; color: var(--text-muted); margin-top: 3px; font-weight: 700; }
+.swatch-locked { position: relative; cursor: not-allowed; opacity: 0.6; display: flex; align-items: center; justify-content: center; }
+.swatch-locked:hover { transform: scale(1.05); opacity: 0.75; }
+.swatch-lock-icon { width: 16px; height: 16px; flex-shrink: 0; }
 
 /* ─── THÔNG BÁO BANNER ──────────────────────── */
 .notice-banner {
@@ -348,15 +351,15 @@ body {
 .new-update-card:hover .new-update-cover-wrap { box-shadow: none; }
 .new-update-cover-wrap { position: relative; width: 100%; padding-top: 140%; overflow: hidden; background: linear-gradient(145deg, var(--peach-light), var(--gold-light)); border-radius: 14px 14px 0 0; }
 .new-update-cover-wrap img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
-.new-update-ch-badge { position: absolute; top: 6px; left: 6px; background: var(--peach); color: white; font-size: 9px; font-weight: 800; padding: 2px 7px; border-radius: 10px; }
+.new-update-ch-badge { position: absolute; top: 6px; left: 6px; background: #F3E4E7; color: #A56A78; font-size: 9px; font-weight: 800; padding: 2px 7px; border-radius: 10px; }
 .status-badge { position: absolute; top: 6px; right: 6px; font-size: 9px; font-weight: 800; padding: 2px 7px; border-radius: 10px; color: white; }
 .status-full { background: #4caf50; }
 .status-on { background: #e876a0; }
 .new-update-info { padding: 8px 10px 10px; flex: 1; display: flex; flex-direction: column; gap: 3px; }
 .new-update-title { font-size: 12px; font-weight: 800; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: var(--text); }
 .new-update-tags { display: flex; flex-wrap: wrap; gap: 2px; margin-top: 2px; }
-.new-update-tag { font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 8px; background: var(--peach-light); color: var(--peach-dark); border: 1px solid var(--border-hover); text-decoration: none; cursor: pointer; transition: background .15s; }
-.new-update-tag:hover { background: var(--peach); color: #fff; border-color: var(--peach); }
+.new-update-tag { font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 8px; background: #F3E4E7; color: #A56A78; border: 1px solid #e8c8cf; text-decoration: none; cursor: pointer; transition: background .15s; }
+.new-update-tag:hover { background: #e8c8cf; color: #A56A78; border-color: #d4a8b4; }
 
 .story-card {
   background: var(--card); border: 1px solid var(--border); border-radius: 12px;
@@ -366,14 +369,14 @@ body {
 .story-card:hover { border-color: var(--peach-mid); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.09); }
 .story-cover-wrap { position: relative; width: 100%; padding-top: 140%; overflow: hidden; background: linear-gradient(145deg, var(--peach-light), var(--gold-light)); flex-shrink: 0; }
 .story-cover-wrap img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.ch-badge { position: absolute; top: 6px; left: 6px; background: var(--peach); color: white; font-size: 9px; font-weight: 800; padding: 2px 7px; border-radius: 10px; }
+.ch-badge { position: absolute; top: 6px; left: 6px; background: #F3E4E7; color: #A56A78; font-size: 9px; font-weight: 800; padding: 2px 7px; border-radius: 10px; }
 .story-info { padding: 8px 10px 10px; flex: 1; display: flex; flex-direction: column; gap: 3px; }
 .story-title { font-size: 12px; font-weight: 800; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: var(--text); }
 .story-author-row { font-size: 10px; color: var(--text-muted); display: flex; align-items: center; gap: 3px; }
 .story-author-row svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 .story-desc { font-size: 10px; color: var(--text-muted); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .story-tags { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 4px; }
-.story-tag { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 10px; background: var(--peach-light); color: var(--peach-dark); border: 1px solid var(--border-hover); }
+.story-tag { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 10px; background: #F3E4E7; color: #A56A78; border: 1px solid #e8c8cf; }
 .story-views-row { font-size: 10px; color: var(--text-muted); display: flex; align-items: center; gap: 3px; margin-top: 2px; }
 .story-views-row svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 
@@ -683,8 +686,11 @@ body.theme-blue   .chat-box { border-color: #a8d4f5 !important; }
 body.theme-pink   .chat-box { border-color: #f5a8a8 !important; }
 body.theme-purple .chat-box { border-color: #d9a8f5 !important; }
 body.theme-sepia  .chat-box { border-color: #c9b98a !important; }
-/* chat-list và input-row luôn trắng bất kể theme */
+/* chat-list và input-row luôn trắng bất kể theme, trừ dark */
 .chat-list, .chat-input-row, .chat-login-hint { background: #fff !important; }
+body.theme-dark .chat-list, body.theme-dark .chat-input-row, body.theme-dark .chat-login-hint { background: #2a2a2a !important; }
+body.theme-dark .chat-empty { color: #aaa !important; }
+body.theme-dark .chat-box { background: #1e1e1e !important; border-color: #444 !important; }
 
 /* 4. Chat title: SVG outline + text */
 .chat-panel-title { font-size: 0 !important; display: flex !important; align-items: center !important; gap: 6px !important; }
@@ -840,10 +846,10 @@ body.theme-sepia  .chat-box { border-color: #c9b98a !important; }
     <div><div class="swatch active" style="background:#FDF6F2;border:2px solid #F2A882" onclick="setTheme('light',this)" title="Light"></div><div class="swatch-label">Light</div></div>
     <div><div class="swatch" style="background:#1a1a1a" onclick="setTheme('dark',this)" title="Dark"></div><div class="swatch-label">Dark</div></div>
     <div><div class="swatch" style="background:#f5f0e8;border:2px solid #A67C52" onclick="setTheme('sepia',this)" title="Sepia"></div><div class="swatch-label">Sepia</div></div>
-    <div><div class="swatch" style="background:#e8f0fe;border:2px solid #4a7de0" onclick="setTheme('blue',this)" title="Blue"></div><div class="swatch-label">Blue</div></div>
-    <div><div class="swatch" style="background:#fff0f6;border:2px solid #e876a0" onclick="setTheme('pink',this)" title="Pink"></div><div class="swatch-label">Pink</div></div>
-    <div><div class="swatch" style="background:#f0ebff;border:2px solid #8a5de0" onclick="setTheme('purple',this)" title="Purple"></div><div class="swatch-label">Purple</div></div>
-    <div><div class="swatch" style="background:#faf5ee;border:2px solid #f26522" onclick="setTheme('warm',this)" title="Warm"></div><div class="swatch-label">Warm</div></div>
+    <div><div class="swatch swatch-locked" style="background:#e8f0fe;border:2px solid #4a7de0" title="Chỉ Admin"><svg class="swatch-lock-icon" viewBox="0 0 24 24" fill="none" stroke="#4a7de0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="swatch-label">Blue</div></div>
+    <div><div class="swatch swatch-locked" style="background:#fff0f6;border:2px solid #e876a0" title="Chỉ Admin"><svg class="swatch-lock-icon" viewBox="0 0 24 24" fill="none" stroke="#e876a0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="swatch-label">Pink</div></div>
+    <div><div class="swatch swatch-locked" style="background:#f0ebff;border:2px solid #8a5de0" title="Chỉ Admin"><svg class="swatch-lock-icon" viewBox="0 0 24 24" fill="none" stroke="#8a5de0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="swatch-label">Purple</div></div>
+    <div><div class="swatch swatch-locked" style="background:#faf5ee;border:2px solid #f26522" title="Chỉ Admin"><svg class="swatch-lock-icon" viewBox="0 0 24 24" fill="none" stroke="#f26522" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="swatch-label">Warm</div></div>
     
   </div>
 </div>
@@ -1003,6 +1009,7 @@ document.getElementById('heroImg').src = logoSrc;
 
 /* ── THEME ── */
 function setTheme(name, el) {
+  if (el && el.classList.contains('swatch-locked')) return; // Chỉ Admin
   document.body.className = 'theme-' + name;
   localStorage.setItem('plTheme', name);
   document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
