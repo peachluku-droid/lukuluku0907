@@ -166,6 +166,9 @@ body {
 .swatch.active { border-color: var(--peach); box-shadow: 0 0 0 2px var(--bg2), 0 0 0 4px var(--peach); }
 .swatch:hover { transform: scale(1.12); }
 .swatch-label { font-size: 11px; text-align: center; color: var(--text-muted); margin-top: 3px; font-weight: 700; }
+.swatch-locked { position: relative; cursor: not-allowed; opacity: 0.6; display: flex; align-items: center; justify-content: center; }
+.swatch-locked:hover { transform: scale(1.05); opacity: 0.75; }
+.swatch-lock-icon { width: 16px; height: 16px; flex-shrink: 0; }
 .cover-hero { position: relative; width: 100%; background: var(--peach-light); display: flex; justify-content: center; padding: 2rem 1.5rem 2.5rem; overflow: hidden; }
 .cover-hero-blur { position: absolute; inset: 0; filter: blur(22px) saturate(1.4); opacity: 0.32; background-size: cover; background-position: center; transform: scale(1.1); }
 .cover-book { position: relative; width: 154px; height: 230px; border-radius: 10px; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.28); background: var(--peach-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -457,11 +460,11 @@ body {
     <div><div class="swatch" style="background:#FDF6F2;border:2px solid #F2A882" onclick="setTheme('light',this)"></div><div class="swatch-label">Sáng</div></div>
     <div><div class="swatch" style="background:#1a1a1a" onclick="setTheme('dark',this)"></div><div class="swatch-label">Tối</div></div>
     <div><div class="swatch" style="background:#f5f0e8;border:2px solid #A67C52" onclick="setTheme('sepia',this)"></div><div class="swatch-label">Sepia</div></div>
-    <div><div class="swatch" style="background:#e8f0fe;border:2px solid #4a7de0" onclick="setTheme('blue',this)"></div><div class="swatch-label">Xanh</div></div>
-    <div><div class="swatch" style="background:#fff0f6;border:2px solid #e876a0" onclick="setTheme('pink',this)"></div><div class="swatch-label">Hồng</div></div>
-    <div><div class="swatch" style="background:#f0ebff;border:2px solid #8a5de0" onclick="setTheme('purple',this)"></div><div class="swatch-label">Tím</div></div>
-    <div><div class="swatch" style="background:#f0f0f0;border:2px solid #777" onclick="setTheme('gray',this)"></div><div class="swatch-label">Xám</div></div>
-    <div><div class="swatch" style="background:#faf5ee;border:2px solid #f8863a" onclick="setTheme('wattpad',this)"></div><div class="swatch-label">Warm</div></div>
+    <div><div class="swatch swatch-locked" style="background:#e8f0fe;border:2px solid #4a7de0" data-locked="true" onclick="setTheme('blue',this)"><svg class="swatch-lock-icon" viewBox="0 0 24 24" fill="none" stroke="#4a7de0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="swatch-label">Xanh</div></div>
+    <div><div class="swatch swatch-locked" style="background:#fff0f6;border:2px solid #e876a0" data-locked="true" onclick="setTheme('pink',this)"><svg class="swatch-lock-icon" viewBox="0 0 24 24" fill="none" stroke="#e876a0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="swatch-label">Hồng</div></div>
+    <div><div class="swatch swatch-locked" style="background:#f0ebff;border:2px solid #8a5de0" data-locked="true" onclick="setTheme('purple',this)"><svg class="swatch-lock-icon" viewBox="0 0 24 24" fill="none" stroke="#8a5de0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="swatch-label">Tím</div></div>
+    <div><div class="swatch swatch-locked" style="background:#f0f0f0;border:2px solid #777" data-locked="true" onclick="setTheme('gray',this)"><svg class="swatch-lock-icon" viewBox="0 0 24 24" fill="none" stroke="#777" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="swatch-label">Xám</div></div>
+    <div><div class="swatch swatch-locked" style="background:#faf5ee;border:2px solid #f8863a" data-locked="true" onclick="setTheme('wattpad',this)"><svg class="swatch-lock-icon" viewBox="0 0 24 24" fill="none" stroke="#f26522" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="swatch-label">Warm</div></div>
   </div>
 </div>
 
@@ -609,7 +612,7 @@ let comments = [], commentsPage = 0;
 const COMMENTS_PER_PAGE = 15;
 let commentTotal = 0;
 
-function setTheme(name, el) { document.body.className = 'theme-' + name; localStorage.setItem('plTheme', name); document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active')); if (el) el.classList.add('active'); }
+function setTheme(name, el) { if (el && el.classList.contains('swatch-locked')) return; document.body.className = 'theme-' + name; localStorage.setItem('plTheme', name); document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active')); if (el) el.classList.add('active'); }
 function toggleThemeDrawer() { document.getElementById('theme-drawer').classList.toggle('open'); }
 document.addEventListener('click', e => { const d = document.getElementById('theme-drawer'); if (!d.contains(e.target) && !e.target.closest('[onclick="toggleThemeDrawer()"]')) d.classList.remove('open'); });
 (function() { const t = localStorage.getItem('plTheme') || 'light'; document.body.className = 'theme-' + t; })();
@@ -965,7 +968,9 @@ function renderCommentCard(c) {
   </div>`;
 }
 
-function tagReply(parentId, name) {
+const replyInputTarget = {};
+function tagReply(parentId, name, userId) {
+  if (userId) replyInputTarget[parentId] = userId;
   const sec = document.getElementById('replies-' + parentId);
   if (sec.style.display === 'none' || sec.style.display === '') {
     sec.style.display = 'flex';
@@ -1033,7 +1038,7 @@ async function loadReplies(parentId) {
     const isOwn = currentUser && r.user_id === currentUser.id;
     const isAdmin = currentUser && ADMIN_EMAILS.includes(currentUser.email);
     const lk = likesCache[r.id] || { count: 0, liked: false };
-    return `<div class="reply-item" id="cmt-${r.id}" onclick="event.stopPropagation();tagReply('${parentId}','${escapeHtml(rname)}')" style="cursor:pointer">
+    return `<div class="reply-item" id="cmt-${r.id}" onclick="event.stopPropagation();tagReply('${parentId}','${escapeHtml(rname)}','${r.user_id}')" style="cursor:pointer">
       <div class="reply-avatar">${avatarHtml(r.user_id, r.user_email, 30, 12)}</div>
       <div class="reply-bubble">
         <div class="reply-header"><span class="reply-name" style="cursor:pointer" onclick="toggleReplyBox('${parentId}','${escapeHtml(rname)}')" title="Trả lời ${escapeHtml(rname)}">@${escapeHtml(rname)}</span><span class="reply-time">${timeAgo(r.created_at)}</span></div>
@@ -1061,7 +1066,15 @@ async function submitReply(parentId) {
   if (!content) return;
   const btn = document.querySelector(`#reply-compose-${parentId} .reply-submit`);
   if (btn) btn.disabled = true;
-  const { error } = await sb.from('comments').insert({ story_id: storyId, user_id: currentUser.id, user_email: currentUser.email, content, parent_id: parentId });
+  const replyToUserId = replyInputTarget[parentId] || null;
+  // fallback: lấy user_id của comment cha nếu chưa tag reply cụ thể
+  let finalReplyUserId = replyToUserId;
+  if (!finalReplyUserId) {
+    const { data: parentCmt } = await sb.from('comments').select('user_id').eq('id', parentId).maybeSingle();
+    finalReplyUserId = parentCmt?.user_id || null;
+  }
+  const { error } = await sb.from('comments').insert({ story_id: storyId, user_id: currentUser.id, user_email: currentUser.email, content, parent_id: parentId, reply_to_user_id: finalReplyUserId });
+  delete replyInputTarget[parentId];
   if (error) { showToast('Lỗi: ' + error.message); if (btn) btn.disabled = false; }
   else { await loadReplies(parentId); }
 }
