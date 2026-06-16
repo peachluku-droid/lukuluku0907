@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- SEO: meta được cập nhật động bởi setChapterMeta() sau khi load dữ liệu -->
 <link rel="canonical" href="https://peachluku.com/chapter.html">
 <meta name="description" content="Đọc truyện chữ tiếng Việt online tại Peach Luku">
 <meta name="robots" content="index, follow">
+<!-- Open Graph -->
 <meta property="og:site_name" content="Peach Luku">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://peachluku.com/chapter.html">
@@ -15,6 +17,7 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="vi_VN">
+<!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Peach Luku — Đọc Truyện">
 <meta name="twitter:description" content="Đọc truyện chữ tiếng Việt online tại Peach Luku">
@@ -35,6 +38,7 @@ body.theme-sepia  { --bg:#f5f0e8; --bg2:#faf7f0; --text:#3d2b1f; --border:#d4c4a
 body.theme-blue   { --bg:#e8f0fe; --bg2:#f4f7ff; --text:#1a2a4a; --border:#b8ccf4; --accent:#2a5bbf; --accent2:#4a7de0; --panel:#f4f7ff; --sidebar:#dce8fc; --meta:#7a9ac0; }
 body.theme-purple { --bg:#f0ebff; --bg2:#f9f6ff; --text:#2a1a4a; --border:#cdb8f4; --accent:#6a3bbf; --accent2:#8a5de0; --panel:#f9f6ff; --sidebar:#e8dcfc; --meta:#9a7ac0; }
 body.theme-pink   { --bg:#fff0f6; --bg2:#fff8fb; --text:#2c1a22; --border:#f4c0d1; --accent:#993556; --accent2:#d4537e; --panel:#fff8fb; --sidebar:#ffe6f2; --meta:#c09aaa; }
+
 body.theme-wattpad{ --bg:#FBF0D9; --bg2:#fdf3e0; --text:#4A3525; --border:#d9c4a0; --accent:#8b5e1a; --accent2:#b07d2e; --panel:#fdf3e0; --sidebar:#f0ddb8; --meta:#a08050; }
 
 body {
@@ -45,6 +49,7 @@ body {
   font-size: var(--font-size, 17px);
 }
 
+/* ── Nav avatar fix ── */
 #nav-user-btn,
 .user-nav-btn,
 .user-nav-btn-ch {
@@ -105,12 +110,7 @@ body {
 .toc-item.active { background: var(--bg2); color: var(--accent); font-weight: 700; border-left: 3px solid var(--accent); }
 .toc-num { font-size: 11px; color: var(--meta); display: block; margin-bottom: 2px; }
 
-.story-col {
-  flex: 1; padding: 32px 48px; max-width: 720px; margin: 0 auto; min-width: 0;
-  /* ScrollNav sẽ animate opacity + transform trên element này */
-  will-change: transform, opacity;
-  /* Không set opacity/transform cứng ở đây để fade hoạt động đúng */
-}
+.story-col { flex: 1; padding: 32px 48px; max-width: 720px; margin: 0 auto; min-width: 0; }
 @media (max-width: 600px) {
   .story-col { padding: 20px 18px; }
   .chapter-stats { gap: 14px; padding: 10px 16px; font-size: 12px; }
@@ -119,13 +119,13 @@ body {
 .chapter-meta { font-size: 13px; color: var(--meta); margin-bottom: 36px; text-align: center; }
 
 .para-wrap {
-  display: flex; align-items: flex-start; gap: 6px;
-  margin-bottom: 4px; border-radius: 8px;
-  padding: 3px 6px; transition: background .2s;
+  display: block; margin-bottom: 1px; border-radius: 8px;
+  padding: 1px 6px; transition: background .2s;
+  /* overflow: hidden xóa vì clip float */
 }
 .para-wrap.highlighted { background: color-mix(in srgb, var(--accent) 8%, transparent); }
 .para-text {
-  flex: 1; min-width: 0;
+  display: block;
   font-weight: var(--font-weight, 400);
   font-style: var(--font-style, normal);
   line-height: 1.4;
@@ -144,9 +144,8 @@ body {
 .para-text br { display: block; }
 
 .cmt-trigger {
-  flex-shrink: 0;
-  align-self: flex-start;
-  margin-top: 2px;
+  float: right;
+  clear: right;
   display: flex; align-items: center; gap: 3px;
   white-space: nowrap;
   background: var(--bg2);
@@ -156,6 +155,7 @@ body {
   color: var(--text-muted);
   cursor: pointer; transition: all .15s; line-height: 1.4;
   font-family: 'Nunito', sans-serif; opacity: 0.55;
+  margin-left: 8px; margin-top: 2px; margin-bottom: 2px;
 }
 .cmt-trigger svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .cmt-trigger:hover { opacity: 1; background: color-mix(in srgb, var(--accent) 15%, var(--bg2)); border-color: var(--accent2); color: var(--accent); }
@@ -180,14 +180,13 @@ body {
   border-radius: 20px; padding: 8px 20px; font-size: 14px;
   color: var(--accent); font-weight: 600; transition: all .15s; white-space: nowrap;
   display: flex; align-items: center; gap: 5px;
-  cursor: pointer;
 }
 .nav-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .nav-btn:hover { background: var(--sidebar); }
 .nav-btn.disabled { opacity: 0.4; pointer-events: none; }
 .nav-chapter-title { font-size: 13px; color: var(--meta); text-align: center; flex: 1; }
 
-.end-section { margin-top: 28px; padding-top: 4px; display: flex; flex-direction: column; gap: 20px; }
+.end-section { margin-top: 48px; display: flex; flex-direction: column; gap: 20px; }
 .chapter-stats-end {
   display: flex; justify-content: center; align-items: center;
   gap: 0; font-size: 13px; color: var(--meta); flex-wrap: wrap;
@@ -202,6 +201,11 @@ body {
 .chapter-stats-end .stat-btn:hover { background: var(--bg2); color: var(--accent); }
 .chapter-stats-end .stat-btn.voted { color: var(--accent); font-weight: 700; }
 .chapter-stats-end .stat-btn.voted svg { stroke: var(--accent); fill: var(--accent); }
+
+.audio-section { padding: 16px 0; }
+.audio-section h3 { font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+.audio-section h3 svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.audio-section audio { width: 100%; accent-color: var(--accent); }
 
 .toc-inline-section { display: none; }
 .toc-inline-head {
@@ -221,6 +225,29 @@ body {
 .toc-inline-item.active { color: var(--accent); font-weight: 700; border-left: 3px solid var(--accent); }
 .toc-empty { padding: 14px 16px; font-size: 13px; color: var(--meta); }
 
+.cmt-overview-section { border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: var(--bg2); }
+.cmt-overview-head {
+  padding: 10px 16px; font-size: 13px; font-weight: 700; color: var(--accent);
+  border-bottom: 1px solid var(--border); background: var(--sidebar);
+  display: flex; align-items: center; gap: 6px; font-family: 'Nunito', sans-serif;
+}
+.cmt-overview-head svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.cmt-overview-list { display: flex; flex-direction: column; }
+.cmt-overview-row {
+  display: flex; align-items: center; gap: 10px; padding: 10px 16px;
+  border-bottom: 1px solid var(--border); cursor: pointer; transition: background .15s;
+}
+.cmt-overview-row:last-child { border-bottom: none; }
+.cmt-overview-row:hover { background: var(--sidebar); }
+.cmt-overview-num { font-size: 10px; color: var(--meta); font-weight: 700; width: 22px; flex-shrink: 0; font-family: 'Nunito', sans-serif; opacity: 0.7; }
+.cmt-overview-excerpt { flex: 1; font-size: 13px; color: var(--text); line-height: 1.45; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; min-width: 0; }
+.cmt-overview-badge {
+  flex-shrink: 0; display: flex; align-items: center; gap: 3px;
+  color: var(--meta); font-size: 11px; font-family: 'Nunito', sans-serif; opacity: 0.8;
+}
+.cmt-overview-badge svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.cmt-overview-badge.has-cmt { color: var(--accent); font-weight: 700; opacity: 1; }
+
 .settings-drawer {
   position: fixed; top: 49px; left: 0; right: 0; background: var(--panel);
   border-bottom: 1px solid var(--border); padding: 18px 16px 20px;
@@ -231,6 +258,10 @@ body {
 .setting-group label { font-size: 12px; color: var(--meta); display: block; margin-bottom: 10px; }
 .theme-swatches { display: flex; gap: 8px; flex-wrap: wrap; }
 .swatch { width: 38px; height: 38px; border-radius: 6px; border: 2.5px solid transparent; cursor: pointer; transition: border-color .15s; flex-shrink: 0; }
+.swatch-locked { position: relative; cursor: not-allowed; opacity: 0.6; display: flex; align-items: center; justify-content: center; }
+.swatch-locked:hover { transform: scale(1.05); opacity: 0.75; }
+.swatch-lock-icon { width: 16px; height: 16px; flex-shrink: 0; }
+.swatch-lock-icon { width: 16px; height: 16px; flex-shrink: 0; }
 .swatch.active { border-color: var(--accent) !important; }
 .swatch-light  { background:#ffffff; border-color:#ccc; }
 .swatch-dark   { background:#1a1a1a; }
@@ -238,6 +269,7 @@ body {
 .swatch-blue   { background:#e8f0fe; border-color:#ddd; }
 .swatch-purple { background:#f0ebff; border-color:#ddd; }
 .swatch-pink   { background:#fff0f6; border-color:#ddd; }
+
 .swatch-wattpad{ background:#f5e6c8; border-color:#d9c4a0; }
 .fontsize-row { display: flex; gap: 8px; }
 .fs-btn {
@@ -277,21 +309,14 @@ body {
 .cmt-sheet-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 299; }
 .cmt-sheet-overlay.open { display: block; }
 .cmt-sheet {
-  position: fixed; inset: 0; background: var(--panel);
-  border: none; border-radius: 0;
-  box-shadow: none; z-index: 300;
-  display: flex; flex-direction: column; height: 100%; height: 100dvh; max-height: none;
-  transform: translateY(100%); transition: transform .32s cubic-bezier(.32,1,.4,1);
-}
-@media (min-width: 769px) {
-  .cmt-sheet {
-    max-width: 680px; left: 50%; transform: translateX(-50%) translateY(100%);
-    right: auto; width: 100%;
-  }
-  .cmt-sheet.open { transform: translateX(-50%) translateY(0); }
+  position: fixed; bottom: 0; left: 0; right: 0; background: var(--panel);
+  border-top: 1.5px solid var(--border); border-radius: 20px 20px 0 0;
+  box-shadow: 0 -4px 30px rgba(0,0,0,0.12); z-index: 300;
+  display: flex; flex-direction: column; max-height: 75vh;
+  transform: translateY(100%); transition: transform .3s cubic-bezier(.32,1,.4,1);
 }
 .cmt-sheet.open { transform: translateY(0); }
-.cmt-sheet-handle { width: 40px; height: 4px; background: var(--border); border-radius: 4px; margin: 10px auto 0; flex-shrink: 0; }
+.cmt-sheet-handle { width: 40px; height: 4px; background: var(--border); border-radius: 4px; margin: 12px auto 0; flex-shrink: 0; }
 .cmt-sheet-header {
   display: flex; align-items: center; justify-content: space-between;
   padding: 10px 16px; flex-shrink: 0; border-bottom: 1px solid var(--border);
@@ -323,13 +348,6 @@ body {
 .cmt-img { margin-top: 8px; max-width: 100%; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; display: block; }
 .cmt-footer { display: flex; align-items: center; gap: 12px; margin-top: 5px; }
 .cmt-time { font-size: 11px; color: var(--meta); font-family: 'Nunito', sans-serif; }
-.cmt-pid-tag {
-  font-size: 11px; font-weight: 700; color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 12%, var(--bg2));
-  border: none; border-radius: 8px; padding: 2px 8px; cursor: pointer;
-  font-family: 'Nunito', sans-serif; transition: all .15s;
-}
-.cmt-pid-tag:hover { background: color-mix(in srgb, var(--accent) 22%, var(--bg2)); }
 .cmt-reply-btn { font-size: 12px; font-weight: 700; color: var(--accent); background: none; border: none; cursor: pointer; padding: 0; font-family: 'Nunito', sans-serif; }
 .cmt-like-btn {
   margin-left: auto; background: none; border: none; cursor: pointer;
@@ -341,6 +359,7 @@ body {
 .empty-msg { text-align: center; font-size: 13px; color: var(--meta); padding: 28px 12px; line-height: 1.8; font-family: 'Nunito', sans-serif; }
 
 .cmt-sheet-input { padding: 10px 16px 20px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+/* sheet-name removed */
 .sheet-emoji-row { display: flex; align-items: center; gap: 6px; }
 .sheet-emoji-btn, .sheet-img-btn {
   background: var(--sidebar); border: 1.5px solid var(--border);
@@ -415,42 +434,6 @@ body {
 }
 .audio-speed-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
 
-/* ── FLOATING AUDIO BAR ── */
-.floating-audio {
-  position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%) translateY(24px);
-  width: calc(100% - 24px); max-width: 460px;
-  background: var(--panel); border: 1.5px solid var(--border);
-  border-radius: 16px; box-shadow: 0 6px 24px rgba(0,0,0,.16);
-  padding: 8px 10px; display: flex; align-items: center; gap: 10px;
-  z-index: 250; opacity: 0; visibility: hidden; pointer-events: none;
-  transition: opacity .25s ease, transform .25s ease;
-}
-.floating-audio.show { opacity: 1; visibility: visible; pointer-events: auto; transform: translateX(-50%) translateY(0); }
-.floating-audio .audio-play-btn { width: 36px; height: 36px; flex-shrink: 0; }
-.floating-audio .audio-play-btn svg { width: 14px; height: 14px; }
-.floating-audio-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
-.floating-audio-title { font-size: 11px; font-weight: 800; color: var(--meta); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.floating-audio .audio-progress-wrap { gap: 3px; }
-.floating-audio-close {
-  background: none; border: none; cursor: pointer; color: var(--meta);
-  padding: 5px; display: flex; align-items: center; border-radius: 8px; flex-shrink: 0; transition: background .15s, color .15s;
-}
-.floating-audio-close:hover { background: var(--sidebar); color: var(--text); }
-.floating-audio-close svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; }
-
-/* ── SCROLL NAV HINT ── */
-.chapter-swipe-hint {
-  position: fixed; left: 50%; transform: translateX(-50%) scale(.9);
-  background: var(--accent); color: #fff; font-size: 12px; font-weight: 800;
-  padding: 7px 16px; border-radius: 20px; font-family: 'Nunito', sans-serif;
-  opacity: 0; pointer-events: none; z-index: 280; white-space: nowrap;
-  box-shadow: 0 4px 16px rgba(0,0,0,.18);
-  transition: opacity .15s ease, transform .15s ease, background .15s ease;
-}
-.chapter-swipe-hint.top    { top: 14px; }
-.chapter-swipe-hint.bottom { bottom: 88px; }
-.chapter-swipe-hint.visible { opacity: .9; transform: translateX(-50%) scale(1); }
-.chapter-swipe-hint.ready   { opacity: 1; background: var(--accent2); }
 </style>
 </head>
 <body class="theme-light">
@@ -504,10 +487,11 @@ body {
       <div class="swatch swatch-light active" onclick="setTheme('light',this)" title="Trắng"></div>
       <div class="swatch swatch-dark"         onclick="setTheme('dark',this)"   title="Đen"></div>
       <div class="swatch swatch-sepia"        onclick="setTheme('sepia',this)"  title="Vàng"></div>
-      <div class="swatch swatch-blue"         onclick="setTheme('blue',this)"   title="Xanh"></div>
-      <div class="swatch swatch-purple"       onclick="setTheme('purple',this)" title="Tím"></div>
-      <div class="swatch swatch-pink"         onclick="setTheme('pink',this)"   title="Hồng"></div>
-      <div class="swatch swatch-wattpad"      onclick="setTheme('wattpad',this)" title="Warm"></div>
+      <div class="swatch swatch-blue swatch-locked"         data-locked="true" onclick="setTheme('blue',this)"   title="Xanh"><svg class="swatch-lock-icon" viewBox="0 0 24 24" fill="none" stroke="#4a7de0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+      <div class="swatch swatch-purple swatch-locked"       data-locked="true" onclick="setTheme('purple',this)" title="Tím"><svg class="swatch-lock-icon" viewBox="0 0 24 24" fill="none" stroke="#8a5de0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+      <div class="swatch swatch-pink swatch-locked"         data-locked="true" onclick="setTheme('pink',this)"   title="Hồng"><svg class="swatch-lock-icon" viewBox="0 0 24 24" fill="none" stroke="#e876a0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+
+      <div class="swatch swatch-wattpad swatch-locked"      data-locked="true" onclick="setTheme('wattpad',this)" title="Warm"><svg class="swatch-lock-icon" viewBox="0 0 24 24" fill="none" stroke="#f26522" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
     </div>
   </div>
   <div class="setting-group">
@@ -588,7 +572,7 @@ body {
     <div class="chapter-stats">
       <span><svg class="ic" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span id="view-count">0</span> lượt đọc</span>
       <span><svg class="ic" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span id="vote-count">0</span> vote</span>
-      <span style="cursor:pointer" onclick="openAllCmtSheet()"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span id="total-cmt-count-top">0</span> bình luận</span>
+      <span><svg class="ic" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span id="total-cmt-count-top">0</span> bình luận</span>
     </div>
 
     <div id="paragraphs-container">
@@ -601,7 +585,7 @@ body {
 
     <div class="end-section">
       <div class="chapter-stats-end">
-        <button class="stat-btn" id="audio-stat-btn" onclick="toggleFloatingAudio()" style="display:none">
+        <button class="stat-btn" onclick="toggleAudioSection()">
           <svg viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z"/><path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
           Audio
         </button>
@@ -609,10 +593,28 @@ body {
           <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
           <span id="vote-count-end">0</span> vote
         </button>
-        <button class="stat-btn" onclick="openAllCmtSheet()">
+        <button class="stat-btn" onclick="toggleCmtOverview()">
           <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           <span id="total-cmt-end">0</span> bình luận
         </button>
+      </div>
+
+      <div class="audio-section" id="audio-section-end" style="display:none">
+        <h3><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg> Nghe truyện</h3>
+        <audio id="chapter-audio" controls>
+          <source id="audio-src" src="" type="audio/mpeg">
+          Trình duyệt không hỗ trợ audio.
+        </audio>
+      </div>
+
+      <div class="cmt-overview-section" id="cmt-overview-end" style="display:none">
+        <div class="cmt-overview-head">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Bình luận chương
+        </div>
+        <div class="cmt-overview-list" id="cmt-overview-list">
+          <p class="toc-empty">Đang tải...</p>
+        </div>
       </div>
 
       <div class="toc-inline-section">
@@ -625,6 +627,7 @@ body {
         </div>
       </div>
 
+      <!-- chapter-nav ẩn, chuyển chương thủ công bằng cách lướt hoặc tự động khi nghe audio xong -->
       <nav class="chapter-nav" id="chapter-nav" style="display:none">
         <a href="#" class="nav-btn disabled" id="btn-prev">
           <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
@@ -641,6 +644,7 @@ body {
 </div>
 
 <div class="cmt-sheet-overlay" id="cmt-overlay" onclick="closeCmtSheet()"></div>
+
 <div class="cmt-sheet" id="cmt-sheet">
   <div class="cmt-sheet-handle"></div>
   <div class="cmt-sheet-header">
@@ -653,7 +657,7 @@ body {
   <div class="cmt-sheet-list" id="sheet-cmt-list">
     <p class="empty-msg">Đang tải...</p>
   </div>
-  <div class="cmt-sheet-input" id="cmt-sheet-input-bar">
+  <div class="cmt-sheet-input">
     <div class="sheet-emoji-row">
       <button class="sheet-emoji-btn" onclick="toggleSheetPicker()">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
@@ -682,32 +686,7 @@ body {
   <img id="lightbox-img" src="" alt="">
 </div>
 
-<div class="floating-audio" id="floating-audio">
-  <button class="audio-play-btn" id="floating-audio-play-btn" onclick="toggleAudioPlay()">
-    <svg id="floating-audio-play-icon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-  </button>
-  <div class="floating-audio-body">
-    <div class="floating-audio-title" id="floating-audio-title">🎧 Nghe chương</div>
-    <div class="audio-progress-wrap">
-      <input class="audio-progress" id="floating-audio-seek" type="range" value="0" min="0" step="0.1" oninput="seekAudio(this.value)">
-      <div class="audio-time">
-        <span id="floating-audio-cur">0:00</span>
-        <span id="floating-audio-dur">0:00</span>
-      </div>
-    </div>
-  </div>
-  <button class="floating-audio-close" onclick="hideFloatingAudio()" title="Ẩn thanh nghe">
-    <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-  </button>
-</div>
-
-<!-- Hint chuyển chương khi scroll -->
-<div class="chapter-swipe-hint" id="swipe-hint"></div>
-
 <script>
-/* ═══════════════════════════════════════════════════════
-   SUPABASE + PAGE PARAMS
-═══════════════════════════════════════════════════════ */
 const SUPABASE_URL = 'https://jnlqzqtavfptkfvnndxq.supabase.co'
 const SUPABASE_KEY = 'sb_publishable_ojRrfSwxK_B6-TGSXaYGxQ_DKERN0-f'
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
@@ -725,9 +704,6 @@ if (!STORY_ID || !params.get('chapter')) {
   </div>`
 }
 
-/* ═══════════════════════════════════════════════════════
-   SETTINGS / THEME / FONT (giữ nguyên gốc)
-═══════════════════════════════════════════════════════ */
 const FONTS = [
   { key: 'Noto Serif',       label: 'Mặc định'    },
   { key: 'Nunito',           label: 'Nunito'      },
@@ -739,6 +715,7 @@ const FONTS = [
 let fontIdx = 0, fontSize = 17
 
 function setTheme(t, el) {
+  if (el && el.classList.contains('swatch-locked')) return;
   document.body.className = 'theme-' + t
   document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'))
   el.classList.add('active')
@@ -799,33 +776,39 @@ restoreSettings()
 
 function toggleToc() { document.getElementById('toc-sidebar').classList.toggle('collapsed') }
 function shareChapter() {
-  const title = chapterData?.title || document.title
-  const url = location.href
-  if (navigator.share) { navigator.share({ title, url }).catch(() => {}) }
-  else { navigator.clipboard.writeText(url).then(() => showToast && showToast('Đã sao chép link!')) }
+  const title = chapterData?.title || document.title;
+  const url = location.href;
+  if (navigator.share) {
+    navigator.share({ title, url }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(url).then(() => showToast('Đã sao chép link!'));
+  }
 }
+
 function toggleSettings() { document.getElementById('settings-drawer').classList.toggle('open') }
 document.addEventListener('click', e => {
   const drawer = document.getElementById('settings-drawer')
   if (drawer.classList.contains('open') && !drawer.contains(e.target) && !e.target.closest('[onclick="toggleSettings()"]'))
     drawer.classList.remove('open')
 })
-function toggleFloatingAudio() {
-  const bar = document.getElementById('floating-audio')
-  if (!chapterData?.audio_url) return
-  if (!bar.classList.contains('show')) bar.classList.add('show')
-  toggleAudioPlay()
+function toggleAudioSection() {
+  const el = document.getElementById('audio-section-end')
+  const vis = el.style.display !== 'none'
+  el.style.display = vis ? 'none' : 'block'
+  if (!vis) el.scrollIntoView({ behavior:'smooth', block:'nearest' })
 }
-function hideFloatingAudio() {
-  const bar = document.getElementById('floating-audio')
-  bar.classList.remove('show')
-  if (_audioPlaying) { _audio.pause(); _audioPlaying = false; updateAudioPlayIcons(false) }
+function toggleCmtOverview() {
+  const el = document.getElementById('cmt-overview-end')
+  const vis = el.style.display !== 'none'
+  el.style.display = vis ? 'none' : 'block'
+  if (!vis) { renderCmtOverview(); el.scrollIntoView({ behavior:'smooth', block:'nearest' }) }
 }
 
-/* ═══════════════════════════════════════════════════════
-   UTILS
-═══════════════════════════════════════════════════════ */
-function stripHtml(html) { const t = document.createElement('div'); t.innerHTML = html; return t.textContent || '' }
+function stripHtml(html) {
+  const tmp = document.createElement('div')
+  tmp.innerHTML = html
+  return tmp.textContent || ''
+}
 function escapeHtml(str) {
   if (!str) return ''
   const d = document.createElement('div'); d.textContent = str; return d.innerHTML
@@ -844,426 +827,71 @@ function formatViews(n) {
 }
 const CMT_ICON = `<svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`
 
-/* ═══════════════════════════════════════════════════════
-   STATE
-═══════════════════════════════════════════════════════ */
-let chapterData    = null
-let _currentUUID   = CHAPTER_UUID   // luôn sync với chapter đang hiển thị
+let chapterData = null
+let allChaptersInStory = []
 
-/* ═══════════════════════════════════════════════════════
-   SCROLL NAV MODULE (inline, không cần file ngoài)
-═══════════════════════════════════════════════════════ */
-const ScrollNav = (() => {
-  'use strict'
-
-  // ── Config ──────────────────────────────────────────
-  const CFG = {
-    FADE_MS:         150,
-    HINT_THRESHOLD:  56,
-    DRAG_RESISTANCE: 0.42,
-    DRAG_MAX:        88,
-    WHEEL_OVERFLOW:  90,
-    WHEEL_DECAY:     0.82,
-    COOLDOWN_MS:     1400,
-    PRELOAD_DELAY:   700,
-    VIBRATE_MS:      10,
-    SCROLL_EDGE:     4,
-  }
-
-  // ── Internal state ───────────────────────────────────
-  let _chapters     = []
-  let _cache        = {}        // { [uuid]: chapterRow }
-  let _preloadTimer = null
-  let _transiting   = false
-  let _lastTransit  = 0
-  let _onLoad       = null
-  let _getSbClient  = null
-  let _storyId      = null
-  let _getUUID      = null
-
-  // ── Helpers ──────────────────────────────────────────
-  const vibrate = () => { try { navigator.vibrate && navigator.vibrate(CFG.VIBRATE_MS) } catch(_){} }
-  const col     = () => document.querySelector('.story-col')
-  const hint    = () => document.getElementById('swipe-hint')
-  const scr     = () => document.scrollingElement || document.documentElement
-  const overlayOpen = () =>
-    document.getElementById('cmt-sheet')?.classList.contains('open') ||
-    document.getElementById('lightbox')?.classList.contains('open')  ||
-    document.getElementById('settings-drawer')?.classList.contains('open')
-  const curIdx  = () => _chapters.findIndex(c => c.id === _getUUID())
-  const neighbors = () => {
-    const i = curIdx()
-    return { prev: i > 0 ? _chapters[i-1] : null, next: i < _chapters.length-1 ? _chapters[i+1] : null }
-  }
-  const atTop    = () => scr().scrollTop <= CFG.SCROLL_EDGE
-  const atBottom = () => scr().scrollTop + scr().clientHeight >= scr().scrollHeight - CFG.SCROLL_EDGE
-
-  // ── Hint UI ──────────────────────────────────────────
-  function showHint(dir, ready = false, label = null) {
-    const h = hint(); if (!h) return
-    h.textContent = label || (dir === 'next' ? '↑ Thả để xem chương sau' : '↓ Thả để xem chương trước')
-    h.className   = 'chapter-swipe-hint ' + (dir === 'next' ? 'bottom' : 'top') + ' visible' + (ready ? ' ready' : '')
-  }
-  function hideHint() { const h = hint(); if (h) h.className = 'chapter-swipe-hint' }
-
-  // ── Rubber-band drag ─────────────────────────────────
-  function dragCol(px) {
-    const el = col(); if (!el) return
-    el.style.transition = 'none'
-    el.style.transform  = `translateY(${px}px)`
-  }
-  function snapCol(animated = true) {
-    const el = col(); if (!el) return
-    el.style.transition = animated ? 'transform .28s cubic-bezier(.34,1.56,.64,1)' : 'none'
-    el.style.transform  = ''
-  }
-
-  // ── Fade ─────────────────────────────────────────────
-  function fadeOut() {
-    const el = col(); if (!el) return Promise.resolve()
-    el.style.transition = `opacity ${CFG.FADE_MS}ms ease, transform ${CFG.FADE_MS}ms ease`
-    el.style.opacity    = '0'
-    el.style.transform  = ''
-    return new Promise(r => setTimeout(r, CFG.FADE_MS))
-  }
-  function fadeIn() {
-    const el = col(); if (!el) return
-    el.style.transition = 'none'
-    el.style.opacity    = '0'
-    el.style.transform  = ''
-    void el.offsetHeight
-    el.style.transition = `opacity ${CFG.FADE_MS}ms ease`
-    el.style.opacity    = '1'
-  }
-
-  // ── Fetch + cache ────────────────────────────────────
-  async function fetchChapter(uuid) {
-    if (_cache[uuid]) return _cache[uuid]
-    const { data, error } = await _getSbClient().from('chapters').select('*').eq('id', uuid).single()
-    if (error || !data) return null
-    _cache[uuid] = data
-    return data
-  }
-
-  function schedulePreload() {
-    clearTimeout(_preloadTimer)
-    _preloadTimer = setTimeout(async () => {
-      const { prev, next } = neighbors()
-      const jobs = []
-      if (prev && !_cache[prev.id]) jobs.push(fetchChapter(prev.id))
-      if (next && !_cache[next.id]) jobs.push(fetchChapter(next.id))
-      await Promise.all(jobs)
-    }, CFG.PRELOAD_DELAY)
-  }
-
-  // ── Chapter list ─────────────────────────────────────
-  async function loadList() {
-    const { data } = await _getSbClient()
-      .from('chapters')
-      .select('id, chapter_number, title, is_published')
-      .eq('story_id', _storyId)
-      .eq('is_published', true)
-      .order('chapter_number')
-    _chapters = data || []
-    return _chapters
-  }
-
-  // ── Core navigate ────────────────────────────────────
-  async function goTo(uuid, direction = 'next') {
-    if (_transiting) return
-    if (Date.now() - _lastTransit < CFG.COOLDOWN_MS) return
-    _transiting  = true
-    _lastTransit = Date.now()
-
-    vibrate()
-    showHint(direction, true, 'Đang tải...')
-
-    await fadeOut()
-
-    const chData = await fetchChapter(uuid)
-    if (!chData) {
-      fadeIn(); hideHint(); snapCol(true); _transiting = false; return
-    }
-
-    // Đổi URL không reload
-    history.pushState({ chapterId: uuid }, '', `chapter.html?story=${_storyId}&chapter=${uuid}`)
-
-    // Về đầu trang ngay lập tức
-    window.scrollTo({ top: 0, behavior: 'instant' })
-
-    // Gọi host callback
-    if (_onLoad) await _onLoad(chData, _chapters, direction)
-
-    hideHint()
-    fadeIn()
-    schedulePreload()
-    _transiting = false
-  }
-
-  // ── Touch ────────────────────────────────────────────
-  let _ty = null, _tdir = null
-
-  function onTouchStart(e) {
-    if (overlayOpen()) { _ty = null; return }
-    _ty   = e.touches[0].clientY
-    _tdir = null
-  }
-  function onTouchMove(e) {
-    if (_ty === null || _transiting) return
-    const delta = e.touches[0].clientY - _ty
-    const { prev, next } = neighbors()
-    let dir = null, dist = 0
-
-    if (delta > 0 && atTop() && prev) {
-      dir  = 'prev'; dist = Math.min(delta * CFG.DRAG_RESISTANCE, CFG.DRAG_MAX)
-    } else if (delta < 0 && atBottom() && next) {
-      dir  = 'next'; dist = Math.max(delta * CFG.DRAG_RESISTANCE, -CFG.DRAG_MAX)
-    } else {
-      if (_tdir) { snapCol(true); hideHint() }
-      _tdir = null; return
-    }
-    _tdir = dir
-    dragCol(dist)
-    showHint(dir, Math.abs(dist) >= CFG.HINT_THRESHOLD)
-  }
-  function onTouchEnd(e) {
-    if (_ty === null) return
-    const delta = e.changedTouches[0].clientY - _ty
-    const { prev, next } = neighbors()
-
-    if (_tdir === 'prev' && delta >  CFG.HINT_THRESHOLD && prev) goTo(prev.id, 'prev')
-    else if (_tdir === 'next' && delta < -CFG.HINT_THRESHOLD && next) goTo(next.id, 'next')
-    else { snapCol(true); hideHint() }
-
-    _ty = null; _tdir = null
-  }
-
-  // ── Wheel ────────────────────────────────────────────
-  let _wAccum = 0, _wRaf = null, _wHintTimer = null
-
-  function decayWheel() {
-    _wAccum *= CFG.WHEEL_DECAY
-    if (Math.abs(_wAccum) < 1) { _wAccum = 0; _wRaf = null; return }
-    _wRaf = requestAnimationFrame(decayWheel)
-  }
-  function onWheel(e) {
-    if (overlayOpen() || _transiting) return
-    const { prev, next } = neighbors()
-    const goDown = e.deltaY > 0, goUp = e.deltaY < 0
-
-    if      (goDown && atBottom() && next) _wAccum += e.deltaY
-    else if (goUp   && atTop()    && prev) _wAccum += e.deltaY
-    else { _wAccum = 0; return }
-
-    if (Math.abs(_wAccum) >= CFG.WHEEL_OVERFLOW) {
-      const dir    = _wAccum > 0 ? 'next' : 'prev'
-      const target = dir === 'next' ? next : prev
-      _wAccum = 0
-      cancelAnimationFrame(_wRaf); _wRaf = null
-      goTo(target.id, dir)
-      return
-    }
-
-    const dir   = goDown ? 'next' : 'prev'
-    const ratio = Math.abs(_wAccum) / CFG.WHEEL_OVERFLOW
-    showHint(dir, ratio >= 0.8)
-
-    clearTimeout(_wHintTimer)
-    _wHintTimer = setTimeout(() => { hideHint(); _wAccum = 0 }, 800)
-    cancelAnimationFrame(_wRaf)
-    _wRaf = requestAnimationFrame(decayWheel)
-  }
-
-  // ── Popstate (back/forward) ───────────────────────────
-  function onPopState(e) {
-    const uuid = e.state?.chapterId
-    if (!uuid || uuid === _getUUID()) return
-    const idx    = _chapters.findIndex(c => c.id === uuid)
-    const curI   = curIdx()
-    goTo(uuid, idx > curI ? 'next' : 'prev')
-  }
-
-  // ── Public API ───────────────────────────────────────
-  async function init(opts) {
-    _getSbClient = opts.getSbClient   // () => sb
-    _storyId     = opts.storyId
-    _getUUID     = opts.getChapterUUID
-    _onLoad      = opts.onChapterLoad
-
-    await loadList()
-    schedulePreload()
-
-    document.addEventListener('touchstart', onTouchStart, { passive: true })
-    document.addEventListener('touchmove',  onTouchMove,  { passive: true })
-    document.addEventListener('touchend',   onTouchEnd,   { passive: true })
-    window.addEventListener('wheel',        onWheel,      { passive: true })
-    window.addEventListener('popstate',     onPopState)
-  }
-
-  function notifyLoaded(chData) {
-    if (chData) _cache[chData.id] = chData
-    schedulePreload()
-  }
-
-  function navigateTo(uuid, direction) { return goTo(uuid, direction || 'next') }
-
-  function getChapters() { return _chapters }
-
-  return { init, notifyLoaded, navigateTo, getChapters }
-})()
-
-
-/* ═══════════════════════════════════════════════════════
-   LOAD CHAPTER (lần đầu, từ URL params)
-═══════════════════════════════════════════════════════ */
 async function loadChapter() {
-  // Đợi session restore
-  let session = null
-  try { ({ data: { session } } = await sb.auth.getSession()) } catch(e) {}
+  // Đợi session restore (quan trọng với GitHub Pages / SSO)
+  let session = null;
+  try {
+    const { data } = await sb.auth.getSession();
+    session = data.session;
+  } catch(e) {}
+
+  // Nếu chưa có session, thử đợi thêm 1 giây rồi check lại
   if (!session) {
-    await new Promise(r => setTimeout(r, 1000))
-    try { ({ data: { session } } = await sb.auth.getSession()) } catch(e) {}
+    await new Promise(r => setTimeout(r, 1000));
+    try {
+      const { data } = await sb.auth.getSession();
+      session = data.session;
+    } catch(e) {}
   }
+
   if (!session) {
-    const nextUrl = encodeURIComponent(location.pathname + location.search)
-    document.getElementById('chapter-heading').textContent = ''
+    const nextUrl = encodeURIComponent(location.pathname + location.search);
+    document.getElementById('chapter-heading').textContent = '';
     document.getElementById('paragraphs-container').innerHTML = `
       <div style="text-align:center;padding:3rem 1.5rem;display:flex;flex-direction:column;align-items:center;gap:14px">
         <svg viewBox="0 0 24 24" width="48" height="48" style="stroke:var(--accent);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         <div style="font-size:17px;font-weight:800;color:var(--text)">Đăng nhập để đọc truyện</div>
         <div style="font-size:13px;color:var(--meta)">Bạn cần đăng nhập để đọc nội dung chương này</div>
         <a href="auth.html?next=${nextUrl}" style="padding:11px 28px;background:var(--accent);color:white;border-radius:24px;text-decoration:none;font-weight:800;font-size:14px;margin-top:4px">Đăng nhập / Đăng ký</a>
-      </div>`
-    return
+      </div>`;
+    return;
   }
-
   const { data: ch, error } = await sb.from('chapters').select('*').eq('id', CHAPTER_UUID).single()
   if (error || !ch) {
     document.getElementById('chapter-heading').textContent = 'Không tìm thấy chương'
     return
   }
-
-  chapterData   = ch
-  _currentUUID  = ch.id
-
+  chapterData = ch
   document.title = `Chương ${ch.chapter_number} — ${ch.title || ''} · Peach Luku`
-  sb.from('stories').select('title, cover_url, author').eq('id', STORY_ID).maybeSingle()
-    .then(({ data: s }) => setChapterMeta(ch, s?.title || null, s?.cover_url || null))
-    .catch(() => setChapterMeta(ch, null, null))
 
-  _applyChapterUI(ch)
+  // Fetch story info để có title + cover cho SEO (chạy song song với render)
+  sb.from('stories').select('title, cover_url, author').eq('id', STORY_ID).maybeSingle()
+    .then(({ data: storyInfo }) => {
+      setChapterMeta(ch, storyInfo?.title || null, storyInfo?.cover_url || null)
+    })
+    .catch(() => setChapterMeta(ch, null, null))
+  document.getElementById('header-title').textContent = `${ch.title || 'Chương ' + ch.chapter_number}`
+  document.getElementById('chapter-heading').textContent = ch.title || `Chương ${ch.chapter_number}`
+  document.getElementById('chapter-meta').textContent =
+    (ch.author_name || '') + (ch.created_at ? ' · Cập nhật ' + new Date(ch.created_at).toLocaleDateString('vi-VN') : '')
+  if (ch.audio_url) {
+    document.getElementById('audio-src').src = ch.audio_url
+    document.getElementById('chapter-audio').load()
+  }
   initSettingsAudio(ch.audio_url || null)
   renderParagraphs(ch.content || '')
   await initChapterUser()
   await Promise.all([loadToc(), countView(), loadVotes(), loadAllCounts()])
-
   if (window.plLib) {
     plLib.pushHistory(STORY_ID, CHAPTER_UUID, ch.chapter_number, ch.title)
-    const { count } = await sb.from('chapters').select('id', { count: 'exact', head: true }).eq('story_id', STORY_ID)
+    const { count } = await sb.from('chapters').select('id', { count:'exact', head:true }).eq('story_id', STORY_ID)
     plLib.updateBookmarkProgress(STORY_ID, CHAPTER_UUID, ch.chapter_number, count || 0)
   }
-
-  // ── Khởi động ScrollNav sau khi đã có dữ liệu ─────────
-  await ScrollNav.init({
-    getSbClient:    () => sb,
-    storyId:        STORY_ID,
-    getChapterUUID: () => _currentUUID,
-    onChapterLoad:  onScrollNavLoad,
-  })
-  ScrollNav.notifyLoaded(ch)
-
-  // Gắn nút prev/next dùng ScrollNav thay vì href reload
-  _bindNavButtons()
 }
 
-/* ═══════════════════════════════════════════════════════
-   SCROLLNAV CALLBACK — host xử lý sau khi module fetch xong
-═══════════════════════════════════════════════════════ */
-async function onScrollNavLoad(chData, allChapters, direction) {
-  chapterData  = chData
-  _currentUUID = chData.id
-
-  // Cập nhật UI
-  _applyChapterUI(chData)
-  renderParagraphs(chData.content || '')
-  initSettingsAudio(chData.audio_url || null)
-  _updateTocAndNav(chData, allChapters)
-
-  // Meta + SEO
-  document.title = `Chương ${chData.chapter_number} — ${chData.title || ''} · Peach Luku`
-  sb.from('stories').select('title, cover_url').eq('id', STORY_ID).maybeSingle()
-    .then(({ data: s }) => setChapterMeta(chData, s?.title || null, s?.cover_url || null))
-
-  // Stats (fire-and-forget, không block fade-in)
-  Promise.all([countView(), loadVotes(), loadAllCounts()])
-
-  if (window.plLib) {
-    plLib.pushHistory(STORY_ID, chData.id, chData.chapter_number, chData.title)
-    const { count } = await sb.from('chapters')
-      .select('id', { count: 'exact', head: true }).eq('story_id', STORY_ID)
-    plLib.updateBookmarkProgress(STORY_ID, chData.id, chData.chapter_number, count || 0)
-  }
-}
-
-/* ── Helper: áp heading + meta text ────────────────────── */
-function _applyChapterUI(ch) {
-  document.getElementById('header-title').textContent    = ch.title || `Chương ${ch.chapter_number}`
-  document.getElementById('chapter-heading').textContent = ch.title || `Chương ${ch.chapter_number}`
-  document.getElementById('chapter-meta').textContent    =
-    (ch.author_name || '') +
-    (ch.created_at ? ' · Cập nhật ' + new Date(ch.created_at).toLocaleDateString('vi-VN') : '')
-}
-
-/* ── Helper: cập nhật TOC active + nút prev/next ─────────── */
-function _updateTocAndNav(chData, chapters) {
-  // Sidebar TOC
-  document.querySelectorAll('.toc-item').forEach(el =>
-    el.classList.toggle('active', el.getAttribute('href')?.includes(chData.id)))
-  // Inline TOC
-  document.querySelectorAll('.toc-inline-item').forEach(el =>
-    el.classList.toggle('active', el.getAttribute('href')?.includes(chData.id)))
-
-  document.getElementById('nav-title').textContent = `Chương ${chData.chapter_number} / ${chapters.length}`
-
-  const idx  = chapters.findIndex(c => c.id === chData.id)
-  const prev = chapters[idx - 1] || null
-  const next = chapters[idx + 1] || null
-  const btnPrev = document.getElementById('btn-prev')
-  const btnNext = document.getElementById('btn-next')
-
-  if (prev) {
-    btnPrev.dataset.uuid = prev.id
-    btnPrev.classList.remove('disabled')
-  } else {
-    btnPrev.dataset.uuid = ''
-    btnPrev.classList.add('disabled')
-  }
-  if (next) {
-    btnNext.dataset.uuid = next.id
-    btnNext.classList.remove('disabled')
-  } else {
-    btnNext.dataset.uuid = ''
-    btnNext.classList.add('disabled')
-  }
-}
-
-/* ── Gắn click handler cho nút prev/next (dùng ScrollNav) ── */
-function _bindNavButtons() {
-  document.getElementById('btn-prev')?.addEventListener('click', e => {
-    e.preventDefault()
-    const uuid = e.currentTarget.dataset.uuid
-    if (uuid) ScrollNav.navigateTo(uuid, 'prev')
-  })
-  document.getElementById('btn-next')?.addEventListener('click', e => {
-    e.preventDefault()
-    const uuid = e.currentTarget.dataset.uuid
-    if (uuid) ScrollNav.navigateTo(uuid, 'next')
-  })
-}
-
-/* ═══════════════════════════════════════════════════════
-   RENDER PARAGRAPHS (giữ nguyên gốc)
-═══════════════════════════════════════════════════════ */
 function renderParagraphs(content) {
   const container = document.getElementById('paragraphs-container')
   if (!content || !content.trim()) {
@@ -1284,7 +912,9 @@ function renderParagraphs(content) {
         if (text) blocks.push({ type: 'text', content: text })
       } else if (node.nodeType === Node.ELEMENT_NODE) {
         const plainText = node.textContent.replace(/\u00a0/g, '').trim()
-        if (plainText || node.tagName === 'IMG') blocks.push({ type: 'html', content: node.outerHTML })
+        if (plainText || node.tagName === 'IMG') {
+          blocks.push({ type: 'html', content: node.outerHTML })
+        }
       }
     })
     if (!blocks.length) blocks.push({ type: 'html', content })
@@ -1297,18 +927,20 @@ function renderParagraphs(content) {
     container.innerHTML = '<p style="color:var(--meta);font-size:14px;text-align:center;padding:2rem">Chương này chưa có nội dung.</p>'
     return
   }
+  // Extract data-pid from HTML blocks if present (written by editor)
   container.innerHTML = paragraphs.map((block, i) => {
-    let pid = null
+    let pid = null;
     if (block.type === 'html') {
-      const m = block.content.match(/data-pid="([^"]+)"/)
-      if (m) pid = m[1]
+      const m = block.content.match(/data-pid="([^"]+)"/);
+      if (m) pid = m[1];
     }
-    if (!pid) pid = 'p' + (i + 1)
+    if (!pid) pid = 'p' + (i + 1);
     const rendered = block.type === 'html' ? block.content : escapeHtml(block.content)
     return `
     <div class="para-wrap" data-pid="${pid}">
       <div class="para-text">${rendered}</div>
       <button class="cmt-trigger" data-pid="${pid}">${CMT_ICON}<span class="cnt">0</span></button>
+      <div style="clear:both"></div>
     </div>`
   }).join('')
   document.querySelectorAll('.cmt-trigger').forEach(btn => {
@@ -1324,67 +956,80 @@ function renderParagraphs(content) {
   })
 }
 
-/* ═══════════════════════════════════════════════════════
-   TOC (load lần đầu)
-═══════════════════════════════════════════════════════ */
+// Tiêu đề chương xuống dòng bình thường khi đủ chữ một dòng
+
+// Lướt lên/xuống ở đầu/cuối trang để chuyển chương trước/sau
+;(function setupSwipeChapterNav() {
+  let touchStartY = null
+  document.addEventListener('touchstart', (e) => {
+    touchStartY = e.touches[0].clientY
+  }, { passive: true })
+  document.addEventListener('touchend', (e) => {
+    if (touchStartY === null) return
+    const deltaY = e.changedTouches[0].clientY - touchStartY
+    touchStartY = null
+    const threshold = 70
+    const scrollEl = document.scrollingElement || document.documentElement
+    const atTop = scrollEl.scrollTop <= 2
+    const atBottom = scrollEl.scrollTop + scrollEl.clientHeight >= scrollEl.scrollHeight - 2
+    const btnPrev = document.getElementById('btn-prev')
+    const btnNext = document.getElementById('btn-next')
+    // Lướt xuống (kéo tay xuống) khi đang ở đầu trang -> chương trước
+    if (deltaY > threshold && atTop && btnPrev && !btnPrev.classList.contains('disabled')) {
+      location.href = btnPrev.href
+    }
+    // Lướt lên (kéo tay lên) khi đang ở cuối trang -> chương sau
+    else if (deltaY < -threshold && atBottom && btnNext && !btnNext.classList.contains('disabled')) {
+      location.href = btnNext.href
+    }
+  }, { passive: true })
+})()
+
 async function loadToc() {
   const { data } = await sb.from('chapters')
     .select('id, chapter_number, title, is_published')
-    .eq('story_id', STORY_ID).eq('is_published', true)
+    .eq('story_id', STORY_ID)
+    .eq('is_published', true)
     .order('chapter_number')
   if (!data || !data.length) {
     document.getElementById('toc-list').innerHTML = '<p style="padding:12px 16px;font-size:13px;color:var(--meta)">Chưa có chương nào</p>'
     document.getElementById('toc-inline-list').innerHTML = '<p class="toc-empty">Chưa có chương nào</p>'
     return
   }
+  allChaptersInStory = data
+  const cur = data.findIndex(c => c.id === CHAPTER_UUID)
   document.getElementById('toc-list').innerHTML = data.map(c => `
-    <a class="toc-item${c.id === _currentUUID ? ' active' : ''}" data-chid="${c.id}"
-       href="chapter.html?story=${STORY_ID}&chapter=${c.id}">
+    <a class="toc-item${c.id === CHAPTER_UUID ? ' active' : ''}" href="chapter.html?story=${STORY_ID}&chapter=${c.id}">
       <span class="toc-num">Chương ${c.chapter_number}</span>
       ${escapeHtml(c.title || '')}
     </a>`).join('')
   document.getElementById('toc-inline-list').innerHTML = data.map(c => `
-    <a class="toc-inline-item${c.id === _currentUUID ? ' active' : ''}" data-chid="${c.id}"
-       href="chapter.html?story=${STORY_ID}&chapter=${c.id}">
+    <a class="toc-inline-item${c.id === CHAPTER_UUID ? ' active' : ''}" href="chapter.html?story=${STORY_ID}&chapter=${c.id}">
       <span style="font-size:11px;color:var(--meta);display:block;margin-bottom:2px">Chương ${c.chapter_number}</span>
       ${escapeHtml(c.title || '')}
     </a>`).join('')
-
-  // TOC links cũng dùng ScrollNav
-  document.querySelectorAll('.toc-item, .toc-inline-item').forEach(a => {
-    a.addEventListener('click', e => {
-      e.preventDefault()
-      const uuid = a.dataset.chid
-      if (uuid && uuid !== _currentUUID) {
-        const chapters = ScrollNav.getChapters()
-        const ci = chapters.findIndex(c => c.id === _currentUUID)
-        const ti = chapters.findIndex(c => c.id === uuid)
-        ScrollNav.navigateTo(uuid, ti > ci ? 'next' : 'prev')
-      }
-      // Đóng sidebar sau khi chọn
-      document.getElementById('toc-sidebar').classList.add('collapsed')
-    })
-  })
-
-  // Cập nhật nav buttons lần đầu
-  _updateTocAndNav(chapterData, data)
+  const prev = data[cur - 1], next = data[cur + 1]
+  document.getElementById('nav-title').textContent = `Chương ${chapterData?.chapter_number || ''} / ${data.length}`
+  const btnPrev = document.getElementById('btn-prev')
+  const btnNext = document.getElementById('btn-next')
+  if (prev) { btnPrev.href = `chapter.html?story=${STORY_ID}&chapter=${prev.id}`; btnPrev.classList.remove('disabled') }
+  if (next) { btnNext.href = `chapter.html?story=${STORY_ID}&chapter=${next.id}`; btnNext.classList.remove('disabled') }
 }
 
-/* ═══════════════════════════════════════════════════════
-   VOTES / VIEWS / COMMENTS (giữ nguyên gốc)
-═══════════════════════════════════════════════════════ */
 async function loadVotes() {
-  const { data } = await sb.from('chapters').select('votes, views').eq('id', _currentUUID).single()
+  const { data } = await sb.from('chapters').select('votes, views').eq('id', CHAPTER_UUID).single()
   if (!data) return
   const votes = data.votes || 0
-  document.getElementById('vote-count').textContent     = votes
+  document.getElementById('vote-count').textContent = votes
   document.getElementById('vote-count-end').textContent = votes
-  document.getElementById('view-count').textContent     = formatViews(data.views || 0)
+  document.getElementById('view-count').textContent = formatViews(data.views || 0)
   const btn = document.getElementById('vote-btn')
   if (chCurrentUser) {
     const { count } = await sb.from('chapter_votes').select('id', { count: 'exact', head: true })
-      .eq('chapter_id', _currentUUID).eq('voter_ip', chCurrentUser.id)
-    if ((count || 0) >= 3) btn.classList.add('voted')
+      .eq('chapter_id', CHAPTER_UUID).eq('voter_ip', chCurrentUser.id)
+    const used = count || 0
+    btn.dataset.voteCount = used
+    if (used >= 3) btn.classList.add('voted')
     else btn.classList.remove('voted')
   }
 }
@@ -1392,38 +1037,52 @@ async function loadVotes() {
 async function submitVote() {
   const btn = document.getElementById('vote-btn')
   if (!chCurrentUser) { alert('Vui lòng đăng nhập để vote!'); return }
+  if (!CHAPTER_UUID) return
+  // Mỗi tài khoản được vote tối đa 3 lần / chương
   const { count } = await sb.from('chapter_votes').select('id', { count: 'exact', head: true })
-    .eq('chapter_id', _currentUUID).eq('voter_ip', chCurrentUser.id)
+    .eq('chapter_id', CHAPTER_UUID).eq('voter_ip', chCurrentUser.id)
   const used = count || 0
   if (used >= 3) { btn.classList.add('voted'); showToast && showToast('Bạn đã vote tối đa 3 lần cho chương này!'); return }
-  const { error } = await sb.from('chapter_votes').insert({ chapter_id: _currentUUID, voter_ip: chCurrentUser.id })
-  if (!error) await sb.rpc('increment_votes', { chapter_id: _currentUUID })
+  const { error } = await sb.from('chapter_votes').insert({ chapter_id: CHAPTER_UUID, voter_ip: chCurrentUser.id })
+  if (!error) await sb.rpc('increment_votes', { chapter_id: CHAPTER_UUID })
   if (used + 1 >= 3) btn.classList.add('voted')
   loadVotes()
 }
 
 async function countView() {
-  const uuid = _currentUUID
-  const { data: chCheck } = await sb.from('chapters').select('is_published').eq('id', uuid).single()
-  if (!chCheck?.is_published) return
-  let hasScrolled = false, viewCounted = false
-  function onScroll() { if (window.scrollY > 100) hasScrolled = true }
-  window.addEventListener('scroll', onScroll, { passive: true })
-  setTimeout(async () => {
-    window.removeEventListener('scroll', onScroll)
-    if (!hasScrolled || viewCounted || uuid !== _currentUUID) return  // tránh đếm sai nếu đã chuyển chương
-    viewCounted = true
-    const { data } = await sb.from('chapters').select('views').eq('id', uuid).single()
-    if (!data) return
-    await sb.from('chapters').update({ views: (data.views || 0) + 1 }).eq('id', uuid)
-    const el = document.getElementById('view-count')
-    if (el) el.textContent = formatViews((data.views || 0) + 1)
-  }, 30000)
+  if (!CHAPTER_UUID) return;
+  // Chỉ tính view khi chương đã được đăng (is_published = true)
+  const { data: chCheck } = await sb.from('chapters').select('is_published').eq('id', CHAPTER_UUID).single();
+  if (!chCheck?.is_published) return;
+
+  let hasScrolled = false;
+  let readTimer = null;
+  let viewCounted = false;
+
+  function onScroll() {
+    if (window.scrollY > 100) hasScrolled = true;
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Sau 30 giây, kiểm tra đã scroll chưa
+  readTimer = setTimeout(async () => {
+    window.removeEventListener('scroll', onScroll);
+    if (!hasScrolled || viewCounted) return;
+    viewCounted = true;
+
+    const { data } = await sb.from('chapters').select('views').eq('id', CHAPTER_UUID).single();
+    if (!data) return;
+    await sb.from('chapters').update({ views: (data.views || 0) + 1 }).eq('id', CHAPTER_UUID);
+
+    // Cập nhật hiển thị
+    const el = document.getElementById('view-count');
+    if (el) el.textContent = formatViews((data.views || 0) + 1);
+  }, 30000); // 30 giây
 }
 
 async function loadAllCounts() {
   const { data } = await sb.from('comments').select('paragraph_id')
-    .eq('story_id', STORY_ID).eq('chapter_id', _currentUUID)
+    .eq('story_id', STORY_ID).eq('chapter_id', CHAPTER_UUID)
   if (!data) return
   const counts = {}
   data.forEach(r => { counts[r.paragraph_id] = (counts[r.paragraph_id] || 0) + 1 })
@@ -1439,80 +1098,56 @@ async function loadAllCounts() {
   if (endEl) endEl.textContent = total
 }
 
-/* ═══════════════════════════════════════════════════════
-   COMMENTS SHEET (giữ nguyên gốc)
-═══════════════════════════════════════════════════════ */
+async function renderCmtOverview() {
+  const list = document.getElementById('cmt-overview-list')
+  list.innerHTML = '<p class="toc-empty">Đang tải...</p>'
+  const { data } = await sb.from('comments').select('paragraph_id')
+    .eq('story_id', STORY_ID).eq('chapter_id', CHAPTER_UUID)
+  const counts = {}
+  if (data) data.forEach(r => { counts[r.paragraph_id] = (counts[r.paragraph_id] || 0) + 1 })
+  const paras = document.querySelectorAll('.para-wrap[data-pid]')
+  if (!paras.length) { list.innerHTML = '<p class="toc-empty">Không có đoạn nào.</p>'; return }
+  list.innerHTML = Array.from(paras).map((wrap, i) => {
+    const pid = wrap.dataset.pid
+    const excerpt = (wrap.querySelector('.para-text')?.textContent || '').trim().slice(0, 80)
+    const cnt = counts[pid] || 0
+    return `
+    <div class="cmt-overview-row" onclick="openCmtSheet('${pid}')">
+      <span class="cmt-overview-num">§${i+1}</span>
+      <span class="cmt-overview-excerpt">${escapeHtml(excerpt)}</span>
+      <span class="cmt-overview-badge ${cnt>0?'has-cmt':''}">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> ${cnt}
+      </span>
+    </div>`
+  }).join('')
+}
+
 let activePid = null
 
 function openCmtSheet(pid) {
   activePid = pid
-  document.getElementById('sheet-pid-label').textContent = `Bình luận đoạn ${pid.replace('p','')}`
-  const paraEl  = document.querySelector(`.para-wrap[data-pid="${pid}"] .para-text`)
+  const num = pid.replace('p','')
+  document.getElementById('sheet-pid-label').textContent = `Bình luận đoạn ${num}`
+  const paraEl = document.querySelector(`.para-wrap[data-pid="${pid}"] .para-text`)
   const quoteEl = document.getElementById('cmt-para-quote')
-  if (paraEl && quoteEl) { quoteEl.textContent = (paraEl.textContent || '').trim(); quoteEl.classList.add('visible') }
-  document.getElementById('cmt-sheet-input-bar').style.display = ''
+  if (paraEl && quoteEl) {
+    quoteEl.textContent = (paraEl.textContent || '').trim()
+    quoteEl.classList.add('visible')
+  }
   document.getElementById('sheet-emoji-picker').classList.remove('open')
   document.getElementById('cmt-sheet').classList.add('open')
   document.getElementById('cmt-overlay').classList.add('open')
   document.body.style.overflow = 'hidden'
   loadSheetComments(pid)
 }
-function openAllCmtSheet() {
-  activePid = '__all__'
-  document.getElementById('sheet-pid-label').textContent = 'Tất cả bình luận chương'
-  const quoteEl = document.getElementById('cmt-para-quote')
-  quoteEl.classList.remove('visible'); quoteEl.textContent = ''
-  document.getElementById('cmt-sheet-input-bar').style.display = 'none'
-  document.getElementById('sheet-emoji-picker').classList.remove('open')
-  document.getElementById('cmt-sheet').classList.add('open')
-  document.getElementById('cmt-overlay').classList.add('open')
-  document.body.style.overflow = 'hidden'
-  loadAllSheetComments()
-}
+
 function closeCmtSheet() {
   document.getElementById('cmt-sheet').classList.remove('open')
   document.getElementById('cmt-overlay').classList.remove('open')
   document.body.style.overflow = ''
   document.querySelectorAll('.cmt-trigger').forEach(b => b.classList.remove('active'))
   document.querySelectorAll('.para-wrap').forEach(el => el.classList.remove('highlighted'))
-  document.getElementById('cmt-para-quote').classList.remove('visible')
-  document.getElementById('cmt-sheet-input-bar').style.display = ''
   activePid = null
-}
-
-const _avatarColors = ['#d4537e','#5b9bd5','#71c285','#e8a838','#9b7fe8','#e87878']
-
-async function loadAllSheetComments() {
-  const list = document.getElementById('sheet-cmt-list')
-  list.innerHTML = '<p class="empty-msg">Đang tải...</p>'
-  const { data, error } = await sb.from('comments')
-    .select('*, profiles(display_name, avatar_url)')
-    .eq('story_id', STORY_ID).eq('chapter_id', _currentUUID)
-    .order('created_at', { ascending: true })
-  if (error) { list.innerHTML = '<p class="empty-msg">Lỗi tải bình luận</p>'; return }
-  if (!data.length) { list.innerHTML = '<p class="empty-msg">Chương này chưa có bình luận nào.<br>Hãy là người đầu tiên!</p>'; return }
-  const pidIndex = {}
-  document.querySelectorAll('.para-wrap[data-pid]').forEach((el, i) => { pidIndex[el.dataset.pid] = i + 1 })
-  list.innerHTML = data.map((c, i) => {
-    const prof = c.profiles || {}
-    const name = escapeHtml(prof.display_name || c.username || 'Ẩn danh')
-    const color = _avatarColors[i % _avatarColors.length]
-    const avatarSrc = prof.avatar_url || c.avatar_url
-    const avatarHtml = avatarSrc ? `<img src="${escapeHtml(avatarSrc)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : name.charAt(0).toUpperCase()
-    const pidNum = pidIndex[c.paragraph_id] || '?'
-    return `<div class="cmt-bubble" id="cmt-all-${c.id}">
-      <div class="cmt-avatar" style="background:${color}">${avatarHtml}</div>
-      <div class="cmt-body">
-        <div class="cmt-user">${name}</div>
-        ${c.content ? `<div class="cmt-content">${escapeHtml(c.content)}</div>` : ''}
-        ${c.image_url ? `<img class="cmt-img" src="${c.image_url}" alt="" loading="lazy" decoding="async" onclick="openLightbox('${c.image_url}')">` : ''}
-        <div class="cmt-footer">
-          <span class="cmt-time">${formatTime(c.created_at)}</span>
-          <button class="cmt-pid-tag" onclick="openCmtSheet('${c.paragraph_id}')" title="Xem đoạn ${pidNum}">§${pidNum}</button>
-        </div>
-      </div>
-    </div>`
-  }).join('')
 }
 
 async function loadSheetComments(pid) {
@@ -1520,20 +1155,27 @@ async function loadSheetComments(pid) {
   list.innerHTML = '<p class="empty-msg">Đang tải...</p>'
   const { data, error } = await sb.from('comments')
     .select('*, profiles(display_name, avatar_url)')
-    .eq('story_id', STORY_ID).eq('chapter_id', _currentUUID).eq('paragraph_id', pid)
+    .eq('story_id', STORY_ID).eq('chapter_id', CHAPTER_UUID).eq('paragraph_id', pid)
     .order('created_at', { ascending: true })
   if (error) { list.innerHTML = '<p class="empty-msg">Lỗi tải bình luận</p>'; return }
   const btn = document.querySelector(`.cmt-trigger[data-pid="${pid}"] .cnt`)
   if (btn) btn.textContent = data.length
-  if (!data.length) { list.innerHTML = '<p class="empty-msg">Chưa có bình luận.<br>Hãy là người đầu tiên!</p>'; return }
+  if (!data.length) {
+    list.innerHTML = '<p class="empty-msg">Chưa có bình luận.<br>Hãy là người đầu tiên!</p>'
+    return
+  }
+  const avatarColors = ['#d4537e','#5b9bd5','#71c285','#e8a838','#9b7fe8','#e87878']
   list.innerHTML = data.map((c, i) => {
     const prof = c.profiles || {}
     const name = escapeHtml(prof.display_name || c.username || 'Ẩn danh')
-    const color = _avatarColors[i % _avatarColors.length]
+    const color = avatarColors[i % avatarColors.length]
     const avatarSrc = prof.avatar_url || c.avatar_url
-    const avatarHtml = avatarSrc ? `<img src="${escapeHtml(avatarSrc)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : name.charAt(0).toUpperCase()
+    const avatarHtml = avatarSrc
+      ? `<img src="${escapeHtml(avatarSrc)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+      : name.charAt(0).toUpperCase()
     const isOwn = chCurrentUser && c.user_id === chCurrentUser.id
-    return `<div class="cmt-bubble" id="cmt-${c.id}">
+    return `
+    <div class="cmt-bubble" id="cmt-${c.id}">
       <div class="cmt-avatar" style="background:${color}">${avatarHtml}</div>
       <div class="cmt-body">
         <div class="cmt-user">${name}</div>
@@ -1541,7 +1183,7 @@ async function loadSheetComments(pid) {
         ${c.image_url ? `<img class="cmt-img" src="${c.image_url}" alt="" loading="lazy" decoding="async" onclick="openLightbox('${c.image_url}')">` : ''}
         <div class="cmt-footer">
           <span class="cmt-time">${formatTime(c.created_at)}</span>
-          ${chCurrentUser ? `<button class="cmt-reply-btn" onclick="replyTo('${name}', ${c.id})">Trả lời</button>` : ''}
+          ${chCurrentUser ? `<button class="cmt-reply-btn" onclick="replyTo('${name}', ${c.id}, '${c.user_id}')">Trả lời</button>` : ''}
           ${isOwn ? `<button class="cmt-reply-btn" style="color:#e84040" onclick="deleteComment('${c.id}', '${pid}')">Xoá</button>` : ''}
         </div>
       </div>
@@ -1552,21 +1194,25 @@ async function loadSheetComments(pid) {
 async function deleteComment(id, pid) {
   if (!confirm('Xoá bình luận này?')) return
   await sb.from('comments').delete().eq('id', id)
-  if (activePid === '__all__') loadAllSheetComments()
-  else loadSheetComments(pid)
+  loadSheetComments(pid)
   loadAllCounts()
 }
-function replyTo(name, id) {
-  if (!chCurrentUser) { alert('Vui lòng đăng nhập để trả lời!'); return }
+
+let activeReplyUserId = null; let activeParentId = null;
+function replyTo(name, id, userId) {
+  if (!chCurrentUser) { alert('Vui lòng đăng nhập để trả lời!'); return; }
+  activeReplyUserId = userId || null;
+  activeParentId = id || null;
   const ta = document.getElementById('sheet-cmt-input')
   ta.value = `@${name} `; ta.focus()
   ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 'px'
 }
 
-/* ── Image upload for comments ──────────────────────────── */
 let selectedImgFile = null
+
 function previewImg(input) {
-  const file = input.files[0]; if (!file) return
+  const file = input.files[0]
+  if (!file) return
   if (file.size > 5*1024*1024) { alert('Ảnh tối đa 5MB'); input.value=''; return }
   selectedImgFile = file
   const url = URL.createObjectURL(file)
@@ -1581,60 +1227,70 @@ function removeImg() {
   document.getElementById('img-preview-container').innerHTML = ''
   document.getElementById('sheet-img-input').value = ''
 }
-let _webpSupport = null
+let _webpSupport = null;
 function supportsWebP() {
-  if (_webpSupport !== null) return _webpSupport
-  const c = document.createElement('canvas'); c.width = c.height = 1
-  _webpSupport = c.toDataURL('image/webp').indexOf('image/webp') === 5
-  return _webpSupport
+  if (_webpSupport !== null) return _webpSupport;
+  const c = document.createElement('canvas');
+  c.width = c.height = 1;
+  _webpSupport = c.toDataURL('image/webp').indexOf('image/webp') === 5;
+  return _webpSupport;
 }
 function compressImage(file, maxDim = 1000, quality = 0.8) {
-  return new Promise(resolve => {
-    if (!file.type.startsWith('image/') || file.type === 'image/gif') return resolve(file)
-    const img = new Image(), reader = new FileReader()
-    reader.onload = e => { img.src = e.target.result }
+  return new Promise((resolve) => {
+    if (!file.type.startsWith('image/') || file.type === 'image/gif') return resolve(file);
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = (e) => { img.src = e.target.result; };
     img.onload = () => {
-      let { width, height } = img
+      let { width, height } = img;
       if (width > maxDim || height > maxDim) {
-        if (width > height) { height = Math.round(height * maxDim / width); width = maxDim }
-        else { width = Math.round(width * maxDim / height); height = maxDim }
+        if (width > height) { height = Math.round(height * maxDim / width); width = maxDim; }
+        else { width = Math.round(width * maxDim / height); height = maxDim; }
       }
-      const canvas = document.createElement('canvas')
-      canvas.width = width; canvas.height = height
-      canvas.getContext('2d').drawImage(img, 0, 0, width, height)
-      const mime = supportsWebP() ? 'image/webp' : 'image/jpeg'
-      canvas.toBlob(blob => resolve(blob || file), mime, quality)
-    }
-    img.onerror = () => resolve(file)
-    reader.readAsDataURL(file)
-  })
+      const canvas = document.createElement('canvas');
+      canvas.width = width; canvas.height = height;
+      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+      const mime = supportsWebP() ? 'image/webp' : 'image/jpeg';
+      canvas.toBlob((blob) => resolve(blob || file), mime, quality);
+    };
+    img.onerror = () => resolve(file);
+    reader.readAsDataURL(file);
+  });
 }
 function imgExtFor(blob, file) {
-  if (blob.type === 'image/webp') return 'webp'
-  if (blob.type === 'image/jpeg') return 'jpg'
-  return (file.name.split('.').pop() || 'jpg')
+  if (blob.type === 'image/webp') return 'webp';
+  if (blob.type === 'image/jpeg') return 'jpg';
+  return (file.name.split('.').pop() || 'jpg');
 }
 async function uploadImg(file) {
-  const compressed = await compressImage(file, 1000, 0.8)
-  const ext  = imgExtFor(compressed, file)
+  const compressed = await compressImage(file, 1000, 0.8);
+  const ext = imgExtFor(compressed, file);
   const path = `comments/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`
   const { error } = await sb.storage.from('comment-images').upload(path, compressed, { contentType: compressed.type || file.type, cacheControl: '31536000' })
   if (error) { console.error('uploadImg error:', error); return null }
   return sb.storage.from('comment-images').getPublicUrl(path).data.publicUrl
 }
 async function submitSheetComment() {
-  if (!activePid || activePid === '__all__') return
-  if (!chCurrentUser) { alert('Vui lòng đăng nhập để bình luận!'); return }
-  const content  = document.getElementById('sheet-cmt-input').value.trim()
+  if (!activePid) return
+  if (!chCurrentUser) { alert('Vui lòng đăng nhập để bình luận!'); return; }
+  const content = document.getElementById('sheet-cmt-input').value.trim()
   const username = chUserProfile?.display_name || chCurrentUser.email.split('@')[0]
   if (!content && !selectedImgFile) return alert('Nhập nội dung hoặc chọn ảnh nhé!')
-  const btn = document.getElementById('sheet-send-btn'); btn.disabled = true
+  const btn = document.getElementById('sheet-send-btn')
+  btn.disabled = true
   let image_url = null
-  if (selectedImgFile) { image_url = await uploadImg(selectedImgFile); if (!image_url) { alert('Upload ảnh thất bại'); btn.disabled = false; return } }
+  if (selectedImgFile) {
+    image_url = await uploadImg(selectedImgFile)
+    if (!image_url) { alert('Upload ảnh thất bại'); btn.disabled = false; return }
+  }
   const { error } = await sb.from('comments').insert({
     story_id: STORY_ID, chapter_id: _currentUUID,
     paragraph_id: activePid, username, user_id: chCurrentUser.id, content, image_url,
+
+    parent_id: activeParentId || null,
+    reply_to_user_id: activeReplyUserId || null,
   })
+  activeReplyUserId = null; activeParentId = null;
   btn.disabled = false
   if (error) { alert('Gửi thất bại: ' + error.message); return }
   document.getElementById('sheet-cmt-input').value = ''
@@ -1644,7 +1300,6 @@ async function submitSheetComment() {
   loadAllCounts()
 }
 
-/* ── Emoji picker ─────────────────────────────────────────── */
 const EMOJIS = {
   'Cảm xúc': ['😍','😭','😂','🥺','😱','🤩','😢','😆','🥰','🫠','😳','🤭','😬','😤','🙈'],
   'Truyện':  ['📖','✨','💔','❤️','🔥','⚡','🌸','🌙','💫','🎭','🗡️','👑','🏹','🪄','🌊'],
@@ -1668,39 +1323,56 @@ function insertSheetEmoji(emoji) {
   inp.focus()
 }
 
-/* ── Lightbox ─────────────────────────────────────────────── */
-function openLightbox(src) { document.getElementById('lightbox-img').src = src; document.getElementById('lightbox').classList.add('open') }
+function openLightbox(src) {
+  document.getElementById('lightbox-img').src = src
+  document.getElementById('lightbox').classList.add('open')
+}
 function closeLightbox() { document.getElementById('lightbox').classList.remove('open') }
 
-/* ═══════════════════════════════════════════════════════
-   USER / AUTH
-═══════════════════════════════════════════════════════ */
-let chCurrentUser = null, chUserProfile = null
+let chCurrentUser = null
+let chUserProfile = null
 
 async function initChapterUser() {
   const { data: { session } } = await sb.auth.getSession()
   chCurrentUser = session?.user || null
   if (!chCurrentUser) return
-  const { data: prof } = await sb.from('profiles').select('display_name, avatar_url').eq('id', chCurrentUser.id).maybeSingle()
+  const { data: prof } = await sb.from('profiles')
+    .select('display_name, avatar_url').eq('id', chCurrentUser.id).maybeSingle()
   chUserProfile = prof
+  // username hiện từ profile, không cần nameRow nữa
 }
 
-/* ═══════════════════════════════════════════════════════
-   SEO META
-═══════════════════════════════════════════════════════ */
 function setChapterMeta(ch, storyTitle, storyCover) {
-  const canonicalUrl = 'https://peachluku.com/chapter.html?story=' + encodeURIComponent(STORY_ID) + '&chapter=' + encodeURIComponent(ch.id)
-  const chTitle   = 'Chương ' + ch.chapter_number + (ch.title ? ' — ' + ch.title : '')
+  const canonicalUrl = 'https://peachluku.com/chapter.html?story='
+    + encodeURIComponent(STORY_ID)
+    + '&chapter='
+    + encodeURIComponent(ch.id)
+
+  const chTitle  = 'Chương ' + ch.chapter_number + (ch.title ? ' — ' + ch.title : '')
   const pageTitle = chTitle + ' · ' + (storyTitle || 'Peach Luku')
-  const tmp = document.createElement('div'); tmp.innerHTML = ch.content || ''
-  const desc = (tmp.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 160) || 'Đọc truyện online tại Peach Luku'
+
+  // Description từ nội dung chương (không expose toàn bộ)
+  const tmp = document.createElement('div')
+  tmp.innerHTML = ch.content || ''
+  const desc = (tmp.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 160)
+    || 'Đọc truyện online tại Peach Luku'
+
   document.title = pageTitle
+
   if (window.PlSEO) {
-    PlSEO.updateMeta({ title: pageTitle.replace(' — Peach Luku','').replace(' · Peach Luku',''), description: desc, image: storyCover || undefined, url: canonicalUrl, type: 'article' })
+    PlSEO.updateMeta({
+      title: pageTitle.replace(' — Peach Luku', '').replace(' · Peach Luku', ''),
+      description: desc,
+      image: storyCover || undefined,
+      url: canonicalUrl,
+      type: 'article',
+    })
     PlSEO.injectChapterJsonLd(ch, storyTitle, storyCover, STORY_ID)
   } else {
-    _setMeta('description', desc); _setMeta('og:title', pageTitle); _setMeta('og:description', desc)
-    _setMeta('og:url', canonicalUrl); _setMeta('twitter:title', pageTitle); _setMeta('twitter:description', desc)
+    _setMeta('description', desc)
+    _setMeta('og:title', pageTitle); _setMeta('og:description', desc)
+    _setMeta('og:url', canonicalUrl)
+    _setMeta('twitter:title', pageTitle); _setMeta('twitter:description', desc)
   }
 }
 function _setMeta(k, v) {
@@ -1708,93 +1380,35 @@ function _setMeta(k, v) {
   if (el) el.setAttribute('content', v)
 }
 
-/* ═══════════════════════════════════════════════════════
-   AUDIO PLAYER
-═══════════════════════════════════════════════════════ */
-const _audio = new Audio()
-let _audioPlaying = false
-const PLAY_ICON  = '<polygon points="5 3 19 12 5 21 5 3"/>'
-const PAUSE_ICON = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'
+buildSheetPicker()
+if (STORY_ID && params.get('chapter')) loadChapter()
 
-function initSettingsAudio(url) {
-  const audioStatBtn = document.getElementById('audio-stat-btn')
-  const floatingBar  = document.getElementById('floating-audio')
-  // Reset audio sạch khi chuyển chapter
-  _audio.pause(); _audio.src = ''; _audioPlaying = false; updateAudioPlayIcons(false)
-  if (!url) {
-    document.getElementById('audio-no-file').style.display = 'block'
-    document.getElementById('audio-player-ui').style.display = 'none'
-    if (audioStatBtn) audioStatBtn.style.display = 'none'
-    if (floatingBar)  floatingBar.classList.remove('show')
-    return
-  }
-  document.getElementById('audio-no-file').style.display = 'none'
-  document.getElementById('audio-player-ui').style.display = 'block'
-  if (audioStatBtn) audioStatBtn.style.display = 'flex'
-  const titleEl = document.getElementById('floating-audio-title')
-  if (titleEl) titleEl.textContent = '🎧 ' + (chapterData?.title || ('Chương ' + (chapterData?.chapter_number ?? '')))
-  if (floatingBar) floatingBar.classList.add('show')
-  _audio.src = url
-  _audio.ontimeupdate = () => {
-    const cur = _audio.currentTime, dur = _audio.duration || 0
-    const pct = dur ? (cur / dur * 100) : 0
-    const curTxt = fmtTime(cur), durTxt = fmtTime(dur)
-    const seek = document.getElementById('audio-seek'); if (seek) { seek.value = pct; seek.max = 100 }
-    const fSeek = document.getElementById('floating-audio-seek'); if (fSeek) { fSeek.value = pct; fSeek.max = 100 }
-    const cEl = document.getElementById('audio-cur');         if (cEl) cEl.textContent = curTxt
-    const dEl = document.getElementById('audio-dur');         if (dEl) dEl.textContent = durTxt
-    const fcEl = document.getElementById('floating-audio-cur'); if (fcEl) fcEl.textContent = curTxt
-    const fdEl = document.getElementById('floating-audio-dur'); if (fdEl) fdEl.textContent = durTxt
-  }
-  _audio.onended = () => {
-    _audioPlaying = false; updateAudioPlayIcons(false)
-    // Dùng ScrollNav để chuyển chapter tiếp — không reload
-    const btnNext = document.getElementById('btn-next')
-    const uuid = btnNext?.dataset?.uuid
-    if (uuid) setTimeout(() => ScrollNav.navigateTo(uuid, 'next'), 1200)
-  }
-}
-function fmtTime(s) {
-  if (!s || isNaN(s)) return '0:00'
-  const m = Math.floor(s/60), sec = Math.floor(s%60)
-  return `${m}:${sec.toString().padStart(2,'0')}`
-}
-function updateAudioPlayIcons(playing) {
-  const icon = playing ? PAUSE_ICON : PLAY_ICON
-  const a = document.getElementById('audio-play-icon');         if (a) a.innerHTML = icon
-  const f = document.getElementById('floating-audio-play-icon'); if (f) f.innerHTML = icon
-}
-function toggleAudioPlay() {
-  if (!_audio.src) return
-  if (_audioPlaying) { _audio.pause(); _audioPlaying = false }
-  else               { _audio.play();  _audioPlaying = true  }
-  updateAudioPlayIcons(_audioPlaying)
-}
-function seekAudio(val) { if (_audio.duration) _audio.currentTime = val / 100 * _audio.duration }
-function setAudioSpeed(speed, btn) {
-  _audio.playbackRate = speed
-  document.querySelectorAll('.audio-speed-btn').forEach(b => b.classList.remove('active'))
-  btn.classList.add('active')
-}
-
-/* ═══════════════════════════════════════════════════════
-   NAV AVATAR
-═══════════════════════════════════════════════════════ */
+/* ── FIX: loadNavAvatar với ảnh constrained ── */
 async function loadNavAvatar() {
   const { data: { session } } = await sb.auth.getSession()
-  const btn = document.getElementById('nav-user-btn'); if (!btn) return
+  const btn = document.getElementById('nav-user-btn')
+  if (!btn) return
   if (!session) {
     btn.href = 'auth.html?next=' + encodeURIComponent(location.pathname + location.search)
     btn.title = 'Đăng nhập'; return
   }
   btn.href = 'profile.html'; btn.title = 'Hồ sơ của tôi'
+  // Kiểm tra có phải chủ truyện không
   if (STORY_ID) {
     const { data: story } = await sb.from('stories').select('user_id').eq('id', STORY_ID).maybeSingle()
+    const writeBtn = document.getElementById('write-story-btn')
     if (story && story.user_id === session.user.id) {
-      const ownerBtn = document.getElementById('ownerMenuBtn'); if (ownerBtn) ownerBtn.style.display = 'flex'
-      const { data: chData } = await sb.from('chapters').select('is_published').eq('id', CHAPTER_UUID).maybeSingle()
-      const publishBtn = document.getElementById('publish-toggle-btn')
-      if (publishBtn && chData?.is_published) publishBtn.innerHTML = publishBtn.innerHTML.replace('Đăng chương', 'Gỡ xuống')
+      // Hiện nút 3 chấm cho chủ truyện
+      const ownerBtn = document.getElementById('ownerMenuBtn');
+      if (ownerBtn) ownerBtn.style.display = 'flex';
+      // Cập nhật trạng thái nút đăng/gỡ theo is_published
+      const { data: chData } = await sb.from('chapters').select('is_published').eq('id', CHAPTER_UUID).maybeSingle();
+      const publishBtn = document.getElementById('publish-toggle-btn');
+      if (publishBtn && chData) {
+        if (chData.is_published) {
+          publishBtn.innerHTML = publishBtn.innerHTML.replace('Đăng chương', 'Gỡ xuống');
+        }
+      }
     }
   }
   const { data: prof } = await sb.from('profiles').select('display_name, avatar_url').eq('id', session.user.id).maybeSingle()
@@ -1804,101 +1418,157 @@ async function loadNavAvatar() {
     btn.textContent = (prof?.display_name || session.user.email || 'U')[0].toUpperCase()
   }
 }
+loadNavAvatar()
 
-/* ═══════════════════════════════════════════════════════
-   OWNER MENU
-═══════════════════════════════════════════════════════ */
-function toggleOwnerMenu() {
-  const menu = document.getElementById('ownerMenu')
-  menu.style.display = menu.style.display === 'none' ? 'block' : 'none'
-}
-document.addEventListener('click', e => {
-  const wrap = document.getElementById('ownerMenuWrap')
-  if (wrap && !wrap.contains(e.target)) {
-    const m = document.getElementById('ownerMenu'); if (m) m.style.display = 'none'
-  }
-})
-function goToWrite() { location.href = 'write.html?story=' + STORY_ID }
-async function togglePublish() {
-  if (!CHAPTER_UUID) return
-  const { data } = await sb.from('chapters').select('is_published, title').eq('id', CHAPTER_UUID).single()
-  if (!data) return
-  const newState = !data.is_published
-  if (!confirm(`Bạn muốn ${newState ? 'đăng' : 'gỡ xuống'} chương này?`)) return
-  await sb.from('chapters').update({ is_published: newState }).eq('id', CHAPTER_UUID)
-  const btn = document.getElementById('publish-toggle-btn')
-  if (btn) btn.innerHTML = btn.innerHTML.replace(newState ? 'Đăng chương' : 'Gỡ xuống', newState ? 'Gỡ xuống' : 'Đăng chương')
-  document.getElementById('ownerMenu').style.display = 'none'
-  if (window.showToast) showToast(newState ? 'Đã đăng chương! 🎉' : 'Đã gỡ chương xuống')
-}
-async function deleteChapter() {
-  if (!CHAPTER_UUID) return
-  if (!confirm('Xóa chương này? Không thể hoàn tác!')) return
-  await sb.from('chapters').delete().eq('id', CHAPTER_UUID)
-  location.href = 'story.html?story=' + STORY_ID
-}
-
-/* ═══════════════════════════════════════════════════════
-   CONTENT PROTECTION (giữ nguyên gốc)
-═══════════════════════════════════════════════════════ */
 ;(function() {
-  'use strict'
-  const protectCSS = document.createElement('style')
+  'use strict';
+  const protectCSS = document.createElement('style');
   protectCSS.textContent = `
     .story-col, #paragraphs-container, .para-text,
     .chapter-heading, .chapter-meta {
-      -webkit-user-select: none !important; -moz-user-select: none !important;
-      -ms-user-select: none !important; user-select: none !important;
+      -webkit-user-select: none !important;
+      -moz-user-select: none !important;
+      -ms-user-select: none !important;
+      user-select: none !important;
       -webkit-touch-callout: none !important;
-    }
-    .cmt-sheet input, .cmt-sheet textarea, .cmt-sheet .sheet-input-bar,
-    .cmt-sheet .sheet-emoji-picker, .cmt-sheet .sheet-cmt-input,
-    #sheet-cmt-input, .sheet-text-inline {
-      -webkit-user-select: text !important; -moz-user-select: text !important;
-      -ms-user-select: text !important; user-select: text !important;
-      -webkit-touch-callout: default !important;
     }
     img:not(.cmt-img):not(#lightbox-img):not(.img-preview) { -webkit-user-drag: none !important; user-drag: none !important; pointer-events: none; }
     .cmt-img { cursor: pointer; }
     ::selection { background: transparent !important; }
     ::-moz-selection { background: transparent !important; }
-  `
-  document.head.appendChild(protectCSS)
-  document.addEventListener('contextmenu', e => { if (e.target.closest('.cmt-sheet')) return; e.preventDefault(); return false })
+  `;
+  document.head.appendChild(protectCSS);
+  document.addEventListener('contextmenu', e => { e.preventDefault(); return false; });
   document.addEventListener('keydown', e => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.closest('.cmt-sheet')) return
-    const key = e.key.toLowerCase(), ctrl = e.ctrlKey || e.metaKey
-    if (ctrl && ['c','x','a','s','p','u'].includes(key)) { e.preventDefault(); return false }
-    if (e.key === 'F12') { e.preventDefault(); return false }
-    if (ctrl && e.shiftKey && ['i','j','c','k'].includes(key)) { e.preventDefault(); return false }
-  })
-  document.addEventListener('copy', e => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.closest('.cmt-sheet')) return
-    e.preventDefault(); if (e.clipboardData) e.clipboardData.setData('text/plain', '© Peach Luku'); return false
-  })
-  document.addEventListener('cut', e => { if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.closest('.cmt-sheet')) return; e.preventDefault(); return false })
-  document.addEventListener('dragstart', e => { e.preventDefault(); return false })
+    const key = e.key.toLowerCase();
+    const ctrl = e.ctrlKey || e.metaKey;
+    if (ctrl && ['c','x','a','s','p','u'].includes(key)) { e.preventDefault(); return false; }
+    if (e.key === 'F12') { e.preventDefault(); return false; }
+    if (ctrl && e.shiftKey && ['i','j','c','k'].includes(key)) { e.preventDefault(); return false; }
+  });
+  document.addEventListener('copy', e => { e.preventDefault(); if (e.clipboardData) e.clipboardData.setData('text/plain', '© Peach Luku'); return false; });
+  document.addEventListener('cut', e => { e.preventDefault(); return false; });
+  document.addEventListener('dragstart', e => { e.preventDefault(); return false; });
   document.addEventListener('selectstart', e => {
-    const t = e.target
-    if (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.closest('.cmt-sheet-input') || t.closest('.sheet-input-bar') || t.closest('#sheet-cmt-input') || t.closest('.cmt-sheet') || t.id === 'sheet-cmt-input' || t.id === 'sheet-img-input' || t.closest('.img-preview-wrap') || t.closest('.sheet-img-btn') || t.closest('.sheet-emoji-btn') || t.closest('.sheet-send-inline') || t.closest('.cmt-trigger') || t.closest('.sheet-emoji-picker')) return true
-    e.preventDefault(); return false
-  })
+    const t = e.target;
+    if (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' 
+      || t.closest('.cmt-sheet-input') || t.closest('.sheet-input-bar') 
+      || t.closest('.sheet-name') || t.closest('#sheet-cmt-input')
+      || t.closest('.cmt-sheet') || t.id === 'sheet-cmt-input'
+      || t.id === 'sheet-img-input' || t.closest('.img-preview-wrap')
+      || t.closest('.sheet-img-btn') || t.closest('.sheet-emoji-btn')) return true;
+    e.preventDefault(); return false;
+  });
   function injectWatermark() {
-    if (document.getElementById('__pl_wm')) return
-    const wm = document.createElement('div'); wm.id = '__pl_wm'
-    wm.style.cssText = 'position:fixed;bottom:18px;right:18px;font-size:11px;color:var(--meta,#aaa);font-family:"Nunito",sans-serif;font-weight:700;pointer-events:none;z-index:9999;opacity:0.45;letter-spacing:.3px;'
-    wm.textContent = '© Peach Luku'; document.body.appendChild(wm)
+    if (document.getElementById('__pl_wm')) return;
+    const wm = document.createElement('div');
+    wm.id = '__pl_wm';
+    wm.style.cssText = 'position:fixed;bottom:18px;right:18px;font-size:11px;color:var(--meta,#aaa);font-family:"Nunito",sans-serif;font-weight:700;pointer-events:none;z-index:9999;opacity:0.45;letter-spacing:.3px;';
+    wm.textContent = '© Peach Luku';
+    document.body.appendChild(wm);
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', injectWatermark)
-  else injectWatermark()
-})()
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', injectWatermark);
+  else injectWatermark();
+})();
 
-/* ═══════════════════════════════════════════════════════
-   BOOT
-═══════════════════════════════════════════════════════ */
-buildSheetPicker()
-loadNavAvatar()
-if (STORY_ID && params.get('chapter')) loadChapter()
+/* ── OWNER MENU ── */
+function toggleOwnerMenu() {
+  const menu = document.getElementById('ownerMenu');
+  menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+}
+document.addEventListener('click', e => {
+  const wrap = document.getElementById('ownerMenuWrap');
+  if (wrap && !wrap.contains(e.target)) {
+    const m = document.getElementById('ownerMenu');
+    if (m) m.style.display = 'none';
+  }
+});
+function goToWrite() {
+  location.href = 'write.html?story=' + STORY_ID;
+}
+async function togglePublish() {
+  if (!CHAPTER_UUID) return;
+  const { data } = await sb.from('chapters').select('is_published, title').eq('id', CHAPTER_UUID).single();
+  if (!data) return;
+  const newState = !data.is_published;
+  const label = newState ? 'đăng' : 'gỡ xuống';
+  if (!confirm(`Bạn muốn ${label} chương này?`)) return;
+  await sb.from('chapters').update({ is_published: newState }).eq('id', CHAPTER_UUID);
+  const btn = document.getElementById('publish-toggle-btn');
+  if (btn) {
+    btn.querySelector('svg').style.stroke = newState ? '#1fba52' : 'currentColor';
+    btn.innerHTML = btn.innerHTML.replace(
+      newState ? 'Đăng chương' : 'Gỡ xuống',
+      newState ? 'Gỡ xuống' : 'Đăng chương'
+    );
+  }
+  document.getElementById('ownerMenu').style.display = 'none';
+  const action = newState ? 'Đã đăng chương! 🎉' : 'Đã gỡ chương xuống';
+  if (window.showToast) showToast(action);
+}
+async function deleteChapter() {
+  if (!CHAPTER_UUID) return;
+  if (!confirm('Xóa chương này? Không thể hoàn tác!')) return;
+  await sb.from('chapters').delete().eq('id', CHAPTER_UUID);
+  location.href = 'story.html?story=' + STORY_ID;
+}
+
+
+/* ── AUDIO PLAYER (settings) ── */
+const _audio = new Audio();
+let _audioPlaying = false;
+
+function initSettingsAudio(url) {
+  if (!url) {
+    document.getElementById('audio-no-file').style.display = 'block';
+    document.getElementById('audio-player-ui').style.display = 'none';
+    return;
+  }
+  document.getElementById('audio-no-file').style.display = 'none';
+  document.getElementById('audio-player-ui').style.display = 'block';
+  _audio.src = url;
+  _audio.ontimeupdate = () => {
+    const cur = _audio.currentTime, dur = _audio.duration || 0;
+    document.getElementById('audio-seek').value = dur ? (cur / dur * 100) : 0;
+    document.getElementById('audio-seek').max = 100;
+    document.getElementById('audio-cur').textContent = fmtTime(cur);
+    document.getElementById('audio-dur').textContent = fmtTime(dur);
+  };
+  _audio.onended = () => {
+    _audioPlaying = false;
+    document.getElementById('audio-play-icon').innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
+    // Tự động chuyển chương tiếp theo sau khi nghe xong
+    const btnNext = document.getElementById('btn-next');
+    if (btnNext && !btnNext.classList.contains('disabled') && btnNext.href) {
+      setTimeout(() => { location.href = btnNext.href; }, 1200);
+    }
+  };
+}
+function fmtTime(s) {
+  if (!s || isNaN(s)) return '0:00';
+  const m = Math.floor(s/60), sec = Math.floor(s%60);
+  return `${m}:${sec.toString().padStart(2,'0')}`;
+}
+function toggleAudioPlay() {
+  if (!_audio.src) return;
+  if (_audioPlaying) {
+    _audio.pause(); _audioPlaying = false;
+    document.getElementById('audio-play-icon').innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
+  } else {
+    _audio.play(); _audioPlaying = true;
+    document.getElementById('audio-play-icon').innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+  }
+}
+function seekAudio(val) {
+  if (_audio.duration) _audio.currentTime = val / 100 * _audio.duration;
+}
+function setAudioSpeed(speed, btn) {
+  _audio.playbackRate = speed;
+  document.querySelectorAll('.audio-speed-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+
 </script>
 </body>
 </html>
