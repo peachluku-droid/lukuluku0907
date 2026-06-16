@@ -119,13 +119,13 @@ body {
 .chapter-meta { font-size: 13px; color: var(--meta); margin-bottom: 36px; text-align: center; }
 
 .para-wrap {
-  display: block; margin-bottom: 1px; border-radius: 8px;
-  padding: 1px 6px; transition: background .2s;
-  /* overflow: hidden xóa vì clip float */
+  display: flex; align-items: flex-start; gap: 6px;
+  margin-bottom: 4px; border-radius: 8px;
+  padding: 3px 6px; transition: background .2s;
 }
 .para-wrap.highlighted { background: color-mix(in srgb, var(--accent) 8%, transparent); }
 .para-text {
-  display: block;
+  flex: 1; min-width: 0;
   font-weight: var(--font-weight, 400);
   font-style: var(--font-style, normal);
   line-height: 1.4;
@@ -144,8 +144,9 @@ body {
 .para-text br { display: block; }
 
 .cmt-trigger {
-  float: right;
-  clear: right;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 2px;
   display: flex; align-items: center; gap: 3px;
   white-space: nowrap;
   background: var(--bg2);
@@ -155,7 +156,6 @@ body {
   color: var(--text-muted);
   cursor: pointer; transition: all .15s; line-height: 1.4;
   font-family: 'Nunito', sans-serif; opacity: 0.55;
-  margin-left: 8px; margin-top: 2px; margin-bottom: 2px;
 }
 .cmt-trigger svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .cmt-trigger:hover { opacity: 1; background: color-mix(in srgb, var(--accent) 15%, var(--bg2)); border-color: var(--accent2); color: var(--accent); }
@@ -186,7 +186,7 @@ body {
 .nav-btn.disabled { opacity: 0.4; pointer-events: none; }
 .nav-chapter-title { font-size: 13px; color: var(--meta); text-align: center; flex: 1; }
 
-.end-section { margin-top: 48px; display: flex; flex-direction: column; gap: 20px; }
+.end-section { margin-top: 28px; padding-top: 4px; display: flex; flex-direction: column; gap: 20px; }
 .chapter-stats-end {
   display: flex; justify-content: center; align-items: center;
   gap: 0; font-size: 13px; color: var(--meta); flex-wrap: wrap;
@@ -201,11 +201,6 @@ body {
 .chapter-stats-end .stat-btn:hover { background: var(--bg2); color: var(--accent); }
 .chapter-stats-end .stat-btn.voted { color: var(--accent); font-weight: 700; }
 .chapter-stats-end .stat-btn.voted svg { stroke: var(--accent); fill: var(--accent); }
-
-.audio-section { padding: 16px 0; }
-.audio-section h3 { font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
-.audio-section h3 svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.audio-section audio { width: 100%; accent-color: var(--accent); }
 
 .toc-inline-section { display: none; }
 .toc-inline-head {
@@ -224,29 +219,6 @@ body {
 .toc-inline-item:hover { background: var(--sidebar); }
 .toc-inline-item.active { color: var(--accent); font-weight: 700; border-left: 3px solid var(--accent); }
 .toc-empty { padding: 14px 16px; font-size: 13px; color: var(--meta); }
-
-.cmt-overview-section { border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: var(--bg2); }
-.cmt-overview-head {
-  padding: 10px 16px; font-size: 13px; font-weight: 700; color: var(--accent);
-  border-bottom: 1px solid var(--border); background: var(--sidebar);
-  display: flex; align-items: center; gap: 6px; font-family: 'Nunito', sans-serif;
-}
-.cmt-overview-head svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.cmt-overview-list { display: flex; flex-direction: column; }
-.cmt-overview-row {
-  display: flex; align-items: center; gap: 10px; padding: 10px 16px;
-  border-bottom: 1px solid var(--border); cursor: pointer; transition: background .15s;
-}
-.cmt-overview-row:last-child { border-bottom: none; }
-.cmt-overview-row:hover { background: var(--sidebar); }
-.cmt-overview-num { font-size: 10px; color: var(--meta); font-weight: 700; width: 22px; flex-shrink: 0; font-family: 'Nunito', sans-serif; opacity: 0.7; }
-.cmt-overview-excerpt { flex: 1; font-size: 13px; color: var(--text); line-height: 1.45; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; min-width: 0; }
-.cmt-overview-badge {
-  flex-shrink: 0; display: flex; align-items: center; gap: 3px;
-  color: var(--meta); font-size: 11px; font-family: 'Nunito', sans-serif; opacity: 0.8;
-}
-.cmt-overview-badge svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.cmt-overview-badge.has-cmt { color: var(--accent); font-weight: 700; opacity: 1; }
 
 .settings-drawer {
   position: fixed; top: 49px; left: 0; right: 0; background: var(--panel);
@@ -305,14 +277,21 @@ body {
 .cmt-sheet-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 299; }
 .cmt-sheet-overlay.open { display: block; }
 .cmt-sheet {
-  position: fixed; bottom: 0; left: 0; right: 0; background: var(--panel);
-  border-top: 1.5px solid var(--border); border-radius: 20px 20px 0 0;
-  box-shadow: 0 -4px 30px rgba(0,0,0,0.12); z-index: 300;
-  display: flex; flex-direction: column; max-height: 75vh;
-  transform: translateY(100%); transition: transform .3s cubic-bezier(.32,1,.4,1);
+  position: fixed; inset: 0; background: var(--panel);
+  border: none; border-radius: 0;
+  box-shadow: none; z-index: 300;
+  display: flex; flex-direction: column; height: 100%; height: 100dvh; max-height: none;
+  transform: translateY(100%); transition: transform .32s cubic-bezier(.32,1,.4,1);
+}
+@media (min-width: 769px) {
+  .cmt-sheet {
+    max-width: 680px; left: 50%; transform: translateX(-50%) translateY(100%);
+    right: auto; width: 100%;
+  }
+  .cmt-sheet.open { transform: translateX(-50%) translateY(0); }
 }
 .cmt-sheet.open { transform: translateY(0); }
-.cmt-sheet-handle { width: 40px; height: 4px; background: var(--border); border-radius: 4px; margin: 12px auto 0; flex-shrink: 0; }
+.cmt-sheet-handle { width: 40px; height: 4px; background: var(--border); border-radius: 4px; margin: 10px auto 0; flex-shrink: 0; }
 .cmt-sheet-header {
   display: flex; align-items: center; justify-content: space-between;
   padding: 10px 16px; flex-shrink: 0; border-bottom: 1px solid var(--border);
@@ -344,6 +323,13 @@ body {
 .cmt-img { margin-top: 8px; max-width: 100%; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; display: block; }
 .cmt-footer { display: flex; align-items: center; gap: 12px; margin-top: 5px; }
 .cmt-time { font-size: 11px; color: var(--meta); font-family: 'Nunito', sans-serif; }
+.cmt-pid-tag {
+  font-size: 11px; font-weight: 700; color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--bg2));
+  border: none; border-radius: 8px; padding: 2px 8px; cursor: pointer;
+  font-family: 'Nunito', sans-serif; transition: all .15s;
+}
+.cmt-pid-tag:hover { background: color-mix(in srgb, var(--accent) 22%, var(--bg2)); }
 .cmt-reply-btn { font-size: 12px; font-weight: 700; color: var(--accent); background: none; border: none; cursor: pointer; padding: 0; font-family: 'Nunito', sans-serif; }
 .cmt-like-btn {
   margin-left: auto; background: none; border: none; cursor: pointer;
@@ -429,6 +415,44 @@ body {
   color: var(--text); cursor: pointer; transition: all .12s;
 }
 .audio-speed-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+/* ── FLOATING AUDIO BAR ── */
+.floating-audio {
+  position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%) translateY(24px);
+  width: calc(100% - 24px); max-width: 460px;
+  background: var(--panel); border: 1.5px solid var(--border);
+  border-radius: 16px; box-shadow: 0 6px 24px rgba(0,0,0,.16);
+  padding: 8px 10px; display: flex; align-items: center; gap: 10px;
+  z-index: 250; opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity .25s ease, transform .25s ease;
+}
+.floating-audio.show { opacity: 1; visibility: visible; pointer-events: auto; transform: translateX(-50%) translateY(0); }
+.floating-audio .audio-play-btn { width: 36px; height: 36px; flex-shrink: 0; }
+.floating-audio .audio-play-btn svg { width: 14px; height: 14px; }
+.floating-audio-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.floating-audio-title { font-size: 11px; font-weight: 800; color: var(--meta); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.floating-audio .audio-progress-wrap { gap: 3px; }
+.floating-audio-close {
+  background: none; border: none; cursor: pointer; color: var(--meta);
+  padding: 5px; display: flex; align-items: center; border-radius: 8px; flex-shrink: 0; transition: background .15s, color .15s;
+}
+.floating-audio-close:hover { background: var(--sidebar); color: var(--text); }
+.floating-audio-close svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; }
+
+/* ── SWIPE CHAPTER TRANSITION ── */
+.story-col { will-change: transform, opacity; }
+.chapter-swipe-hint {
+  position: fixed; left: 50%; transform: translateX(-50%) scale(.9);
+  background: var(--accent); color: #fff; font-size: 12px; font-weight: 800;
+  padding: 7px 16px; border-radius: 20px; font-family: 'Nunito', sans-serif;
+  opacity: 0; pointer-events: none; z-index: 280; white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(0,0,0,.18);
+  transition: opacity .15s ease, transform .15s ease, background .15s ease;
+}
+.chapter-swipe-hint.top { top: 14px; }
+.chapter-swipe-hint.bottom { bottom: 88px; }
+.chapter-swipe-hint.visible { opacity: .9; transform: translateX(-50%) scale(1); }
+.chapter-swipe-hint.ready { opacity: 1; background: var(--accent2); }
 
 </style>
 </head>
@@ -568,7 +592,7 @@ body {
     <div class="chapter-stats">
       <span><svg class="ic" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span id="view-count">0</span> lượt đọc</span>
       <span><svg class="ic" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span id="vote-count">0</span> vote</span>
-      <span><svg class="ic" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span id="total-cmt-count-top">0</span> bình luận</span>
+      <span style="cursor:pointer" onclick="openAllCmtSheet()"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span id="total-cmt-count-top">0</span> bình luận</span>
     </div>
 
     <div id="paragraphs-container">
@@ -581,7 +605,7 @@ body {
 
     <div class="end-section">
       <div class="chapter-stats-end">
-        <button class="stat-btn" onclick="toggleAudioSection()">
+        <button class="stat-btn" id="audio-stat-btn" onclick="toggleFloatingAudio()" style="display:none">
           <svg viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z"/><path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
           Audio
         </button>
@@ -589,28 +613,10 @@ body {
           <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
           <span id="vote-count-end">0</span> vote
         </button>
-        <button class="stat-btn" onclick="toggleCmtOverview()">
+        <button class="stat-btn" onclick="openAllCmtSheet()">
           <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           <span id="total-cmt-end">0</span> bình luận
         </button>
-      </div>
-
-      <div class="audio-section" id="audio-section-end" style="display:none">
-        <h3><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg> Nghe truyện</h3>
-        <audio id="chapter-audio" controls>
-          <source id="audio-src" src="" type="audio/mpeg">
-          Trình duyệt không hỗ trợ audio.
-        </audio>
-      </div>
-
-      <div class="cmt-overview-section" id="cmt-overview-end" style="display:none">
-        <div class="cmt-overview-head">
-          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          Bình luận chương
-        </div>
-        <div class="cmt-overview-list" id="cmt-overview-list">
-          <p class="toc-empty">Đang tải...</p>
-        </div>
       </div>
 
       <div class="toc-inline-section">
@@ -653,7 +659,7 @@ body {
   <div class="cmt-sheet-list" id="sheet-cmt-list">
     <p class="empty-msg">Đang tải...</p>
   </div>
-  <div class="cmt-sheet-input">
+  <div class="cmt-sheet-input" id="cmt-sheet-input-bar">
     <div class="sheet-emoji-row">
       <button class="sheet-emoji-btn" onclick="toggleSheetPicker()">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
@@ -681,6 +687,29 @@ body {
   </button>
   <img id="lightbox-img" src="" alt="">
 </div>
+
+<!-- Thanh nghe audio nổi, hiện khi chương có file audio -->
+<div class="floating-audio" id="floating-audio">
+  <button class="audio-play-btn" id="floating-audio-play-btn" onclick="toggleAudioPlay()">
+    <svg id="floating-audio-play-icon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+  </button>
+  <div class="floating-audio-body">
+    <div class="floating-audio-title" id="floating-audio-title">🎧 Nghe chương</div>
+    <div class="audio-progress-wrap">
+      <input class="audio-progress" id="floating-audio-seek" type="range" value="0" min="0" step="0.1" oninput="seekAudio(this.value)">
+      <div class="audio-time">
+        <span id="floating-audio-cur">0:00</span>
+        <span id="floating-audio-dur">0:00</span>
+      </div>
+    </div>
+  </div>
+  <button class="floating-audio-close" onclick="hideFloatingAudio()" title="Ẩn thanh nghe">
+    <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+</div>
+
+<!-- Gợi ý khi lướt để chuyển chương -->
+<div class="chapter-swipe-hint" id="swipe-hint"></div>
 
 <script>
 const SUPABASE_URL = 'https://jnlqzqtavfptkfvnndxq.supabase.co'
@@ -786,17 +815,19 @@ document.addEventListener('click', e => {
   if (drawer.classList.contains('open') && !drawer.contains(e.target) && !e.target.closest('[onclick="toggleSettings()"]'))
     drawer.classList.remove('open')
 })
-function toggleAudioSection() {
-  const el = document.getElementById('audio-section-end')
-  const vis = el.style.display !== 'none'
-  el.style.display = vis ? 'none' : 'block'
-  if (!vis) el.scrollIntoView({ behavior:'smooth', block:'nearest' })
+function toggleFloatingAudio() {
+  const bar = document.getElementById('floating-audio')
+  if (!chapterData?.audio_url) return
+  if (!bar.classList.contains('show')) bar.classList.add('show')
+  toggleAudioPlay()
 }
-function toggleCmtOverview() {
-  const el = document.getElementById('cmt-overview-end')
-  const vis = el.style.display !== 'none'
-  el.style.display = vis ? 'none' : 'block'
-  if (!vis) { renderCmtOverview(); el.scrollIntoView({ behavior:'smooth', block:'nearest' }) }
+function hideFloatingAudio() {
+  const bar = document.getElementById('floating-audio')
+  bar.classList.remove('show')
+  if (_audioPlaying) {
+    _audio.pause(); _audioPlaying = false
+    updateAudioPlayIcons(false)
+  }
 }
 
 function stripHtml(html) {
@@ -872,10 +903,6 @@ async function loadChapter() {
   document.getElementById('chapter-heading').textContent = ch.title || `Chương ${ch.chapter_number}`
   document.getElementById('chapter-meta').textContent =
     (ch.author_name || '') + (ch.created_at ? ' · Cập nhật ' + new Date(ch.created_at).toLocaleDateString('vi-VN') : '')
-  if (ch.audio_url) {
-    document.getElementById('audio-src').src = ch.audio_url
-    document.getElementById('chapter-audio').load()
-  }
   initSettingsAudio(ch.audio_url || null)
   renderParagraphs(ch.content || '')
   await initChapterUser()
@@ -935,7 +962,6 @@ function renderParagraphs(content) {
     <div class="para-wrap" data-pid="${pid}">
       <div class="para-text">${rendered}</div>
       <button class="cmt-trigger" data-pid="${pid}">${CMT_ICON}<span class="cnt">0</span></button>
-      <div style="clear:both"></div>
     </div>`
   }).join('')
   document.querySelectorAll('.cmt-trigger').forEach(btn => {
@@ -951,34 +977,103 @@ function renderParagraphs(content) {
   })
 }
 
-// Tiêu đề chương xuống dòng bình thường khi đủ chữ một dòng
-
-// Lướt lên/xuống ở đầu/cuối trang để chuyển chương trước/sau
+// Lướt ở đầu/cuối trang để chuyển chương trước/sau, có hiệu ứng kéo theo tay + chuyển mượt
 ;(function setupSwipeChapterNav() {
+  const SWIPE_THRESHOLD = 70
+  const SWIPE_MAX_DRAG = 90
   let touchStartY = null
+  let dragDir = null
+  let atEdge = { top: false, bottom: false }
+
+  function isOverlayOpen() {
+    return document.getElementById('cmt-sheet')?.classList.contains('open')
+      || document.getElementById('lightbox')?.classList.contains('open')
+      || document.getElementById('settings-drawer')?.classList.contains('open')
+  }
+  function storyCol() { return document.querySelector('.story-col') }
+  function hintEl() { return document.getElementById('swipe-hint') }
+  function resetStoryCol(animated) {
+    const el = storyCol()
+    if (!el) return
+    el.style.transition = animated ? 'transform .28s cubic-bezier(.34,1.56,.64,1)' : 'none'
+    el.style.transform = ''
+  }
+  function resetHint() {
+    const h = hintEl()
+    if (h) h.className = 'chapter-swipe-hint'
+  }
+
   document.addEventListener('touchstart', (e) => {
+    if (isOverlayOpen()) { touchStartY = null; return }
     touchStartY = e.touches[0].clientY
+    const scrollEl = document.scrollingElement || document.documentElement
+    atEdge.top    = scrollEl.scrollTop <= 2
+    atEdge.bottom = scrollEl.scrollTop + scrollEl.clientHeight >= scrollEl.scrollHeight - 2
+    dragDir = null
   }, { passive: true })
+
+  document.addEventListener('touchmove', (e) => {
+    if (touchStartY === null) return
+    const el = storyCol()
+    if (!el) return
+    const deltaY = e.touches[0].clientY - touchStartY
+    const btnPrev = document.getElementById('btn-prev')
+    const btnNext = document.getElementById('btn-next')
+    let dir = null, dist = 0
+    if (deltaY > 0 && atEdge.top && btnPrev && !btnPrev.classList.contains('disabled')) {
+      dir = 'prev'; dist = Math.min(deltaY * 0.45, SWIPE_MAX_DRAG)
+    } else if (deltaY < 0 && atEdge.bottom && btnNext && !btnNext.classList.contains('disabled')) {
+      dir = 'next'; dist = Math.max(deltaY * 0.45, -SWIPE_MAX_DRAG)
+    } else {
+      if (dragDir) { resetStoryCol(true); resetHint(); dragDir = null }
+      return
+    }
+    dragDir = dir
+    el.style.transition = 'none'
+    el.style.transform = `translateY(${dist}px)`
+    const h = hintEl()
+    if (h) {
+      const ready = Math.abs(dist) >= Math.min(SWIPE_MAX_DRAG, SWIPE_THRESHOLD)
+      h.textContent = dir === 'prev' ? '↓ Thả để xem chương trước' : '↑ Thả để xem chương sau'
+      h.className = 'chapter-swipe-hint ' + (dir === 'prev' ? 'top' : 'bottom') + ' visible' + (ready ? ' ready' : '')
+    }
+  }, { passive: true })
+
   document.addEventListener('touchend', (e) => {
     if (touchStartY === null) return
     const deltaY = e.changedTouches[0].clientY - touchStartY
     touchStartY = null
-    const threshold = 70
-    const scrollEl = document.scrollingElement || document.documentElement
-    const atTop = scrollEl.scrollTop <= 2
-    const atBottom = scrollEl.scrollTop + scrollEl.clientHeight >= scrollEl.scrollHeight - 2
     const btnPrev = document.getElementById('btn-prev')
     const btnNext = document.getElementById('btn-next')
-    // Lướt xuống (kéo tay xuống) khi đang ở đầu trang -> chương trước
-    if (deltaY > threshold && atTop && btnPrev && !btnPrev.classList.contains('disabled')) {
-      location.href = btnPrev.href
+
+    if (dragDir === 'prev' && deltaY > SWIPE_THRESHOLD && btnPrev?.href) {
+      goToChapter(btnPrev.href, 'prev')
+    } else if (dragDir === 'next' && deltaY < -SWIPE_THRESHOLD && btnNext?.href) {
+      goToChapter(btnNext.href, 'next')
+    } else {
+      resetStoryCol(true)
+      resetHint()
     }
-    // Lướt lên (kéo tay lên) khi đang ở cuối trang -> chương sau
-    else if (deltaY < -threshold && atBottom && btnNext && !btnNext.classList.contains('disabled')) {
-      location.href = btnNext.href
-    }
+    dragDir = null
   }, { passive: true })
 })()
+
+// Chuyển chương với hiệu ứng trượt mượt thay vì load trang đột ngột
+function goToChapter(url, dir) {
+  if (!url || url === '#') return
+  const el = document.querySelector('.story-col')
+  const h = document.getElementById('swipe-hint')
+  if (h) {
+    h.textContent = 'Đang chuyển chương…'
+    h.className = 'chapter-swipe-hint visible ready ' + (dir === 'next' ? 'bottom' : 'top')
+  }
+  if (el) {
+    el.style.transition = 'transform .25s cubic-bezier(.4,0,.2,1), opacity .25s ease'
+    el.style.transform = dir === 'next' ? 'translateY(-60px)' : 'translateY(60px)'
+    el.style.opacity = '0'
+  }
+  setTimeout(() => { location.href = url }, 200)
+}
 
 async function loadToc() {
   const { data } = await sb.from('chapters')
@@ -1093,30 +1188,6 @@ async function loadAllCounts() {
   if (endEl) endEl.textContent = total
 }
 
-async function renderCmtOverview() {
-  const list = document.getElementById('cmt-overview-list')
-  list.innerHTML = '<p class="toc-empty">Đang tải...</p>'
-  const { data } = await sb.from('comments').select('paragraph_id')
-    .eq('story_id', STORY_ID).eq('chapter_id', CHAPTER_UUID)
-  const counts = {}
-  if (data) data.forEach(r => { counts[r.paragraph_id] = (counts[r.paragraph_id] || 0) + 1 })
-  const paras = document.querySelectorAll('.para-wrap[data-pid]')
-  if (!paras.length) { list.innerHTML = '<p class="toc-empty">Không có đoạn nào.</p>'; return }
-  list.innerHTML = Array.from(paras).map((wrap, i) => {
-    const pid = wrap.dataset.pid
-    const excerpt = (wrap.querySelector('.para-text')?.textContent || '').trim().slice(0, 80)
-    const cnt = counts[pid] || 0
-    return `
-    <div class="cmt-overview-row" onclick="openCmtSheet('${pid}')">
-      <span class="cmt-overview-num">§${i+1}</span>
-      <span class="cmt-overview-excerpt">${escapeHtml(excerpt)}</span>
-      <span class="cmt-overview-badge ${cnt>0?'has-cmt':''}">
-        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> ${cnt}
-      </span>
-    </div>`
-  }).join('')
-}
-
 let activePid = null
 
 function openCmtSheet(pid) {
@@ -1129,11 +1200,27 @@ function openCmtSheet(pid) {
     quoteEl.textContent = (paraEl.textContent || '').trim()
     quoteEl.classList.add('visible')
   }
+  document.getElementById('cmt-sheet-input-bar').style.display = ''
   document.getElementById('sheet-emoji-picker').classList.remove('open')
   document.getElementById('cmt-sheet').classList.add('open')
   document.getElementById('cmt-overlay').classList.add('open')
   document.body.style.overflow = 'hidden'
   loadSheetComments(pid)
+}
+
+// Mở sheet hiện toàn bộ bình luận của chương (toàn trang)
+function openAllCmtSheet() {
+  activePid = '__all__'
+  document.getElementById('sheet-pid-label').textContent = 'Tất cả bình luận chương'
+  const quoteEl = document.getElementById('cmt-para-quote')
+  quoteEl.classList.remove('visible')
+  quoteEl.textContent = ''
+  document.getElementById('cmt-sheet-input-bar').style.display = 'none'
+  document.getElementById('sheet-emoji-picker').classList.remove('open')
+  document.getElementById('cmt-sheet').classList.add('open')
+  document.getElementById('cmt-overlay').classList.add('open')
+  document.body.style.overflow = 'hidden'
+  loadAllSheetComments()
 }
 
 function closeCmtSheet() {
@@ -1142,7 +1229,50 @@ function closeCmtSheet() {
   document.body.style.overflow = ''
   document.querySelectorAll('.cmt-trigger').forEach(b => b.classList.remove('active'))
   document.querySelectorAll('.para-wrap').forEach(el => el.classList.remove('highlighted'))
+  document.getElementById('cmt-para-quote').classList.remove('visible')
+  document.getElementById('cmt-sheet-input-bar').style.display = ''
   activePid = null
+}
+
+// Tải toàn bộ bình luận của chương (mọi đoạn), kèm nhãn §N để nhảy tới đoạn tương ứng
+async function loadAllSheetComments() {
+  const list = document.getElementById('sheet-cmt-list')
+  list.innerHTML = '<p class="empty-msg">Đang tải...</p>'
+  const { data, error } = await sb.from('comments')
+    .select('*, profiles(display_name, avatar_url)')
+    .eq('story_id', STORY_ID).eq('chapter_id', CHAPTER_UUID)
+    .order('created_at', { ascending: true })
+  if (error) { list.innerHTML = '<p class="empty-msg">Lỗi tải bình luận</p>'; return }
+  if (!data.length) {
+    list.innerHTML = '<p class="empty-msg">Chương này chưa có bình luận nào.<br>Hãy là người đầu tiên!</p>'
+    return
+  }
+  const pidIndex = {}
+  document.querySelectorAll('.para-wrap[data-pid]').forEach((el, i) => { pidIndex[el.dataset.pid] = i + 1 })
+  const avatarColors = ['#d4537e','#5b9bd5','#71c285','#e8a838','#9b7fe8','#e87878']
+  list.innerHTML = data.map((c, i) => {
+    const prof = c.profiles || {}
+    const name = escapeHtml(prof.display_name || c.username || 'Ẩn danh')
+    const color = avatarColors[i % avatarColors.length]
+    const avatarSrc = prof.avatar_url || c.avatar_url
+    const avatarHtml = avatarSrc
+      ? `<img src="${escapeHtml(avatarSrc)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+      : name.charAt(0).toUpperCase()
+    const pidNum = pidIndex[c.paragraph_id] || '?'
+    return `
+    <div class="cmt-bubble" id="cmt-all-${c.id}">
+      <div class="cmt-avatar" style="background:${color}">${avatarHtml}</div>
+      <div class="cmt-body">
+        <div class="cmt-user">${name}</div>
+        ${c.content ? `<div class="cmt-content">${escapeHtml(c.content)}</div>` : ''}
+        ${c.image_url ? `<img class="cmt-img" src="${c.image_url}" alt="" loading="lazy" decoding="async" onclick="openLightbox('${c.image_url}')">` : ''}
+        <div class="cmt-footer">
+          <span class="cmt-time">${formatTime(c.created_at)}</span>
+          <button class="cmt-pid-tag" onclick="openCmtSheet('${c.paragraph_id}')" title="Xem đoạn ${pidNum}">§${pidNum}</button>
+        </div>
+      </div>
+    </div>`
+  }).join('')
 }
 
 async function loadSheetComments(pid) {
@@ -1189,7 +1319,8 @@ async function loadSheetComments(pid) {
 async function deleteComment(id, pid) {
   if (!confirm('Xoá bình luận này?')) return
   await sb.from('comments').delete().eq('id', id)
-  loadSheetComments(pid)
+  if (activePid === '__all__') loadAllSheetComments()
+  else loadSheetComments(pid)
   loadAllCounts()
 }
 
@@ -1263,7 +1394,7 @@ async function uploadImg(file) {
   return sb.storage.from('comment-images').getPublicUrl(path).data.publicUrl
 }
 async function submitSheetComment() {
-  if (!activePid) return
+  if (!activePid || activePid === '__all__') return
   if (!chCurrentUser) { alert('Vui lòng đăng nhập để bình luận!'); return; }
   const content = document.getElementById('sheet-cmt-input').value.trim()
   const username = chUserProfile?.display_name || chCurrentUser.email.split('@')[0]
@@ -1421,22 +1552,43 @@ loadNavAvatar()
       user-select: none !important;
       -webkit-touch-callout: none !important;
     }
+    .cmt-sheet input, .cmt-sheet textarea, .cmt-sheet .sheet-input-bar,
+    .cmt-sheet .sheet-emoji-picker, .cmt-sheet .sheet-cmt-input,
+    #sheet-cmt-input, .sheet-text-inline {
+      -webkit-user-select: text !important;
+      -moz-user-select: text !important;
+      -ms-user-select: text !important;
+      user-select: text !important;
+      -webkit-touch-callout: default !important;
+    }
     img:not(.cmt-img):not(#lightbox-img):not(.img-preview) { -webkit-user-drag: none !important; user-drag: none !important; pointer-events: none; }
     .cmt-img { cursor: pointer; }
     ::selection { background: transparent !important; }
     ::-moz-selection { background: transparent !important; }
   `;
   document.head.appendChild(protectCSS);
-  document.addEventListener('contextmenu', e => { e.preventDefault(); return false; });
+  document.addEventListener('contextmenu', e => {
+    // Cho phép context menu trong cmt-sheet để paste ảnh
+    if (e.target.closest('.cmt-sheet')) return;
+    e.preventDefault(); return false;
+  });
   document.addEventListener('keydown', e => {
+    // Không block phím khi đang nhập bình luận
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.closest('.cmt-sheet')) return;
     const key = e.key.toLowerCase();
     const ctrl = e.ctrlKey || e.metaKey;
     if (ctrl && ['c','x','a','s','p','u'].includes(key)) { e.preventDefault(); return false; }
     if (e.key === 'F12') { e.preventDefault(); return false; }
     if (ctrl && e.shiftKey && ['i','j','c','k'].includes(key)) { e.preventDefault(); return false; }
   });
-  document.addEventListener('copy', e => { e.preventDefault(); if (e.clipboardData) e.clipboardData.setData('text/plain', '© Peach Luku'); return false; });
-  document.addEventListener('cut', e => { e.preventDefault(); return false; });
+  document.addEventListener('copy', e => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.closest('.cmt-sheet')) return;
+    e.preventDefault(); if (e.clipboardData) e.clipboardData.setData('text/plain', '© Peach Luku'); return false;
+  });
+  document.addEventListener('cut', e => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.closest('.cmt-sheet')) return;
+    e.preventDefault(); return false;
+  });
   document.addEventListener('dragstart', e => { e.preventDefault(); return false; });
   document.addEventListener('selectstart', e => {
     const t = e.target;
@@ -1445,7 +1597,9 @@ loadNavAvatar()
       || t.closest('.sheet-name') || t.closest('#sheet-cmt-input')
       || t.closest('.cmt-sheet') || t.id === 'sheet-cmt-input'
       || t.id === 'sheet-img-input' || t.closest('.img-preview-wrap')
-      || t.closest('.sheet-img-btn') || t.closest('.sheet-emoji-btn')) return true;
+      || t.closest('.sheet-img-btn') || t.closest('.sheet-emoji-btn')
+      || t.closest('.sheet-send-inline') || t.closest('.cmt-trigger')
+      || t.closest('.sheet-emoji-picker')) return true;
     e.preventDefault(); return false;
   });
   function injectWatermark() {
@@ -1503,33 +1657,52 @@ async function deleteChapter() {
 }
 
 
-/* ── AUDIO PLAYER (settings) ── */
+/* ── AUDIO PLAYER (settings + thanh nổi) ── */
 const _audio = new Audio();
 let _audioPlaying = false;
+const PLAY_ICON  = '<polygon points="5 3 19 12 5 21 5 3"/>';
+const PAUSE_ICON = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
 
 function initSettingsAudio(url) {
+  const audioStatBtn = document.getElementById('audio-stat-btn');
+  const floatingBar = document.getElementById('floating-audio');
   if (!url) {
     document.getElementById('audio-no-file').style.display = 'block';
     document.getElementById('audio-player-ui').style.display = 'none';
+    if (audioStatBtn) audioStatBtn.style.display = 'none';
+    if (floatingBar) floatingBar.classList.remove('show');
     return;
   }
   document.getElementById('audio-no-file').style.display = 'none';
   document.getElementById('audio-player-ui').style.display = 'block';
+  if (audioStatBtn) audioStatBtn.style.display = 'flex';
+  const titleEl = document.getElementById('floating-audio-title');
+  if (titleEl) {
+    const ch = chapterData;
+    titleEl.textContent = '🎧 ' + (ch?.title || ('Chương ' + (ch?.chapter_number ?? '')));
+  }
+  if (floatingBar) floatingBar.classList.add('show');
   _audio.src = url;
   _audio.ontimeupdate = () => {
     const cur = _audio.currentTime, dur = _audio.duration || 0;
-    document.getElementById('audio-seek').value = dur ? (cur / dur * 100) : 0;
-    document.getElementById('audio-seek').max = 100;
-    document.getElementById('audio-cur').textContent = fmtTime(cur);
-    document.getElementById('audio-dur').textContent = fmtTime(dur);
+    const pct = dur ? (cur / dur * 100) : 0;
+    const curTxt = fmtTime(cur), durTxt = fmtTime(dur);
+    const seek = document.getElementById('audio-seek');
+    if (seek) { seek.value = pct; seek.max = 100; }
+    const fSeek = document.getElementById('floating-audio-seek');
+    if (fSeek) { fSeek.value = pct; fSeek.max = 100; }
+    const cEl = document.getElementById('audio-cur'); if (cEl) cEl.textContent = curTxt;
+    const dEl = document.getElementById('audio-dur'); if (dEl) dEl.textContent = durTxt;
+    const fcEl = document.getElementById('floating-audio-cur'); if (fcEl) fcEl.textContent = curTxt;
+    const fdEl = document.getElementById('floating-audio-dur'); if (fdEl) fdEl.textContent = durTxt;
   };
   _audio.onended = () => {
     _audioPlaying = false;
-    document.getElementById('audio-play-icon').innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
-    // Tự động chuyển chương tiếp theo sau khi nghe xong
+    updateAudioPlayIcons(false);
+    // Tự động chuyển chương tiếp theo sau khi nghe xong, có hiệu ứng trượt mượt
     const btnNext = document.getElementById('btn-next');
     if (btnNext && !btnNext.classList.contains('disabled') && btnNext.href) {
-      setTimeout(() => { location.href = btnNext.href; }, 1200);
+      setTimeout(() => { goToChapter(btnNext.href, 'next'); }, 1200);
     }
   };
 }
@@ -1538,15 +1711,21 @@ function fmtTime(s) {
   const m = Math.floor(s/60), sec = Math.floor(s%60);
   return `${m}:${sec.toString().padStart(2,'0')}`;
 }
+function updateAudioPlayIcons(playing) {
+  const icon = playing ? PAUSE_ICON : PLAY_ICON;
+  const a = document.getElementById('audio-play-icon');
+  const f = document.getElementById('floating-audio-play-icon');
+  if (a) a.innerHTML = icon;
+  if (f) f.innerHTML = icon;
+}
 function toggleAudioPlay() {
   if (!_audio.src) return;
   if (_audioPlaying) {
     _audio.pause(); _audioPlaying = false;
-    document.getElementById('audio-play-icon').innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
   } else {
     _audio.play(); _audioPlaying = true;
-    document.getElementById('audio-play-icon').innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
   }
+  updateAudioPlayIcons(_audioPlaying);
 }
 function seekAudio(val) {
   if (_audio.duration) _audio.currentTime = val / 100 * _audio.duration;
