@@ -126,7 +126,6 @@ body {
   font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text);
   transition: background .3s, color .3s; line-height: 1.6;
   margin: 0; min-height: 100vh;
-  /* +2 cỡ chữ base: 16px → 18px */
   font-size: 18px;
 }
 .page-wrapper {
@@ -176,13 +175,11 @@ body {
 .cover-book-ph { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
 .cover-book-ph svg { width: 52px; height: 52px; stroke: var(--peach-mid); fill: none; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
 .story-body { background: var(--bg2); padding: 1.2rem 1.2rem 0; margin-bottom: 0; }
-/* +2 cỡ: 20px → 22px */
 .story-title-main { font-size: 22px; font-weight: 800; color: var(--text); line-height: 1.3; margin-bottom: 0.7rem; text-align: center; }
 .author-row { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 1rem; cursor: pointer; }
 .author-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--peach-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; border: 2px solid var(--border); }
 .author-avatar svg { width: 16px; height: 16px; stroke: var(--peach-mid); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .author-avatar img { width: 100%; height: 100%; object-fit: cover; }
-/* +2 cỡ: 14px → 16px */
 .author-name { font-size: 16px; font-weight: 700; }
 .author-row:hover .author-name { color: var(--peach); text-decoration: underline; }
 .stats-row { display: flex; gap: 0; margin-bottom: 1.2rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: .7rem 0; }
@@ -190,17 +187,13 @@ body {
 .stat-block + .stat-block::before { content: ''; position: absolute; left: 0; top: 10%; bottom: 10%; width: 1px; background: var(--border); }
 .stat-icon { color: var(--text-muted); display: flex; align-items: center; margin-bottom: 1px; }
 .stat-icon svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-/* +2 cỡ: 15px → 17px */
 .stat-val { font-size: 17px; font-weight: 800; color: var(--text); }
-/* +2 cỡ: 10.5px → 12.5px */
 .stat-label { font-size: 12.5px; color: var(--text-muted); font-weight: 600; }
 .action-row { display: flex; gap: 8px; margin-bottom: 1.2rem; }
-/* +2 cỡ: 14px → 16px */
 .btn-read { flex: 1; background: var(--text); color: var(--bg2); border: none; border-radius: 28px; padding: 13px 16px; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; transition: opacity .2s, transform .1s; text-decoration: none; font-family: 'Nunito', sans-serif; }
 .btn-read svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 .btn-read:hover { opacity: .82; }
 .btn-read:active { transform: scale(.97); }
-/* +2 cỡ: 13px → 15px */
 .btn-secondary-action { background: var(--bg2); color: var(--text); border: 1.5px solid var(--border-hover); border-radius: 28px; padding: 13px 14px; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background .15s, transform .1s; font-family: 'Nunito', sans-serif; white-space: nowrap; }
 .btn-secondary-action svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 .btn-secondary-action:hover { background: var(--peach-light); }
@@ -210,40 +203,32 @@ body {
 #bookmark-btn.active svg { stroke: var(--peach); fill: var(--peach); }
 .btn-secondary-action:active { transform: scale(.97); }
 .tags-row { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 1.2rem; align-items: center; }
-/* +2 cỡ: 11.5px → 13.5px */
 .status-chip { padding: 5px 13px; border-radius: 20px; font-size: 13.5px; font-weight: 800; display: flex; align-items: center; gap: 5px; }
 .status-chip svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 .status-chip.done { background: var(--green-light); color: var(--green); }
 .status-chip.ongoing { background: var(--gold-light); color: var(--gold); }
-/* +2 cỡ: 11.5px → 13.5px */
 .genre-tag { padding: 5px 13px; background: var(--peach-light); color: var(--peach-dark); border-radius: 20px; font-size: 13.5px; font-weight: 700; cursor: pointer; text-decoration: none; transition: background .12s; }
 .genre-tag:hover { background: var(--peach-mid); color: white; }
 .description-box { background: var(--bg); border: 1px solid var(--border); border-radius: 14px; padding: .9rem 1rem; margin-bottom: 1.4rem; }
-/* +2 cỡ: 10.5px → 12.5px */
 .description-label { font-size: 12.5px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 5px; }
-/* +2 cỡ: 13.5px → 15.5px */
 .description-text { font-size: 15.5px; line-height: 1.45; color: var(--text); }
 .description-text.clamped { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
 .description-text * { font-family: inherit !important; font-size: inherit !important; color: inherit !important; background: transparent !important; }
 .description-text p, .description-text div { margin-bottom: 0.2em; line-height: 1.45; }
 .description-text b, .description-text strong { font-weight: 700; }
 .description-text i, .description-text em { font-style: italic; }
-/* +2 cỡ: 12.5px → 14.5px */
 .read-more-btn { background: none; border: none; cursor: pointer; color: var(--peach); font-size: 14.5px; font-weight: 700; padding: 4px 0; margin-top: 5px; font-family: 'Nunito', sans-serif; display: flex; align-items: center; gap: 4px; }
 .read-more-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; transition: transform .15s; }
 .read-more-btn.expanded svg { transform: rotate(180deg); }
 .content-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); background: var(--bg2); position: sticky; top: 56px; z-index: 90; transition: background .3s; margin: 0 -1.2rem; padding: 0 1.2rem; }
-/* +2 cỡ: 13px → 15px */
 .tab-btn { flex: 1; background: none; border: none; padding: 12px 0; font-size: 15px; font-weight: 700; color: var(--text-muted); cursor: pointer; position: relative; transition: color .15s; font-family: 'Nunito', sans-serif; display: flex; align-items: center; justify-content: center; gap: 5px; }
 .tab-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 .tab-btn:hover { color: var(--peach); }
 .tab-btn.active { color: var(--peach); }
 .tab-btn.active::after { content: ''; position: absolute; bottom: -2px; left: 15%; right: 15%; height: 2.5px; background: var(--peach); border-radius: 2px; }
-/* +2 cỡ: 10px → 12px */
 .tab-count { font-size: 12px; font-weight: 800; background: var(--peach-light); color: var(--peach-dark); padding: 1px 5px; border-radius: 8px; min-width: 18px; text-align: center; }
 .tab-btn.active .tab-count { background: var(--peach); color: white; }
 
-/* ── Tab content: tất cả tab đều có viền + bo góc + margin khớp description-box ── */
 .tab-content { display: none; }
 .tab-content.active { display: block; }
 #tab-chapters { margin: 12px 0 1.4rem; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; background: var(--bg); }
@@ -255,39 +240,31 @@ body {
 .comment-card { margin: 8px 10px; border-radius: 14px !important; border: 1px solid var(--peach-mid) !important; border-bottom: 1px solid var(--peach-mid) !important; }
 .comment-card:last-child { margin-bottom: 8px; }
 .chapter-controls { display: flex; justify-content: space-between; align-items: center; padding: .9rem 1.2rem .7rem; flex-wrap: wrap; gap: .6rem; background: var(--bg); }
-/* +2 cỡ: 13.5px → 15.5px */
 .chapter-count-label { font-size: 15.5px; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 6px; }
 .chapter-count-label svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; color: var(--text-muted); }
-/* +2 cỡ: 12px → 14px */
 .sort-btn { padding: 5px 12px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 16px; font-size: 14px; font-weight: 700; color: var(--text); cursor: pointer; transition: all .15s; font-family: 'Nunito', sans-serif; display: flex; align-items: center; gap: 5px; }
 .sort-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: transform .2s; }
 .sort-btn:hover { background: var(--peach-light); border-color: var(--border-hover); }
 .chapter-search-bar { display: flex; align-items: center; gap: 8px; background: var(--bg2); border: 1.5px solid var(--border); border-radius: 22px; padding: 7px 15px; margin: 0 1.2rem .7rem; transition: border-color .15s; }
 .chapter-search-bar:focus-within { border-color: var(--peach); }
 .chapter-search-bar svg { width: 15px; height: 15px; stroke: var(--text-muted); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
-/* +2 cỡ: 13px → 15px */
 .chapter-search-bar input { border: none; background: none; outline: none; font-size: 15px; color: var(--text); flex: 1; font-family: 'Nunito', sans-serif; }
 .chapter-search-bar input::placeholder { color: var(--text-muted); }
 .chapter-list { padding: 0 1.2rem 1rem; display: flex; flex-direction: column; }
-.chapter-item { display: flex; align-items: center; gap: 10px; padding: 11px 4px; border-bottom: 1px solid var(--border); text-decoration: none; color: var(--text); transition: all .12s; border-radius: 0; }
+.chapter-item { display: flex; align-items: center; gap: 10px; padding: 11px 4px; border-bottom: 1px solid var(--border); text-decoration: none; color: var(--text); transition: all .12s; border-radius: 0; min-height: 48px; }
 .chapter-item:last-child { border-bottom: none; }
 .chapter-item:hover { background: var(--peach-light); margin: 0 -8px; padding-left: 12px; padding-right: 12px; border-radius: 10px; border-bottom-color: transparent; }
-
-/* ── Badge số chương: nhỏ gọn, căn giữa tuyệt đối ── */
 .chapter-num-badge {
-  width: 24px; height: 24px; border-radius: 6px; flex-shrink: 0;
+  width: 28px; height: 28px; border-radius: 6px; flex-shrink: 0;
   background: var(--peach-light); color: var(--peach-dark);
   display: flex; align-items: center; justify-content: center;
   font-size: 11px; font-weight: 800; line-height: 1;
   align-self: center;
 }
 .chapter-item.read .chapter-num-badge { background: var(--green-light); color: var(--green); }
-
-.chapter-info { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
-/* +2 cỡ: 13.5px → 15.5px */
-.chapter-name { font-weight: 700; font-size: 15.5px; margin-bottom: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.3; }
+.chapter-info { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; align-self: center; }
+.chapter-name { font-weight: 700; font-size: 15.5px; margin-bottom: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; }
 .chapter-item.read .chapter-name { color: var(--text-muted); }
-/* meta chỉ còn lượt xem bên phải, không còn thời gian */
 .chapter-meta { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; justify-content: flex-end; margin-top: 2px; }
 .chapter-meta-left { display: none; }
 .chapter-meta-right { display: flex; align-items: center; gap: 4px; }
@@ -334,11 +311,9 @@ body {
 .compose-avatar { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); }
 .compose-avatar svg { width: 15px; height: 15px; stroke: var(--peach-mid); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .compose-body { flex: 1; min-width: 0; }
-/* +2 cỡ: 13.5px → 15.5px */
 .compose-input { width: 100%; border: none; background: none; outline: none; font-family: 'Nunito', sans-serif; font-size: 15.5px; color: var(--text); resize: none; min-height: 38px; max-height: 120px; line-height: 1.5; }
 .compose-input::placeholder { color: var(--text-muted); }
 .compose-footer { display: flex; align-items: center; justify-content: flex-end; margin-top: 8px; }
-/* +2 cỡ: 12.5px → 14.5px */
 .compose-submit { background: var(--peach-dark); color: white; border: none; border-radius: 20px; padding: 6px 16px; font-family: 'Nunito', sans-serif; font-size: 14.5px; font-weight: 700; cursor: pointer; transition: background .15s; display: flex; align-items: center; gap: 5px; }
 .compose-submit svg { width: 14px; height: 14px; stroke: white; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 .compose-submit:hover { background: var(--peach-dark); }
@@ -351,14 +326,10 @@ body {
 .comment-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .comment-bubble { flex: 1; min-width: 0; }
 .comment-header { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; flex-wrap: wrap; }
-/* +2 cỡ: 13px → 15px */
 .comment-name { font-size: 15px; font-weight: 800; }
-/* +2 cỡ: 11px → 13px */
 .comment-time { font-size: 13px; color: var(--text-muted); font-weight: 600; }
-/* +2 cỡ: 13.5px → 15.5px */
 .comment-text { font-size: 15.5px; line-height: 1.65; color: var(--text); word-break: break-word; }
 .comment-actions { display: flex; align-items: center; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
-/* +2 cỡ: 12px → 14px */
 .comment-action-btn { background: none; border: none; cursor: pointer; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700; color: var(--text-muted); display: flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 20px; transition: all .12s; }
 .comment-action-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .comment-action-btn:hover { background: var(--peach-light); color: var(--peach-dark); }
@@ -371,43 +342,33 @@ body {
 .reply-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .reply-bubble { flex: 1; min-width: 0; }
 .reply-header { display: flex; align-items: center; gap: 7px; margin-bottom: 3px; }
-/* +2 cỡ: 12.5px → 14.5px */
 .reply-name { font-size: 14.5px; font-weight: 800; }
-/* +2 cỡ: 10.5px → 12.5px */
 .reply-time { font-size: 12.5px; color: var(--text-muted); font-weight: 600; }
-/* +2 cỡ: 13px → 15px */
 .reply-text { font-size: 15px; line-height: 1.6; color: var(--text); word-break: break-word; }
 .reply-actions { display: flex; align-items: center; gap: 6px; margin-top: 5px; }
 .reply-compose { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); display: flex; gap: 9px; align-items: flex-start; }
 .reply-compose-avatar { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); font-size: 12px; font-weight: 800; color: var(--peach-dark); overflow: hidden; margin-top: 2px; }
 .reply-compose-body { flex: 1; display: flex; gap: 8px; align-items: flex-end; }
-/* +2 cỡ: 13px → 15px */
 .reply-input { flex: 1; border: 1.5px solid var(--border); background: var(--bg2); outline: none; font-family: 'Nunito', sans-serif; font-size: 15px; color: var(--text); resize: none; min-height: 36px; max-height: 80px; line-height: 1.5; border-radius: 12px; padding: 6px 10px; transition: border-color .15s; }
 .reply-input:focus { border-color: var(--peach); }
 .reply-input::placeholder { color: var(--text-muted); }
-/* +2 cỡ: 12px → 14px */
 .reply-submit { background: var(--peach-dark); color: white; border: none; border-radius: 20px; padding: 6px 13px; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: opacity .15s; flex-shrink: 0; }
 .reply-submit:hover { opacity: .85; }
 .reply-submit:disabled { opacity: .5; cursor: not-allowed; }
-/* +2 cỡ: 13px → 15px */
 .load-more-btn { width: 100%; margin-top: 16px; padding: 11px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: all .15s; display: flex; align-items: center; justify-content: center; gap: 6px; }
 .load-more-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .load-more-btn:hover { background: var(--peach-light); color: var(--peach-dark); border-color: var(--peach-mid); }
-/* +2 cỡ comment empty */
 .comment-empty { text-align: center; padding: 2.5rem 1rem; display: flex; flex-direction: column; align-items: center; gap: 8px; }
 .comment-empty svg { width: 46px; height: 46px; stroke: var(--peach-mid); fill: none; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
 .comment-empty-title { font-size: 16px; font-weight: 800; }
 .comment-empty-sub { font-size: 14.5px; color: var(--text-muted); }
 .login-prompt { background: var(--peach-light); border: 1.5px solid var(--border-hover); border-radius: 14px; padding: 14px 16px; margin-bottom: 1.4rem; display: flex; align-items: center; gap: 12px; }
 .login-prompt svg { width: 20px; height: 20px; stroke: var(--peach-dark); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
-/* +2 cỡ: 13px → 15px */
 .login-prompt-text { flex: 1; font-size: 15px; color: var(--peach-dark); font-weight: 700; }
-/* +2 cỡ: 12px → 14px */
 .login-prompt-btn { background: var(--peach); color: white; border: none; border-radius: 20px; padding: 6px 14px; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: background .15s; white-space: nowrap; }
 .login-prompt-btn:hover { background: var(--peach-dark); }
 .empty-state { text-align: center; padding: 3rem 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 8px; }
 .empty-state svg { width: 48px; height: 48px; stroke: var(--peach-mid); fill: none; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
-/* +2 cỡ: 14px → 16px */
 .empty-state-text { font-size: 16px; color: var(--text-muted); font-weight: 600; }
 .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--text); color: var(--bg2); padding: 10px 20px; border-radius: 22px; font-size: 15px; font-weight: 700; z-index: 999; opacity: 0; transition: transform .25s, opacity .25s; white-space: nowrap; pointer-events: none; max-width: 90vw; text-align: center; }
 .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
@@ -426,7 +387,6 @@ body {
   display: none; flex-direction: column; gap: 2px;
 }
 .profile-dropdown.open { display: flex; }
-/* +2 cỡ: 13px → 15px */
 .profile-dropdown-item {
   display: flex; align-items: center; gap: 9px;
   padding: 9px 12px; border-radius: 10px;
@@ -437,7 +397,6 @@ body {
 .profile-dropdown-item svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; opacity: .7; }
 .profile-dropdown-divider { height: 1px; background: var(--border); margin: 4px 8px; }
 .dd-auth-row { display: flex; align-items: center; gap: 6px; padding: 6px 10px; margin: 2px 0; }
-/* +2 cỡ: 12px → 14px */
 .dd-auth-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 7px 6px; border-radius: 9px; font-size: 14px; font-weight: 800; color: var(--peach); text-decoration: none; background: var(--peach-light); transition: background .15s, color .15s; }
 .dd-auth-btn:hover { background: var(--peach); color: #fff; }
 .dd-auth-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; opacity:1; }
@@ -450,116 +409,72 @@ body {
 }
 .profile-menu-btn:hover { border-color: var(--peach) !important; background: var(--peach-light) !important; }
 .profile-menu-btn svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-/*
-  ============================================================
-  PATCH story.html — Peach Luku
-  Paste toàn bộ vào CUỐI khối <style> trong story.html
-  (ngay trước dòng đóng </style>)
-  ============================================================
-*/
 
-/* ── FIX 1: Giảm font size 1px toàn trang ── */
-body                    { font-size: 17px; }
-.story-title-main       { font-size: 21px; }
-.author-name            { font-size: 15px; }
-.stat-val               { font-size: 16px; }
-.stat-label             { font-size: 11.5px; }
-.btn-read               { font-size: 15px; }
-.btn-secondary-action   { font-size: 14px; }
-.status-chip, .genre-tag{ font-size: 12.5px; }
-.description-label      { font-size: 11.5px; }
-.description-text       { font-size: 14.5px; }
-.read-more-btn          { font-size: 13.5px; }
-.tab-btn                { font-size: 14px; }
-.tab-count              { font-size: 11px; }
-.chapter-count-label    { font-size: 14.5px; }
-.sort-btn               { font-size: 13px; }
-.chapter-search-bar input { font-size: 14px; }
-.chapter-name           { font-size: 14.5px; }
-.chapter-meta           { font-size: 12px; }
-.compose-input          { font-size: 14.5px; }
-.compose-submit         { font-size: 13.5px; }
-.comment-name           { font-size: 14px; }
-.comment-time           { font-size: 12px; }
-.comment-text           { font-size: 14.5px; }
-.comment-action-btn     { font-size: 13px; }
-.reply-name             { font-size: 13.5px; }
-.reply-time             { font-size: 11.5px; }
-.reply-text             { font-size: 14px; }
-.reply-input            { font-size: 14px; }
-.reply-submit           { font-size: 13px; }
-.load-more-btn          { font-size: 14px; }
-.comment-empty-title    { font-size: 15px; }
-.comment-empty-sub      { font-size: 13.5px; }
-.login-prompt-text      { font-size: 14px; }
-.login-prompt-btn       { font-size: 13px; }
-.empty-state-text       { font-size: 15px; }
-.profile-dropdown-item  { font-size: 14px; }
-.dd-auth-btn            { font-size: 13px; }
+/* ══════════════════════════════════════════════════════════
+   PATCH CUỐI — tất cả fix áp dụng sau cùng
+   ══════════════════════════════════════════════════════════ */
+
+/* FIX 1: Font size giảm thêm 1px (base 16px, -2 so với gốc 18px) */
+body                      { font-size: 16px; }
+.story-title-main         { font-size: 20px; }
+.author-name              { font-size: 14px; }
+.stat-val                 { font-size: 15px; }
+.stat-label               { font-size: 10.5px; }
+.btn-read                 { font-size: 14px; }
+.btn-secondary-action     { font-size: 13px; }
+.status-chip, .genre-tag  { font-size: 11.5px; }
+.description-label        { font-size: 10.5px; }
+.description-text         { font-size: 13.5px; }
+.read-more-btn            { font-size: 12.5px; }
+.tab-btn                  { font-size: 13px; }
+.tab-count                { font-size: 10px; }
+.chapter-count-label      { font-size: 13.5px; }
+.sort-btn                 { font-size: 12px; }
+.chapter-search-bar input { font-size: 13px; }
+.chapter-name             { font-size: 13.5px; }
+.chapter-meta             { font-size: 11px; }
+.compose-input            { font-size: 13.5px; }
+.compose-submit           { font-size: 12.5px; }
+.comment-name             { font-size: 13px; }
+.comment-time             { font-size: 11px; }
+.comment-text             { font-size: 13.5px; }
+.comment-action-btn       { font-size: 12px; }
+.reply-name               { font-size: 12.5px; }
+.reply-time               { font-size: 10.5px; }
+.reply-text               { font-size: 13px; }
+.reply-input              { font-size: 13px; }
+.reply-submit             { font-size: 12px; }
+.load-more-btn            { font-size: 13px; }
+.comment-empty-title      { font-size: 14px; }
+.comment-empty-sub        { font-size: 12.5px; }
+.login-prompt-text        { font-size: 13px; }
+.login-prompt-btn         { font-size: 12px; }
+.empty-state-text         { font-size: 14px; }
+.profile-dropdown-item    { font-size: 13px; }
+.dd-auth-btn              { font-size: 12px; }
 @media (max-width: 480px) {
-  .story-title-main { font-size: 19px; }
-  .tab-btn { font-size: 13px; }
+  .story-title-main { font-size: 18px; }
+  .tab-btn { font-size: 12px; }
 }
 
-/* ── FIX 2: Tab chapters & comments đồng kích thước & border-radius với description-box ── */
-#tab-chapters {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  margin: 12px 0 1.4rem;
+/* FIX 2: Tab frames đồng kích thước y chang description-box */
+#tab-chapters, #tab-comments, #tab-info {
+  background: var(--bg) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 14px !important;
+  margin: 12px 0 1.4rem !important;
   overflow: hidden;
 }
-#tab-comments {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  margin: 12px 0 1.4rem;
-  overflow: hidden;
-}
-#tab-info {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  margin: 12px 0 1.4rem;
-}
 
-/* ── FIX 3: Chapter item — badge số và tên chương căn giữa dọc ── */
-.chapter-item {
-  align-items: center;
-}
-.chapter-num-badge {
-  align-self: center;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  font-size: 11px;
-}
-.chapter-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-self: center;
-  min-width: 0;
-}
-.chapter-name {
-  line-height: 1.2;
-  margin-bottom: 0;
-}
-.chapter-arrow {
-  align-self: center;
-}
+/* FIX 3: Chapter badge + tên chương căn giữa dọc */
+.chapter-item             { align-items: center !important; min-height: 48px; }
+.chapter-num-badge        { align-self: center !important; width: 28px; height: 28px; display: flex !important; align-items: center !important; justify-content: center !important; margin-top: 0 !important; }
+.chapter-info             { align-self: center !important; }
+.chapter-arrow            { align-self: center !important; }
 
-/* ── FIX 4: Author row — clickable visual cue rõ hơn ── */
-.author-row {
-  cursor: pointer;
-}
-.author-row:hover .author-name {
-  color: var(--peach);
-  text-decoration: underline;
-}
+/* FIX 4: Author row dẫn profile */
+.author-row               { cursor: pointer; }
+.author-row:hover .author-name { color: var(--peach); text-decoration: underline; }
 </style>
 </head>
 <body class="theme-light">
@@ -590,7 +505,7 @@ body                    { font-size: 17px; }
 
 <div class="story-body">
   <h1 class="story-title-main" id="story-title">Đang tải...</h1>
-  <div class="author-row" onclick="goToAuthorProfile()" title="Xem hồ sơ tác giả">
+  <div class="author-row" onclick="goToAuthorProfile()" title="Xem hồ sơ người đăng">
     <div class="author-avatar" id="author-avatar">
       <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
     </div>
@@ -793,7 +708,6 @@ function searchByAuthor() {
 }
 
 function goToAuthorProfile() {
-  // Nếu có user_id của người đăng → đến trang profile
   if (storyData?.user_id) {
     location.href = 'profile.html?id=' + encodeURIComponent(storyData.user_id);
   } else if (storyData?.author) {
@@ -930,7 +844,6 @@ function renderChapters(filtered = null) {
   try { const h = JSON.parse(localStorage.getItem('pl_history') || '[]'); const entry = h.find(x => x.storyId === storyId); if (entry) readChapterIds.add(entry.chapterId); } catch {}
   listEl.innerHTML = sorted.map(ch => {
     const num = ch.chapter_number || '?', isRead = readChapterIds.has(ch.id);
-    // chỉ hiển thị lượt xem, bỏ thời gian
     const viewsMeta = ch.views
       ? `<div class="chapter-meta"><div class="chapter-meta-right"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>${formatViews(ch.views)}</div></div>`
       : '';
@@ -1177,7 +1090,6 @@ async function submitReply(parentId) {
   const btn = document.querySelector(`#reply-compose-${parentId} .reply-submit`);
   if (btn) btn.disabled = true;
   const replyToUserId = replyInputTarget[parentId] || null;
-  // fallback: lấy user_id của comment cha nếu chưa tag reply cụ thể
   let finalReplyUserId = replyToUserId;
   if (!finalReplyUserId) {
     const { data: parentCmt } = await sb.from('comments').select('user_id').eq('id', parentId).maybeSingle();
