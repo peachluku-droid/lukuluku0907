@@ -245,7 +245,8 @@ body {
   font-size: 13px; font-weight: 600; color: var(--text-muted);
   padding-left: 100%;
 }
-.notice-banner:hover .notice-scroll-text { animation-play-state: paused; }
+.notice-banner:hover .notice-scroll-text { animation-play-state: running; }
+.notice-scroll-wrap:hover .notice-scroll-text { animation-play-state: paused; }
 @media (max-width: 600px) { .notice-banner { margin: 10px 0.8rem; max-width: calc(100% - 1.6rem - 2px); } }
 @keyframes scroll-left {
   0%   { transform: translateX(0); }
@@ -597,19 +598,21 @@ footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
 /* ─── MODAL BẢNG XẾP HẠNG ─────────────────── */
 .rank-modal-overlay {
   position: fixed; inset: 0; z-index: 500;
-  background: rgba(0,0,0,0.45); backdrop-filter: blur(3px);
-  display: none; align-items: flex-end; justify-content: center;
+  background: var(--bg2);
+  display: none; flex-direction: column;
+  overflow: hidden;
 }
 .rank-modal-overlay.open { display: flex; }
 .rank-modal {
-  background: var(--bg2); border-radius: 24px 24px 0 0;
-  width: 100%; max-width: 700px; max-height: 90vh;
+  background: var(--bg2);
+  width: 100%; height: 100%;
   display: flex; flex-direction: column;
-  animation: rankSlideUp .25s ease;
+  animation: rankSlideUp .22s ease;
   overflow: hidden;
+  max-width: none; max-height: none; border-radius: 0;
 }
 @keyframes rankSlideUp {
-  from { transform: translateY(60px); opacity: 0; }
+  from { transform: translateY(40px); opacity: 0; }
   to   { transform: translateY(0);    opacity: 1; }
 }
 .rank-modal-head {
@@ -781,7 +784,34 @@ body.theme-dark .chat-box { background: #1e1e1e !important; border-color: #444 !
   .hero-waveform { max-width: 240px; height: 28px; }
 }
 
-/* ── EXPANDABLE SEARCH (cạnh "Mới cập nhật") ── */
+/* ── FILTER DROPDOWN ── */
+.filter-dropdown {
+  position: absolute; top: calc(100% + 6px); right: 0; z-index: 400;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 14px 14px 12px;
+  width: 220px; box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+  display: none; flex-direction: column; gap: 8px;
+}
+.filter-dropdown.open { display: flex; }
+.filter-section-label { font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 2px; }
+.filter-sort-row { display: flex; gap: 5px; flex-wrap: wrap; }
+.filter-sort-btn {
+  flex: 1; padding: 5px 8px; border-radius: 10px; border: 1.5px solid var(--border);
+  background: none; font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 700;
+  color: var(--text-muted); cursor: pointer; transition: all .15s; white-space: nowrap;
+}
+.filter-sort-btn:hover { border-color: var(--peach-mid); color: var(--peach); }
+.filter-sort-btn.active { background: var(--peach); border-color: var(--peach); color: white; }
+.filter-divider { height: 1px; background: var(--border); margin: 2px 0; }
+.filter-genre-wrap { display: flex; flex-wrap: wrap; gap: 5px; }
+.filter-genre-chip {
+  padding: 4px 10px; border-radius: 20px; border: 1.5px solid var(--border);
+  background: none; font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 700;
+  color: var(--text-muted); cursor: pointer; transition: all .15s;
+}
+.filter-genre-chip:hover { border-color: var(--peach-mid); color: var(--peach); }
+.filter-genre-chip.active { background: var(--peach-light); border-color: var(--peach-mid); color: var(--peach-dark); }
+
 .sec-search-wrap {
   display: flex;
   align-items: center;
@@ -971,7 +1001,34 @@ body.theme-dark .chat-box { background: #1e1e1e !important; border-color: #444 !
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       </button>
       <input class="sec-search-input" id="secSearchInput" type="text" placeholder="Tìm truyện..." autocomplete="off"
+        oninput="goSearchSec()"
         onkeydown="if(event.key==='Enter')goSearchSec()" onblur="collapseSecSearch()"/>
+      <div style="position:relative">
+        <button class="sec-search-btn" id="filterToggleBtn" onclick="toggleFilterMenu(event)" title="Lọc & sắp xếp" aria-label="Lọc">
+          <svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round">
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="6" y1="12" x2="21" y2="12"/>
+            <line x1="9" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <!-- FILTER DROPDOWN -->
+        <div class="filter-dropdown" id="filterDropdown">
+          <div class="filter-section-label">Sắp xếp</div>
+          <div class="filter-sort-row">
+            <button class="filter-sort-btn active" data-sort="latest" onclick="setSort('latest',this)">Mới nhất</button>
+            <button class="filter-sort-btn" data-sort="views" onclick="setSort('views',this)">Xem nhiều</button>
+            <button class="filter-sort-btn" data-sort="alpha" onclick="setSort('alpha',this)">A–Z</button>
+            <button class="filter-sort-btn" data-sort="alpha-desc" onclick="setSort('alpha-desc',this)">Z–A</button>
+            <button class="filter-sort-btn" data-sort="full" onclick="setSort('full',this)">Hoàn thành</button>
+            <button class="filter-sort-btn" data-sort="on" onclick="setSort('on',this)">Đang ra</button>
+          </div>
+          <div class="filter-divider"></div>
+          <div class="filter-section-label">Thể loại</div>
+          <div class="filter-genre-wrap" id="filterGenreWrap">
+            <button class="filter-genre-chip active" data-genre="" onclick="setGenre('',this)">Tất cả</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1065,26 +1122,29 @@ function goSearch() {
 }
 function toggleSecSearch() {
   const input = document.getElementById('secSearchInput');
-  const wrap = document.getElementById('secSearchWrap');
   if (input.classList.contains('open')) {
-    goSearchSec();
+    if (!input.value.trim()) {
+      input.classList.remove('open');
+      currentSearchQ = '';
+      renderFilteredStories();
+    }
   } else {
     input.classList.add('open');
     setTimeout(() => input.focus(), 50);
   }
 }
 function goSearchSec() {
-  const q = document.getElementById('secSearchInput')?.value.trim();
-  if (q) location.href = 'search.html?q=' + encodeURIComponent(q);
-  else collapseSecSearch();
+  currentSearchQ = document.getElementById('secSearchInput')?.value.trim().toLowerCase() || '';
+  renderFilteredStories();
 }
 function collapseSecSearch() {
   const input = document.getElementById('secSearchInput');
-  // Delay nhỏ để cho click event trên button xử lý trước
   setTimeout(() => {
     if (!document.activeElement?.closest('#secSearchWrap')) {
       input.classList.remove('open');
       input.value = '';
+      currentSearchQ = '';
+      renderFilteredStories();
     }
   }, 150);
 }
@@ -1116,6 +1176,11 @@ async function loadStories() {
     }
   });
 
+  // Cache for filter/sort
+  allStoriesCache = stories;
+  chCountsCache = chCounts;
+  latestChDateCache = latestChapterDate;
+
   // ── TOP RANK (tất cả truyện xếp hạng lượt xem, hiện 3 đầu) ──
   const rankClasses = ['rank-1','rank-2','rank-3','rank-n'];
   const allRanked = [...stories].sort((a,b) => (b.total_views||0)-(a.total_views||0));
@@ -1142,24 +1207,107 @@ async function loadStories() {
     </a>`;
   }).join('');
 
-  // ── TRUYỆN MỚI CẬP NHẬT (card ngang, sắp xếp theo chương mới nhất) ──
-  // Sort stories: those with latest chapters come first
-  const sortedByLatestChapter = [...stories].sort((a, b) => {
-    const dateA = latestChapterDate[a.id] || a.created_at || '';
-    const dateB = latestChapterDate[b.id] || b.created_at || '';
-    return dateB.localeCompare(dateA);
-  });
+  // ── TRUYỆN MỚI CẬP NHẬT ──
+  buildGenreChips(stories);
+  renderFilteredStories();
+}
 
-  document.getElementById('dien-thoai-list').innerHTML = sortedByLatestChapter.map((s) => {
-    const ch = chCounts[s.id] || 0;
+/* ── FILTER & SORT ── */
+let currentSort = 'latest';
+let currentGenre = '';
+let currentSearchQ = '';
+let allStoriesCache = [];
+let chCountsCache = {};
+let latestChDateCache = {};
+
+function toggleFilterMenu(e) {
+  e.stopPropagation();
+  const dd = document.getElementById('filterDropdown');
+  dd.classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  const dd = document.getElementById('filterDropdown');
+  const btn = document.getElementById('filterToggleBtn');
+  if (dd && !dd.contains(e.target) && btn && !btn.contains(e.target)) {
+    dd.classList.remove('open');
+  }
+});
+function setSort(sort, el) {
+  currentSort = sort;
+  document.querySelectorAll('.filter-sort-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderFilteredStories();
+}
+function setGenre(genre, el) {
+  currentGenre = genre;
+  document.querySelectorAll('.filter-genre-chip').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderFilteredStories();
+}
+function renderFilteredStories() {
+  let stories = [...allStoriesCache];
+  // Filter by genre
+  if (currentGenre) {
+    stories = stories.filter(s => {
+      const tags = (s.tags || '').split(',').map(g => g.trim().toLowerCase());
+      return tags.includes(currentGenre.toLowerCase());
+    });
+  }
+  // Filter by search query (title, author, tags, status)
+  if (currentSearchQ) {
+    const q = currentSearchQ;
+    const statusMap = { 'hoàn thành': 'full', 'full': 'full', 'đang ra': 'on', 'on': 'on' };
+    const statusFilter = statusMap[q];
+    stories = stories.filter(s => {
+      if (statusFilter) return (s.status || '') === statusFilter;
+      return (
+        (s.title || '').toLowerCase().includes(q) ||
+        (s.author || '').toLowerCase().includes(q) ||
+        (s.tags || '').toLowerCase().includes(q)
+      );
+    });
+  }
+  // Sort / filter by status
+  if (currentSort === 'views') {
+    stories.sort((a,b) => (b.total_views||0) - (a.total_views||0));
+  } else if (currentSort === 'alpha') {
+    stories.sort((a,b) => (a.title||'').localeCompare(b.title||'', 'vi'));
+  } else if (currentSort === 'alpha-desc') {
+    stories.sort((a,b) => (b.title||'').localeCompare(a.title||'', 'vi'));
+  } else if (currentSort === 'full') {
+    stories = stories.filter(s => s.status === 'full');
+    stories.sort((a,b) => {
+      const da = latestChDateCache[a.id] || a.created_at || '';
+      const db = latestChDateCache[b.id] || b.created_at || '';
+      return db.localeCompare(da);
+    });
+  } else if (currentSort === 'on') {
+    stories = stories.filter(s => s.status === 'on' || !s.status);
+    stories.sort((a,b) => {
+      const da = latestChDateCache[a.id] || a.created_at || '';
+      const db = latestChDateCache[b.id] || b.created_at || '';
+      return db.localeCompare(da);
+    });
+  } else {
+    // latest: by latest chapter date
+    stories.sort((a,b) => {
+      const da = latestChDateCache[a.id] || a.created_at || '';
+      const db = latestChDateCache[b.id] || b.created_at || '';
+      return db.localeCompare(da);
+    });
+  }
+  const grid = document.getElementById('dien-thoai-list');
+  if (!stories.length) {
+    grid.innerHTML = '<p style="padding:12px;font-size:13px;color:var(--text-muted);grid-column:1/-1">Không tìm thấy truyện nào</p>';
+    return;
+  }
+  grid.innerHTML = stories.map(s => {
+    const ch = chCountsCache[s.id] || 0;
     const tags = (s.tags || '').split(',').map(g => g.trim()).filter(Boolean).slice(0, 2);
     const statusBadge = s.status === 'full'
       ? '<span class="status-badge status-full">Full</span>'
-      : s.status === 'on'
-      ? '<span class="status-badge status-on">On</span>'
-      : '';
-    return `
-    <a class="new-update-card" href="story.html?story=${s.id}">
+      : s.status === 'on' ? '<span class="status-badge status-on">On</span>' : '';
+    return `<a class="new-update-card" href="story.html?story=${s.id}">
       <div class="new-update-cover-wrap">
         ${s.cover_url ? `<img src="${escapeHtml(s.cover_url)}" alt="${escapeHtml(s.title)}" loading="lazy">` : ''}
         ${ch > 0 ? `<span class="new-update-ch-badge">${ch} ch.</span>` : ''}
@@ -1171,6 +1319,19 @@ async function loadStories() {
       </div>
     </a>`;
   }).join('');
+}
+function buildGenreChips(stories) {
+  const genreSet = new Set();
+  stories.forEach(s => {
+    (s.tags || '').split(',').map(g => g.trim()).filter(Boolean).forEach(g => genreSet.add(g));
+  });
+  const wrap = document.getElementById('filterGenreWrap');
+  if (!wrap) return;
+  const allChip = `<button class="filter-genre-chip active" data-genre="" onclick="setGenre('',this)">Tất cả</button>`;
+  const chips = [...genreSet].sort((a,b) => a.localeCompare(b,'vi')).map(g =>
+    `<button class="filter-genre-chip" data-genre="${escapeHtml(g)}" onclick="setGenre('${escapeHtml(g)}',this)">${escapeHtml(g)}</button>`
+  ).join('');
+  wrap.innerHTML = allChip + chips;
 }
 
 loadStories();
@@ -1723,16 +1884,16 @@ async function renderRankModal() {
 
 
 <!-- MODAL BẢNG XẾP HẠNG -->
-<div class="rank-modal-overlay" id="rankModalOverlay" onclick="closeRankModal(event)">
+<div class="rank-modal-overlay" id="rankModalOverlay">
   <div class="rank-modal">
     <div class="rank-modal-head">
+      <button class="rank-modal-close" onclick="document.getElementById('rankModalOverlay').classList.remove('open')" title="Quay lại" style="background:none;border:none;cursor:pointer;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:all .15s;flex-shrink:0;">
+        <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      </button>
       <div class="rank-modal-title">
         <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
         Bảng xếp hạng toàn bộ
       </div>
-      <button class="rank-modal-close" onclick="document.getElementById('rankModalOverlay').classList.remove('open')">
-        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
     </div>
     <div class="rank-modal-body" id="rankModalBody">
       <div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:13px">Đang tải...</div>
