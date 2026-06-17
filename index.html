@@ -245,8 +245,9 @@ body {
   font-size: 13px; font-weight: 600; color: var(--text-muted);
   padding-left: 100%;
 }
-.notice-banner:hover .notice-scroll-text { animation-play-state: running; }
-.notice-scroll-wrap:hover .notice-scroll-text { animation-play-state: paused; }
+@media (hover: hover) and (pointer: fine) {
+  .notice-scroll-wrap:hover .notice-scroll-text { animation-play-state: paused; }
+}
 @media (max-width: 600px) { .notice-banner { margin: 10px 0.8rem; max-width: calc(100% - 1.6rem - 2px); } }
 @keyframes scroll-left {
   0%   { transform: translateX(0); }
@@ -285,10 +286,10 @@ body {
 .inline-search-btn svg { stroke: white; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; width: 14px; height: 14px; }
 
 /* ─── SECTION COMMON ──────────────────────── */
-.section { padding: 1.1rem 2rem; }
-@media (max-width: 600px) { .section { padding: 0.8rem 0.8rem; } }
-.sec-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-.sec-title { font-size: 14px; font-weight: 800; display: flex; align-items: center; gap: 6px; color: var(--text); }
+.section { padding: 1.1rem 2rem; box-sizing: border-box; max-width: 100%; overflow-x: hidden; }
+@media (max-width: 600px) { .section { padding: 0.8rem 0.6rem; } }
+.sec-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 8px; flex-wrap: nowrap; }
+.sec-title { font-size: 14px; font-weight: 800; display: flex; align-items: center; gap: 6px; color: var(--text); flex-shrink: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sec-title svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; color: var(--peach); }
 .see-all { font-size: 12px; color: var(--peach); background: none; border: none; cursor: pointer; font-family: 'Nunito', sans-serif; font-weight: 700; display: flex; align-items: center; gap: 3px; }
 .see-all:hover { text-decoration: underline; }
@@ -302,12 +303,16 @@ body {
 /* ─── PHẦN GỘP: ĐIỆN THOẠI, BIỂN CẢ VÀ GẬY ── */
 /* TOP RANK GRID (2 cột dạng card ngang) */
 .top-rank-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-@media (max-width: 600px) { .top-rank-grid { grid-template-columns: 1fr 1fr; gap: 8px; } }
+@media (max-width: 600px) { .top-rank-grid { grid-template-columns: 1fr 1fr; gap: 6px; } }
 .top-rank-card {
   background: var(--card); border: 1px solid var(--border);
   border-radius: 14px; padding: 10px 12px;
   display: flex; gap: 10px; align-items: center;
   cursor: pointer; transition: all .15s; text-decoration: none; color: var(--text);
+  box-sizing: border-box; min-width: 0; width: 100%;
+}
+@media (max-width: 600px) {
+  .top-rank-card { padding: 8px 8px; gap: 6px; }
 }
 .top-rank-card:hover { border-color: var(--peach-mid); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
 .rank-badge {
@@ -322,7 +327,11 @@ body {
 .rank-n { background: var(--border); color: var(--text-muted); }
 .rank-cover-wrap { width: 40px; height: 56px; border-radius: 6px; overflow: hidden; flex-shrink: 0; background: var(--peach-light); }
 .rank-cover-wrap img { width: 100%; height: 100%; object-fit: cover; }
-.rank-info { flex: 1; min-width: 0; }
+.rank-info { flex: 1; min-width: 0; overflow: hidden; }
+@media (max-width: 600px) {
+  .rank-cover-wrap { width: 34px; height: 48px; }
+  .rank-badge { width: 24px; height: 24px; font-size: 11px; }
+}
 .rank-title { font-size: 12px; font-weight: 700; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 3px; }
 .rank-author { font-size: 11px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 3px; }
 .rank-author svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
@@ -789,19 +798,23 @@ body.theme-dark .chat-box { background: #1e1e1e !important; border-color: #444 !
   position: absolute; top: calc(100% + 6px); right: 0; z-index: 400;
   background: var(--bg2); border: 1px solid var(--border);
   border-radius: 16px; padding: 14px 14px 12px;
-  width: 220px; box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+  width: 250px; box-shadow: 0 8px 28px rgba(0,0,0,0.12);
   display: none; flex-direction: column; gap: 8px;
 }
 .filter-dropdown.open { display: flex; }
 .filter-section-label { font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 2px; }
-.filter-sort-row { display: flex; gap: 5px; flex-wrap: wrap; }
-.filter-sort-btn {
-  flex: 1; padding: 5px 8px; border-radius: 10px; border: 1.5px solid var(--border);
-  background: none; font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 700;
+.filter-sort-pills { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.filter-sort-pill {
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+  padding: 7px 8px; border-radius: 20px; border: 1.5px solid var(--border);
+  background: none; font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700;
   color: var(--text-muted); cursor: pointer; transition: all .15s; white-space: nowrap;
 }
-.filter-sort-btn:hover { border-color: var(--peach-mid); color: var(--peach); }
-.filter-sort-btn.active { background: var(--peach); border-color: var(--peach); color: white; }
+.filter-sort-pill:hover { border-color: var(--peach-mid); color: var(--peach); }
+.filter-sort-pill.active { background: var(--peach); border-color: var(--peach); color: white; }
+.fsp-arrow { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.3; stroke-linecap: round; stroke-linejoin: round; transition: transform .2s; flex-shrink: 0; }
+.filter-sort-pill[data-dir="asc"] .fsp-arrow,
+.filter-sort-pill[data-dir="on"] .fsp-arrow { transform: rotate(180deg); }
 .filter-divider { height: 1px; background: var(--border); margin: 2px 0; }
 .filter-genre-wrap { display: flex; flex-wrap: wrap; gap: 5px; }
 .filter-genre-chip {
@@ -817,6 +830,11 @@ body.theme-dark .chat-box { background: #1e1e1e !important; border-color: #444 !
   align-items: center;
   gap: 0;
   position: relative;
+  flex-shrink: 0;
+}
+.sec-search-wrap.expanded {
+  flex: 1;
+  min-width: 0;
 }
 .sec-search-btn {
   background: none;
@@ -853,14 +871,20 @@ body.theme-dark .chat-box { background: #1e1e1e !important; border-color: #444 !
   pointer-events: none;
 }
 .sec-search-input.open {
-  width: 140px;
+  width: 180px;
   opacity: 1;
   border-bottom-color: var(--peach);
   padding: 5px 8px;
   pointer-events: auto;
 }
+.sec-search-wrap.expanded .sec-search-input.open {
+  width: auto;
+  flex: 1;
+  min-width: 0;
+}
 @media (max-width: 600px) {
   .sec-search-input.open { width: 110px; }
+  .sec-search-wrap.expanded .sec-search-input.open { width: auto; flex: 1; }
 }
 </style>
 </head>
@@ -992,7 +1016,7 @@ body.theme-dark .chat-box { background: #1e1e1e !important; border-color: #444 !
 
   <!-- Truyện mới thêm grid -->
   <div class="sec-head" style="margin-bottom:12px">
-    <div class="sec-title" style="font-size:13px">
+    <div class="sec-title" id="newUpdateTitle" style="font-size:13px">
       <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
       Mới cập nhật
     </div>
@@ -1014,13 +1038,23 @@ body.theme-dark .chat-box { background: #1e1e1e !important; border-color: #444 !
         <!-- FILTER DROPDOWN -->
         <div class="filter-dropdown" id="filterDropdown">
           <div class="filter-section-label">Sắp xếp</div>
-          <div class="filter-sort-row">
-            <button class="filter-sort-btn active" data-sort="latest" onclick="setSort('latest',this)">Mới nhất</button>
-            <button class="filter-sort-btn" data-sort="views" onclick="setSort('views',this)">Xem nhiều</button>
-            <button class="filter-sort-btn" data-sort="alpha" onclick="setSort('alpha',this)">A–Z</button>
-            <button class="filter-sort-btn" data-sort="alpha-desc" onclick="setSort('alpha-desc',this)">Z–A</button>
-            <button class="filter-sort-btn" data-sort="full" onclick="setSort('full',this)">Hoàn thành</button>
-            <button class="filter-sort-btn" data-sort="on" onclick="setSort('on',this)">Đang ra</button>
+          <div class="filter-sort-pills">
+            <button class="filter-sort-pill active" data-key="date" data-dir="desc" data-label-desc="Mới nhất" data-label-asc="Cũ nhất" onclick="cycleSortPill('date',this)">
+              <span class="fsp-label">Mới nhất</span>
+              <svg class="fsp-arrow" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="6 13 12 19 18 13"/></svg>
+            </button>
+            <button class="filter-sort-pill" data-key="views" data-dir="desc" data-label-desc="Xem nhiều" data-label-asc="Xem ít" onclick="cycleSortPill('views',this)">
+              <span class="fsp-label">Xem nhiều</span>
+              <svg class="fsp-arrow" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="6 13 12 19 18 13"/></svg>
+            </button>
+            <button class="filter-sort-pill" data-key="alpha" data-dir="asc" data-label-asc="A–Z" data-label-desc="Z–A" onclick="cycleSortPill('alpha',this)">
+              <span class="fsp-label">A–Z</span>
+              <svg class="fsp-arrow" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="6 13 12 19 18 13"/></svg>
+            </button>
+            <button class="filter-sort-pill" data-key="status" data-dir="on" data-label-on="Đang ra" data-label-full="Hoàn thành" onclick="cycleSortPill('status',this)">
+              <span class="fsp-label">Đang ra</span>
+              <svg class="fsp-arrow" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="6 13 12 19 18 13"/></svg>
+            </button>
           </div>
           <div class="filter-divider"></div>
           <div class="filter-section-label">Thể loại</div>
@@ -1122,14 +1156,20 @@ function goSearch() {
 }
 function toggleSecSearch() {
   const input = document.getElementById('secSearchInput');
+  const wrap = document.getElementById('secSearchWrap');
+  const title = document.getElementById('newUpdateTitle');
   if (input.classList.contains('open')) {
     if (!input.value.trim()) {
       input.classList.remove('open');
+      wrap.classList.remove('expanded');
+      if (title) title.style.display = '';
       currentSearchQ = '';
       renderFilteredStories();
     }
   } else {
     input.classList.add('open');
+    wrap.classList.add('expanded');
+    if (title) title.style.display = 'none';
     setTimeout(() => input.focus(), 50);
   }
 }
@@ -1139,9 +1179,13 @@ function goSearchSec() {
 }
 function collapseSecSearch() {
   const input = document.getElementById('secSearchInput');
+  const wrap = document.getElementById('secSearchWrap');
+  const title = document.getElementById('newUpdateTitle');
   setTimeout(() => {
     if (!document.activeElement?.closest('#secSearchWrap')) {
       input.classList.remove('open');
+      wrap.classList.remove('expanded');
+      if (title) title.style.display = '';
       input.value = '';
       currentSearchQ = '';
       renderFilteredStories();
@@ -1213,7 +1257,8 @@ async function loadStories() {
 }
 
 /* ── FILTER & SORT ── */
-let currentSort = 'latest';
+let currentSortKey = 'date';
+let currentSortDir = 'desc';
 let currentGenre = '';
 let currentSearchQ = '';
 let allStoriesCache = [];
@@ -1232,10 +1277,26 @@ document.addEventListener('click', e => {
     dd.classList.remove('open');
   }
 });
-function setSort(sort, el) {
-  currentSort = sort;
-  document.querySelectorAll('.filter-sort-btn').forEach(b => b.classList.remove('active'));
+const sortDirCycle = {
+  date:   ['desc', 'asc'],
+  views:  ['desc', 'asc'],
+  alpha:  ['asc', 'desc'],
+  status: ['on', 'full']
+};
+function cycleSortPill(key, el) {
+  const dirs = sortDirCycle[key];
+  if (currentSortKey === key) {
+    // Đang active -> đảo hướng
+    currentSortDir = currentSortDir === dirs[0] ? dirs[1] : dirs[0];
+  } else {
+    // Chọn nhóm mới -> dùng hướng mặc định
+    currentSortKey = key;
+    currentSortDir = dirs[0];
+  }
+  document.querySelectorAll('.filter-sort-pill').forEach(b => b.classList.remove('active'));
   el.classList.add('active');
+  el.dataset.dir = currentSortDir;
+  el.querySelector('.fsp-label').textContent = el.dataset['label' + currentSortDir.charAt(0).toUpperCase() + currentSortDir.slice(1)];
   renderFilteredStories();
 }
 function setGenre(genre, el) {
@@ -1268,33 +1329,25 @@ function renderFilteredStories() {
     });
   }
   // Sort / filter by status
-  if (currentSort === 'views') {
-    stories.sort((a,b) => (b.total_views||0) - (a.total_views||0));
-  } else if (currentSort === 'alpha') {
-    stories.sort((a,b) => (a.title||'').localeCompare(b.title||'', 'vi'));
-  } else if (currentSort === 'alpha-desc') {
-    stories.sort((a,b) => (b.title||'').localeCompare(a.title||'', 'vi'));
-  } else if (currentSort === 'full') {
-    stories = stories.filter(s => s.status === 'full');
-    stories.sort((a,b) => {
-      const da = latestChDateCache[a.id] || a.created_at || '';
-      const db = latestChDateCache[b.id] || b.created_at || '';
-      return db.localeCompare(da);
-    });
-  } else if (currentSort === 'on') {
-    stories = stories.filter(s => s.status === 'on' || !s.status);
-    stories.sort((a,b) => {
-      const da = latestChDateCache[a.id] || a.created_at || '';
-      const db = latestChDateCache[b.id] || b.created_at || '';
-      return db.localeCompare(da);
-    });
+  const byLatestChapter = (a, b) => {
+    const da = latestChDateCache[a.id] || a.created_at || '';
+    const db = latestChDateCache[b.id] || b.created_at || '';
+    return db.localeCompare(da);
+  };
+  if (currentSortKey === 'views') {
+    stories.sort((a,b) => currentSortDir === 'desc'
+      ? (b.total_views||0) - (a.total_views||0)
+      : (a.total_views||0) - (b.total_views||0));
+  } else if (currentSortKey === 'alpha') {
+    stories.sort((a,b) => currentSortDir === 'asc'
+      ? (a.title||'').localeCompare(b.title||'', 'vi')
+      : (b.title||'').localeCompare(a.title||'', 'vi'));
+  } else if (currentSortKey === 'status') {
+    stories = stories.filter(s => currentSortDir === 'full' ? s.status === 'full' : (s.status === 'on' || !s.status));
+    stories.sort(byLatestChapter);
   } else {
-    // latest: by latest chapter date
-    stories.sort((a,b) => {
-      const da = latestChDateCache[a.id] || a.created_at || '';
-      const db = latestChDateCache[b.id] || b.created_at || '';
-      return db.localeCompare(da);
-    });
+    // date: by latest chapter date
+    stories.sort((a,b) => currentSortDir === 'desc' ? byLatestChapter(a,b) : byLatestChapter(b,a));
   }
   const grid = document.getElementById('dien-thoai-list');
   if (!stories.length) {
