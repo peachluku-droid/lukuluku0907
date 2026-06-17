@@ -231,9 +231,9 @@ body {
 
 .tab-content { display: none; }
 .tab-content.active { display: block; }
-#tab-chapters { margin: 12px 0 1.4rem; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; background: var(--bg); }
-#tab-comments { margin: 12px 0 1.4rem; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; background: var(--bg); }
-#tab-info { margin: 12px 0 1.4rem; border-radius: 14px; border: 1px solid var(--border); background: var(--bg); }
+#tab-chapters { margin: 12px 1.2rem 1.4rem; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; background: var(--bg); }
+#tab-comments { margin: 12px 1.2rem 1.4rem; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; background: var(--bg); }
+#tab-info { margin: 12px 1.2rem 1.4rem; border-radius: 14px; border: 1px solid var(--border); background: var(--bg); }
 
 .tab-frame { margin: 12px 0 1.4rem; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; position: relative; background: var(--bg); }
 .tab-deco-top, .tab-deco-bot { display: none; }
@@ -848,7 +848,6 @@ function renderChapters(filtered = null) {
       ? `<div class="chapter-meta"><div class="chapter-meta-right"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>${formatViews(ch.views)}</div></div>`
       : '';
     return `<a class="chapter-item${isRead ? ' read' : ''}" href="chapter.html?story=${storyId}&chapter=${ch.id}">
-      <div class="chapter-num-badge">${num}</div>
       <div class="chapter-info">
         <div class="chapter-name">${escapeHtml(ch.title || `Chương ${num}`)}</div>
         ${viewsMeta}
