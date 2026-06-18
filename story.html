@@ -174,7 +174,9 @@ body {
 .cover-book img { width: 100%; height: 100%; object-fit: cover; }
 .cover-book-ph { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
 .cover-book-ph svg { width: 52px; height: 52px; stroke: var(--peach-mid); fill: none; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
-.story-body { background: var(--bg2); padding: 1.2rem 1.2rem 0; margin-bottom: 0; }
+.story-body { background: var(--bg2); padding: 1.2rem 0 0; margin-bottom: 0; }
+.story-detail-container { width: min(100%, 760px); margin: 0 auto; padding-inline: 16px; box-sizing: border-box; }
+.story-card { width: 100%; max-width: 100%; margin: 0; box-sizing: border-box; }
 .story-title-main { font-size: 22px; font-weight: 800; color: var(--text); line-height: 1.3; margin-bottom: 0.7rem; text-align: center; }
 .author-row { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 1rem; cursor: pointer; }
 .author-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--peach-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; border: 2px solid var(--border); }
@@ -220,7 +222,7 @@ body {
 .read-more-btn { background: none; border: none; cursor: pointer; color: var(--peach); font-size: 14.5px; font-weight: 700; padding: 4px 0; margin-top: 5px; font-family: 'Nunito', sans-serif; display: flex; align-items: center; gap: 4px; }
 .read-more-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; transition: transform .15s; }
 .read-more-btn.expanded svg { transform: rotate(180deg); }
-.content-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); background: var(--bg2); position: sticky; top: 56px; z-index: 90; transition: background .3s; margin: 0 -1.2rem; padding: 0 1.2rem; }
+.content-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); background: var(--bg2); position: sticky; top: 56px; z-index: 90; transition: background .3s; padding: 0; }
 .tab-btn { flex: 1; background: none; border: none; padding: 12px 0; font-size: 15px; font-weight: 700; color: var(--text-muted); cursor: pointer; position: relative; transition: color .15s; font-family: 'Nunito', sans-serif; display: flex; align-items: center; justify-content: center; gap: 5px; }
 .tab-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 .tab-btn:hover { color: var(--peach); }
@@ -231,9 +233,9 @@ body {
 
 .tab-content { display: none; }
 .tab-content.active { display: block; }
-#tab-chapters { margin: 12px 1.2rem 1.4rem; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; background: var(--bg); }
-#tab-comments { margin: 12px 1.2rem 1.4rem; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; background: var(--bg); }
-#tab-info { margin: 12px 1.2rem 1.4rem; border-radius: 14px; border: 1px solid var(--border); background: var(--bg); }
+#tab-chapters { margin: 12px 0 1.4rem; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; background: var(--bg); }
+#tab-comments { margin: 12px 0 1.4rem; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; background: var(--bg); }
+#tab-info { margin: 12px 0 1.4rem; border-radius: 14px; border: 1px solid var(--border); background: var(--bg); }
 
 .tab-frame { margin: 12px 0 1.4rem; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; position: relative; background: var(--bg); }
 .tab-deco-top, .tab-deco-bot { display: none; }
@@ -504,6 +506,7 @@ body                      { font-size: 16px; }
 </div>
 
 <div class="story-body">
+<div class="story-detail-container">
   <h1 class="story-title-main" id="story-title">Đang tải...</h1>
   <div class="author-row" onclick="goToAuthorProfile()" title="Xem hồ sơ người đăng">
     <div class="author-avatar" id="author-avatar">
@@ -550,17 +553,18 @@ body                      { font-size: 16px; }
     </span>
   </div>
   <div id="story-genres" style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:1.2rem"></div>
-  <div class="description-box">
+  <div class="description-box story-card">
     <div class="description-label">Tóm tắt</div>
     <div class="description-text clamped" id="story-description">...</div>
     <button class="read-more-btn" id="desc-toggle" onclick="toggleDesc()">
       Đọc thêm <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
     </button>
   </div>
+</div><!-- /.story-detail-container -->
 
-<div style="padding:0 1.2rem">
 <div style="height:12px;background:var(--bg2)"></div>
 <div class="content-tabs">
+<div class="story-detail-container" style="display:flex;width:100%;max-width:100%;padding-inline:0">
   <button class="tab-btn active" onclick="showTab('chapters',this)">
     <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
     Chương <span class="tab-count" id="tc-chapters">0</span>
@@ -569,10 +573,11 @@ body                      { font-size: 16px; }
     <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
     Review <span class="tab-count" id="tc-comments">0</span>
   </button>
+</div><!-- /.story-detail-container inner -->
+</div><!-- /.content-tabs -->
 
-</div>
-
-<div class="tab-content active" id="tab-chapters">
+<div class="story-detail-container">
+<div class="tab-content active story-card" id="tab-chapters">
   <div class="chapter-controls">
     <div class="chapter-count-label">
       <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
@@ -594,7 +599,7 @@ body                      { font-size: 16px; }
   </div>
 </div>
 
-<div class="tab-content" id="tab-comments">
+<div class="tab-content story-card" id="tab-comments">
   <div class="comment-section">
     <div id="compose-area"></div>
     <div class="comment-list" id="comment-list"></div>
@@ -605,9 +610,7 @@ body                      { font-size: 16px; }
   </div>
 </div>
 
-
-
-</div><!-- /.tabs-wrapper -->
+</div><!-- /.story-detail-container -->
 
 <div class="toast" id="toast"></div>
 </div><!-- /.page-wrapper -->
@@ -759,14 +762,7 @@ async function loadStory() {
 
     const created = story.created_at ? new Date(story.created_at).toLocaleDateString('vi-VN') : '—';
 
-    document.getElementById('info-grid').innerHTML = [
-      { label: 'Tác giả', val: story.author || 'Ẩn danh' },
-      { label: 'Trạng thái', val: isDone ? 'Hoàn thành' : 'Đang ra' },
-      { label: 'Đăng lần đầu', val: created },
-      { label: 'Cập nhật', val: '—', id: 'info-updated' },
-      { label: 'Lượt xem', val: formatViews(story.total_views || 0) },
-      { label: 'Bình chọn', val: formatViews(totalVotes) },
-    ].map(i => `<div style="background:var(--bg);border-radius:12px;padding:11px 13px"${i.id ? ` id="${i.id}"` : ''}><div style="font-size:12.5px;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">${i.label}</div><div style="font-size:16px;font-weight:700" ${i.id ? `id="${i.id}-val"` : ''}>${escapeHtml(i.val)}</div></div>`).join('');
+
 
     if (currentUser) {
       const [{ data: bm }, { data: fl }] = await Promise.all([
