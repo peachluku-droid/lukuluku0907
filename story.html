@@ -247,7 +247,7 @@ body {
 .sort-btn { padding: 5px 12px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 16px; font-size: 14px; font-weight: 700; color: var(--text); cursor: pointer; transition: all .15s; font-family: 'Nunito', sans-serif; display: flex; align-items: center; gap: 5px; }
 .sort-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: transform .2s; }
 .sort-btn:hover { background: var(--peach-light); border-color: var(--border-hover); }
-.chapter-search-bar { display: flex; align-items: center; gap: 8px; background: var(--bg2); border: 1.5px solid var(--border); border-radius: 22px; padding: 7px 15px; margin: 0 1.2rem .7rem; transition: border-color .15s; }
+.chapter-search-bar { display: flex; align-items: center; gap: 8px; background: var(--bg2); border: 1.5px solid var(--border); border-radius: 22px; padding: 7px 15px; margin: 0 0 .7rem; transition: border-color .15s; }
 .chapter-search-bar:focus-within { border-color: var(--peach); }
 .chapter-search-bar svg { width: 15px; height: 15px; stroke: var(--text-muted); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 .chapter-search-bar input { border: none; background: none; outline: none; font-size: 15px; color: var(--text); flex: 1; font-family: 'Nunito', sans-serif; }
@@ -289,11 +289,12 @@ body {
   border: 1.5px solid var(--border);
   border-radius: 22px;
   padding: 7px 15px;
-  margin: 10px 1.2rem;
+  margin: 10px 0 10px;
   transition: border-color .15s, background .2s;
   cursor: text;
   overflow: hidden;
   align-items: center;
+  min-height: 38px;
 }
 .comment-compose:focus-within { border-color: var(--peach); }
 .comment-compose.expanded {
@@ -629,6 +630,7 @@ if (!storyId) {
 }
 
 let allChapters = [], currentSort = 'asc', storyData = null, currentUser = null, currentUserProfile = null;
+let uploaderUserId = null;
 let comments = [], commentsPage = 0;
 const COMMENTS_PER_PAGE = 15;
 let commentTotal = 0;
@@ -703,9 +705,15 @@ function searchByAuthor() {
   location.href = 'search.html?author=' + encodeURIComponent(author);
 }
 
+function goToUserProfile(userId) {
+  if (userId && userId !== 'undefined' && userId !== 'null') {
+    location.href = 'profile.html?id=' + encodeURIComponent(userId);
+  }
+}
+
 function goToAuthorProfile() {
-  if (storyData?.user_id) {
-    location.href = 'profile.html?id=' + encodeURIComponent(storyData.user_id);
+  if (uploaderUserId) {
+    location.href = 'profile.html?id=' + encodeURIComponent(uploaderUserId);
   } else if (storyData?.author) {
     location.href = 'search.html?author=' + encodeURIComponent(storyData.author);
   }
@@ -732,6 +740,7 @@ async function loadStory() {
     setStoryMeta(story);
     document.getElementById('story-title').textContent = story.title || 'Không có tiêu đề';
     if (story.user_id) {
+      uploaderUserId = story.user_id;
       const { data: uploaderProf } = await sb.from('profiles').select('username, avatar_url').eq('id', story.user_id).maybeSingle();
       if (uploaderProf) {
         document.getElementById('story-author').textContent = uploaderProf.username || story.author || 'Ẩn danh';
@@ -955,10 +964,10 @@ function renderCommentCard(c) {
   const likedClass = lk.liked ? ' liked' : '';
   return `<div class="comment-card" id="cmt-${c.id}" onclick="toggleReplyBox('${c.id}','${escapeHtml(name)}')" style="cursor:pointer">
     <div class="comment-item">
-      <div class="comment-avatar" onclick="event.stopPropagation();if('${c.user_id}')location.href='profile.html?id=${c.user_id}'" style="cursor:pointer">${avatarHtml(c.user_id, c.user_email)}</div>
+      <div class="comment-avatar" onclick="event.stopPropagation();goToUserProfile('${c.user_id}')" style="cursor:pointer">${avatarHtml(c.user_id, c.user_email)}</div>
       <div class="comment-bubble">
         <div class="comment-header">
-          <span class="comment-name" onclick="event.stopPropagation();if('${c.user_id}')location.href='profile.html?id=${c.user_id}'" style="cursor:pointer">${escapeHtml(name)}</span>
+          <span class="comment-name" onclick="event.stopPropagation();goToUserProfile('${c.user_id}')" style="cursor:pointer">${escapeHtml(name)}</span>
           <span class="comment-time">${timeAgo(c.created_at)}</span>
         </div>
         <div class="comment-text">${escapeHtml(c.content)}</div>
@@ -1050,9 +1059,9 @@ async function loadReplies(parentId) {
     const isAdmin = currentUser && ADMIN_EMAILS.includes(currentUser.email);
     const lk = likesCache[r.id] || { count: 0, liked: false };
     return `<div class="reply-item" id="cmt-${r.id}" onclick="event.stopPropagation();tagReply('${parentId}','${escapeHtml(rname)}','${r.user_id}')" style="cursor:pointer">
-      <div class="reply-avatar" onclick="event.stopPropagation();if('${r.user_id}')location.href='profile.html?id=${r.user_id}'" style="cursor:pointer">${avatarHtml(r.user_id, r.user_email, 30, 12)}</div>
+      <div class="reply-avatar" onclick="event.stopPropagation();goToUserProfile('${r.user_id}')" style="cursor:pointer">${avatarHtml(r.user_id, r.user_email, 30, 12)}</div>
       <div class="reply-bubble">
-        <div class="reply-header"><span class="reply-name" style="cursor:pointer" onclick="event.stopPropagation();if('${r.user_id}')location.href='profile.html?id=${r.user_id}'" title="${escapeHtml(rname)}">@${escapeHtml(rname)}</span><span class="reply-time">${timeAgo(r.created_at)}</span></div>
+        <div class="reply-header"><span class="reply-name" style="cursor:pointer" onclick="event.stopPropagation();goToUserProfile('${r.user_id}')" title="${escapeHtml(rname)}">@${escapeHtml(rname)}</span><span class="reply-time">${timeAgo(r.created_at)}</span></div>
         <div class="reply-text">${escapeHtml(r.content)}</div>
         <div class="reply-actions">
           <button class="comment-action-btn${lk.liked ? ' liked' : ''}" onclick="toggleLike('${r.id}','${parentId}')">
