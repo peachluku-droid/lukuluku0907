@@ -1377,6 +1377,7 @@ function setTheme(name, el) {
   localStorage.setItem('plTheme', name);
   document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
   if (el) el.classList.add('active');
+  if (name === 'player') initPlayerIfNeeded();
 }
 
 function toggleThemeDrawer() {
@@ -1393,6 +1394,7 @@ document.addEventListener('click', e => {
 (function() {
   const saved = localStorage.getItem('plTheme') || 'light';
   document.body.className = 'theme-' + saved;
+  if (saved === 'player') { document.addEventListener('DOMContentLoaded', () => setTimeout(initPlayerIfNeeded, 500)); }
   const swatches = document.querySelectorAll('.swatch');
   const labels = ['light','dark','sepia','blue','pink','purple','warm','player'];
   swatches.forEach((s, i) => {
@@ -2459,12 +2461,9 @@ function plRandom() {
   plSelectStory(s);
 }
 
-// Hook vào setTheme
+// Hook initPlayer khi chọn theme player
 const _origSetTheme = setTheme;
-function setTheme(name, el) {
-  _origSetTheme(name, el);
-  if (name === 'player' && allStoriesCache?.length) initPlayerIfNeeded();
-}
+window._playerThemeHooked = true;
 // ═══════════════════════════════════════
 </script>
 <script src="navbar.js"></script>
