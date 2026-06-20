@@ -343,13 +343,15 @@ body { display: block; }
 
 /* Paragraph wrap — khoảng cách khớp với editor */
 .pv-para-wrap {
-  display: block; margin-bottom: 0; border-radius: 8px;
-  padding: 6px; transition: background .2s; overflow: hidden;
+  display: flex; align-items: flex-end; gap: 8px;
+  margin-bottom: 0; border-radius: 8px;
+  padding: 6px; transition: background .2s;
 }
 .pv-para-wrap.highlighted { background: color-mix(in srgb, var(--pv-accent) 8%, transparent); }
 
 /* Para text — khớp chính xác với .content-editable của editor */
 .pv-para-text {
+  flex: 1; min-width: 0;
   display: block;
   font-family: 'Noto Serif', Georgia, serif;
   font-size: var(--pv-font-size, 19px);
@@ -369,20 +371,20 @@ body { display: block; }
 
 /* Comment trigger — clone .cmt-trigger */
 .pv-cmt-trigger {
-  float: right; display: flex; align-items: center; gap: 4px;
-  white-space: nowrap;
-  background: color-mix(in srgb, var(--pv-accent) 8%, var(--pv-bg2));
-  border: 1.5px solid color-mix(in srgb, var(--pv-accent) 30%, var(--pv-border));
-  border-radius: 20px; padding: 3px 8px 3px 6px;
-  font-size: 11px; font-weight: 600;
-  color: color-mix(in srgb, var(--pv-accent) 70%, var(--pv-text));
-  cursor: pointer; transition: all .15s; line-height: 1.4;
-  font-family: 'Nunito', sans-serif; opacity: 0.7;
-  margin-left: 10px; margin-top: 6px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: none;
+  border: none;
+  padding: 2px;
+  color: var(--pv-meta);
+  cursor: pointer; transition: all .15s;
+  opacity: 0.7;
+  margin-bottom: 2px;
 }
-.pv-cmt-trigger svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.pv-cmt-trigger:hover, .pv-cmt-trigger.active { opacity: 1; background: color-mix(in srgb, var(--pv-accent) 15%, var(--pv-bg2)); border-color: var(--pv-accent2); color: var(--pv-accent); }
-.pv-cmt-trigger.has-cmt { opacity: 1; color: var(--pv-accent); border-color: var(--pv-accent2); }
+.pv-cmt-trigger svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.pv-cmt-trigger .pv-cnt { font-size: 10px; font-weight: 700; font-family: 'Nunito', sans-serif; margin-left: 2px; }
+.pv-cmt-trigger:hover, .pv-cmt-trigger.active { opacity: 1; color: var(--pv-accent); }
+.pv-cmt-trigger.has-cmt { opacity: 1; color: var(--pv-accent); }
 
 /* Comment sheet — bottom drawer giống .cmt-sheet */
 .pv-cmt-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 700; }
