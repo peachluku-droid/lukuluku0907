@@ -381,7 +381,7 @@ body { display: block; }
   opacity: 0.7;
   margin-bottom: 2px;
 }
-.pv-cmt-trigger svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.pv-cmt-trigger svg { width: 27px; height: 27px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .pv-cmt-trigger .pv-cnt { font-size: 10px; font-weight: 700; font-family: 'Nunito', sans-serif; margin-left: 2px; }
 .pv-cmt-trigger:hover, .pv-cmt-trigger.active { opacity: 1; color: var(--pv-accent); }
 .pv-cmt-trigger.has-cmt { opacity: 1; color: var(--pv-accent); }
@@ -1789,17 +1789,54 @@ function initPasteHandler() {
       // Loại mọi script/style/comment trước
       tmp.querySelectorAll('script, style, meta, link, title').forEach(el => el.remove());
 
-      // Convert mọi block (div/h1-h6/li/tr/blockquote...) thành <p>, giữ nội dung con
-      const BLOCKS = ['DIV','H1','H2','H3','H4','H5','H6','LI','TR','BLOCKQUOTE','SECTION','ARTICLE','HEADER','FOOTER','PRE','FIGURE','TABLE','THEAD','TBODY','UL','OL'];
-      function convertBlocks(root) {
-        Array.from(root.children).forEach(el => convertBlocks(el));
-        if (BLOCKS.includes(root.tagName)) {
-          const p = document.createElement('p');
-          while (root.firstChild) p.appendChild(root.firstChild);
-          root.replaceWith(p);
+      // Convert mọi block (div/h1-h6/li/tr/blockquote...) thành <p>, giữ nội dung con.
+      // Xử lý TOP-DOWN và "đẩy phẳng" (flatten) mọi block lồng nhau nhiều cấp ra thành
+      // các <p> ngang hàng — không bao giờ để <p> lồng trong <p>. Đây là yêu cầu bắt buộc
+      // để nội dung dán từ nguồn ngoài (Word, web khác, hoặc copy lại từ chính trang này)
+      // luôn quy về đúng 1 cấu trúc phẳng chuẩn, khớp 100% format/khoảng cách của bản thảo web.
+      const BLOCKS = ['DIV','H1','H2','H3','H4','H5','H6','LI','TR','BLOCKQUOTE','SECTION','ARTICLE','HEADER','FOOTER','PRE','FIGURE','TABLE','THEAD','TBODY','UL','OL','P'];
+
+      function flattenToParagraphs(root) {
+        // root: container tạm (DocumentFragment-like). Trả về mảng các <p> phẳng.
+        const result = [];
+        let current = document.createElement('p');
+
+        function flush() {
+          if (current.childNodes.length) result.push(current);
+          current = document.createElement('p');
         }
+
+        function walk(node) {
+          Array.from(node.childNodes).forEach(child => {
+            if (child.nodeType === Node.TEXT_NODE) {
+              current.appendChild(child);
+            } else if (child.nodeType === Node.ELEMENT_NODE) {
+              const tag = child.tagName;
+              if (BLOCKS.includes(tag)) {
+                // Gặp block mới → đóng đoạn hiện tại, đệ quy xuống con của block này,
+                // rồi mở đoạn mới tiếp theo (đảm bảo không bao giờ lồng <p> trong <p>)
+                flush();
+                walk(child);
+                flush();
+              } else if (tag === 'BR') {
+                current.appendChild(document.createElement('br'));
+              } else {
+                // inline tag (strong/em/b/i/u/img/span/font...) → giữ nguyên cây con,
+                // xử lý sanitize ở bước sau
+                current.appendChild(child.cloneNode(true));
+              }
+            }
+          });
+        }
+
+        walk(root);
+        flush();
+        return result.filter(p => p.childNodes.length > 0);
       }
-      convertBlocks(tmp);
+
+      const flatParas = flattenToParagraphs(tmp);
+      tmp.innerHTML = '';
+      flatParas.forEach(p => tmp.appendChild(p));
 
       // Unwrap mọi tag không thuộc whitelist (giữ nội dung con), strip toàn bộ attribute trừ src/alt cho img
       const WHITELIST = new Set(['P','BR','STRONG','B','EM','I','U','IMG']);
@@ -1867,7 +1904,65 @@ function cleanEditorContent() {
     );
   }
 
-  // Bước 1: unwrap/convert mọi tag không nằm trong whitelist (trừ block đặc biệt)
+  // Bước 1: "Đẩy phẳng" (flatten) toàn bộ cấu trúc về danh sách <p> ngang hàng,
+  // không bao giờ lồng <p> trong <p> dù nguồn paste/clipboard lồng bao nhiêu cấp.
+  // Đây là bước bắt buộc để nội dung copy từ nơi khác (kể cả copy lại chính trang
+  // web này) luôn quy về đúng 1 format/khoảng cách chuẩn của bản thảo.
+  function flattenToParagraphs(root) {
+    const result = [];
+    let current = document.createElement('p');
+
+    function flush() {
+      if (current.childNodes.length) result.push(current);
+      current = document.createElement('p');
+    }
+
+    function walk(node) {
+      Array.from(node.childNodes).forEach(child => {
+        if (child.nodeType === Node.TEXT_NODE) {
+          current.appendChild(child);
+        } else if (child.nodeType === Node.ELEMENT_NODE) {
+          if (isSpecialBlock(child)) {
+            flush();
+            result.push(child); // giữ nguyên block đặc biệt (media/annotation) làm 1 "đoạn" riêng
+            return;
+          }
+          const tag = child.tagName;
+          if (BLOCK_TAGS.has(tag)) {
+            // Nếu đây là <p> đơn (không còn block con khác) và đoạn hiện tại đang trống
+            // → giữ luôn data-pid gốc của nó thay vì merge, để không mất liên kết comment.
+            const hasNestedBlock = Array.from(child.children).some(c => BLOCK_TAGS.has(c.tagName) && !isSpecialBlock(c));
+            if (tag === 'P' && !hasNestedBlock && !current.childNodes.length) {
+              const keepPid = child.dataset && child.dataset.pid;
+              const p = document.createElement('p');
+              if (keepPid) p.dataset.pid = keepPid;
+              Array.from(child.childNodes).forEach(n => p.appendChild(n.cloneNode(true)));
+              result.push(p);
+              return;
+            }
+            flush();
+            walk(child);
+            flush();
+          } else if (tag === 'BR') {
+            current.appendChild(document.createElement('br'));
+          } else {
+            // inline tag (strong/em/b/i/u/img/a/span/font...) → giữ cây con, sanitize ở bước sau
+            current.appendChild(child.cloneNode(true));
+          }
+        }
+      });
+    }
+
+    walk(root);
+    flush();
+    return result.filter(p => p.nodeType !== Node.ELEMENT_NODE || isSpecialBlock(p) || p.childNodes.length > 0);
+  }
+
+  const flatParas = flattenToParagraphs(ed);
+  ed.innerHTML = '';
+  flatParas.forEach(p => ed.appendChild(p));
+
+  // Bước 2: unwrap/strip các tag inline không nằm whitelist (FONT/SPAN/...) còn sót lại
   function normalizeNode(node) {
     if (node.nodeType !== Node.ELEMENT_NODE) return;
     if (isSpecialBlock(node)) return;
@@ -1883,18 +1978,6 @@ function cleanEditorContent() {
       if (!parent) return;
       while (node.firstChild) parent.insertBefore(node.firstChild, node);
       parent.removeChild(node);
-      return;
-    }
-
-    // Heading / div / li / table / blockquote... → convert thành <p>, giữ nội dung con
-    if (BLOCK_TAGS.has(tag) && tag !== 'P') {
-      const parent = node.parentNode;
-      if (!parent) return;
-      const p = document.createElement('p');
-      while (node.firstChild) p.appendChild(node.firstChild);
-      parent.replaceChild(p, node);
-      // Truyền data-pid cũ nếu có, để giữ liên kết comment
-      if (node.dataset && node.dataset.pid) p.dataset.pid = node.dataset.pid;
       return;
     }
 
