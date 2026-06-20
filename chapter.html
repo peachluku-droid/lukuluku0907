@@ -119,12 +119,13 @@ body {
 .chapter-meta { font-size: 13px; color: var(--meta); margin-bottom: 36px; text-align: center; }
 
 .para-wrap {
-  display: block; margin-bottom: 1px; border-radius: 8px;
+  display: flex; align-items: flex-end; gap: 8px;
+  margin-bottom: 1px; border-radius: 8px;
   padding: 1px 6px; transition: background .2s;
-  /* overflow: hidden xóa vì clip float */
 }
 .para-wrap.highlighted { background: color-mix(in srgb, var(--accent) 8%, transparent); }
 .para-text {
+  flex: 1; min-width: 0;
   display: block;
   font-weight: var(--font-weight, 400);
   font-style: var(--font-style, normal);
@@ -144,24 +145,21 @@ body {
 .para-text br { display: block; }
 
 .cmt-trigger {
-  float: right;
-  clear: right;
-  display: flex; align-items: center; gap: 3px;
-  white-space: nowrap;
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 12px; padding: 2px 6px 2px 5px;
-  font-size: 10px; font-weight: 600;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: none;
+  border: none;
+  padding: 2px;
   color: var(--text-muted);
-  cursor: pointer; transition: all .15s; line-height: 1.4;
-  font-family: 'Nunito', sans-serif; opacity: 0.55;
-  margin-left: 8px; margin-top: 2px; margin-bottom: 2px;
+  cursor: pointer; transition: all .15s;
+  opacity: 0.55;
+  margin-bottom: 2px;
 }
-.cmt-trigger svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.cmt-trigger:hover { opacity: 1; background: color-mix(in srgb, var(--accent) 15%, var(--bg2)); border-color: var(--accent2); color: var(--accent); }
-.cmt-trigger.active { opacity: 1; background: color-mix(in srgb, var(--accent) 15%, var(--bg2)); border-color: var(--accent); color: var(--accent); }
-.cmt-trigger.has-cmt { opacity: 1; background: color-mix(in srgb, var(--accent) 12%, var(--bg2)); border-color: var(--accent2); color: var(--accent); }
-.cmt-trigger .cnt { font-weight: 700; }
+.cmt-trigger svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.cmt-trigger .cnt { font-size: 10px; font-weight: 700; font-family: 'Nunito', sans-serif; margin-left: 2px; }
+.cmt-trigger:hover { opacity: 1; color: var(--accent); }
+.cmt-trigger.active { opacity: 1; color: var(--accent); }
+.cmt-trigger.has-cmt { opacity: 1; color: var(--accent); }
 
 .ic { display:inline-block; vertical-align:-3px; margin-right:4px; width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
 .chapter-stats {
@@ -962,8 +960,7 @@ function renderParagraphs(content) {
     return `
     <div class="para-wrap" data-pid="${pid}">
       <div class="para-text">${rendered}</div>
-      <button class="cmt-trigger" data-pid="${pid}">${CMT_ICON}<span class="cnt">0</span></button>
-      <div style="clear:both"></div>
+      <button class="cmt-trigger" data-pid="${pid}">${CMT_ICON}<span class="cnt"></span></button>
     </div>`
   }).join('')
   document.querySelectorAll('.cmt-trigger').forEach(btn => {
@@ -1111,7 +1108,7 @@ async function loadAllCounts() {
   data.forEach(r => { counts[r.paragraph_id] = (counts[r.paragraph_id] || 0) + 1 })
   document.querySelectorAll('.cmt-trigger').forEach(btn => {
     const c = counts[btn.dataset.pid] || 0
-    btn.querySelector('.cnt').textContent = c
+    btn.querySelector('.cnt').textContent = c > 0 ? c : ''
     btn.classList.toggle('has-cmt', c > 0)
   })
   const total = data.length
