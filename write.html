@@ -358,11 +358,12 @@ body { display: block; }
 }
 .pv-para-text p, .pv-para-text div {
   margin-top: 0;
-  margin-bottom: 0.5em;
+  margin-bottom: 0.3em;
   line-height: 1.4;
   font-family: 'Noto Serif', Georgia, serif;
   font-size: var(--pv-font-size, 19px);
 }
+.pv-para-text p:last-child, .pv-para-text div:last-child { margin-bottom: 0; }
 .pv-para-text b, .pv-para-text strong { font-weight: 700; }
 .pv-para-text i, .pv-para-text em { font-style: italic; }
 
@@ -541,7 +542,7 @@ body { display: block; }
 .content-editable:empty::before { content: attr(data-ph); color: var(--text-muted); font-style: italic; }
 .content-editable p {
   margin-top: 0;
-  margin-bottom: 0;
+  margin-bottom: 0.3em;
   font-family: 'Noto Serif', Georgia, serif !important;
   font-size: 19px !important;
   line-height: 1.4 !important;
@@ -1685,6 +1686,11 @@ function newChapter() {
 }
 
 // ── SAVE / PUBLISH ──
+let __paraIdSeq = 0;
+function genParaId() {
+  __paraIdSeq++;
+  return 'pid_' + Date.now().toString(36) + '_' + __paraIdSeq.toString(36) + '_' + Math.random().toString(36).slice(2, 8);
+}
 async function saveDraft() {
   // Lấy session và tự refresh nếu cần
   let session;
@@ -1703,14 +1709,14 @@ async function saveDraft() {
   if (!title) { showToast('Nhập tên chương trước khi lưu!', 'err'); document.getElementById('chTitle').focus(); return; }
 
   // Clean toàn bộ inline style/font do browser hoặc paste để lại
+  // (chuẩn hóa cấu trúc về p/br/strong/b/em/i/u/img; pid cũ trên block bị convert vẫn được giữ)
   cleanEditorContent();
 
-  // Gán data-pid cố định vào từng đoạn trước khi lưu
+  // Gán data-pid cố định vào từng đoạn trước khi lưu (mọi thẻ phải có data-pid duy nhất)
   const ed = document.getElementById('chContent');
-  let pidCounter = 0;
-  ed.querySelectorAll('p, div:not(#chContent)').forEach(el => {
+  ed.querySelectorAll('p, .media-block, .annotation-block').forEach(el => {
     if (!el.dataset.pid) {
-      el.dataset.pid = 'pid_' + Date.now() + '_' + (pidCounter++);
+      el.dataset.pid = genParaId();
     }
   });
   const content = ed.innerHTML;
@@ -1763,7 +1769,7 @@ async function publishChapter() {
 
 // ── EDITOR TOOLS ──
 
-// Fix lỗi 1: Paste sạch — strip toàn bộ font/color/style từ clipboard
+// Fix lỗi 1: Paste sạch — chỉ giữ p, br, strong, b, em, i, u, img; loại bỏ toàn bộ style/font-family/font-size/line-height/margin/padding/span style
 function initPasteHandler() {
   const ed = document.getElementById('chContent');
   if (!ed) return;
@@ -1771,29 +1777,52 @@ function initPasteHandler() {
     e.preventDefault();
     const clipData = e.clipboardData || window.clipboardData;
 
-    // Luôn lấy plain text để đảm bảo không bị lỗi font/style từ nền tảng khác
-    // Nếu có HTML thì dùng textContent để extract text thuần, giữ nguyên xuống dòng
-    let pasteHtml = '';
     const rawHtml = clipData.getData('text/html');
+    let pasteHtml = '';
+
     if (rawHtml) {
       const tmp = document.createElement('div');
       tmp.innerHTML = rawHtml;
-      // Chuyển block elements thành newline trước khi lấy text
-      tmp.querySelectorAll('p, div, br, h1, h2, h3, h4, h5, h6, li, tr').forEach(el => {
-        if (el.tagName === 'BR') {
-          el.replaceWith('\n');
-        } else {
-          el.insertAdjacentText('beforebegin', '');
-          el.insertAdjacentText('afterend', '\n');
+
+      // Loại mọi script/style/comment trước
+      tmp.querySelectorAll('script, style, meta, link, title').forEach(el => el.remove());
+
+      // Convert mọi block (div/h1-h6/li/tr/blockquote...) thành <p>, giữ nội dung con
+      const BLOCKS = ['DIV','H1','H2','H3','H4','H5','H6','LI','TR','BLOCKQUOTE','SECTION','ARTICLE','HEADER','FOOTER','PRE','FIGURE','TABLE','THEAD','TBODY','UL','OL'];
+      function convertBlocks(root) {
+        Array.from(root.children).forEach(el => convertBlocks(el));
+        if (BLOCKS.includes(root.tagName)) {
+          const p = document.createElement('p');
+          while (root.firstChild) p.appendChild(root.firstChild);
+          root.replaceWith(p);
         }
-      });
-      const lines = tmp.textContent
-        .split('\n')
-        .map(l => l.trim())
-        .filter((l, i, arr) => l || (arr[i-1] !== '' )); // giữ 1 dòng trống, bỏ nhiều dòng trống liên tiếp
-      pasteHtml = lines
-        .map(l => l ? `<p>${l.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</p>` : '<p><br></p>')
-        .join('');
+      }
+      convertBlocks(tmp);
+
+      // Unwrap mọi tag không thuộc whitelist (giữ nội dung con), strip toàn bộ attribute trừ src/alt cho img
+      const WHITELIST = new Set(['P','BR','STRONG','B','EM','I','U','IMG']);
+      function sanitize(root) {
+        Array.from(root.childNodes).forEach(node => {
+          if (node.nodeType === Node.ELEMENT_NODE) {
+            sanitize(node);
+            if (!WHITELIST.has(node.tagName)) {
+              const parent = node.parentNode;
+              while (node.firstChild) parent.insertBefore(node.firstChild, node);
+              parent.removeChild(node);
+            } else {
+              Array.from(node.attributes).forEach(attr => {
+                if (node.tagName === 'IMG' && (attr.name === 'src' || attr.name === 'alt')) return;
+                node.removeAttribute(attr.name);
+              });
+            }
+          }
+        });
+      }
+      sanitize(tmp);
+
+      // Đảm bảo có ít nhất 1 đoạn, loại bỏ p rỗng thừa (giữ tối đa 1 dòng trống liên tiếp)
+      let html = tmp.innerHTML;
+      pasteHtml = html || '<p><br></p>';
     } else {
       const text = clipData.getData('text/plain') || '';
       const lines = text.split('\n').map(l => l.trim());
@@ -1802,7 +1831,7 @@ function initPasteHandler() {
         .join('');
     }
     document.execCommand('insertHTML', false, pasteHtml);
-    // Clean lại sau khi paste để đảm bảo không còn inline style nào
+    // Clean lại sau khi paste để đảm bảo không còn inline style/tag lạ nào
     setTimeout(() => cleanEditorContent(), 0);
     updateWordCount();
     isDirty = true;
@@ -1813,7 +1842,11 @@ function initPasteHandler() {
 
 // ── CLEAN EDITOR CONTENT ──
 // Strip toàn bộ inline style/font/color do browser hoặc paste để lại
-// Giữ nguyên: bold/italic/underline (qua <b><i><u>/<strong><em>), link, và các block đặc biệt
+// Chuẩn hóa cấu trúc về đúng whitelist: p, br, strong, b, em, i, u, img
+// Giữ nguyên: link, và các block đặc biệt (media/annotation)
+const ALLOWED_TAGS = new Set(['P', 'BR', 'STRONG', 'B', 'EM', 'I', 'U', 'IMG', 'A']);
+const BLOCK_TAGS = new Set(['DIV', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'TR', 'BLOCKQUOTE', 'SECTION', 'ARTICLE', 'HEADER', 'FOOTER', 'PRE', 'FIGURE', 'FIGCAPTION', 'TABLE', 'THEAD', 'TBODY', 'UL', 'OL', 'P']);
+
 function cleanEditorContent() {
   const ed = document.getElementById('chContent');
   if (!ed) return;
@@ -1822,47 +1855,88 @@ function cleanEditorContent() {
   const KEEP_ATTRS = new Set(['data-pid', 'href', 'target', 'rel', 'src', 'alt',
     'data-vid', 'data-yt', 'id', 'class', 'contenteditable', 'data-delete-media']);
 
-  function cleanNode(node) {
-    if (node.nodeType !== Node.ELEMENT_NODE) return;
-
-    // Bỏ qua các block đặc biệt (media, annotation)
-    if (node.classList && (
+  function isSpecialBlock(node) {
+    return node.nodeType === Node.ELEMENT_NODE && node.classList && (
       node.classList.contains('media-block') ||
       node.classList.contains('annotation-block') ||
       node.classList.contains('annotation-toggle') ||
       node.classList.contains('annotation-body') ||
       node.dataset.vid || node.dataset.yt
-    )) return;
+    );
+  }
 
-    // Xóa style inline
-    if (node.hasAttribute('style')) node.removeAttribute('style');
+  // Bước 1: unwrap/convert mọi tag không nằm trong whitelist (trừ block đặc biệt)
+  function normalizeNode(node) {
+    if (node.nodeType !== Node.ELEMENT_NODE) return;
+    if (isSpecialBlock(node)) return;
 
-    // Xóa font tag (browser cũ)
-    if (node.tagName === 'FONT') {
+    // Đệ quy con trước (bottom-up) để xử lý lồng nhau đúng
+    Array.from(node.childNodes).forEach(child => normalizeNode(child));
+
+    const tag = node.tagName;
+
+    // FONT/SPAN (không class) → unwrap, giữ nội dung con
+    if (tag === 'FONT' || (tag === 'SPAN' && !node.className)) {
       const parent = node.parentNode;
-      while (node.firstChild) parent.insertBefore(node.firstChild, node);
-      parent.removeChild(node);
-      return; // đã thay thế node, không cần duyệt con
-    }
-
-    // Xóa span không có class (chỉ là wrapper style từ paste/browser)
-    if (node.tagName === 'SPAN' && !node.className) {
-      const parent = node.parentNode;
+      if (!parent) return;
       while (node.firstChild) parent.insertBefore(node.firstChild, node);
       parent.removeChild(node);
       return;
     }
 
-    // Xóa attribute không cần thiết
+    // Heading / div / li / table / blockquote... → convert thành <p>, giữ nội dung con
+    if (BLOCK_TAGS.has(tag) && tag !== 'P') {
+      const parent = node.parentNode;
+      if (!parent) return;
+      const p = document.createElement('p');
+      while (node.firstChild) p.appendChild(node.firstChild);
+      parent.replaceChild(p, node);
+      // Truyền data-pid cũ nếu có, để giữ liên kết comment
+      if (node.dataset && node.dataset.pid) p.dataset.pid = node.dataset.pid;
+      return;
+    }
+
+    // Tag không nằm whitelist và không phải block đã xử lý ở trên → unwrap (giữ nội dung)
+    if (!ALLOWED_TAGS.has(tag)) {
+      const parent = node.parentNode;
+      if (!parent) return;
+      while (node.firstChild) parent.insertBefore(node.firstChild, node);
+      parent.removeChild(node);
+      return;
+    }
+  }
+
+  Array.from(ed.childNodes).forEach(child => normalizeNode(child));
+
+  // Bước 2: strip style/attribute thừa trên các node còn lại
+  function stripAttrs(node) {
+    if (node.nodeType !== Node.ELEMENT_NODE) return;
+    if (isSpecialBlock(node)) return;
+
+    if (node.hasAttribute('style')) node.removeAttribute('style');
     Array.from(node.attributes).forEach(attr => {
       if (!KEEP_ATTRS.has(attr.name)) node.removeAttribute(attr.name);
     });
 
-    // Đệ quy con (clone list để tránh live NodeList bug)
-    Array.from(node.childNodes).forEach(child => cleanNode(child));
+    Array.from(node.childNodes).forEach(child => stripAttrs(child));
   }
 
-  Array.from(ed.childNodes).forEach(child => cleanNode(child));
+  Array.from(ed.childNodes).forEach(child => stripAttrs(child));
+
+  // Bước 3: mọi text node hoặc inline content nằm trực tiếp dưới #chContent
+  // (không bọc trong p/block đặc biệt) → bọc lại vào <p> để đảm bảo cấu trúc chuẩn
+  Array.from(ed.childNodes).forEach(node => {
+    const isBlockLevel = node.nodeType === Node.ELEMENT_NODE && (
+      node.tagName === 'P' || isSpecialBlock(node) || node.tagName === 'BR'
+    );
+    if (!isBlockLevel) {
+      const text = node.textContent ? node.textContent.replace(/\u00a0/g, '').trim() : '';
+      if (!text && node.nodeType === Node.TEXT_NODE) { ed.removeChild(node); return; }
+      const p = document.createElement('p');
+      ed.insertBefore(p, node);
+      p.appendChild(node);
+    }
+  });
 }
 
 
@@ -2192,12 +2266,23 @@ function renderPvParagraphs(rawHtml, paraCmts = {}) {
 
   const CMT_ICON_SVG = `<svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`;
 
+  const seenPid = new Set();
   container.innerHTML = blocks.map((block, i) => {
-    const pid = 'p' + (i + 1);
-    const rendered = block.type === 'html' ? block.content : escH(block.content);
+    let pid = null;
+    if (block.type === 'html') {
+      const m = block.content.match(/data-pid="([^"]+)"/);
+      if (m) pid = m[1];
+    }
     const textForHash = (block.type === 'html'
       ? document.createElement('div') && (() => { const d = document.createElement('div'); d.innerHTML = block.content; return d.textContent; })()
       : block.content);
+    if (!pid) pid = 'h' + paraHash(textForHash) + '_' + (i + 1);
+    let uniquePid = pid;
+    let dupCount = 1;
+    while (seenPid.has(uniquePid)) { uniquePid = pid + '_' + (++dupCount); }
+    seenPid.add(uniquePid);
+    pid = uniquePid;
+    const rendered = block.type === 'html' ? block.content : escH(block.content);
     const hash = paraHash(textForHash);
     const savedCmts = paraCmts[hash];
     const cmtCount = savedCmts ? 1 : 0;
