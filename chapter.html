@@ -150,12 +150,12 @@ body {
   background: none;
   border: none;
   padding: 2px;
-  color: var(--text-muted);
+  color: var(--meta);
   cursor: pointer; transition: all .15s;
   opacity: 0.55;
   margin-bottom: 2px;
 }
-.cmt-trigger svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.cmt-trigger svg { width: 27px; height: 27px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .cmt-trigger .cnt { font-size: 10px; font-weight: 700; font-family: 'Nunito', sans-serif; margin-left: 2px; }
 .cmt-trigger:hover { opacity: 1; color: var(--accent); }
 .cmt-trigger.active { opacity: 1; color: var(--accent); }
@@ -307,24 +307,24 @@ body {
 .cmt-sheet-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 299; }
 .cmt-sheet-overlay.open { display: block; }
 .cmt-sheet {
-  position: fixed; bottom: 0; left: 0; right: 0; background: var(--panel);
-  border-top: 1.5px solid var(--border); border-radius: 20px 20px 0 0;
-  box-shadow: 0 -4px 30px rgba(0,0,0,0.12); z-index: 300;
-  display: flex; flex-direction: column; max-height: 75vh;
-  transform: translateY(100%); transition: transform .3s cubic-bezier(.32,1,.4,1);
+  position: fixed; inset: 0; background: var(--panel);
+  z-index: 300;
+  display: flex; flex-direction: column; height: 100vh; height: 100dvh;
+  transform: translateX(100%); transition: transform .28s cubic-bezier(.32,1,.4,1);
 }
-.cmt-sheet.open { transform: translateY(0); }
-.cmt-sheet-handle { width: 40px; height: 4px; background: var(--border); border-radius: 4px; margin: 12px auto 0; flex-shrink: 0; }
+.cmt-sheet.open { transform: translateX(0); }
+.cmt-sheet-handle { display: none; }
 .cmt-sheet-header {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 16px; flex-shrink: 0; border-bottom: 1px solid var(--border);
+  padding: 14px 16px; flex-shrink: 0; border-bottom: 1px solid var(--border);
+  padding-top: max(14px, env(safe-area-inset-top));
 }
-.cmt-sheet-title { font-size: 14px; font-weight: 700; color: var(--accent); }
+.cmt-sheet-title { font-size: 16px; font-weight: 700; color: var(--accent); }
 .cmt-sheet-close {
   background: none; border: none; cursor: pointer; color: var(--meta);
-  padding: 2px 6px; border-radius: 8px; display: flex; align-items: center;
+  padding: 6px 8px; border-radius: 8px; display: flex; align-items: center;
 }
-.cmt-sheet-close svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+.cmt-sheet-close svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; }
 .cmt-sheet-close:hover { background: var(--sidebar); }
 .cmt-para-quote {
   padding: 12px 18px; background: color-mix(in srgb, var(--accent) 6%, var(--bg2));
@@ -334,9 +334,17 @@ body {
   display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
   flex-shrink: 0; display: none;
 }
-.cmt-para-quote.visible { display: -webkit-box; }
+.cmt-para-quote.visible { display: -webkit-box; margin-top: 12px; }
 
 .cmt-sheet-list { flex: 1; overflow-y: auto; padding: 8px 16px; display: flex; flex-direction: column; gap: 0; }
+.cmt-sheet-back {
+  background: none; border: none; cursor: pointer; color: var(--text);
+  padding: 6px; border-radius: 8px; display: flex; align-items: center; flex-shrink: 0;
+}
+.cmt-sheet-back svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.cmt-sheet-back:hover { background: var(--sidebar); }
+.cmt-sheet-overview { flex: 1; overflow-y: auto; padding: 12px 16px; }
+.cmt-sheet-detail { flex: 1; display: flex; flex-direction: column; min-height: 0; }
 .cmt-bubble { display: flex; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--border); }
 .cmt-bubble:last-child { border-bottom: none; }
 .cmt-avatar { width: 38px; height: 38px; border-radius: 50%; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; flex-shrink: 0; font-family: 'Nunito', sans-serif; }
@@ -570,7 +578,7 @@ body {
     <div class="chapter-stats">
       <span><svg class="ic" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span id="view-count">0</span> lượt đọc</span>
       <span><svg class="ic" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span id="vote-count">0</span> vote</span>
-      <span><svg class="ic" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span id="total-cmt-count-top">0</span> bình luận</span>
+      <span style="cursor:pointer" onclick="openCmtOverviewFull()"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span id="total-cmt-count-top">0</span> bình luận</span>
     </div>
 
     <div id="paragraphs-container">
@@ -605,15 +613,7 @@ body {
         </audio>
       </div>
 
-      <div class="cmt-overview-section" id="cmt-overview-end" style="display:none">
-        <div class="cmt-overview-head">
-          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          Bình luận chương
-        </div>
-        <div class="cmt-overview-list" id="cmt-overview-list">
-          <p class="toc-empty">Đang tải...</p>
-        </div>
-      </div>
+      <!-- Khối tổng quan bình luận giờ hiển thị full-page qua openCmtOverviewFull(), không còn inline ở đây -->
 
       <div class="toc-inline-section">
         <div class="toc-inline-head">
@@ -646,34 +646,48 @@ body {
 <div class="cmt-sheet" id="cmt-sheet">
   <div class="cmt-sheet-handle"></div>
   <div class="cmt-sheet-header">
-    <span class="cmt-sheet-title" id="sheet-pid-label">Bình luận đoạn 1</span>
+    <div style="display:flex;align-items:center;gap:8px;min-width:0">
+      <button class="cmt-sheet-back" id="cmt-sheet-back" onclick="backToCmtOverview()" style="display:none">
+        <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      </button>
+      <span class="cmt-sheet-title" id="sheet-pid-label">Bình luận chương</span>
+    </div>
     <button class="cmt-sheet-close" onclick="closeCmtSheet()">
       <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
   </div>
-  <div class="cmt-para-quote" id="cmt-para-quote"></div>
-  <div class="cmt-sheet-list" id="sheet-cmt-list">
-    <p class="empty-msg">Đang tải...</p>
+
+  <div class="cmt-sheet-overview" id="cmt-sheet-overview">
+    <div class="cmt-overview-list" id="cmt-overview-list-full">
+      <p class="toc-empty">Đang tải...</p>
+    </div>
   </div>
-  <div class="cmt-sheet-input">
-    <div class="sheet-emoji-row">
-      <button class="sheet-emoji-btn" onclick="toggleSheetPicker()">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-      </button>
-      <button class="sheet-img-btn" onclick="document.getElementById('sheet-img-input').click()" title="Thêm ảnh">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-      </button>
-      <input type="file" id="sheet-img-input" accept="image/*" style="display:none" onchange="previewImg(this)">
+
+  <div class="cmt-sheet-detail" id="cmt-sheet-detail" style="display:none">
+    <div class="cmt-para-quote" id="cmt-para-quote"></div>
+    <div class="cmt-sheet-list" id="sheet-cmt-list">
+      <p class="empty-msg">Đang tải...</p>
     </div>
-    <div class="sheet-emoji-picker" id="sheet-emoji-picker"></div>
-    <div id="img-preview-container"></div>
-    <div class="sheet-input-bar">
-      <textarea class="sheet-text-inline" id="sheet-cmt-input" placeholder="Viết bình luận..." rows="1"
-        oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
-      <button class="sheet-send-inline" id="sheet-send-btn" onclick="submitSheetComment()">
-        <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-      </button>
+    <div class="cmt-sheet-input">
+      <div class="sheet-emoji-row">
+        <button class="sheet-emoji-btn" onclick="toggleSheetPicker()">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+        </button>
+        <button class="sheet-img-btn" onclick="document.getElementById('sheet-img-input').click()" title="Thêm ảnh">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        </button>
+        <input type="file" id="sheet-img-input" accept="image/*" style="display:none" onchange="previewImg(this)">
+      </div>
+      <div class="sheet-emoji-picker" id="sheet-emoji-picker"></div>
+      <div id="img-preview-container"></div>
+      <div class="sheet-input-bar">
+        <textarea class="sheet-text-inline" id="sheet-cmt-input" placeholder="Viết bình luận..." rows="1"
+          oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+        <button class="sheet-send-inline" id="sheet-send-btn" onclick="submitSheetComment()">
+          <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
     </div>
+  </div>
   </div>
 </div>
 
@@ -796,10 +810,7 @@ function toggleAudioSection() {
   if (!vis) el.scrollIntoView({ behavior:'smooth', block:'nearest' })
 }
 function toggleCmtOverview() {
-  const el = document.getElementById('cmt-overview-end')
-  const vis = el.style.display !== 'none'
-  el.style.display = vis ? 'none' : 'block'
-  if (!vis) { renderCmtOverview(); el.scrollIntoView({ behavior:'smooth', block:'nearest' }) }
+  openCmtOverviewFull()
 }
 
 function stripHtml(html) {
@@ -1119,7 +1130,7 @@ async function loadAllCounts() {
 }
 
 async function renderCmtOverview() {
-  const list = document.getElementById('cmt-overview-list')
+  const list = document.getElementById('cmt-overview-list-full')
   list.innerHTML = '<p class="toc-empty">Đang tải...</p>'
   const { data } = await sb.from('comments').select('paragraph_id')
     .eq('story_id', STORY_ID).eq('chapter_id', CHAPTER_UUID)
@@ -1132,7 +1143,7 @@ async function renderCmtOverview() {
     const excerpt = (wrap.querySelector('.para-text')?.textContent || '').trim().slice(0, 80)
     const cnt = counts[pid] || 0
     return `
-    <div class="cmt-overview-row" onclick="openCmtSheet('${pid}')">
+    <div class="cmt-overview-row" onclick="openCmtSheet('${pid}', true)">
       <span class="cmt-overview-num">§${i+1}</span>
       <span class="cmt-overview-excerpt">${escapeHtml(excerpt)}</span>
       <span class="cmt-overview-badge ${cnt>0?'has-cmt':''}">
@@ -1142,12 +1153,34 @@ async function renderCmtOverview() {
   }).join('')
 }
 
+// Mở sheet full-page ở chế độ tổng quan (danh sách tất cả đoạn + số bình luận)
+function openCmtOverviewFull() {
+  document.getElementById('sheet-pid-label').textContent = 'Bình luận chương'
+  document.getElementById('cmt-sheet-back').style.display = 'none'
+  document.getElementById('cmt-sheet-overview').style.display = 'block'
+  document.getElementById('cmt-sheet-detail').style.display = 'none'
+  document.getElementById('cmt-sheet').classList.add('open')
+  document.getElementById('cmt-overlay').classList.add('open')
+  document.body.style.overflow = 'hidden'
+  renderCmtOverview()
+}
+
+// Quay lại chế độ tổng quan từ trong chế độ xem chi tiết 1 đoạn
+function backToCmtOverview() {
+  document.querySelectorAll('.cmt-trigger').forEach(b => b.classList.remove('active'))
+  document.querySelectorAll('.para-wrap').forEach(el => el.classList.remove('highlighted'))
+  activePid = null
+  openCmtOverviewFull()
+}
+
 let activePid = null
 
-function openCmtSheet(pid) {
+function openCmtSheet(pid, fromOverview) {
   activePid = pid
-  const num = pid.replace('p','')
-  document.getElementById('sheet-pid-label').textContent = `Bình luận đoạn ${num}`
+  document.getElementById('sheet-pid-label').textContent = `Bình luận đoạn`
+  document.getElementById('cmt-sheet-back').style.display = fromOverview ? 'flex' : 'none'
+  document.getElementById('cmt-sheet-overview').style.display = 'none'
+  document.getElementById('cmt-sheet-detail').style.display = 'flex'
   const paraEl = document.querySelector(`.para-wrap[data-pid="${pid}"] .para-text`)
   const quoteEl = document.getElementById('cmt-para-quote')
   if (paraEl && quoteEl) {
