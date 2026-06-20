@@ -137,7 +137,7 @@ body {
 }
 .para-text p { margin: 0 0 0.3em 0; padding: 0; }
 .para-text p:last-child { margin-bottom: 0; }
-.para-text div { margin: 0 0 0.2em 0; }
+.para-text div { margin: 0 0 0.3em 0; }
 .para-text b, .para-text strong { font-weight: 700; }
 .para-text i, .para-text em { font-style: italic; }
 .para-text span { white-space: pre-wrap; }
@@ -892,6 +892,15 @@ async function loadChapter() {
   }
 }
 
+// Tạo hash đơn giản và ổn định từ nội dung đoạn — dùng làm data-pid fallback
+// khi dữ liệu cũ chưa có data-pid (tương thích ngược, không phụ thuộc vị trí đoạn)
+function paraHash(text) {
+  let h = 0;
+  const s = (text || '').replace(/\u00a0/g, ' ').trim();
+  for (let i = 0; i < Math.min(s.length, 200); i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+  return h.toString(36);
+}
+
 function renderParagraphs(content) {
   const container = document.getElementById('paragraphs-container')
   if (!content || !content.trim()) {
@@ -928,13 +937,27 @@ function renderParagraphs(content) {
     return
   }
   // Extract data-pid from HTML blocks if present (written by editor)
+  // Nếu thiếu data-pid (dữ liệu cũ) → tự sinh pid ổn định dựa trên hash nội dung + vị trí,
+  // để không bị lệch khi đoạn trước/sau bị thêm/xóa giữa các lần render.
+  const seenPid = new Set();
   container.innerHTML = paragraphs.map((block, i) => {
     let pid = null;
     if (block.type === 'html') {
       const m = block.content.match(/data-pid="([^"]+)"/);
       if (m) pid = m[1];
     }
-    if (!pid) pid = 'p' + (i + 1);
+    if (!pid) {
+      const plain = block.type === 'html'
+        ? (() => { const d = document.createElement('div'); d.innerHTML = block.content; return d.textContent; })()
+        : block.content;
+      pid = 'h' + paraHash(plain) + '_' + (i + 1);
+    }
+    // Đảm bảo duy nhất tuyệt đối trong phạm vi chương (phòng trùng hash hiếm gặp)
+    let uniquePid = pid;
+    let dupCount = 1;
+    while (seenPid.has(uniquePid)) { uniquePid = pid + '_' + (++dupCount); }
+    seenPid.add(uniquePid);
+    pid = uniquePid;
     const rendered = block.type === 'html' ? block.content : escapeHtml(block.content)
     return `
     <div class="para-wrap" data-pid="${pid}">
