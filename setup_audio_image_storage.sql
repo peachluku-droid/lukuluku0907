@@ -74,3 +74,35 @@ create policy if not exists "owner delete comments"
 on comments for delete
 to authenticated
 using (auth.uid() = user_id);
+
+-- ============================================
+-- 8. Đảm bảo bảng comments có đủ cột cần dùng (ảnh, reply, paragraph_id)
+--    Bổ sung an toàn — không ảnh hưởng dữ liệu cũ nếu cột đã tồn tại.
+-- ============================================
+alter table comments add column if not exists image_url text;
+alter table comments add column if not exists parent_id bigint;
+alter table comments add column if not exists reply_to_user_id uuid;
+alter table comments add column if not exists paragraph_id text;
+alter table comments add column if not exists sticker_url text;
+-- Lưu ý: nếu cột paragraph_id đã tồn tại từ trước với kiểu KHÁC text (vd integer),
+-- lệnh "add column if not exists" ở trên sẽ không đổi kiểu cột (vì cột đã có).
+-- Nếu vẫn còn lỗi "Lỗi tải bình luận" sau khi chạy file này, chạy thêm dòng dưới
+-- để ép kiểu cột paragraph_id về text (an toàn, không mất dữ liệu cũ):
+-- alter table comments alter column paragraph_id type text using paragraph_id::text;
+
+-- ============================================
+-- 9. Sticker động — bucket lưu file GIF/ảnh động do admin tự upload qua
+--    Supabase Dashboard > Storage > bucket "stickers". Mọi người chỉ cần
+--    kéo-thả file GIF vào bucket này, không cần sửa code, sticker picker
+--    trong chapter.html sẽ tự động liệt kê file mới.
+-- ============================================
+insert into storage.buckets (id, name, public)
+values ('stickers', 'stickers', true)
+on conflict (id) do nothing;
+
+create policy if not exists "public read stickers"
+on storage.objects for select
+using (bucket_id = 'stickers');
+
+-- Chỉ chủ web (qua Dashboard, dùng service role) mới cần upload, nên không
+-- cần policy insert cho "authenticated" ở đây — tránh người đọc tự ý thêm sticker lạ.
