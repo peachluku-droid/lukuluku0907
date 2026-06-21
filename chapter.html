@@ -390,6 +390,28 @@ body {
 .ep-label { width: 100%; font-size: 10px; color: var(--meta); padding: 4px 2px 2px; font-weight: 700; text-transform: uppercase; }
 .ep-emoji { font-size: 19px; background: none; border: none; cursor: pointer; border-radius: 6px; padding: 3px 4px; line-height: 1; }
 .ep-emoji:hover { background: var(--sidebar); }
+.sheet-sticker-picker {
+  display: none; flex-wrap: wrap; gap: 6px; padding: 8px;
+  border: 1.5px solid var(--border); border-radius: 10px; background: var(--bg2);
+  max-height: 180px; overflow-y: auto;
+}
+.sheet-sticker-picker.open { display: flex; }
+.sticker-pick-item {
+  width: 56px; height: 56px; border-radius: 8px; cursor: pointer;
+  border: 1.5px solid transparent; background: var(--sidebar);
+  display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 0;
+}
+.sticker-pick-item:hover { border-color: var(--accent2); }
+.sticker-pick-item img { width: 100%; height: 100%; object-fit: contain; }
+.sticker-pick-empty { font-size: 12px; color: var(--meta); padding: 8px; width: 100%; text-align: center; }
+.sticker-preview-wrap { position: relative; display: inline-block; margin-top: 4px; }
+.sticker-preview-wrap img { width: 84px; height: 84px; object-fit: contain; border-radius: 8px; background: var(--sidebar); }
+.sticker-preview-remove {
+  position: absolute; top: -6px; right: -6px; width: 20px; height: 20px; border-radius: 50%;
+  background: var(--accent); color: #fff; border: none; cursor: pointer; font-size: 11px;
+  display: flex; align-items: center; justify-content: center; line-height: 1;
+}
+.cmt-sticker { width: 96px; height: 96px; object-fit: contain; display: block; margin-top: 4px; border-radius: 8px; cursor: pointer; }
 .sheet-input-bar { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 30px; padding: 6px 6px 6px 14px; }
 .sheet-input-bar:focus-within { border-color: var(--accent); }
 .sheet-text-inline { flex: 1; border: none; background: transparent; font-size: 14px; color: var(--text); font-family: 'Nunito', sans-serif; outline: none; min-height: 20px; max-height: 80px; resize: none; }
@@ -689,9 +711,13 @@ body {
         <button class="sheet-img-btn" onclick="document.getElementById('sheet-img-input').click()" title="Thêm ảnh">
           <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
         </button>
+        <button class="sheet-img-btn" onclick="toggleStickerPicker()" title="Nhãn dán">
+          <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-10 10 10 10 0 0 0 10 10c.5 0 1-.04 1.5-.12a3.5 3.5 0 0 1-.5-1.79V18a2 2 0 0 1 2-2h2.09c.08-.5.12-1 .12-1.5A10 10 0 0 0 12 2z"/><path d="M14.5 14H18a2 2 0 0 0 2-2c0-1.1-.9-2-2-2"/><circle cx="8" cy="9" r="1"/><circle cx="14.5" cy="8" r="1"/></svg>
+        </button>
         <input type="file" id="sheet-img-input" accept="image/*" style="display:none" onchange="previewImg(this)">
       </div>
       <div class="sheet-emoji-picker" id="sheet-emoji-picker"></div>
+      <div class="sheet-sticker-picker" id="sheet-sticker-picker"></div>
       <div id="img-preview-container"></div>
       <div class="sheet-input-bar">
         <textarea class="sheet-text-inline" id="sheet-cmt-input" placeholder="Viết bình luận..." rows="1"
@@ -1141,16 +1167,45 @@ async function loadAllCounts() {
   if (endEl) endEl.textContent = total
 }
 
+// Lấy comments + thông tin profile (display_name, avatar_url) một cách an toàn:
+// query 2 bước tách rời (không dùng join lồng select('*, profiles(...)')), vì join lồng
+// phụ thuộc vào cấu hình foreign-key relationship trong Supabase và rất dễ lỗi PGRST200
+// "Could not find a relationship" nếu DB chưa khai báo FK rõ ràng. Tách bước giúp chắc chắn
+// hoạt động bất kể cấu hình DB, không cần sửa gì phía Supabase.
+async function fetchCommentsWithProfiles(query) {
+  const { data: comments, error } = await query
+  if (error) return { data: null, error }
+  if (!comments || !comments.length) return { data: [], error: null }
+
+  const userIds = [...new Set(comments.map(c => c.user_id).filter(Boolean))]
+  let profilesMap = {}
+  if (userIds.length) {
+    const { data: profiles, error: profErr } = await sb.from('profiles')
+      .select('id, display_name, avatar_url')
+      .in('id', userIds)
+    if (!profErr && profiles) {
+      profiles.forEach(p => { profilesMap[p.id] = p })
+    }
+  }
+  const merged = comments.map(c => ({ ...c, profiles: profilesMap[c.user_id] || null }))
+  return { data: merged, error: null }
+}
+
 async function renderCmtOverview() {
   const list = document.getElementById('cmt-overview-list-full')
   list.innerHTML = '<p class="toc-empty">Đang tải...</p>'
 
-  const { data, error } = await sb.from('comments')
-    .select('*, profiles(display_name, avatar_url)')
-    .eq('story_id', STORY_ID).eq('chapter_id', CHAPTER_UUID)
-    .order('created_at', { ascending: true })
+  const { data, error } = await fetchCommentsWithProfiles(
+    sb.from('comments').select('*')
+      .eq('story_id', STORY_ID).eq('chapter_id', CHAPTER_UUID)
+      .order('created_at', { ascending: true })
+  )
 
-  if (error) { list.innerHTML = '<p class="toc-empty">Lỗi tải bình luận.</p>'; return }
+  if (error) {
+    console.error('[renderCmtOverview] Supabase error:', error)
+    list.innerHTML = `<p class="toc-empty">Lỗi tải bình luận.<br><span style="font-size:11px;opacity:.7">${escapeHtml(error.message || 'Không rõ nguyên nhân')}</span></p>`
+    return
+  }
   if (!data || !data.length) { list.innerHTML = '<p class="toc-empty">Chưa có bình luận nào trong chương này.</p>'; return }
 
   // Map pid -> số thứ tự đoạn (§1, §2...) và đoạn trích để hiển thị ngữ cảnh
@@ -1185,6 +1240,7 @@ async function renderCmtOverview() {
         <div class="cmt-user">${name}</div>
         ${c.content ? `<div class="cmt-content">${escapeHtml(c.content)}</div>` : ''}
         ${c.image_url ? `<img class="cmt-img" src="${c.image_url}" alt="" loading="lazy" decoding="async" onclick="openLightbox('${c.image_url}')">` : ''}
+        ${c.sticker_url ? `<img class="cmt-sticker" src="${c.sticker_url}" alt="sticker" loading="lazy" decoding="async" onclick="openLightbox('${c.sticker_url}')">` : ''}
         <div class="cmt-footer">
           <span class="cmt-time">${formatTime(c.created_at)}</span>
           ${chCurrentUser ? `<button class="cmt-reply-btn" onclick="openCmtSheet('${c.paragraph_id}', true); setTimeout(()=>replyTo('${name}', ${c.id}, '${c.user_id}'), 250)">Trả lời</button>` : ''}
@@ -1248,11 +1304,16 @@ function closeCmtSheet() {
 async function loadSheetComments(pid) {
   const list = document.getElementById('sheet-cmt-list')
   list.innerHTML = '<p class="empty-msg">Đang tải...</p>'
-  const { data, error } = await sb.from('comments')
-    .select('*, profiles(display_name, avatar_url)')
-    .eq('story_id', STORY_ID).eq('chapter_id', CHAPTER_UUID).eq('paragraph_id', pid)
-    .order('created_at', { ascending: true })
-  if (error) { list.innerHTML = '<p class="empty-msg">Lỗi tải bình luận</p>'; return }
+  const { data, error } = await fetchCommentsWithProfiles(
+    sb.from('comments').select('*')
+      .eq('story_id', STORY_ID).eq('chapter_id', CHAPTER_UUID).eq('paragraph_id', pid)
+      .order('created_at', { ascending: true })
+  )
+  if (error) {
+    console.error('[loadSheetComments] Supabase error:', error)
+    list.innerHTML = `<p class="empty-msg">Lỗi tải bình luận.<br><span style="font-size:11px;opacity:.7">${escapeHtml(error.message || 'Không rõ nguyên nhân')}</span></p>`
+    return
+  }
   const btn = document.querySelector(`.cmt-trigger[data-pid="${pid}"] .cnt`)
   if (btn) btn.textContent = data.length
   if (!data.length) {
@@ -1276,6 +1337,7 @@ async function loadSheetComments(pid) {
         <div class="cmt-user">${name}</div>
         ${c.content ? `<div class="cmt-content">${escapeHtml(c.content)}</div>` : ''}
         ${c.image_url ? `<img class="cmt-img" src="${c.image_url}" alt="" loading="lazy" decoding="async" onclick="openLightbox('${c.image_url}')">` : ''}
+        ${c.sticker_url ? `<img class="cmt-sticker" src="${c.sticker_url}" alt="sticker" loading="lazy" decoding="async" onclick="openLightbox('${c.sticker_url}')">` : ''}
         <div class="cmt-footer">
           <span class="cmt-time">${formatTime(c.created_at)}</span>
           ${chCurrentUser ? `<button class="cmt-reply-btn" onclick="replyTo('${name}', ${c.id}, '${c.user_id}')">Trả lời</button>` : ''}
@@ -1309,6 +1371,7 @@ function previewImg(input) {
   const file = input.files[0]
   if (!file) return
   if (file.size > 5*1024*1024) { alert('Ảnh tối đa 5MB'); input.value=''; return }
+  selectedSticker = null
   selectedImgFile = file
   const url = URL.createObjectURL(file)
   document.getElementById('img-preview-container').innerHTML = `
@@ -1370,7 +1433,7 @@ async function submitSheetComment() {
   if (!chCurrentUser) { alert('Vui lòng đăng nhập để bình luận!'); return; }
   const content = document.getElementById('sheet-cmt-input').value.trim()
   const username = chUserProfile?.display_name || chCurrentUser.email.split('@')[0]
-  if (!content && !selectedImgFile) return alert('Nhập nội dung hoặc chọn ảnh nhé!')
+  if (!content && !selectedImgFile && !selectedSticker) return alert('Nhập nội dung, chọn ảnh hoặc nhãn dán nhé!')
   const btn = document.getElementById('sheet-send-btn')
   btn.disabled = true
   let image_url = null
@@ -1378,9 +1441,10 @@ async function submitSheetComment() {
     image_url = await uploadImg(selectedImgFile)
     if (!image_url) { alert('Upload ảnh thất bại'); btn.disabled = false; return }
   }
+  const sticker_url = selectedSticker || null
   const { error } = await sb.from('comments').insert({
-    story_id: STORY_ID, chapter_id: _currentUUID,
-    paragraph_id: activePid, username, user_id: chCurrentUser.id, content, image_url,
+    story_id: STORY_ID, chapter_id: CHAPTER_UUID,
+    paragraph_id: activePid, username, user_id: chCurrentUser.id, content, image_url, sticker_url,
 
     parent_id: activeParentId || null,
     reply_to_user_id: activeReplyUserId || null,
@@ -1390,6 +1454,8 @@ async function submitSheetComment() {
   if (error) { alert('Gửi thất bại: ' + error.message); return }
   document.getElementById('sheet-cmt-input').value = ''
   document.getElementById('sheet-emoji-picker').classList.remove('open')
+  document.getElementById('sheet-sticker-picker').classList.remove('open')
+  selectedSticker = null
   removeImg()
   loadSheetComments(activePid)
   loadAllCounts()
@@ -1417,6 +1483,65 @@ function insertSheetEmoji(emoji) {
   inp.selectionStart = inp.selectionEnd = s + emoji.length
   inp.focus()
 }
+
+// ── STICKER ĐỘNG ──
+// Sticker được quản lý hoàn toàn qua Supabase Storage bucket "stickers".
+// Chủ web chỉ cần kéo-thả file ảnh/GIF vào bucket đó qua Supabase Dashboard,
+// không cần sửa code — danh sách dưới đây tự refresh mỗi lần mở picker.
+let selectedSticker = null
+let _stickerListCache = null
+
+async function loadStickerList() {
+  if (_stickerListCache) return _stickerListCache
+  try {
+    const { data, error } = await sb.storage.from('stickers').list('', {
+      limit: 100, sortBy: { column: 'name', order: 'asc' }
+    })
+    if (error) { console.error('[loadStickerList] error:', error); return [] }
+    const files = (data || []).filter(f => f.name && !f.name.startsWith('.'))
+    _stickerListCache = files.map(f => sb.storage.from('stickers').getPublicUrl(f.name).data.publicUrl)
+    return _stickerListCache
+  } catch (e) {
+    console.error('[loadStickerList] exception:', e)
+    return []
+  }
+}
+
+async function toggleStickerPicker() {
+  const picker = document.getElementById('sheet-sticker-picker')
+  const isOpening = !picker.classList.contains('open')
+  picker.classList.toggle('open')
+  document.getElementById('sheet-emoji-picker').classList.remove('open')
+  if (!isOpening) return
+  picker.innerHTML = '<div class="sticker-pick-empty">Đang tải...</div>'
+  const urls = await loadStickerList()
+  if (!urls.length) {
+    picker.innerHTML = '<div class="sticker-pick-empty">Chưa có nhãn dán nào.</div>'
+    return
+  }
+  picker.innerHTML = urls.map(u => `
+    <button class="sticker-pick-item" onclick="pickSticker('${u}')">
+      <img src="${u}" alt="sticker" loading="lazy">
+    </button>`).join('')
+}
+
+function pickSticker(url) {
+  selectedSticker = url
+  // Chọn sticker thì bỏ ảnh thường đã chọn (mỗi comment chỉ gửi 1 trong 2 loại đính kèm)
+  removeImg()
+  document.getElementById('img-preview-container').innerHTML = `
+    <div class="sticker-preview-wrap">
+      <img src="${url}" alt="sticker preview">
+      <button class="sticker-preview-remove" onclick="removeSticker()">✕</button>
+    </div>`
+  document.getElementById('sheet-sticker-picker').classList.remove('open')
+}
+
+function removeSticker() {
+  selectedSticker = null
+  document.getElementById('img-preview-container').innerHTML = ''
+}
+
 
 function openLightbox(src) {
   document.getElementById('lightbox-img').src = src
