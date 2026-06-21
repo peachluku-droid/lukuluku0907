@@ -110,9 +110,9 @@ body {
 .toc-item.active { background: var(--bg2); color: var(--accent); font-weight: 700; border-left: 3px solid var(--accent); }
 .toc-num { font-size: 11px; color: var(--meta); display: block; margin-bottom: 2px; }
 
-.story-col { flex: 1; padding: 32px 48px; max-width: 720px; margin: 0 auto; min-width: 0; }
+.story-col { flex: 1; padding: 32px 48px; padding-bottom: max(56px, env(safe-area-inset-bottom) + 40px); max-width: 720px; margin: 0 auto; min-width: 0; }
 @media (max-width: 600px) {
-  .story-col { padding: 20px 18px; }
+  .story-col { padding: 20px 18px; padding-bottom: max(56px, env(safe-area-inset-bottom) + 40px); }
   .chapter-stats { gap: 14px; padding: 10px 16px; font-size: 12px; }
 }
 .chapter-heading { font-size: 24px; font-weight: 700; color: var(--accent); margin-bottom: 6px; line-height: 1.3; text-align: center; }
@@ -142,7 +142,12 @@ body {
 .para-text b, .para-text strong { font-weight: 700; }
 .para-text i, .para-text em { font-style: italic; }
 .para-text span { white-space: pre-wrap; }
-.para-text br { display: block; }
+/* br giữ hành vi xuống dòng mặc định (không display:block) để tránh cộng dồn
+   khoảng cách dòng khi dữ liệu cũ chứa nhiều <br> liên tiếp (paste từ nguồn ngoài
+   trước khi có bộ lọc paste). Khoảng cách giữa các đoạn luôn do margin của <p> quyết định,
+   không phụ thuộc số lượng <br> trong nội dung — đảm bảo đồng nhất giữa mọi chương/mọi bộ. */
+.para-text br { line-height: 1.4; }
+.para-text br + br { display: none; } /* gộp nhiều br liên tiếp thành 1 lần xuống dòng */
 
 .cmt-trigger {
   flex-shrink: 0;
@@ -155,7 +160,7 @@ body {
   opacity: 0.55;
   margin-bottom: 2px;
 }
-.cmt-trigger svg { width: 27px; height: 27px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.cmt-trigger svg { width: 54px; height: 54px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 .cmt-trigger .cnt { font-size: 10px; font-weight: 700; font-family: 'Nunito', sans-serif; margin-left: 2px; }
 .cmt-trigger:hover { opacity: 1; color: var(--accent); }
 .cmt-trigger.active { opacity: 1; color: var(--accent); }
@@ -168,6 +173,11 @@ body {
   margin-bottom: 32px; font-size: 13px; color: var(--meta); flex-wrap: wrap;
 }
 .chapter-stats span { white-space: nowrap; }
+.cmt-stats-link {
+  cursor: pointer; padding: 4px 10px; border-radius: 16px;
+  transition: background .15s, color .15s; -webkit-tap-highlight-color: transparent;
+}
+.cmt-stats-link:hover, .cmt-stats-link:active { background: var(--bg2); color: var(--accent); }
 
 .chapter-nav {
   display: flex; justify-content: space-between; align-items: center;
@@ -184,7 +194,7 @@ body {
 .nav-btn.disabled { opacity: 0.4; pointer-events: none; }
 .nav-chapter-title { font-size: 13px; color: var(--meta); text-align: center; flex: 1; }
 
-.end-section { margin-top: 48px; display: flex; flex-direction: column; gap: 20px; }
+.end-section { margin-top: 28px; display: flex; flex-direction: column; gap: 20px; }
 .chapter-stats-end {
   display: flex; justify-content: center; align-items: center;
   gap: 0; font-size: 13px; color: var(--meta); flex-wrap: wrap;
@@ -245,6 +255,13 @@ body {
 }
 .cmt-overview-badge svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .cmt-overview-badge.has-cmt { color: var(--accent); font-weight: 700; opacity: 1; }
+.cmt-overview-context {
+  font-size: 11.5px; color: var(--meta); line-height: 1.5;
+  margin-bottom: 4px; cursor: pointer; opacity: 0.85;
+  border-left: 2px solid var(--accent2); padding-left: 8px;
+  overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
+.cmt-overview-context:hover { opacity: 1; color: var(--accent); }
 
 .settings-drawer {
   position: fixed; top: 49px; left: 0; right: 0; background: var(--panel);
@@ -256,10 +273,6 @@ body {
 .setting-group label { font-size: 12px; color: var(--meta); display: block; margin-bottom: 10px; }
 .theme-swatches { display: flex; gap: 8px; flex-wrap: wrap; }
 .swatch { width: 38px; height: 38px; border-radius: 6px; border: 2.5px solid transparent; cursor: pointer; transition: border-color .15s; flex-shrink: 0; }
-.swatch-locked { position: relative; cursor: not-allowed; opacity: 0.6; display: flex; align-items: center; justify-content: center; }
-.swatch-locked:hover { transform: scale(1.05); opacity: 0.75; }
-.swatch-lock-icon { width: 16px; height: 16px; flex-shrink: 0; }
-.swatch-lock-icon { width: 16px; height: 16px; flex-shrink: 0; }
 .swatch.active { border-color: var(--accent) !important; }
 .swatch-light  { background:#ffffff; border-color:#ccc; }
 .swatch-dark   { background:#1a1a1a; }
@@ -493,11 +506,11 @@ body {
       <div class="swatch swatch-light active" onclick="setTheme('light',this)" title="Trắng"></div>
       <div class="swatch swatch-dark"         onclick="setTheme('dark',this)"   title="Đen"></div>
       <div class="swatch swatch-sepia"        onclick="setTheme('sepia',this)"  title="Vàng"></div>
-      <div class="swatch swatch-blue swatch-locked"         data-locked="true" onclick="setTheme('blue',this)"   title="Xanh"><svg class="swatch-lock-icon" viewBox="0 0 24 24" fill="none" stroke="#4a7de0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-      <div class="swatch swatch-purple swatch-locked"       data-locked="true" onclick="setTheme('purple',this)" title="Tím"><svg class="swatch-lock-icon" viewBox="0 0 24 24" fill="none" stroke="#8a5de0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-      <div class="swatch swatch-pink swatch-locked"         data-locked="true" onclick="setTheme('pink',this)"   title="Hồng"><svg class="swatch-lock-icon" viewBox="0 0 24 24" fill="none" stroke="#e876a0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+      <div class="swatch swatch-blue"         onclick="setTheme('blue',this)"   title="Xanh"></div>
+      <div class="swatch swatch-purple"       onclick="setTheme('purple',this)" title="Tím"></div>
+      <div class="swatch swatch-pink"         onclick="setTheme('pink',this)"   title="Hồng"></div>
 
-      <div class="swatch swatch-wattpad swatch-locked"      data-locked="true" onclick="setTheme('wattpad',this)" title="Warm"><svg class="swatch-lock-icon" viewBox="0 0 24 24" fill="none" stroke="#f26522" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+      <div class="swatch swatch-wattpad"      onclick="setTheme('wattpad',this)" title="Warm"></div>
     </div>
   </div>
   <div class="setting-group">
@@ -578,7 +591,7 @@ body {
     <div class="chapter-stats">
       <span><svg class="ic" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span id="view-count">0</span> lượt đọc</span>
       <span><svg class="ic" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span id="vote-count">0</span> vote</span>
-      <span style="cursor:pointer" onclick="openCmtOverviewFull()"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span id="total-cmt-count-top">0</span> bình luận</span>
+      <span class="cmt-stats-link" onclick="openCmtOverviewFull()"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span id="total-cmt-count-top">0</span> bình luận</span>
     </div>
 
     <div id="paragraphs-container">
@@ -727,7 +740,6 @@ const FONTS = [
 let fontIdx = 0, fontSize = 17
 
 function setTheme(t, el) {
-  if (el && el.classList.contains('swatch-locked')) return;
   document.body.className = 'theme-' + t
   document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'))
   el.classList.add('active')
@@ -1132,23 +1144,53 @@ async function loadAllCounts() {
 async function renderCmtOverview() {
   const list = document.getElementById('cmt-overview-list-full')
   list.innerHTML = '<p class="toc-empty">Đang tải...</p>'
-  const { data } = await sb.from('comments').select('paragraph_id')
+
+  const { data, error } = await sb.from('comments')
+    .select('*, profiles(display_name, avatar_url)')
     .eq('story_id', STORY_ID).eq('chapter_id', CHAPTER_UUID)
-  const counts = {}
-  if (data) data.forEach(r => { counts[r.paragraph_id] = (counts[r.paragraph_id] || 0) + 1 })
+    .order('created_at', { ascending: true })
+
+  if (error) { list.innerHTML = '<p class="toc-empty">Lỗi tải bình luận.</p>'; return }
+  if (!data || !data.length) { list.innerHTML = '<p class="toc-empty">Chưa có bình luận nào trong chương này.</p>'; return }
+
+  // Map pid -> số thứ tự đoạn (§1, §2...) và đoạn trích để hiển thị ngữ cảnh
   const paras = document.querySelectorAll('.para-wrap[data-pid]')
-  if (!paras.length) { list.innerHTML = '<p class="toc-empty">Không có đoạn nào.</p>'; return }
-  list.innerHTML = Array.from(paras).map((wrap, i) => {
-    const pid = wrap.dataset.pid
-    const excerpt = (wrap.querySelector('.para-text')?.textContent || '').trim().slice(0, 80)
-    const cnt = counts[pid] || 0
+  const pidInfo = {}
+  Array.from(paras).forEach((wrap, i) => {
+    pidInfo[wrap.dataset.pid] = {
+      num: i + 1,
+      excerpt: (wrap.querySelector('.para-text')?.textContent || '').trim().slice(0, 100)
+    }
+  })
+
+  const avatarColors = ['#d4537e','#5b9bd5','#71c285','#e8a838','#9b7fe8','#e87878']
+  list.innerHTML = data.map((c, i) => {
+    const prof = c.profiles || {}
+    const name = escapeHtml(prof.display_name || c.username || 'Ẩn danh')
+    const color = avatarColors[i % avatarColors.length]
+    const avatarSrc = prof.avatar_url || c.avatar_url
+    const avatarHtml = avatarSrc
+      ? `<img src="${escapeHtml(avatarSrc)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+      : name.charAt(0).toUpperCase()
+    const isOwn = chCurrentUser && c.user_id === chCurrentUser.id
+    const info = pidInfo[c.paragraph_id]
+    const quoteHtml = info
+      ? `<div class="cmt-overview-context" onclick="openCmtSheet('${c.paragraph_id}', true)">§${info.num} · ${escapeHtml(info.excerpt)}</div>`
+      : ''
     return `
-    <div class="cmt-overview-row" onclick="openCmtSheet('${pid}', true)">
-      <span class="cmt-overview-num">§${i+1}</span>
-      <span class="cmt-overview-excerpt">${escapeHtml(excerpt)}</span>
-      <span class="cmt-overview-badge ${cnt>0?'has-cmt':''}">
-        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> ${cnt}
-      </span>
+    <div class="cmt-bubble" id="ov-cmt-${c.id}">
+      <div class="cmt-avatar" style="background:${color}">${avatarHtml}</div>
+      <div class="cmt-body">
+        ${quoteHtml}
+        <div class="cmt-user">${name}</div>
+        ${c.content ? `<div class="cmt-content">${escapeHtml(c.content)}</div>` : ''}
+        ${c.image_url ? `<img class="cmt-img" src="${c.image_url}" alt="" loading="lazy" decoding="async" onclick="openLightbox('${c.image_url}')">` : ''}
+        <div class="cmt-footer">
+          <span class="cmt-time">${formatTime(c.created_at)}</span>
+          ${chCurrentUser ? `<button class="cmt-reply-btn" onclick="openCmtSheet('${c.paragraph_id}', true); setTimeout(()=>replyTo('${name}', ${c.id}, '${c.user_id}'), 250)">Trả lời</button>` : ''}
+          ${isOwn ? `<button class="cmt-reply-btn" style="color:#e84040" onclick="deleteComment('${c.id}', '${c.paragraph_id}')">Xoá</button>` : ''}
+        </div>
+      </div>
     </div>`
   }).join('')
 }
