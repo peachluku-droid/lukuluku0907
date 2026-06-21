@@ -368,6 +368,8 @@ body { display: block; }
 .pv-para-text p:last-child, .pv-para-text div:last-child { margin-bottom: 0; }
 .pv-para-text b, .pv-para-text strong { font-weight: 700; }
 .pv-para-text i, .pv-para-text em { font-style: italic; }
+.pv-para-text br { line-height: 1.4; }
+.pv-para-text br + br { display: none; }
 
 /* Comment trigger — clone .cmt-trigger */
 .pv-cmt-trigger {
@@ -381,7 +383,7 @@ body { display: block; }
   opacity: 0.7;
   margin-bottom: 2px;
 }
-.pv-cmt-trigger svg { width: 27px; height: 27px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.pv-cmt-trigger svg { width: 54px; height: 54px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 .pv-cmt-trigger .pv-cnt { font-size: 10px; font-weight: 700; font-family: 'Nunito', sans-serif; margin-left: 2px; }
 .pv-cmt-trigger:hover, .pv-cmt-trigger.active { opacity: 1; color: var(--pv-accent); }
 .pv-cmt-trigger.has-cmt { opacity: 1; color: var(--pv-accent); }
@@ -551,6 +553,8 @@ body { display: block; }
   color: #1a1a1a !important;
 }
 .content-editable p:last-child { margin-bottom: 0; }
+.content-editable br { line-height: 1.4; }
+.content-editable br + br { display: none; }
 /* Reset mọi span inline style do browser/paste tạo ra */
 .content-editable span {
   font-family: inherit !important;
