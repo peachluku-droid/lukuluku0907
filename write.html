@@ -344,7 +344,7 @@ body { display: block; }
 /* Paragraph wrap — khoảng cách khớp với editor */
 .pv-para-wrap {
   display: flex; align-items: flex-end; gap: 8px;
-  margin-bottom: 0; border-radius: 8px;
+  margin-bottom: 1em; border-radius: 8px;
   padding: 6px; transition: background .2s;
 }
 .pv-para-wrap.highlighted { background: color-mix(in srgb, var(--pv-accent) 8%, transparent); }
@@ -383,7 +383,7 @@ body { display: block; }
   opacity: 0.7;
   margin-bottom: 2px;
 }
-.pv-cmt-trigger svg { width: 54px; height: 54px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.pv-cmt-trigger svg { width: 108px; height: 108px; stroke: currentColor; fill: none; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
 .pv-cmt-trigger .pv-cnt { font-size: 10px; font-weight: 700; font-family: 'Nunito', sans-serif; margin-left: 2px; }
 .pv-cmt-trigger:hover, .pv-cmt-trigger.active { opacity: 1; color: var(--pv-accent); }
 .pv-cmt-trigger.has-cmt { opacity: 1; color: var(--pv-accent); }
@@ -546,7 +546,7 @@ body { display: block; }
 .content-editable:empty::before { content: attr(data-ph); color: var(--text-muted); font-style: italic; }
 .content-editable p {
   margin-top: 0;
-  margin-bottom: 0.3em;
+  margin-bottom: 1em;
   font-family: 'Noto Serif', Georgia, serif !important;
   font-size: 19px !important;
   line-height: 1.4 !important;
