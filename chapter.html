@@ -35,9 +35,9 @@
 body.theme-light  { --bg:#ffffff; --bg2:#ffffff; --text:#000000; --border:#e0e0e0; --accent:#993556; --accent2:#d4537e; --panel:#ffffff; --sidebar:#f5f5f5; --meta:#999; }
 body.theme-dark   { --bg:#000000; --bg2:#111111; --text:#ffffff; --border:#333333; --accent:#f4a0bc; --accent2:#ed93b1; --panel:#111111; --sidebar:#0a0a0a; --meta:#888; }
 body.theme-sepia  { --bg:#f5f0e8; --bg2:#faf7f0; --text:#3d2b1f; --border:#d4c4a8; --accent:#8b5e3c; --accent2:#a67c52; --panel:#faf7f0; --sidebar:#f0e8d8; --meta:#9a8070; }
-body.theme-blue   { --bg:#e8f0fe; --bg2:#f4f7ff; --text:#1a2a4a; --border:#b8ccf4; --accent:#2a5bbf; --accent2:#4a7de0; --panel:#f4f7ff; --sidebar:#dce8fc; --meta:#7a9ac0; }
-body.theme-purple { --bg:#f0ebff; --bg2:#f9f6ff; --text:#2a1a4a; --border:#cdb8f4; --accent:#6a3bbf; --accent2:#8a5de0; --panel:#f9f6ff; --sidebar:#e8dcfc; --meta:#9a7ac0; }
-body.theme-pink   { --bg:#fff0f6; --bg2:#fff8fb; --text:#2c1a22; --border:#f4c0d1; --accent:#993556; --accent2:#d4537e; --panel:#fff8fb; --sidebar:#ffe6f2; --meta:#c09aaa; }
+body.theme-blue   { --bg:#dcebfa; --bg2:#eef6fd; --text:#1a2a4a; --border:#b8d4f0; --accent:#2a5bbf; --accent2:#4a7de0; --panel:#eef6fd; --sidebar:#cce3f7; --meta:#7a9ac0; }
+body.theme-purple { --bg:#eedcfa; --bg2:#f7eefd; --text:#2a1a4a; --border:#d8b8f0; --accent:#6a3bbf; --accent2:#8a5de0; --panel:#f7eefd; --sidebar:#e3cdf7; --meta:#9a7ac0; }
+body.theme-pink   { --bg:#f2dae7; --bg2:#f9eef4; --text:#2c1a22; --border:#e8b8d4; --accent:#993556; --accent2:#d4537e; --panel:#f9eef4; --sidebar:#edc9de; --meta:#c09aaa; }
 
 body.theme-wattpad{ --bg:#FBF0D9; --bg2:#fdf3e0; --text:#4A3525; --border:#d9c4a0; --accent:#8b5e1a; --accent2:#b07d2e; --panel:#fdf3e0; --sidebar:#f0ddb8; --meta:#a08050; }
 
@@ -120,7 +120,7 @@ body {
 
 .para-wrap {
   display: flex; align-items: flex-end; gap: 8px;
-  margin-bottom: 1px; border-radius: 8px;
+  margin-bottom: 1em; border-radius: 8px;
   padding: 1px 6px; transition: background .2s;
 }
 .para-wrap.highlighted { background: color-mix(in srgb, var(--accent) 8%, transparent); }
@@ -160,7 +160,7 @@ body {
   opacity: 0.55;
   margin-bottom: 2px;
 }
-.cmt-trigger svg { width: 54px; height: 54px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.cmt-trigger svg { width: 108px; height: 108px; stroke: currentColor; fill: none; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
 .cmt-trigger .cnt { font-size: 10px; font-weight: 700; font-family: 'Nunito', sans-serif; margin-left: 2px; }
 .cmt-trigger:hover { opacity: 1; color: var(--accent); }
 .cmt-trigger.active { opacity: 1; color: var(--accent); }
@@ -194,7 +194,7 @@ body {
 .nav-btn.disabled { opacity: 0.4; pointer-events: none; }
 .nav-chapter-title { font-size: 13px; color: var(--meta); text-align: center; flex: 1; }
 
-.end-section { margin-top: 28px; display: flex; flex-direction: column; gap: 20px; }
+.end-section { margin-top: 1.4em; display: flex; flex-direction: column; gap: 20px; }
 .chapter-stats-end {
   display: flex; justify-content: center; align-items: center;
   gap: 0; font-size: 13px; color: var(--meta); flex-wrap: wrap;
@@ -214,6 +214,13 @@ body {
 .audio-section h3 { font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
 .audio-section h3 svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .audio-section audio { width: 100%; accent-color: var(--accent); }
+.audio-no-file { font-size: 13px; color: var(--meta); font-style: italic; padding: 8px 0; }
+.audio-gen-status {
+  display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--meta);
+  padding: 8px 0;
+}
+.audio-gen-spin { width: 16px; height: 16px; stroke: var(--accent); fill: none; stroke-width: 2.5; stroke-linecap: round; animation: audio-gen-spin-anim 1s linear infinite; }
+@keyframes audio-gen-spin-anim { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
 .toc-inline-section { display: none; }
 .toc-inline-head {
@@ -616,6 +623,19 @@ body {
       <span class="cmt-stats-link" onclick="openCmtOverviewFull()"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span id="total-cmt-count-top">0</span> bình luận</span>
     </div>
 
+    <div class="audio-section" id="audio-section-top">
+      <h3><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg> Nghe truyện</h3>
+      <div class="audio-no-file" id="audio-no-file-top" style="display:none">Chương này chưa có audio</div>
+      <div class="audio-gen-status" id="audio-gen-status-top" style="display:none">
+        <svg class="audio-gen-spin" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+        <span id="audio-gen-status-text">Đang tạo giọng đọc...</span>
+      </div>
+      <audio id="chapter-audio-top" controls style="display:none">
+        <source id="audio-src-top" src="" type="audio/mpeg">
+        Trình duyệt không hỗ trợ audio.
+      </audio>
+    </div>
+
     <div id="paragraphs-container">
       <div class="para-skeleton">
         <div class="skel-para"><div class="skel-line" style="width:100%"></div><div class="skel-line" style="width:90%"></div><div class="skel-line" style="width:95%"></div></div>
@@ -642,7 +662,12 @@ body {
 
       <div class="audio-section" id="audio-section-end" style="display:none">
         <h3><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg> Nghe truyện</h3>
-        <audio id="chapter-audio" controls>
+        <div class="audio-no-file" id="audio-no-file-end" style="display:none">Chương này chưa có audio</div>
+        <div class="audio-gen-status" id="audio-gen-status-end" style="display:none">
+          <svg class="audio-gen-spin" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+          <span>Đang tạo giọng đọc...</span>
+        </div>
+        <audio id="chapter-audio" controls style="display:none">
           <source id="audio-src" src="" type="audio/mpeg">
           Trình duyệt không hỗ trợ audio.
         </audio>
@@ -924,11 +949,7 @@ async function loadChapter() {
   document.getElementById('chapter-heading').textContent = ch.title || `Chương ${ch.chapter_number}`
   document.getElementById('chapter-meta').textContent =
     (ch.author_name || '') + (ch.created_at ? ' · Cập nhật ' + new Date(ch.created_at).toLocaleDateString('vi-VN') : '')
-  if (ch.audio_url) {
-    document.getElementById('audio-src').src = ch.audio_url
-    document.getElementById('chapter-audio').load()
-  }
-  initSettingsAudio(ch.audio_url || null)
+  setupChapterAudio(ch)
   renderParagraphs(ch.content || '')
   await initChapterUser()
   await Promise.all([loadToc(), countView(), loadVotes(), loadAllCounts()])
@@ -946,6 +967,120 @@ function paraHash(text) {
   const s = (text || '').replace(/\u00a0/g, ' ').trim();
   for (let i = 0; i < Math.min(s.length, 200); i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
   return h.toString(36);
+}
+
+// ── AUDIO TỰ ĐỘNG ──
+// Mỗi chương có 1 nguồn audio duy nhất, hiển thị ở 2 nơi: đầu chương (audio-section-top)
+// và cuối chương (audio-section-end), dùng chung 1 file/luồng giọng đọc cho toàn bộ nội dung.
+//
+// Thứ tự ưu tiên:
+// 1. Đã có ch.audio_url (đã tạo từ trước, lưu trong Supabase) → phát luôn.
+// 2. Chưa có → gọi /api/tts (Vercel Function dùng Google Cloud TTS, giọng tự nhiên,
+//    miễn phí trong hạn mức hàng tháng) để tạo, lưu vào Supabase Storage rồi cập nhật DB.
+// 3. Nếu bước 2 lỗi (hết hạn mức free hoặc server lỗi) → fallback dùng giọng đọc có sẵn
+//    của trình duyệt (Web Speech API) — luôn miễn phí, không cần mạng tới Google.
+function showAudioUi(state) {
+  // state: 'loading' | 'ready' | 'unavailable'
+  ;['top', 'end'].forEach(pos => {
+    const audioEl = document.getElementById(pos === 'top' ? 'chapter-audio-top' : 'chapter-audio')
+    const noFileEl = document.getElementById(pos === 'top' ? 'audio-no-file-top' : 'audio-no-file-end')
+    const loadingEl = document.getElementById(pos === 'top' ? 'audio-gen-status-top' : 'audio-gen-status-end')
+    if (!audioEl) return
+    audioEl.style.display = state === 'ready' ? 'block' : 'none'
+    if (noFileEl) noFileEl.style.display = state === 'unavailable' ? 'block' : 'none'
+    if (loadingEl) loadingEl.style.display = state === 'loading' ? 'flex' : 'none'
+  })
+}
+
+async function setupChapterAudio(ch) {
+  document.getElementById('audio-section-end').style.display = ''
+
+  if (ch.audio_url) {
+    document.getElementById('audio-src-top').src = ch.audio_url
+    document.getElementById('chapter-audio-top').load()
+    document.getElementById('audio-src').src = ch.audio_url
+    document.getElementById('chapter-audio').load()
+    showAudioUi('ready')
+    initSettingsAudio(ch.audio_url)
+    return
+  }
+
+  const plainText = stripHtml(ch.content || '').trim()
+  if (!plainText) {
+    showAudioUi('unavailable')
+    initSettingsAudio(null)
+    return
+  }
+
+  showAudioUi('loading')
+  initSettingsAudio(null)
+
+  try {
+    const resp = await fetch('/api/tts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chapterId: CHAPTER_UUID, text: plainText })
+    })
+    if (!resp.ok) throw new Error('tts_api_failed_' + resp.status)
+    const result = await resp.json()
+    if (!result.audio_url) throw new Error('tts_api_no_url')
+
+    document.getElementById('audio-src-top').src = result.audio_url
+    document.getElementById('chapter-audio-top').load()
+    document.getElementById('audio-src').src = result.audio_url
+    document.getElementById('chapter-audio').load()
+    showAudioUi('ready')
+    initSettingsAudio(result.audio_url)
+  } catch (e) {
+    console.warn('[setupChapterAudio] Google TTS không khả dụng, dùng giọng trình duyệt:', e)
+    setupBrowserTtsFallback(plainText)
+  }
+}
+
+// Giọng đọc dự phòng bằng Web Speech API của trình duyệt — không tạo ra file audio
+// thật để lưu (API trình duyệt phát trực tiếp, không xuất file), nên thay vì hiện
+// thẻ <audio>, ta hiện 1 nút phát/dừng riêng dùng SpeechSynthesis ngay trong chính
+// khối "Nghe truyện" đó.
+function setupBrowserTtsFallback(text) {
+  if (!('speechSynthesis' in window)) { showAudioUi('unavailable'); return }
+  showAudioUi('unavailable') // ẩn audio tag thật + ẩn "chưa có audio", ta tự vẽ UI riêng bên dưới
+
+  ;['top', 'end'].forEach(pos => {
+    const wrap = document.getElementById(pos === 'top' ? 'audio-section-top' : 'audio-section-end')
+    if (!wrap || wrap.querySelector('.browser-tts-btn')) return
+    const btn = document.createElement('button')
+    btn.className = 'browser-tts-btn'
+    btn.innerHTML = `<svg viewBox="0 0 24 24" width="15" height="15" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polygon points="5 3 19 12 5 21 5 3"/></svg> Nghe bằng giọng trình duyệt`
+    btn.style.cssText = 'display:flex;align-items:center;gap:6px;padding:9px 16px;border-radius:20px;border:1.5px solid var(--border);background:var(--bg2);color:var(--accent);font-size:13px;font-weight:700;cursor:pointer;font-family:Nunito,sans-serif;'
+    btn.onclick = () => toggleBrowserTts(btn, text)
+    wrap.appendChild(btn)
+  })
+}
+
+let _browserTtsUtterance = null
+function toggleBrowserTts(btn, text) {
+  if (_browserTtsUtterance && speechSynthesis.speaking) {
+    speechSynthesis.cancel()
+    _browserTtsUtterance = null
+    document.querySelectorAll('.browser-tts-btn').forEach(b => {
+      b.innerHTML = `<svg viewBox="0 0 24 24" width="15" height="15" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polygon points="5 3 19 12 5 21 5 3"/></svg> Nghe bằng giọng trình duyệt`
+    })
+    return
+  }
+  const utt = new SpeechSynthesisUtterance(text)
+  utt.lang = 'vi-VN'
+  utt.rate = 1
+  utt.onend = () => {
+    document.querySelectorAll('.browser-tts-btn').forEach(b => {
+      b.innerHTML = `<svg viewBox="0 0 24 24" width="15" height="15" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polygon points="5 3 19 12 5 21 5 3"/></svg> Nghe bằng giọng trình duyệt`
+    })
+    _browserTtsUtterance = null
+  }
+  _browserTtsUtterance = utt
+  document.querySelectorAll('.browser-tts-btn').forEach(b => {
+    b.innerHTML = `<svg viewBox="0 0 24 24" width="15" height="15" style="stroke:currentColor;fill:none;stroke-width:2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg> Đang đọc... (bấm để dừng)`
+  })
+  speechSynthesis.speak(utt)
 }
 
 function renderParagraphs(content) {
@@ -1027,20 +1162,30 @@ function renderParagraphs(content) {
 
 // Tiêu đề chương xuống dòng bình thường khi đủ chữ một dòng
 
-// Lướt lên/xuống ở đầu/cuối trang để chuyển chương trước/sau
+// Lướt lên/xuống ở đầu/cuối trang để chuyển chương trước/sau.
+// Nới ngưỡng "gần mép" (thay vì yêu cầu đúng tuyệt đối 0px) và kiểm tra cả thời điểm
+// bắt đầu chạm lẫn lúc kết thúc, để cử chỉ luôn được nhận diện mượt mà, không bị khựng.
 ;(function setupSwipeChapterNav() {
   let touchStartY = null
+  let startedAtTop = false
+  let startedAtBottom = false
+  const EDGE_MARGIN = 40 // px — coi là "gần mép" nếu còn cách mép trong khoảng này
+
   document.addEventListener('touchstart', (e) => {
     touchStartY = e.touches[0].clientY
+    const scrollEl = document.scrollingElement || document.documentElement
+    startedAtTop = scrollEl.scrollTop <= EDGE_MARGIN
+    startedAtBottom = scrollEl.scrollTop + scrollEl.clientHeight >= scrollEl.scrollHeight - EDGE_MARGIN
   }, { passive: true })
+
   document.addEventListener('touchend', (e) => {
     if (touchStartY === null) return
     const deltaY = e.changedTouches[0].clientY - touchStartY
     touchStartY = null
-    const threshold = 70
+    const threshold = 50
     const scrollEl = document.scrollingElement || document.documentElement
-    const atTop = scrollEl.scrollTop <= 2
-    const atBottom = scrollEl.scrollTop + scrollEl.clientHeight >= scrollEl.scrollHeight - 2
+    const atTop = startedAtTop || scrollEl.scrollTop <= EDGE_MARGIN
+    const atBottom = startedAtBottom || scrollEl.scrollTop + scrollEl.clientHeight >= scrollEl.scrollHeight - EDGE_MARGIN
     const btnPrev = document.getElementById('btn-prev')
     const btnNext = document.getElementById('btn-next')
     // Lướt xuống (kéo tay xuống) khi đang ở đầu trang -> chương trước
@@ -1098,7 +1243,7 @@ async function loadVotes() {
       .eq('chapter_id', CHAPTER_UUID).eq('voter_ip', chCurrentUser.id)
     const used = count || 0
     btn.dataset.voteCount = used
-    if (used >= 3) btn.classList.add('voted')
+    if (used >= 1) btn.classList.add('voted')
     else btn.classList.remove('voted')
   }
 }
@@ -1107,14 +1252,14 @@ async function submitVote() {
   const btn = document.getElementById('vote-btn')
   if (!chCurrentUser) { alert('Vui lòng đăng nhập để vote!'); return }
   if (!CHAPTER_UUID) return
-  // Mỗi tài khoản được vote tối đa 3 lần / chương
+  // Mỗi tài khoản được vote tối đa 3 lần / chương, nhưng nút đổi màu ngay từ lần đầu tiên
   const { count } = await sb.from('chapter_votes').select('id', { count: 'exact', head: true })
     .eq('chapter_id', CHAPTER_UUID).eq('voter_ip', chCurrentUser.id)
   const used = count || 0
   if (used >= 3) { btn.classList.add('voted'); showToast && showToast('Bạn đã vote tối đa 3 lần cho chương này!'); return }
   const { error } = await sb.from('chapter_votes').insert({ chapter_id: CHAPTER_UUID, voter_ip: chCurrentUser.id })
   if (!error) await sb.rpc('increment_votes', { chapter_id: CHAPTER_UUID })
-  if (used + 1 >= 3) btn.classList.add('voted')
+  btn.classList.add('voted')
   loadVotes()
 }
 
