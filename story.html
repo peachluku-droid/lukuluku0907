@@ -285,25 +285,26 @@ body {
 
 .comment-compose {
   display: flex; gap: 8px;
-  background: #fff;
-  border: 1.5px solid var(--border);
-  border-radius: 22px;
-  padding: 7px 15px;
-  margin: 10px 0 10px;
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid var(--border);
+  border-radius: 0;
+  padding: 8px 0 8px;
+  margin: 6px 0 10px;
   transition: border-color .15s, background .2s;
   cursor: text;
   overflow: hidden;
   align-items: center;
   min-height: 38px;
 }
-.comment-compose:focus-within { border-color: var(--peach); }
+.comment-compose:focus-within { border-bottom-color: var(--peach); }
 .comment-compose.expanded {
   cursor: default;
+  border: 1.5px solid var(--peach-mid);
   border-radius: 14px;
   padding: 10px 12px;
   align-items: flex-start;
   background: var(--peach-light);
-  border-color: var(--peach-mid);
 }
 .comment-compose .compose-footer { display: none; }
 .comment-compose.expanded .compose-footer { display: flex; }
@@ -875,7 +876,7 @@ function renderComposeArea() {
     const avatarHtml = profile.avatar_url
       ? `<img src="${escapeHtml(profile.avatar_url)}" alt="${escapeHtml(name)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
       : `<span style="font-size:14px;font-weight:800;color:var(--peach-dark)">${initial}</span>`;
-    area.innerHTML = `<div class="comment-compose" id="compose-box" onclick="expandCompose()"><div class="compose-body"><textarea class="compose-input" id="comment-input" placeholder="Viết review của bạn..." rows="1" style="background:#fff" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onkeydown="if(event.key==='Enter'&&!event.shiftKey&&window.innerWidth>600){event.preventDefault();submitComment()}"></textarea><div class="compose-footer"><button class="compose-submit" onclick="submitComment()"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Gửi</button></div></div></div>`;
+    area.innerHTML = `<div class="comment-compose" id="compose-box" onclick="expandCompose()"><div class="compose-body"><textarea class="compose-input" id="comment-input" placeholder="Viết review của bạn..." rows="1" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onkeydown="if(event.key==='Enter'&&!event.shiftKey&&window.innerWidth>600){event.preventDefault();submitComment()}"></textarea><div class="compose-footer"><button class="compose-submit" onclick="submitComment()"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Gửi</button></div></div></div>`;
     setTimeout(() => {
       document.addEventListener('click', function collapseHandler(e) {
         const box = document.getElementById('compose-box');
@@ -948,6 +949,22 @@ function displayName(userId, email) {
   return p.username || email?.split('@')[0] || 'Người dùng';
 }
 
+// Render @mentions as clickable links using profilesCache
+function renderMentions(text) {
+  if (!text) return '';
+  // Escape HTML first
+  const safe = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  // Replace @username with a clickable span — look up userId from profilesCache
+  return safe.replace(/@([\w.]+)/g, (match, uname) => {
+    // Find userId from cache by username
+    const entry = Object.values(profilesCache).find(p => p.username === uname);
+    if (entry) {
+      return `<span class="mention-tag" onclick="goToUserProfile('${entry.id}')" style="color:var(--peach);font-weight:700;cursor:pointer">@${uname}</span>`;
+    }
+    return `<span style="color:var(--peach);font-weight:700">@${uname}</span>`;
+  });
+}
+
 function renderComments() {
   const list = document.getElementById('comment-list');
   renderComposeArea();
@@ -970,7 +987,7 @@ function renderCommentCard(c) {
           <span class="comment-name" onclick="event.stopPropagation();goToUserProfile('${c.user_id}')" style="cursor:pointer">${escapeHtml(name)}</span>
           <span class="comment-time">${timeAgo(c.created_at)}</span>
         </div>
-        <div class="comment-text">${escapeHtml(c.content)}</div>
+        <div class="comment-text">${renderMentions(c.content)}</div>
         <div class="comment-actions">
           <button class="comment-action-btn${likedClass}" onclick="event.stopPropagation();toggleLike('${c.id}')">
             <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
@@ -1062,7 +1079,7 @@ async function loadReplies(parentId) {
       <div class="reply-avatar" onclick="event.stopPropagation();goToUserProfile('${r.user_id}')" style="cursor:pointer">${avatarHtml(r.user_id, r.user_email, 30, 12)}</div>
       <div class="reply-bubble">
         <div class="reply-header"><span class="reply-name" style="cursor:pointer" onclick="event.stopPropagation();goToUserProfile('${r.user_id}')" title="${escapeHtml(rname)}">@${escapeHtml(rname)}</span><span class="reply-time">${timeAgo(r.created_at)}</span></div>
-        <div class="reply-text">${escapeHtml(r.content)}</div>
+        <div class="reply-text">${renderMentions(r.content)}</div>
         <div class="reply-actions">
           <button class="comment-action-btn${lk.liked ? ' liked' : ''}" onclick="toggleLike('${r.id}','${parentId}')">
             <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
