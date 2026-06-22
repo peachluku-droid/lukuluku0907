@@ -707,14 +707,13 @@ function searchByAuthor() {
 }
 
 function goToUserProfile(userId) {
-  if (userId && userId !== 'undefined' && userId !== 'null') {
-    location.href = 'profile.html?id=' + encodeURIComponent(userId);
-  }
+  if (!userId || userId === 'undefined' || userId === 'null') return;
+  location.href = 'profile.html?user=' + encodeURIComponent(userId);
 }
 
 function goToAuthorProfile() {
   if (uploaderUserId) {
-    location.href = 'profile.html?id=' + encodeURIComponent(uploaderUserId);
+    location.href = 'profile.html?user=' + encodeURIComponent(uploaderUserId);
   } else if (storyData?.author) {
     location.href = 'search.html?author=' + encodeURIComponent(storyData.author);
   }
@@ -913,6 +912,8 @@ async function loadComments(append = false) {
     });
   }
   renderComments();
+  // Resolve @mentions async — nếu tìm được username mới thì re-render
+  resolveMentionsInComments(comments).then(changed => { if (changed) renderComments(); });
   if (ids.length) {
     const { data: replyCounts } = await sb.from('comments').select('parent_id').in('parent_id', ids).not('parent_id', 'is', null);
     if (replyCounts) {
@@ -934,7 +935,10 @@ async function fetchProfiles(userIds) {
   const missing = [...new Set(userIds)].filter(id => id && !profilesCache[id]);
   if (!missing.length) return;
   const { data } = await sb.from('profiles').select('id, username, avatar_url').in('id', missing);
-  (data || []).forEach(p => profilesCache[p.id] = p);
+  (data || []).forEach(p => {
+    profilesCache[p.id] = p;
+    if (p.username) usernameToId[p.username] = p.id;
+  });
 }
 
 function avatarHtml(userId, email, size = 36, fsize = 14) {
@@ -949,20 +953,33 @@ function displayName(userId, email) {
   return p.username || email?.split('@')[0] || 'Người dùng';
 }
 
-// Render @mentions as clickable links using profilesCache
+// Cache username → userId riêng để tra @mention
+const usernameToId = {};
+
+// Sync render (dùng cache đã có)
 function renderMentions(text) {
   if (!text) return '';
-  // Escape HTML first
   const safe = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  // Replace @username with a clickable span — look up userId from profilesCache
   return safe.replace(/@([\w.]+)/g, (match, uname) => {
-    // Find userId from cache by username
-    const entry = Object.values(profilesCache).find(p => p.username === uname);
-    if (entry) {
-      return `<span class="mention-tag" onclick="goToUserProfile('${entry.id}')" style="color:var(--peach);font-weight:700;cursor:pointer">@${uname}</span>`;
+    const uid = usernameToId[uname];
+    if (uid) {
+      return `<span class="mention-tag" onclick="event.stopPropagation();goToUserProfile('${uid}')" style="color:var(--peach);font-weight:700;cursor:pointer">@${uname}</span>`;
     }
     return `<span style="color:var(--peach);font-weight:700">@${uname}</span>`;
   });
+}
+
+// Fetch các username được @mention mà chưa có trong cache, rồi re-render
+async function resolveMentionsInComments(commentList) {
+  const allTexts = commentList.map(c => c.content || '').join(' ');
+  const mentioned = [...new Set([...allTexts.matchAll(/@([\w.]+)/g)].map(m => m[1]))];
+  const missing = mentioned.filter(u => !usernameToId[u]);
+  if (!missing.length) return false;
+  const { data } = await sb.from('profiles').select('id, username').in('username', missing);
+  if (!data || !data.length) return false;
+  let changed = false;
+  data.forEach(p => { usernameToId[p.username] = p.id; profilesCache[p.id] = { ...profilesCache[p.id], ...p }; changed = true; });
+  return changed;
 }
 
 function renderComments() {
@@ -1094,6 +1111,10 @@ async function loadReplies(parentId) {
       </div>
     </div>`;
   }).join('') + composeBox;
+  // Resolve @mentions trong replies
+  resolveMentionsInComments(replies).then(changed => {
+    if (changed) loadReplies(parentId);
+  });
 }
 
 async function submitReply(parentId) {
