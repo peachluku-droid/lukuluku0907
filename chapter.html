@@ -151,20 +151,21 @@ body {
 .cmt-trigger {
   float: right;
   clear: right;
-  display: inline-flex; align-items: center; justify-content: center;
-  background: color-mix(in srgb, var(--text) 50%, var(--bg));
+  display: inline-flex; align-items: center; justify-content: center; gap: 3px;
+  background: color-mix(in srgb, var(--text) 52%, var(--bg));
   border: none;
-  border-radius: 7px;
+  border-radius: 6px;
   color: #fff;
   cursor: pointer; transition: all .15s;
   opacity: 0.82;
-  width: 32px;
+  padding: 3px 7px;
   height: 24px;
   margin-left: 6px;
-  margin-top: 4px;
+  margin-top: 5px;
+  font-family: 'Nunito', sans-serif;
 }
-.cmt-trigger svg { display: none; }
-.cmt-trigger .cnt { font-size: 13px; font-weight: 700; font-family: 'Nunito', sans-serif; text-align: center; line-height: 1; }
+.cmt-trigger svg { display: inline-block; width: 13px; height: 13px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.cmt-trigger .cnt { font-size: 12px; font-weight: 700; text-align: center; line-height: 1; }
 .cmt-trigger:hover { opacity: 1; background: var(--accent); }
 .cmt-trigger.active { opacity: 1; background: var(--accent); }
 .cmt-trigger.has-cmt { opacity: 1; background: var(--accent); }
@@ -542,9 +543,32 @@ body {
   color: var(--text); cursor: pointer; transition: all .12s;
 }
 .audio-speed-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+/* ── SETTINGS AUDIO ROW ── */
+.settings-audio-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 0;
+}
+.settings-audio-left {
+  display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0;
+}
+.settings-audio-label {
+  font-size: 14px; font-weight: 700; color: var(--text); font-family: 'Nunito', sans-serif;
+}
+.settings-audio-tag {
+  font-size: 12px; color: var(--meta); font-family: 'Nunito', sans-serif;
+}
+.settings-audio-play-btn {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: none; border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0; transition: all .15s;
+}
+.settings-audio-play-btn svg { width: 13px; height: 13px; stroke: var(--text); fill: var(--text); stroke-width: 0; }
+.settings-audio-play-btn:hover { border-color: var(--accent); }
+.settings-audio-play-btn.playing { background: var(--accent); border-color: var(--accent); }
+.settings-audio-play-btn.playing svg { stroke: #fff; fill: #fff; }
 
-</style>
-</head>
+
 <body class="theme-light">
 
 <header class="site-header">
@@ -631,35 +655,16 @@ body {
     </div>
   </div>
   <div class="setting-group">
-    <label>🎧 Audio</label>
-    <div class="audio-player-wrap" id="settings-audio-wrap">
-      <div class="audio-player-title">
-        <svg viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z"/><path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
-        Nghe truyện
+    <div class="settings-audio-row" id="settings-audio-wrap">
+      <div class="settings-audio-left">
+        <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--text);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        <span class="settings-audio-label">Nghe truyện</span>
+        <span class="settings-audio-tag" id="settings-audio-tag">(Browser TTS)</span>
       </div>
       <div id="settings-audio-body">
-        <div class="audio-no-file" id="audio-no-file">Chương này chưa có audio</div>
-        <div id="audio-player-ui" style="display:none">
-          <div class="audio-controls">
-            <button class="audio-play-btn" id="audio-play-btn" onclick="toggleAudioPlay()">
-              <svg id="audio-play-icon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            </button>
-            <div class="audio-progress-wrap">
-              <input class="audio-progress" id="audio-seek" type="range" value="0" min="0" step="0.1" oninput="seekAudio(this.value)">
-              <div class="audio-time">
-                <span id="audio-cur">0:00</span>
-                <span id="audio-dur">0:00</span>
-              </div>
-            </div>
-          </div>
-          <div class="audio-speed-row">
-            Tốc độ:
-            <button class="audio-speed-btn active" onclick="setAudioSpeed(1,this)">1x</button>
-            <button class="audio-speed-btn" onclick="setAudioSpeed(1.25,this)">1.25x</button>
-            <button class="audio-speed-btn" onclick="setAudioSpeed(1.5,this)">1.5x</button>
-            <button class="audio-speed-btn" onclick="setAudioSpeed(2,this)">2x</button>
-          </div>
-        </div>
+        <button class="settings-audio-play-btn" id="settings-tts-btn" onclick="settingsTtsToggle()">
+          <svg id="settings-tts-icon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </button>
       </div>
     </div>
   </div>
@@ -703,7 +708,7 @@ body {
           <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
           <span id="vote-count-end">0</span> vote
         </button>
-        <button class="stat-btn" onclick="toggleCmtOverview()">
+        <button class="stat-btn" onclick="openCmtSheet('__chapter__', false)">
           <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           <span id="total-cmt-end">0</span> bình luận
         </button>
@@ -1105,8 +1110,8 @@ function setupChapterAudio(ch) {
             <span class="tts-speed-label">Tốc độ</span>
             <button class="tts-speed-btn" data-rate="0.8" onclick="ttsSetRate(this)">0.8×</button>
             <button class="tts-speed-btn active" data-rate="1" onclick="ttsSetRate(this)">1×</button>
-            <button class="tts-speed-btn" data-rate="1.3" onclick="ttsSetRate(this)">1.3×</button>
-            <button class="tts-speed-btn" data-rate="1.6" onclick="ttsSetRate(this)">1.6×</button>
+            <button class="tts-speed-btn" data-rate="1.5" onclick="ttsSetRate(this)">1.5×</button>
+            <button class="tts-speed-btn" data-rate="2" onclick="ttsSetRate(this)">2×</button>
           </div>
         </div>
       </div>`)
@@ -1160,6 +1165,13 @@ function _ttsSetUi(playing) {
       ? `<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg><span>Dừng đọc</span>`
       : `<svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg><span>Nghe truyện</span>`
   })
+  // sync settings compact button
+  const settingsBtn = document.getElementById('settings-tts-btn');
+  const settingsIcon = document.getElementById('settings-tts-icon');
+  if (settingsBtn) settingsBtn.classList.toggle('playing', playing);
+  if (settingsIcon) settingsIcon.innerHTML = playing
+    ? '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'
+    : '<polygon points="5 3 19 12 5 21 5 3"/>';
 }
 
 // Dừng audio khi chuyển trang
@@ -1225,7 +1237,7 @@ function renderParagraphs(content) {
     const rendered = block.type === 'html' ? block.content : escapeHtml(block.content)
     return `
     <div class="para-wrap" data-pid="${pid}">
-      <button class="cmt-trigger" data-pid="${pid}"><span class="cnt">+</span></button>
+      <button class="cmt-trigger" data-pid="${pid}"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="cnt">+</span></button>
       <div class="para-text">${rendered}</div>
     </div>`
   }).join('')
@@ -1251,7 +1263,7 @@ function renderParagraphs(content) {
 ;(function setupSwipeChapterNav() {
   let startY = null, startTime = 0
   let startedAtTop = false, startedAtBottom = false
-  const EDGE_MARGIN = 80 // px rộng hơn để dễ kích hoạt hơn
+  const EDGE_MARGIN = 160
 
   document.addEventListener('touchstart', (e) => {
     if (e.touches.length !== 1) return
@@ -1267,20 +1279,20 @@ function renderParagraphs(content) {
     const deltaY = e.changedTouches[0].clientY - startY
     const elapsed = Date.now() - startTime
     startY = null
-    if (elapsed > 500) return
+    if (elapsed > 600) return
     const velocity = Math.abs(deltaY) / elapsed
-    if (velocity < 0.35) return
-    if (Math.abs(deltaY) < 40) return
+    if (velocity < 0.3) return
+    if (Math.abs(deltaY) < 50) return
 
     const sc = document.scrollingElement || document.documentElement
-    const atTop    = startedAtTop    || sc.scrollTop <= EDGE_MARGIN
-    const atBottom = startedAtBottom || sc.scrollTop + sc.clientHeight >= sc.scrollHeight - EDGE_MARGIN
+    const atTop    = sc.scrollTop <= EDGE_MARGIN
+    const atBottom = sc.scrollTop + sc.clientHeight >= sc.scrollHeight - EDGE_MARGIN
     const btnPrev = document.getElementById('btn-prev')
     const btnNext = document.getElementById('btn-next')
 
-    if (deltaY > 0 && atTop && btnPrev && !btnPrev.classList.contains('disabled')) {
+    if (deltaY > 0 && (startedAtTop || atTop) && btnPrev && !btnPrev.classList.contains('disabled') && btnPrev.href && btnPrev.href !== '#') {
       location.href = btnPrev.href
-    } else if (deltaY < 0 && atBottom && btnNext && !btnNext.classList.contains('disabled')) {
+    } else if (deltaY < 0 && (startedAtBottom || atBottom) && btnNext && !btnNext.classList.contains('disabled') && btnNext.href && btnNext.href !== '#') {
       location.href = btnNext.href
     }
   }, { passive: true })
@@ -1510,15 +1522,23 @@ let activePid = null
 
 function openCmtSheet(pid, fromOverview) {
   activePid = pid
-  document.getElementById('sheet-pid-label').textContent = `Bình luận đoạn`
+  const isChapter = pid === '__chapter__'
+  document.getElementById('sheet-pid-label').textContent = isChapter ? 'Bình luận chương' : 'Bình luận đoạn'
   document.getElementById('cmt-sheet-back').style.display = fromOverview ? 'flex' : 'none'
   document.getElementById('cmt-sheet-overview').style.display = 'none'
   document.getElementById('cmt-sheet-detail').style.display = 'flex'
-  const paraEl = document.querySelector(`.para-wrap[data-pid="${pid}"] .para-text`)
   const quoteEl = document.getElementById('cmt-para-quote')
-  if (paraEl && quoteEl) {
-    quoteEl.textContent = (paraEl.textContent || '').trim()
-    quoteEl.classList.add('visible')
+  if (quoteEl) {
+    if (isChapter) {
+      quoteEl.textContent = ''
+      quoteEl.classList.remove('visible')
+    } else {
+      const paraEl = document.querySelector(`.para-wrap[data-pid="${pid}"] .para-text`)
+      if (paraEl) {
+        quoteEl.textContent = (paraEl.textContent || '').trim()
+        quoteEl.classList.add('visible')
+      }
+    }
   }
   document.getElementById('sheet-emoji-picker').classList.remove('open')
   document.getElementById('cmt-sheet').classList.add('open')
@@ -2098,57 +2118,55 @@ const _audio = new Audio();
 let _audioPlaying = false;
 
 function initSettingsAudio(url) {
-  if (!url) {
-    document.getElementById('audio-no-file').style.display = 'none';
-    document.getElementById('audio-player-ui').style.display = 'none';
-    // Dùng Web Speech API trong settings drawer
-    const body = document.getElementById('settings-audio-body');
-    if (body && !body.querySelector('.tts-player')) {
-      const plainText = stripHtml(document.getElementById('paragraphs-container')?.innerHTML || '').trim();
-      if (plainText && 'speechSynthesis' in window) {
-        body.insertAdjacentHTML('beforeend', `
-          <div class="tts-player">
-            <div class="tts-controls">
-              <button class="tts-btn tts-play" onclick="ttsToggle(this)">
-                <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                <span>Nghe truyện</span>
-              </button>
-              <div class="tts-speed-wrap">
-                <span class="tts-speed-label">Tốc độ</span>
-                <button class="tts-speed-btn" data-rate="0.8" onclick="ttsSetRate(this)">0.8×</button>
-                <button class="tts-speed-btn active" data-rate="1" onclick="ttsSetRate(this)">1×</button>
-                <button class="tts-speed-btn" data-rate="1.3" onclick="ttsSetRate(this)">1.3×</button>
-                <button class="tts-speed-btn" data-rate="1.6" onclick="ttsSetRate(this)">1.6×</button>
-              </div>
-            </div>
-          </div>`);
-        body.querySelector('.tts-player').dataset.text = plainText;
-      } else {
-        document.getElementById('audio-no-file').style.display = 'block';
-      }
-    }
-    return;
+  // New compact UI — just store the text/url for the play button
+  const plainText = stripHtml(document.getElementById('paragraphs-container')?.innerHTML || '').trim();
+  const tag = document.getElementById('settings-audio-tag');
+  if (url) {
+    if (tag) tag.textContent = '';
+    // wire up to _audio player
+    _audio.src = url;
+  } else {
+    if (tag) tag.textContent = '(Browser TTS)';
   }
-  document.getElementById('audio-no-file').style.display = 'none';
-  document.getElementById('audio-player-ui').style.display = 'block';
-  _audio.src = url;
-  _audio.ontimeupdate = () => {
-    const cur = _audio.currentTime, dur = _audio.duration || 0;
-    document.getElementById('audio-seek').value = dur ? (cur / dur * 100) : 0;
-    document.getElementById('audio-seek').max = 100;
-    document.getElementById('audio-cur').textContent = fmtTime(cur);
-    document.getElementById('audio-dur').textContent = fmtTime(dur);
-  };
-  _audio.onended = () => {
-    _audioPlaying = false;
-    document.getElementById('audio-play-icon').innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
-    // Tự động chuyển chương tiếp theo sau khi nghe xong
-    const btnNext = document.getElementById('btn-next');
-    if (btnNext && !btnNext.classList.contains('disabled') && btnNext.href) {
-      setTimeout(() => { location.href = btnNext.href; }, 1200);
-    }
-  };
+  // store for toggle
+  document.getElementById('settings-audio-wrap').__audioUrl = url || null;
+  document.getElementById('settings-audio-wrap').__audioText = plainText;
 }
+
+function settingsTtsToggle() {
+  const wrap = document.getElementById('settings-audio-wrap');
+  const btn = document.getElementById('settings-tts-btn');
+  const icon = document.getElementById('settings-tts-icon');
+  const url = wrap?.__audioUrl;
+  const text = wrap?.__audioText || '';
+
+  if (url) {
+    // File audio thật
+    if (_audioPlaying) {
+      _audio.pause(); _audioPlaying = false;
+      btn.classList.remove('playing');
+      icon.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
+    } else {
+      _audio.play(); _audioPlaying = true;
+      btn.classList.add('playing');
+      icon.innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+    }
+  } else {
+    // TTS
+    if (_ttsActive) {
+      speechSynthesis.cancel(); _ttsActive = false;
+      btn.classList.remove('playing');
+      icon.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
+    } else {
+      if (!text) return;
+      _ttsSpeak(text);
+      btn.classList.add('playing');
+      icon.innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+    }
+  }
+}
+
+
 function fmtTime(s) {
   if (!s || isNaN(s)) return '0:00';
   const m = Math.floor(s/60), sec = Math.floor(s%60);
