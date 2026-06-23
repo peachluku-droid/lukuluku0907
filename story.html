@@ -289,13 +289,14 @@ body {
   border: none;
   border-bottom: 1.5px solid var(--border);
   border-radius: 0;
-  padding: 8px 0 8px;
-  margin: 6px 0 10px;
+  padding: 8px 12px 8px 12px;
+  margin: 6px 16px 10px;
   transition: border-color .15s, background .2s;
   cursor: text;
   overflow: hidden;
   align-items: center;
   min-height: 38px;
+  max-width: 480px;
 }
 .comment-compose:focus-within { border-bottom-color: var(--peach); }
 .comment-compose.expanded {
@@ -305,6 +306,7 @@ body {
   padding: 10px 12px;
   align-items: flex-start;
   background: var(--peach-light);
+  max-width: 480px;
 }
 .comment-compose .compose-footer { display: none; }
 .comment-compose.expanded .compose-footer { display: flex; }
@@ -315,7 +317,7 @@ body {
 .compose-avatar { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); }
 .compose-avatar svg { width: 15px; height: 15px; stroke: var(--peach-mid); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .compose-body { flex: 1; min-width: 0; }
-.compose-input { width: 100%; border: none; background: none; outline: none; font-family: 'Nunito', sans-serif; font-size: 15.5px; color: var(--text); resize: none; min-height: 38px; max-height: 120px; line-height: 1.5; }
+.compose-input { width: 100%; border: none; background: none; outline: none; font-family: 'Nunito', sans-serif; font-size: 14px; color: var(--text); resize: none; min-height: 38px; max-height: 120px; line-height: 1.5; padding-left: 2px; }
 .compose-input::placeholder { color: var(--text-muted); }
 .compose-footer { display: flex; align-items: center; justify-content: flex-end; margin-top: 8px; }
 .compose-submit { background: var(--peach-dark); color: white; border: none; border-radius: 20px; padding: 6px 16px; font-family: 'Nunito', sans-serif; font-size: 14.5px; font-weight: 700; cursor: pointer; transition: background .15s; display: flex; align-items: center; gap: 5px; }
@@ -324,13 +326,15 @@ body {
 .compose-submit:disabled { opacity: .6; cursor: not-allowed; }
 .comment-list { display: flex; flex-direction: column; gap: 1px; }
 .comment-card { background: var(--bg); border: none; border-bottom: 1px solid var(--border); padding: 13px 15px; transition: background .12s; }
-.comment-card:hover { background: var(--peach-light); }
+.comment-card:hover { background: var(--bg); }
 .comment-item { display: flex; gap: 10px; }
-.comment-avatar { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); font-size: 14px; font-weight: 800; color: var(--peach-dark); overflow: hidden; }
+.comment-avatar { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); font-size: 14px; font-weight: 800; color: var(--peach-dark); overflow: hidden; transition: opacity .15s; }
+.comment-avatar:hover { opacity: .75; }
 .comment-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .comment-bubble { flex: 1; min-width: 0; }
 .comment-header { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; flex-wrap: wrap; }
-.comment-name { font-size: 15px; font-weight: 800; }
+.comment-name { font-size: 15px; font-weight: 800; transition: color .12s; }
+.comment-name:hover { color: var(--peach); text-decoration: underline; }
 .comment-time { font-size: 13px; color: var(--text-muted); font-weight: 600; }
 .comment-text { font-size: 15.5px; line-height: 1.65; color: var(--text); word-break: break-word; }
 .comment-actions { display: flex; align-items: center; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
@@ -342,11 +346,13 @@ body {
 .comment-action-btn.delete-btn:hover { background: #fff0f0; color: #c0392b; }
 .replies-section { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; padding-left: 44px; }
 .reply-item { display: flex; gap: 9px; }
-.reply-avatar { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); font-size: 12px; font-weight: 800; color: var(--peach-dark); overflow: hidden; }
+.reply-avatar { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); font-size: 12px; font-weight: 800; color: var(--peach-dark); overflow: hidden; transition: opacity .15s; }
+.reply-avatar:hover { opacity: .75; }
 .reply-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .reply-bubble { flex: 1; min-width: 0; }
 .reply-header { display: flex; align-items: center; gap: 7px; margin-bottom: 3px; }
-.reply-name { font-size: 14.5px; font-weight: 800; }
+.reply-name { font-size: 14.5px; font-weight: 800; transition: color .12s; }
+.reply-name:hover { color: var(--peach); text-decoration: underline; }
 .reply-time { font-size: 12.5px; color: var(--text-muted); font-weight: 600; }
 .reply-text { font-size: 15px; line-height: 1.6; color: var(--text); word-break: break-word; }
 .reply-actions { display: flex; align-items: center; gap: 6px; margin-top: 5px; }
@@ -996,25 +1002,25 @@ function renderCommentCard(c) {
   const canDelete = isOwn || isAdmin;
   const lk = likesCache[c.id] || { count: 0, liked: false };
   const likedClass = lk.liked ? ' liked' : '';
-  return `<div class="comment-card" id="cmt-${c.id}" onclick="toggleReplyBox('${c.id}','${escapeHtml(name)}')" style="cursor:pointer">
+  return `<div class="comment-card" id="cmt-${c.id}">
     <div class="comment-item">
-      <div class="comment-avatar" onclick="event.stopPropagation();goToUserProfile('${c.user_id}')" style="cursor:pointer">${avatarHtml(c.user_id, c.user_email)}</div>
+      <div class="comment-avatar" onclick="goToUserProfile('${c.user_id}')" style="cursor:pointer">${avatarHtml(c.user_id, c.user_email)}</div>
       <div class="comment-bubble">
         <div class="comment-header">
-          <span class="comment-name" onclick="event.stopPropagation();goToUserProfile('${c.user_id}')" style="cursor:pointer">${escapeHtml(name)}</span>
+          <span class="comment-name" onclick="goToUserProfile('${c.user_id}')" style="cursor:pointer">${escapeHtml(name)}</span>
           <span class="comment-time">${timeAgo(c.created_at)}</span>
         </div>
         <div class="comment-text">${renderMentions(c.content)}</div>
         <div class="comment-actions">
-          <button class="comment-action-btn${likedClass}" onclick="event.stopPropagation();toggleLike('${c.id}')">
+          <button class="comment-action-btn${likedClass}" onclick="toggleLike('${c.id}')">
             <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             <span id="like-count-${c.id}">${lk.count || ''}</span>
           </button>
-          <button class="comment-action-btn" id="reply-toggle-${c.id}" onclick="event.stopPropagation();toggleReplyBox('${c.id}')">
+          <button class="comment-action-btn" id="reply-toggle-${c.id}" onclick="toggleReplyBox('${c.id}','${escapeHtml(name)}','${c.user_id}')">
             <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             <span id="reply-label-${c.id}">Trả lời</span>
           </button>
-          ${canDelete ? `<button class="comment-action-btn delete-btn" onclick="event.stopPropagation();deleteComment('${c.id}')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg> Xoá</button>` : ''}
+          ${canDelete ? `<button class="comment-action-btn delete-btn" onclick="deleteComment('${c.id}')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg> Xoá</button>` : ''}
         </div>
       </div>
     </div>
@@ -1039,12 +1045,13 @@ function tagReply(parentId, name, userId) {
   }
 }
 
-async function toggleReplyBox(parentId, tagName = null) {
+async function toggleReplyBox(parentId, tagName = null, userId = null) {
   const sec = document.getElementById('replies-' + parentId);
   const isHidden = sec.style.display === 'none' || sec.style.display === '';
   if (isHidden) {
     sec.style.display = 'flex';
     sec.style.flexDirection = 'column';
+    if (userId) replyInputTarget[parentId] = userId;
     await loadReplies(parentId);
     const input = document.getElementById('reply-input-' + parentId);
     if (input && tagName) {
@@ -1092,17 +1099,17 @@ async function loadReplies(parentId) {
     const isOwn = currentUser && r.user_id === currentUser.id;
     const isAdmin = currentUser && ADMIN_EMAILS.includes(currentUser.email);
     const lk = likesCache[r.id] || { count: 0, liked: false };
-    return `<div class="reply-item" id="cmt-${r.id}" onclick="event.stopPropagation();tagReply('${parentId}','${escapeHtml(rname)}','${r.user_id}')" style="cursor:pointer">
-      <div class="reply-avatar" onclick="event.stopPropagation();goToUserProfile('${r.user_id}')" style="cursor:pointer">${avatarHtml(r.user_id, r.user_email, 30, 12)}</div>
+    return `<div class="reply-item" id="cmt-${r.id}">
+      <div class="reply-avatar" onclick="goToUserProfile('${r.user_id}')" style="cursor:pointer">${avatarHtml(r.user_id, r.user_email, 30, 12)}</div>
       <div class="reply-bubble">
-        <div class="reply-header"><span class="reply-name" style="cursor:pointer" onclick="event.stopPropagation();goToUserProfile('${r.user_id}')" title="${escapeHtml(rname)}">@${escapeHtml(rname)}</span><span class="reply-time">${timeAgo(r.created_at)}</span></div>
+        <div class="reply-header"><span class="reply-name" style="cursor:pointer" onclick="goToUserProfile('${r.user_id}')" title="${escapeHtml(rname)}">${escapeHtml(rname)}</span><span class="reply-time">${timeAgo(r.created_at)}</span></div>
         <div class="reply-text">${renderMentions(r.content)}</div>
         <div class="reply-actions">
           <button class="comment-action-btn${lk.liked ? ' liked' : ''}" onclick="toggleLike('${r.id}','${parentId}')">
             <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             <span id="like-count-${r.id}">${lk.count || ''}</span>
           </button>
-          <button class="comment-action-btn" onclick="toggleReplyBox('${parentId}','${escapeHtml(rname)}')">
+          <button class="comment-action-btn" onclick="tagReply('${parentId}','${escapeHtml(rname)}','${r.user_id}')">
             <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             Trả lời
           </button>
