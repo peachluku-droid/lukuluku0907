@@ -285,28 +285,25 @@ body {
 
 .comment-compose {
   display: flex; gap: 8px;
-  background: transparent;
-  border: none;
-  border-bottom: 1.5px solid var(--border);
-  border-radius: 0;
-  padding: 8px 12px 8px 12px;
-  margin: 6px 16px 10px;
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: 22px;
+  padding: 7px 15px;
+  margin: 10px 0 10px;
   transition: border-color .15s, background .2s;
   cursor: text;
   overflow: hidden;
   align-items: center;
   min-height: 38px;
-  max-width: 480px;
 }
-.comment-compose:focus-within { border-bottom-color: var(--peach); }
+.comment-compose:focus-within { border-color: var(--peach); }
 .comment-compose.expanded {
   cursor: default;
-  border: 1.5px solid var(--peach-mid);
   border-radius: 14px;
   padding: 10px 12px;
   align-items: flex-start;
   background: var(--peach-light);
-  max-width: 480px;
+  border-color: var(--peach-mid);
 }
 .comment-compose .compose-footer { display: none; }
 .comment-compose.expanded .compose-footer { display: flex; }
@@ -317,7 +314,7 @@ body {
 .compose-avatar { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); }
 .compose-avatar svg { width: 15px; height: 15px; stroke: var(--peach-mid); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .compose-body { flex: 1; min-width: 0; }
-.compose-input { width: 100%; border: none; background: none; outline: none; font-family: 'Nunito', sans-serif; font-size: 14px; color: var(--text); resize: none; min-height: 38px; max-height: 120px; line-height: 1.5; padding-left: 2px; }
+.compose-input { width: 100%; border: none; background: none; outline: none; font-family: 'Nunito', sans-serif; font-size: 15.5px; color: var(--text); resize: none; min-height: 38px; max-height: 120px; line-height: 1.5; }
 .compose-input::placeholder { color: var(--text-muted); }
 .compose-footer { display: flex; align-items: center; justify-content: flex-end; margin-top: 8px; }
 .compose-submit { background: var(--peach-dark); color: white; border: none; border-radius: 20px; padding: 6px 16px; font-family: 'Nunito', sans-serif; font-size: 14.5px; font-weight: 700; cursor: pointer; transition: background .15s; display: flex; align-items: center; gap: 5px; }
@@ -326,15 +323,13 @@ body {
 .compose-submit:disabled { opacity: .6; cursor: not-allowed; }
 .comment-list { display: flex; flex-direction: column; gap: 1px; }
 .comment-card { background: var(--bg); border: none; border-bottom: 1px solid var(--border); padding: 13px 15px; transition: background .12s; }
-.comment-card:hover { background: var(--bg); }
+.comment-card:hover { background: var(--peach-light); }
 .comment-item { display: flex; gap: 10px; }
-.comment-avatar { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); font-size: 14px; font-weight: 800; color: var(--peach-dark); overflow: hidden; transition: opacity .15s; }
-.comment-avatar:hover { opacity: .75; }
+.comment-avatar { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); font-size: 14px; font-weight: 800; color: var(--peach-dark); overflow: hidden; }
 .comment-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .comment-bubble { flex: 1; min-width: 0; }
 .comment-header { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; flex-wrap: wrap; }
-.comment-name { font-size: 15px; font-weight: 800; transition: color .12s; }
-.comment-name:hover { color: var(--peach); text-decoration: underline; }
+.comment-name { font-size: 15px; font-weight: 800; }
 .comment-time { font-size: 13px; color: var(--text-muted); font-weight: 600; }
 .comment-text { font-size: 15.5px; line-height: 1.65; color: var(--text); word-break: break-word; }
 .comment-actions { display: flex; align-items: center; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
@@ -346,13 +341,11 @@ body {
 .comment-action-btn.delete-btn:hover { background: #fff0f0; color: #c0392b; }
 .replies-section { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; padding-left: 44px; }
 .reply-item { display: flex; gap: 9px; }
-.reply-avatar { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); font-size: 12px; font-weight: 800; color: var(--peach-dark); overflow: hidden; transition: opacity .15s; }
-.reply-avatar:hover { opacity: .75; }
+.reply-avatar { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); font-size: 12px; font-weight: 800; color: var(--peach-dark); overflow: hidden; }
 .reply-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .reply-bubble { flex: 1; min-width: 0; }
 .reply-header { display: flex; align-items: center; gap: 7px; margin-bottom: 3px; }
-.reply-name { font-size: 14.5px; font-weight: 800; transition: color .12s; }
-.reply-name:hover { color: var(--peach); text-decoration: underline; }
+.reply-name { font-size: 14.5px; font-weight: 800; }
 .reply-time { font-size: 12.5px; color: var(--text-muted); font-weight: 600; }
 .reply-text { font-size: 15px; line-height: 1.6; color: var(--text); word-break: break-word; }
 .reply-actions { display: flex; align-items: center; gap: 6px; margin-top: 5px; }
@@ -380,6 +373,42 @@ body {
 .empty-state { text-align: center; padding: 3rem 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 8px; }
 .empty-state svg { width: 48px; height: 48px; stroke: var(--peach-mid); fill: none; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
 .empty-state-text { font-size: 16px; color: var(--text-muted); font-weight: 600; }
+/* ── Save to list modal ── */
+.save-modal-overlay {
+  display: none; position: fixed; inset: 0; z-index: 400;
+  background: rgba(0,0,0,0.45); align-items: flex-end; justify-content: center;
+}
+.save-modal-overlay.open { display: flex; }
+.save-modal {
+  background: var(--bg2); width: 100%; max-width: 520px;
+  border-radius: 22px 22px 0 0; padding: 20px 20px 36px;
+  transform: translateY(100%); transition: transform .25s cubic-bezier(.4,0,.2,1);
+  max-height: 80vh; overflow-y: auto;
+}
+.save-modal-overlay.open .save-modal { transform: translateY(0); }
+.save-modal-title { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; }
+.save-modal-close { background: var(--peach-light); border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--peach-dark); }
+.save-modal-close svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+.list-item-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 12px; border-radius: 12px; cursor: pointer;
+  transition: background .12s; margin-bottom: 4px;
+}
+.list-item-row:hover { background: var(--peach-light); }
+.list-item-row.selected { background: var(--peach-light); }
+.list-item-check { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border-hover); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all .12s; }
+.list-item-row.selected .list-item-check { background: var(--peach); border-color: var(--peach); }
+.list-item-check svg { width: 11px; height: 11px; stroke: white; fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; display: none; }
+.list-item-row.selected .list-item-check svg { display: block; }
+.list-item-name { font-size: 15px; font-weight: 700; color: var(--text); flex: 1; }
+.list-item-count { font-size: 13px; color: var(--text-muted); }
+.new-list-row { display: flex; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+.new-list-input { flex: 1; border: 1.5px solid var(--border); background: var(--bg); border-radius: 10px; padding: 9px 12px; font-family: 'Nunito', sans-serif; font-size: 14px; color: var(--text); outline: none; transition: border-color .15s; }
+.new-list-input:focus { border-color: var(--peach); }
+.new-list-input::placeholder { color: var(--text-muted); }
+.new-list-btn { background: var(--peach); color: white; border: none; border-radius: 10px; padding: 9px 14px; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: opacity .15s; }
+.new-list-btn:hover { opacity: .85; }
+
 .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--text); color: var(--bg2); padding: 10px 20px; border-radius: 22px; font-size: 15px; font-weight: 700; z-index: 999; opacity: 0; transition: transform .25s, opacity .25s; white-space: nowrap; pointer-events: none; max-width: 90vw; text-align: center; }
 .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 @media (max-width: 480px) {
@@ -545,7 +574,7 @@ body                      { font-size: 16px; }
       <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
       <span id="read-btn-text">Đọc</span>
     </a>
-    <button class="btn-secondary-action" id="bookmark-btn" onclick="toggleBookmark()">
+    <button class="btn-secondary-action" id="bookmark-btn" onclick="openSaveModal()">
       <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
       <span id="bookmark-text">Lưu</span>
     </button>
@@ -620,6 +649,22 @@ body                      { font-size: 16px; }
 
 </div><!-- /.story-detail-container -->
 
+<div class="save-modal-overlay" id="save-modal-overlay" onclick="if(event.target===this)closeSaveModal()">
+  <div class="save-modal">
+    <div class="save-modal-title">
+      Lưu vào danh sách
+      <button class="save-modal-close" onclick="closeSaveModal()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div id="save-list-items">
+      <div style="text-align:center;padding:1rem;color:var(--text-muted);font-size:14px">Đang tải...</div>
+    </div>
+    <div class="new-list-row">
+      <input class="new-list-input" id="new-list-name" placeholder="Tên danh sách mới..." maxlength="50">
+      <button class="new-list-btn" onclick="createAndSave()">+ Tạo</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 </div><!-- /.page-wrapper -->
 
@@ -674,6 +719,9 @@ function showTab(name, btn) {
   if (name === 'comments' && comments.length === 0) loadComments();
 }
 
+// ── Save to list ──
+let userLists = []; // [{list_name, count, saved}]
+
 function updateBookmarkBtn(active) {
   const btn = document.getElementById('bookmark-btn');
   const txt = document.getElementById('bookmark-text');
@@ -683,6 +731,133 @@ function updateBookmarkBtn(active) {
     ? '<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" fill="var(--peach)" stroke="var(--peach)"/>'
     : '<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>';
 }
+
+async function openSaveModal() {
+  if (!currentUser) { showToast('Cần đăng nhập để lưu truyện'); return; }
+  document.getElementById('save-modal-overlay').classList.add('open');
+  await loadUserLists();
+}
+
+function closeSaveModal() {
+  document.getElementById('save-modal-overlay').classList.remove('open');
+}
+
+async function loadUserLists() {
+  const container = document.getElementById('save-list-items');
+  container.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--text-muted);font-size:14px">Đang tải...</div>';
+
+  // Lấy tất cả bookmarks của user (để biết danh sách nào đã có)
+  const { data: allBm } = await sb.from('bookmarks').select('list_name, story_id').eq('user_id', currentUser.id);
+  const allBookmarks = allBm || [];
+
+  // Group theo list_name
+  const listMap = {};
+  allBookmarks.forEach(b => {
+    const name = b.list_name || 'Đọc sau';
+    if (!listMap[name]) listMap[name] = { count: 0, hasCurrent: false };
+    listMap[name].count++;
+    if (b.story_id === storyId) listMap[name].hasCurrent = true;
+  });
+
+  // Luôn có ít nhất danh sách mặc định
+  if (!listMap['Danh sách đọc'] && !Object.keys(listMap).length) listMap['Danh sách đọc'] = { count: 0, hasCurrent: false };
+  // Nếu chưa có danh sách nào thì tạo mặc định
+  if (!Object.keys(listMap).length) listMap['Danh sách đọc'] = { count: 0, hasCurrent: false };
+
+  userLists = Object.entries(listMap).map(([name, v]) => ({ name, count: v.count, saved: v.hasCurrent }));
+
+  renderListItems();
+}
+
+function renderListItems() {
+  const container = document.getElementById('save-list-items');
+  if (!userLists.length) {
+    container.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--text-muted);font-size:14px">Chưa có danh sách nào</div>';
+    return;
+  }
+  container.innerHTML = userLists.map((l, i) => `
+    <div class="list-item-row${l.saved ? ' selected' : ''}" id="list-row-${i}">
+      <div class="list-item-check" onclick="toggleSaveToList(${i})">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <span class="list-item-name" onclick="toggleSaveToList(${i})" id="list-name-${i}">${escapeHtml(l.name)}</span>
+      <span class="list-item-count" onclick="toggleSaveToList(${i})">${l.count} truyện</span>
+      <button onclick="startRename(${i})" style="background:none;border:none;cursor:pointer;padding:4px;color:var(--text-muted);display:flex;align-items:center;flex-shrink:0;border-radius:6px;transition:background .12s" title="Đổi tên">
+        <svg viewBox="0 0 24 24" width="14" height="14" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </button>
+    </div>
+  `).join('');
+}
+
+function startRename(idx) {
+  const nameEl = document.getElementById('list-name-' + idx);
+  const oldName = userLists[idx].name;
+  nameEl.innerHTML = `<input id="rename-input-${idx}" value="${escapeHtml(oldName)}" style="border:1.5px solid var(--peach);border-radius:8px;padding:3px 8px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text);background:var(--bg2);outline:none;width:140px" onclick="event.stopPropagation()" onkeydown="if(event.key==='Enter')confirmRename(${idx});if(event.key==='Escape')renderListItems()">
+  <button onclick="event.stopPropagation();confirmRename(${idx})" style="background:var(--peach);color:white;border:none;border-radius:7px;padding:3px 9px;font-size:13px;font-weight:700;cursor:pointer;margin-left:5px">OK</button>`;
+  document.getElementById('rename-input-' + idx)?.focus();
+}
+
+async function confirmRename(idx) {
+  const input = document.getElementById('rename-input-' + idx);
+  const newName = input?.value?.trim();
+  const oldName = userLists[idx].name;
+  if (!newName || newName === oldName) { renderListItems(); return; }
+  if (userLists.find((l, i) => i !== idx && l.name === newName)) { showToast('Tên này đã tồn tại'); return; }
+  // Cập nhật tất cả bookmark có list_name cũ sang tên mới
+  const { error } = await sb.from('bookmarks')
+    .update({ list_name: newName })
+    .eq('user_id', currentUser.id)
+    .eq('list_name', oldName);
+  if (error) { showToast('Lỗi đổi tên'); return; }
+  userLists[idx].name = newName;
+  showToast(`Đã đổi tên thành "${newName}"`);
+  renderListItems();
+}
+
+async function toggleSaveToList(idx) {
+  const list = userLists[idx];
+  if (list.saved) {
+    // Xoá khỏi danh sách này
+    await sb.from('bookmarks').delete()
+      .eq('user_id', currentUser.id)
+      .eq('story_id', storyId)
+      .eq('list_name', list.name);
+    userLists[idx].saved = false;
+    userLists[idx].count = Math.max(0, userLists[idx].count - 1);
+    showToast(`Đã xoá khỏi "${list.name}"`);
+  } else {
+    // Thêm vào danh sách
+    await sb.from('bookmarks').upsert(
+      { user_id: currentUser.id, story_id: storyId, list_name: list.name, added_at: new Date().toISOString() },
+      { onConflict: 'user_id,story_id,list_name' }
+    );
+    userLists[idx].saved = true;
+    userLists[idx].count++;
+    showToast(`Đã lưu vào "${list.name}"`);
+  }
+  renderListItems();
+  // Cập nhật nút Lưu trên story
+  const anySaved = userLists.some(l => l.saved);
+  updateBookmarkBtn(anySaved);
+}
+
+async function createAndSave() {
+  const input = document.getElementById('new-list-name');
+  const name = input.value.trim();
+  if (!name) { showToast('Nhập tên danh sách đi'); return; }
+  if (userLists.find(l => l.name === name)) { showToast('Danh sách này đã tồn tại'); return; }
+  await sb.from('bookmarks').upsert(
+    { user_id: currentUser.id, story_id: storyId, list_name: name, added_at: new Date().toISOString() },
+    { onConflict: 'user_id,story_id,list_name' }
+  );
+  input.value = '';
+  showToast(`Đã tạo và lưu vào "${name}"`);
+  await loadUserLists();
+  updateBookmarkBtn(true);
+}
+
+async function toggleBookmark() { openSaveModal(); }
+
 function updateFollowBtn(active) {
   const btn = document.getElementById('follow-btn');
   const txt = document.getElementById('follow-text');
@@ -693,12 +868,6 @@ function updateFollowBtn(active) {
     : '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>';
 }
 
-async function toggleBookmark() {
-  if (!currentUser) { showToast('Cần đăng nhập để lưu truyện'); return; }
-  const { data } = await sb.from('bookmarks').select('story_id').eq('user_id', currentUser.id).eq('story_id', storyId).maybeSingle();
-  if (data) { await sb.from('bookmarks').delete().eq('user_id', currentUser.id).eq('story_id', storyId); updateBookmarkBtn(false); showToast('Đã xoá khỏi thư viện'); }
-  else { await sb.from('bookmarks').upsert({ user_id: currentUser.id, story_id: storyId, added_at: new Date().toISOString() }, { onConflict: 'user_id,story_id' }); updateBookmarkBtn(true); showToast('Đã lưu vào thư viện'); }
-}
 async function toggleFollow() {
   if (!currentUser) { showToast('Cần đăng nhập để theo dõi'); return; }
   const { data } = await sb.from('follows').select('story_id').eq('user_id', currentUser.id).eq('story_id', storyId).maybeSingle();
@@ -713,13 +882,14 @@ function searchByAuthor() {
 }
 
 function goToUserProfile(userId) {
-  if (!userId || userId === 'undefined' || userId === 'null') return;
-  location.href = 'profile.html?user=' + encodeURIComponent(userId);
+  if (userId && userId !== 'undefined' && userId !== 'null') {
+    location.href = 'profile.html?id=' + encodeURIComponent(userId);
+  }
 }
 
 function goToAuthorProfile() {
   if (uploaderUserId) {
-    location.href = 'profile.html?user=' + encodeURIComponent(uploaderUserId);
+    location.href = 'profile.html?id=' + encodeURIComponent(uploaderUserId);
   } else if (storyData?.author) {
     location.href = 'search.html?author=' + encodeURIComponent(storyData.author);
   }
@@ -786,8 +956,7 @@ async function loadStory() {
       ]);
       updateBookmarkBtn(!!bm);
       updateFollowBtn(!!fl);
-    }
-    await loadChapters();
+    }    await loadChapters();
     if (window.PlSEO) PlSEO.injectBookJsonLd(story, allChapters, totalVotes);
     await loadCommentCount();
   } catch (err) {
@@ -881,7 +1050,7 @@ function renderComposeArea() {
     const avatarHtml = profile.avatar_url
       ? `<img src="${escapeHtml(profile.avatar_url)}" alt="${escapeHtml(name)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
       : `<span style="font-size:14px;font-weight:800;color:var(--peach-dark)">${initial}</span>`;
-    area.innerHTML = `<div class="comment-compose" id="compose-box" onclick="expandCompose()"><div class="compose-body"><textarea class="compose-input" id="comment-input" placeholder="Viết review của bạn..." rows="1" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onkeydown="if(event.key==='Enter'&&!event.shiftKey&&window.innerWidth>600){event.preventDefault();submitComment()}"></textarea><div class="compose-footer"><button class="compose-submit" onclick="submitComment()"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Gửi</button></div></div></div>`;
+    area.innerHTML = `<div class="comment-compose" id="compose-box" onclick="expandCompose()"><div class="compose-body"><textarea class="compose-input" id="comment-input" placeholder="Viết review của bạn..." rows="1" style="background:#fff" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onkeydown="if(event.key==='Enter'&&!event.shiftKey&&window.innerWidth>600){event.preventDefault();submitComment()}"></textarea><div class="compose-footer"><button class="compose-submit" onclick="submitComment()"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Gửi</button></div></div></div>`;
     setTimeout(() => {
       document.addEventListener('click', function collapseHandler(e) {
         const box = document.getElementById('compose-box');
@@ -918,8 +1087,6 @@ async function loadComments(append = false) {
     });
   }
   renderComments();
-  // Resolve @mentions async — nếu tìm được username mới thì re-render
-  resolveMentionsInComments(comments).then(changed => { if (changed) renderComments(); });
   if (ids.length) {
     const { data: replyCounts } = await sb.from('comments').select('parent_id').in('parent_id', ids).not('parent_id', 'is', null);
     if (replyCounts) {
@@ -941,10 +1108,7 @@ async function fetchProfiles(userIds) {
   const missing = [...new Set(userIds)].filter(id => id && !profilesCache[id]);
   if (!missing.length) return;
   const { data } = await sb.from('profiles').select('id, username, avatar_url').in('id', missing);
-  (data || []).forEach(p => {
-    profilesCache[p.id] = p;
-    if (p.username) usernameToId[p.username] = p.id;
-  });
+  (data || []).forEach(p => profilesCache[p.id] = p);
 }
 
 function avatarHtml(userId, email, size = 36, fsize = 14) {
@@ -957,35 +1121,6 @@ function avatarHtml(userId, email, size = 36, fsize = 14) {
 function displayName(userId, email) {
   const p = profilesCache[userId] || {};
   return p.username || email?.split('@')[0] || 'Người dùng';
-}
-
-// Cache username → userId riêng để tra @mention
-const usernameToId = {};
-
-// Sync render (dùng cache đã có)
-function renderMentions(text) {
-  if (!text) return '';
-  const safe = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  return safe.replace(/@([\w.]+)/g, (match, uname) => {
-    const uid = usernameToId[uname];
-    if (uid) {
-      return `<span class="mention-tag" onclick="event.stopPropagation();goToUserProfile('${uid}')" style="color:var(--peach);font-weight:700;cursor:pointer">@${uname}</span>`;
-    }
-    return `<span style="color:var(--peach);font-weight:700">@${uname}</span>`;
-  });
-}
-
-// Fetch các username được @mention mà chưa có trong cache, rồi re-render
-async function resolveMentionsInComments(commentList) {
-  const allTexts = commentList.map(c => c.content || '').join(' ');
-  const mentioned = [...new Set([...allTexts.matchAll(/@([\w.]+)/g)].map(m => m[1]))];
-  const missing = mentioned.filter(u => !usernameToId[u]);
-  if (!missing.length) return false;
-  const { data } = await sb.from('profiles').select('id, username').in('username', missing);
-  if (!data || !data.length) return false;
-  let changed = false;
-  data.forEach(p => { usernameToId[p.username] = p.id; profilesCache[p.id] = { ...profilesCache[p.id], ...p }; changed = true; });
-  return changed;
 }
 
 function renderComments() {
@@ -1002,25 +1137,25 @@ function renderCommentCard(c) {
   const canDelete = isOwn || isAdmin;
   const lk = likesCache[c.id] || { count: 0, liked: false };
   const likedClass = lk.liked ? ' liked' : '';
-  return `<div class="comment-card" id="cmt-${c.id}">
+  return `<div class="comment-card" id="cmt-${c.id}" onclick="toggleReplyBox('${c.id}','${escapeHtml(name)}')" style="cursor:pointer">
     <div class="comment-item">
-      <div class="comment-avatar" onclick="goToUserProfile('${c.user_id}')" style="cursor:pointer">${avatarHtml(c.user_id, c.user_email)}</div>
+      <div class="comment-avatar" onclick="event.stopPropagation();goToUserProfile('${c.user_id}')" style="cursor:pointer">${avatarHtml(c.user_id, c.user_email)}</div>
       <div class="comment-bubble">
         <div class="comment-header">
-          <span class="comment-name" onclick="goToUserProfile('${c.user_id}')" style="cursor:pointer">${escapeHtml(name)}</span>
+          <span class="comment-name" onclick="event.stopPropagation();goToUserProfile('${c.user_id}')" style="cursor:pointer">${escapeHtml(name)}</span>
           <span class="comment-time">${timeAgo(c.created_at)}</span>
         </div>
-        <div class="comment-text">${renderMentions(c.content)}</div>
+        <div class="comment-text">${escapeHtml(c.content)}</div>
         <div class="comment-actions">
-          <button class="comment-action-btn${likedClass}" onclick="toggleLike('${c.id}')">
+          <button class="comment-action-btn${likedClass}" onclick="event.stopPropagation();toggleLike('${c.id}')">
             <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             <span id="like-count-${c.id}">${lk.count || ''}</span>
           </button>
-          <button class="comment-action-btn" id="reply-toggle-${c.id}" onclick="toggleReplyBox('${c.id}','${escapeHtml(name)}','${c.user_id}')">
+          <button class="comment-action-btn" id="reply-toggle-${c.id}" onclick="event.stopPropagation();toggleReplyBox('${c.id}')">
             <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             <span id="reply-label-${c.id}">Trả lời</span>
           </button>
-          ${canDelete ? `<button class="comment-action-btn delete-btn" onclick="deleteComment('${c.id}')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg> Xoá</button>` : ''}
+          ${canDelete ? `<button class="comment-action-btn delete-btn" onclick="event.stopPropagation();deleteComment('${c.id}')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg> Xoá</button>` : ''}
         </div>
       </div>
     </div>
@@ -1045,13 +1180,12 @@ function tagReply(parentId, name, userId) {
   }
 }
 
-async function toggleReplyBox(parentId, tagName = null, userId = null) {
+async function toggleReplyBox(parentId, tagName = null) {
   const sec = document.getElementById('replies-' + parentId);
   const isHidden = sec.style.display === 'none' || sec.style.display === '';
   if (isHidden) {
     sec.style.display = 'flex';
     sec.style.flexDirection = 'column';
-    if (userId) replyInputTarget[parentId] = userId;
     await loadReplies(parentId);
     const input = document.getElementById('reply-input-' + parentId);
     if (input && tagName) {
@@ -1099,17 +1233,17 @@ async function loadReplies(parentId) {
     const isOwn = currentUser && r.user_id === currentUser.id;
     const isAdmin = currentUser && ADMIN_EMAILS.includes(currentUser.email);
     const lk = likesCache[r.id] || { count: 0, liked: false };
-    return `<div class="reply-item" id="cmt-${r.id}">
-      <div class="reply-avatar" onclick="goToUserProfile('${r.user_id}')" style="cursor:pointer">${avatarHtml(r.user_id, r.user_email, 30, 12)}</div>
+    return `<div class="reply-item" id="cmt-${r.id}" onclick="event.stopPropagation();tagReply('${parentId}','${escapeHtml(rname)}','${r.user_id}')" style="cursor:pointer">
+      <div class="reply-avatar" onclick="event.stopPropagation();goToUserProfile('${r.user_id}')" style="cursor:pointer">${avatarHtml(r.user_id, r.user_email, 30, 12)}</div>
       <div class="reply-bubble">
-        <div class="reply-header"><span class="reply-name" style="cursor:pointer" onclick="goToUserProfile('${r.user_id}')" title="${escapeHtml(rname)}">${escapeHtml(rname)}</span><span class="reply-time">${timeAgo(r.created_at)}</span></div>
-        <div class="reply-text">${renderMentions(r.content)}</div>
+        <div class="reply-header"><span class="reply-name" style="cursor:pointer" onclick="event.stopPropagation();goToUserProfile('${r.user_id}')" title="${escapeHtml(rname)}">@${escapeHtml(rname)}</span><span class="reply-time">${timeAgo(r.created_at)}</span></div>
+        <div class="reply-text">${escapeHtml(r.content)}</div>
         <div class="reply-actions">
           <button class="comment-action-btn${lk.liked ? ' liked' : ''}" onclick="toggleLike('${r.id}','${parentId}')">
             <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             <span id="like-count-${r.id}">${lk.count || ''}</span>
           </button>
-          <button class="comment-action-btn" onclick="tagReply('${parentId}','${escapeHtml(rname)}','${r.user_id}')">
+          <button class="comment-action-btn" onclick="toggleReplyBox('${parentId}','${escapeHtml(rname)}')">
             <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             Trả lời
           </button>
@@ -1118,10 +1252,6 @@ async function loadReplies(parentId) {
       </div>
     </div>`;
   }).join('') + composeBox;
-  // Resolve @mentions trong replies
-  resolveMentionsInComments(replies).then(changed => {
-    if (changed) loadReplies(parentId);
-  });
 }
 
 async function submitReply(parentId) {
