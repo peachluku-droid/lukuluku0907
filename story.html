@@ -323,7 +323,7 @@ body {
 .compose-submit:disabled { opacity: .6; cursor: not-allowed; }
 .comment-list { display: flex; flex-direction: column; gap: 1px; }
 .comment-card { background: var(--bg); border: none; border-bottom: 1px solid var(--border); padding: 13px 15px; transition: background .12s; }
-.comment-card:hover { background: var(--peach-light); }
+.comment-card:hover { background: var(--bg); }
 .comment-item { display: flex; gap: 10px; }
 .comment-avatar { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; background: var(--peach-light); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); font-size: 14px; font-weight: 800; color: var(--peach-dark); overflow: hidden; }
 .comment-avatar img { width: 100%; height: 100%; object-fit: cover; }
@@ -376,16 +376,17 @@ body {
 /* ── Save to list modal ── */
 .save-modal-overlay {
   display: none; position: fixed; inset: 0; z-index: 400;
-  background: rgba(0,0,0,0.45); align-items: flex-end; justify-content: center;
+  background: rgba(0,0,0,0.45); align-items: center; justify-content: center;
+  padding: 20px;
 }
 .save-modal-overlay.open { display: flex; }
 .save-modal {
-  background: var(--bg2); width: 100%; max-width: 520px;
-  border-radius: 22px 22px 0 0; padding: 20px 20px 36px;
-  transform: translateY(100%); transition: transform .25s cubic-bezier(.4,0,.2,1);
+  background: var(--bg2); width: 100%; max-width: 420px;
+  border-radius: 20px; padding: 20px 20px 28px;
+  transform: scale(.95); opacity: 0; transition: transform .2s cubic-bezier(.4,0,.2,1), opacity .2s;
   max-height: 80vh; overflow-y: auto;
 }
-.save-modal-overlay.open .save-modal { transform: translateY(0); }
+.save-modal-overlay.open .save-modal { transform: scale(1); opacity: 1; }
 .save-modal-title { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; }
 .save-modal-close { background: var(--peach-light); border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--peach-dark); }
 .save-modal-close svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
@@ -883,13 +884,13 @@ function searchByAuthor() {
 
 function goToUserProfile(userId) {
   if (userId && userId !== 'undefined' && userId !== 'null') {
-    location.href = 'profile.html?id=' + encodeURIComponent(userId);
+    location.href = 'profile.html?user=' + encodeURIComponent(userId);
   }
 }
 
 function goToAuthorProfile() {
   if (uploaderUserId) {
-    location.href = 'profile.html?id=' + encodeURIComponent(uploaderUserId);
+    location.href = 'profile.html?user=' + encodeURIComponent(uploaderUserId);
   } else if (storyData?.author) {
     location.href = 'search.html?author=' + encodeURIComponent(storyData.author);
   }
@@ -1137,12 +1138,12 @@ function renderCommentCard(c) {
   const canDelete = isOwn || isAdmin;
   const lk = likesCache[c.id] || { count: 0, liked: false };
   const likedClass = lk.liked ? ' liked' : '';
-  return `<div class="comment-card" id="cmt-${c.id}" onclick="toggleReplyBox('${c.id}','${escapeHtml(name)}')" style="cursor:pointer">
+  return `<div class="comment-card" id="cmt-${c.id}">
     <div class="comment-item">
-      <div class="comment-avatar" onclick="event.stopPropagation();goToUserProfile('${c.user_id}')" style="cursor:pointer">${avatarHtml(c.user_id, c.user_email)}</div>
+      <div class="comment-avatar" onclick="goToUserProfile('${c.user_id}')" style="cursor:pointer">${avatarHtml(c.user_id, c.user_email)}</div>
       <div class="comment-bubble">
         <div class="comment-header">
-          <span class="comment-name" onclick="event.stopPropagation();goToUserProfile('${c.user_id}')" style="cursor:pointer">${escapeHtml(name)}</span>
+          <span class="comment-name" onclick="goToUserProfile('${c.user_id}')" style="cursor:pointer">${escapeHtml(name)}</span>
           <span class="comment-time">${timeAgo(c.created_at)}</span>
         </div>
         <div class="comment-text">${escapeHtml(c.content)}</div>
@@ -1233,11 +1234,11 @@ async function loadReplies(parentId) {
     const isOwn = currentUser && r.user_id === currentUser.id;
     const isAdmin = currentUser && ADMIN_EMAILS.includes(currentUser.email);
     const lk = likesCache[r.id] || { count: 0, liked: false };
-    return `<div class="reply-item" id="cmt-${r.id}" onclick="event.stopPropagation();tagReply('${parentId}','${escapeHtml(rname)}','${r.user_id}')" style="cursor:pointer">
-      <div class="reply-avatar" onclick="event.stopPropagation();goToUserProfile('${r.user_id}')" style="cursor:pointer">${avatarHtml(r.user_id, r.user_email, 30, 12)}</div>
+    return `<div class="reply-item" id="cmt-${r.id}">
+      <div class="reply-avatar" onclick="goToUserProfile('${r.user_id}')" style="cursor:pointer">${avatarHtml(r.user_id, r.user_email, 30, 12)}</div>
       <div class="reply-bubble">
-        <div class="reply-header"><span class="reply-name" style="cursor:pointer" onclick="event.stopPropagation();goToUserProfile('${r.user_id}')" title="${escapeHtml(rname)}">@${escapeHtml(rname)}</span><span class="reply-time">${timeAgo(r.created_at)}</span></div>
-        <div class="reply-text">${escapeHtml(r.content)}</div>
+        <div class="reply-header"><span class="reply-name" style="cursor:pointer" onclick="goToUserProfile('${r.user_id}')" title="${escapeHtml(rname)}">${escapeHtml(rname)}</span><span class="reply-time">${timeAgo(r.created_at)}</span></div>
+        <div class="reply-text">${renderMentions(r.content)}</div>
         <div class="reply-actions">
           <button class="comment-action-btn${lk.liked ? ' liked' : ''}" onclick="toggleLike('${r.id}','${parentId}')">
             <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
