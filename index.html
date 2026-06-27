@@ -32,7 +32,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://jnlqzqtavfptkfvnndxq.supabase.co">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:ital,wght@0,700;0,800;0,900;1,700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&subset=vietnamese&display=swap" rel="stylesheet">
 <script src="/seo.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -1091,148 +1091,127 @@ input, textarea, select, button {
 
 
 
+
 /* ═══════════════════════════════════════════════
-   FONT SYSTEM — Dakingo-inspired
-   Playfair Display → Logo (elegant serif)
-   Montserrat 900   → Hero/Display headings
-   Poppins          → Everything else (UI/body)
+   FONT SYSTEM v4 — Dakingo-accurate
+   Montserrat 800-900  → Hero/display heading lớn
+   Poppins 700         → Logo, section title, button
+   Poppins 400-600     → Body, nav, card, meta
+   subset=vietnamese   → Hỗ trợ đầy đủ tiếng Việt
 ═══════════════════════════════════════════════ */
 
-/* BASE: Poppins toàn bộ trang */
-*, *::before, *::after {
-  font-family: 'Poppins', sans-serif;
-}
-body {
+/* BASE: Poppins toàn trang, bao gồm tiếng Việt */
+html, body, *, *::before, *::after {
   font-family: 'Poppins', sans-serif !important;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* INPUT / TEXTAREA / BUTTON → Poppins */
+/* INPUT / TEXTAREA / SELECT / BUTTON */
 input, textarea, select, button {
   font-family: 'Poppins', sans-serif !important;
 }
 
-/* ── LOGO: Playfair Display ── */
+/* ── LOGO: Poppins Bold (giống Dakingo — sans-serif, clean) ── */
 .logo-text {
-  font-family: 'Playfair Display', Georgia, serif !important;
+  font-family: 'Poppins', sans-serif !important;
   font-weight: 700 !important;
-  font-size: 20px !important;
-  letter-spacing: -0.3px;
-  font-style: italic;
+  font-style: normal !important;
+  font-size: 19px !important;
+  letter-spacing: -0.4px !important;
 }
 
-/* ── HERO HEADLINE: Montserrat ExtraBold ── */
+/* ── HERO HEADLINE LỚN: Montserrat ExtraBold ── */
 .hero-body h1,
-.hero-headline,
-.pl-title {
+.story-title-main,
+.pl-title,
+.chapter-heading,
+.auth-title,
+.page-title,
+.write-title,
+.profile-name {
   font-family: 'Montserrat', sans-serif !important;
   font-weight: 800 !important;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.3px !important;
 }
 
-/* ── STORY TITLE (story.html): Montserrat Bold ── */
-.story-title-main {
-  font-family: 'Montserrat', sans-serif !important;
-  font-weight: 700 !important;
-  letter-spacing: -0.3px;
-}
-
-/* ── CHAPTER HEADING (chapter.html): Montserrat ── */
-.chapter-heading {
-  font-family: 'Montserrat', sans-serif !important;
-  font-weight: 700 !important;
-}
-
-/* ── SECTION TITLES: Poppins Bold (= "Menu", "Bestsellers") ── */
+/* ── SECTION TITLE: Poppins Bold ── */
 .sec-title,
+.sec-sub-title,
 .pl-section-title,
 .rank-modal-title,
 .notif-panel-title,
 .theme-drawer-title,
 .rank-modal-title-text,
-.page-title, .write-title,
-.profile-name, .auth-title,
 .chat-panel-title::after {
   font-family: 'Poppins', sans-serif !important;
   font-weight: 700 !important;
 }
 
-/* ── BUTTONS: Poppins SemiBold/Bold (= "ORDER NOW", "VIEW ALL") ── */
+/* ── CARD TITLE: Poppins SemiBold ── */
+.new-update-title,
+.story-title,
+.rank-title,
+.notif-story-name,
+.pl-cover-item-title,
+.pl-fav-title,
+.chapter-name {
+  font-family: 'Poppins', sans-serif !important;
+  font-weight: 600 !important;
+}
+
+/* ── BUTTONS: Poppins SemiBold ── */
 .btn-read, .btn-secondary-action,
 .see-all, .filter-sort-pill,
 .filter-genre-chip, .nav-btn,
 .load-more-btn, .compose-submit,
-.login-prompt-btn, .read-more-btn,
-.new-list-btn, .auth-btn,
+.flink, .dd-auth-btn,
 button[type="submit"], .submit-btn,
-.write-submit, .save-btn, .publish-btn,
-.pl-play-btn, .pl-ctrl-btn,
-.flink, .dd-auth-btn {
+.write-submit, .save-btn, .publish-btn {
   font-family: 'Poppins', sans-serif !important;
   font-weight: 600 !important;
 }
 
-/* ── NAV LINKS: Poppins Medium (= "Cakes", "Theme Cakes") ── */
+/* ── NAV LINK: Poppins Medium ── */
 .nav-center a,
-.topbar a,
 .profile-dropdown-item,
-.tab-btn, .library-tab,
-.profile-tab, .genre-chip,
-.toc-item {
+.tab-btn, .library-tab, .profile-tab {
   font-family: 'Poppins', sans-serif !important;
   font-weight: 500 !important;
 }
 
-/* ── CARD TITLE: Poppins SemiBold ── */
-.new-update-title, .story-title,
-.rank-title, .pl-cover-item-title,
-.pl-fav-title, .notif-story-name,
-.chapter-name, .comment-name,
-.reply-name, .author-name,
-.chapter-count-label {
+/* ── BADGES & TAGS: Poppins SemiBold ── */
+.new-update-ch-badge, .ch-badge,
+.status-badge, .new-update-tag,
+.story-tag, .genre-tag, .status-chip,
+.chat-online-count, .rank-badge,
+.rank-modal-num, .pl-genre-tag,
+.pl-genre-chip {
   font-family: 'Poppins', sans-serif !important;
   font-weight: 600 !important;
 }
 
-/* ── BADGES & TAGS: Poppins SemiBold (= "SAVE 20%") ── */
-.new-update-ch-badge, .status-badge,
-.ch-badge, .new-update-tag, .story-tag,
-.genre-tag, .status-chip,
-.chat-online-count, .notice-badge,
-.rank-badge, .rank-modal-num,
-.pl-genre-tag, .pl-genre-chip {
-  font-family: 'Poppins', sans-serif !important;
-  font-weight: 600 !important;
-  letter-spacing: 0.2px;
-}
-
-/* ── SMALL LABELS / CAPTIONS / META: Poppins Regular ── */
+/* ── META / CAPTION: Poppins Regular ── */
 .rank-author, .rank-views,
 .story-author-row, .story-views-row,
 .story-desc, .chapter-meta,
 .stat-label, .description-text,
 .chat-time, .notif-time,
 .pl-author, .pl-fav-sub,
-.pl-cover-item-author,
-.comment-time, .reply-time,
-.text-muted, .notif-ch-name,
-.filter-section-label {
+.comment-time, .filter-section-label {
   font-family: 'Poppins', sans-serif !important;
   font-weight: 400 !important;
 }
 
-/* ── STAT NUMBERS: Poppins Bold (= giá ₹509) ── */
-.stat-val, .rank-modal-views,
-.chat-name, .author-name {
+/* ── STAT NUMBERS: Poppins Bold ── */
+.stat-val, .rank-modal-views, .chat-name {
   font-family: 'Poppins', sans-serif !important;
   font-weight: 700 !important;
 }
 
 /* ── READING CONTENT (chapter.html): giữ font user chọn ── */
 .para-text, .para-text * {
-  font-family: var(--font-body, 'Georgia', serif) !important;
+  font-family: var(--font-body, Georgia, serif) !important;
 }
 
 </style>
