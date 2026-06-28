@@ -627,58 +627,64 @@ function renderIntro() {
   const p = profileData;
   let html = '';
 
-  // Bio
-  const bioText = p.bio || (isOwnProfile ? 'Nhấp vào đây để thêm mô tả về bản thân...' : '');
-  const bioColor = p.bio ? 'var(--text)' : 'var(--text-muted)';
-  const bioClick = isOwnProfile ? 'onclick="openEditModal()" style="cursor:pointer"' : '';
-  html += `<div ${bioClick} style="font-size:14px;line-height:1.7;color:${bioColor};padding:4px 0 8px;white-space:pre-wrap;text-align:left">${esc(bioText)}</div>`;
+  // Bio — căn trái, font nhỏ như hình 1
+  const bioText = p.bio || (isOwnProfile ? 'Nhấp vào đây để thêm một mô tả về bản thân...' : '');
+  if (bioText) {
+    const bioColor = p.bio ? 'var(--text)' : 'var(--text-muted)';
+    const bioClick = isOwnProfile ? 'onclick="openEditModal()" style="cursor:pointer;font-size:13px;line-height:1.65;color:'+bioColor+';padding:4px 0 4px;white-space:pre-wrap;text-align:left"' : 'style="font-size:13px;line-height:1.65;color:'+bioColor+';padding:4px 0 4px;white-space:pre-wrap;text-align:left"';
+    html += `<div ${bioClick}>${esc(bioText)}</div>`;
+  }
 
-  // Join date
+  // Ngày tham gia
   if (p.created_at) {
     const joined = new Date(p.created_at);
-    const joinStr = joined.toLocaleDateString('vi-VN',{month:'long',year:'numeric'});
-    html += `<div style="font-size:13px;color:var(--text-muted);padding:2px 0 12px">Đã gia nhập ${joinStr}</div>`;
+    const joinStr = 'thg ' + (joined.getMonth()+1) + ' ' + joined.getFullYear();
+    html += `<div style="font-size:12px;color:var(--text-muted);padding:3px 0 12px">Đã gia nhập ${joinStr}</div>`;
   }
 
   // Social links
-  if (p.website || p.facebook || p.twitter) {
+  if (p.website || p.facebook) {
     html += `<div style="display:flex;flex-direction:column;gap:10px;padding:4px 0 16px;border-bottom:1px solid var(--border)">`;
     if (p.facebook) html += `<a href="${esc(p.facebook)}" target="_blank" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)">
-      <div style="width:36px;height:36px;border-radius:8px;background:#1877F2;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+      <div style="width:34px;height:34px;border-radius:8px;background:#1877F2;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="#fff"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
       </div>
-      <span style="font-size:14px;font-weight:600">${esc(p.facebook.replace(/https?:\/\/(www\.)?facebook\.com\//,''))}</span>
+      <span style="font-size:13px;font-weight:600">${esc(p.facebook.replace(/https?:\/\/(www\.)?facebook\.com\//,''))}</span>
     </a>`;
     if (p.website) html += `<a href="${esc(p.website)}" target="_blank" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)">
-      <div style="width:36px;height:36px;border-radius:8px;background:var(--peach);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <svg viewBox="0 0 24 24" width="18" height="18" stroke="#fff" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      <div style="width:34px;height:34px;border-radius:8px;background:var(--peach);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg viewBox="0 0 24 24" width="17" height="17" stroke="#fff" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
       </div>
-      <span style="font-size:14px;font-weight:600;word-break:break-all">${esc(p.website)}</span>
+      <span style="font-size:13px;font-weight:600;word-break:break-all">${esc(p.website)}</span>
     </a>`;
     html += `</div>`;
   }
 
-  // Works section - horizontal scroll
-  html += `<div style="margin-top:18px">
+  // Works section
+  html += `<div style="margin-top:16px;padding-bottom:16px;border-bottom:1px solid var(--border)">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
       <span style="font-size:15px;font-weight:800;color:var(--text)">Truyện của ${esc(p.username||p.display_name||'...')} <span style="color:var(--peach)">›</span></span>
-      <span id="intro-works-count" style="font-size:13px;color:var(--text-muted)"></span>
+      <span id="intro-works-count" style="font-size:12px;color:var(--text-muted)"></span>
     </div>
     <div id="intro-works-list"></div>
   </div>`;
 
-  // Own profile: edit button
-  if (isOwnProfile) {
-    html += `<div style="margin-top:24px;padding-top:16px;border-top:1px solid var(--border)">
-      <button onclick="openEditModal()" style="width:100%;padding:11px;border-radius:12px;background:var(--peach-light);border:1.5px solid var(--border);cursor:pointer;font-family:'Roboto',sans-serif;font-size:14px;font-weight:700;color:var(--peach-dark);display:flex;align-items:center;justify-content:center;gap:8px">
-        <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        Chỉnh sửa hồ sơ
+  // Reading list section
+  html += `<div style="margin-top:16px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <span style="font-size:15px;font-weight:800;color:var(--text)">Danh sách Đọc</span>
+      <button onclick="toggleReadingLists()" style="background:none;border:none;cursor:pointer;color:var(--text-muted);padding:4px">
+        <svg viewBox="0 0 24 24" width="18" height="18" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
       </button>
-    </div>`;
-  }
+    </div>
+    <div id="intro-reading-lists"></div>
+  </div>`;
+
+  // KHÔNG có nút "Chỉnh sửa hồ sơ" ở đây nữa
 
   document.getElementById('intro-content').innerHTML = html;
   loadIntroWorks();
+  loadReadingLists();
 }
 
 async function loadIntroWorks() {
@@ -691,38 +697,77 @@ async function loadIntroWorks() {
     list.innerHTML = '<div style="font-size:13px;color:var(--text-muted);padding:.5rem 0">Chưa có tác phẩm nào</div>';
     return;
   }
-  if (countEl) countEl.textContent = stories.length + ' truyện';
+  if (countEl) countEl.textContent = stories.length + ' Truyện Đã Đăng';
 
-  // Load chapter counts
   const storyIds = stories.map(s => s.id);
   const { data: chapData } = await sb.from('chapters').select('story_id').in('story_id', storyIds).eq('is_published', true);
   const chapCount = {};
   (chapData||[]).forEach(c => { chapCount[c.story_id] = (chapCount[c.story_id]||0) + 1; });
 
-  list.innerHTML = stories.map(s => `
-    <a class="story-hcard" href="story.html?story=${s.id}">
-      <div class="story-hcover">
-        ${s.cover_url ? `<img src="${esc(s.cover_url)}" onerror="this.style.display='none'" loading="lazy">` : '📖'}
+  // Hiện tối đa 3 truyện trong intro, click "›" để xem tất cả
+  const display = stories.slice(0, 3);
+  list.innerHTML = display.map(s => {
+    const tags = s.tags ? s.tags.split(',').map(t=>t.trim()).filter(Boolean) : [];
+    const desc = s.description ? s.description.replace(/<[^>]+>/g,'').slice(0,80) + (s.description.length>80?'...':'') : '';
+    const tagHtml = tags.slice(0,3).map(t=>`<span style="background:var(--peach-light);color:var(--peach-dark);border-radius:6px;padding:2px 8px;font-size:11px;font-weight:700">${esc(t)}</span>`).join('');
+    const extraTags = tags.length > 3 ? `<span style="font-size:11px;color:var(--text-muted);font-weight:600">+ ${tags.length-3} thẻ khác</span>` : '';
+    return `<a class="story-hcard" href="story.html?story=${s.id}">
+      <div class="story-hcover" style="width:90px;height:126px;flex-shrink:0">
+        ${s.cover_url ? `<img src="${esc(s.cover_url)}" onerror="this.style.display='none'" loading="lazy">` : '<span style="font-size:28px">📖</span>'}
       </div>
       <div class="story-hinfo">
-        <div class="story-htitle">${esc(s.title)}</div>
-        <div class="story-hstats">
-          <span class="story-hstat">
-            <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            ${fmtNum(s.total_views||0)}
-          </span>
-          <span class="story-hstat">
-            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            ${fmtNum(s.votes||0)}
-          </span>
-          <span class="story-hstat">
-            <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-            ${chapCount[s.id]||0} chương
-          </span>
+        <div style="font-size:11px;color:var(--text-muted);font-weight:600;margin-bottom:3px">${s.genres||''}</div>
+        <div class="story-htitle" style="font-size:14px;-webkit-line-clamp:2">${esc(s.title)}</div>
+        <div class="story-hstats" style="margin:4px 0">
+          <span class="story-hstat"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>${fmtNum(s.total_views||0)}</span>
+          <span class="story-hstat"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>${fmtNum(s.votes||0)}</span>
+          <span class="story-hstat"><svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/></svg>${chapCount[s.id]||0}</span>
         </div>
+        ${desc ? `<div style="font-size:12px;color:var(--text-muted);line-height:1.5;margin-bottom:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${esc(desc)}</div>` : ''}
+        ${tagHtml||extraTags ? `<div style="display:flex;flex-wrap:wrap;gap:5px;align-items:center">${tagHtml}${extraTags}</div>` : ''}
       </div>
-    </a>`).join('');
+    </a>`;
+  }).join('');
 }
+
+async function loadReadingLists() {
+  const el = document.getElementById('intro-reading-lists');
+  if (!el) return;
+  el.innerHTML = '<div style="font-size:13px;color:var(--text-muted)">Đang tải...</div>';
+
+  const { data: bms } = await sb.from('bookmarks').select('list_name, story_id, stories(title,cover_url)').eq('user_id', profileUserId);
+  if (!bms || !bms.length) {
+    el.innerHTML = '<div style="font-size:13px;color:var(--text-muted)">Chưa có danh sách nào</div>';
+    return;
+  }
+
+  // Group theo list_name
+  const lists = {};
+  bms.forEach(b => {
+    const name = b.list_name || 'Danh sách đọc';
+    if (!lists[name]) lists[name] = [];
+    lists[name].push(b);
+  });
+
+  el.innerHTML = Object.entries(lists).map(([name, items]) => {
+    // Hiện tối đa 3 ảnh bìa chồng nhau
+    const covers = items.slice(0,3).map((b,i) => {
+      const s = b.stories || {};
+      return `<div style="width:44px;height:62px;border-radius:6px;overflow:hidden;background:var(--peach-light);flex-shrink:0;border:2px solid var(--bg2);margin-left:${i>0?'-14px':'0'};z-index:${3-i}">
+        ${s.cover_url ? `<img src="${esc(s.cover_url)}" style="width:100%;height:100%;object-fit:cover">` : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:16px">📖</div>'}
+      </div>`;
+    }).join('');
+    return `<div style="display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--border)">
+      <div style="display:flex;position:relative;flex-shrink:0">${covers}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:14px;font-weight:800;color:var(--text)">${esc(name)}</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:2px">${items.length} truyện</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleReadingLists() { /* placeholder cho menu options sau */ }
 
 function openEditModal() {
   const p = profileData;
