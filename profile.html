@@ -198,16 +198,21 @@ body {
 .wall-replybox input:focus { border-color: var(--peach-mid); }
 .wall-replybox input::placeholder { color: var(--text-muted); }
 
-/* Story horizontal cards */
-.story-hcard { display: flex; gap: 12px; background: var(--card); border-radius: 14px; border: 1px solid var(--border); padding: 10px 12px; text-decoration: none; color: var(--text); transition: all .15s; margin-bottom: 10px; }
-.story-hcard:hover { border-color: var(--peach-mid); box-shadow: 0 4px 16px var(--shadow, rgba(0,0,0,0.06)); }
-.story-hcover { width: 64px; height: 90px; border-radius: 8px; overflow: hidden; background: linear-gradient(145deg, var(--peach-light), #FDF6E3); flex-shrink: 0; position: relative; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+/* Story list items — giống hình mẫu */
+.story-hcard { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--border); text-decoration: none; color: var(--text); transition: background .12s; background: transparent; }
+.story-hcard:last-child { border-bottom: none; }
+.story-hcard:hover { background: transparent; }
+.story-hcover { width: 80px; height: 112px; border-radius: 8px; overflow: hidden; background: linear-gradient(145deg, var(--peach-light), #FDF6E3); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 28px; }
 .story-hcover img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .story-hinfo { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 5px; }
-.story-htitle { font-size: 14px; font-weight: 800; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.story-hstats { display: flex; gap: 12px; flex-wrap: wrap; }
+.story-htitle { font-size: 14px; font-weight: 800; line-height: 1.35; color: var(--text); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.story-hstats { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 .story-hstat { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 3px; }
 .story-hstat svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.story-hdesc { font-size: 12px; color: var(--text-muted); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.story-htags { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; margin-top: 2px; }
+.story-htag { background: var(--peach-light); color: var(--peach-dark); border-radius: 6px; padding: 2px 7px; font-size: 11px; font-weight: 700; }
+.story-htag-more { font-size: 11px; color: var(--text-muted); font-weight: 600; }
 
 @media (min-width: 860px) {
   .pane { max-width: 780px; }
@@ -705,29 +710,27 @@ async function loadIntroWorks() {
   const chapCount = {};
   (chapData||[]).forEach(c => { chapCount[c.story_id] = (chapCount[c.story_id]||0) + 1; });
 
-  list.style.display = 'flex';
-  list.style.flexDirection = 'column';
-  list.style.gap = '0';
+  list.style.display = 'block';
 
   list.innerHTML = stories.map(s => {
     const tags = s.tags ? s.tags.split(',').map(t=>t.trim()).filter(Boolean) : [];
     const rawDesc = s.description ? s.description.replace(/<[^>]+>/g,'') : '';
-    const desc = rawDesc.slice(0,80) + (rawDesc.length>80?'....':'');
-    const tagHtml = tags.slice(0,3).map(t=>`<span style="background:var(--peach-light);color:var(--peach-dark);border-radius:6px;padding:2px 7px;font-size:11px;font-weight:700">${esc(t)}</span>`).join('');
-    const extraTags = tags.length > 3 ? `<span style="font-size:11px;color:var(--text-muted);font-weight:600">+ ${tags.length-3} thẻ khác</span>` : '';
-    return `<a href="story.html?story=${s.id}" style="display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);text-decoration:none;color:var(--text)">
-      <div style="width:80px;height:112px;border-radius:8px;overflow:hidden;background:var(--peach-light);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:26px;position:relative">
-        ${s.cover_url ? `<img src="${esc(s.cover_url)}" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none'" loading="lazy">` : '📖'}
+    const desc = rawDesc.slice(0,90) + (rawDesc.length>90?'....':'');
+    const tagHtml = tags.slice(0,3).map(t=>`<span class="story-htag">${esc(t)}</span>`).join('');
+    const extraTags = tags.length > 3 ? `<span class="story-htag-more">+ ${tags.length-3} thẻ khác</span>` : '';
+    return `<a class="story-hcard" href="story.html?story=${s.id}">
+      <div class="story-hcover">
+        ${s.cover_url ? `<img src="${esc(s.cover_url)}" onerror="this.style.display='none'" loading="lazy">` : '📖'}
       </div>
-      <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;justify-content:center">
-        <div style="font-size:14px;font-weight:800;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${esc(s.title)}</div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-          <span style="font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:3px"><svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>${fmtNum(s.total_views||0)}</span>
-          <span style="font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:3px"><svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>${fmtNum(s.votes||0)}</span>
-          <span style="font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:3px"><svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/></svg>${chapCount[s.id]||0}</span>
+      <div class="story-hinfo">
+        <div class="story-htitle">${esc(s.title)}</div>
+        <div class="story-hstats">
+          <span class="story-hstat"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>${fmtNum(s.total_views||0)}</span>
+          <span class="story-hstat"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>${fmtNum(s.votes||0)}</span>
+          <span class="story-hstat"><svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/></svg>${chapCount[s.id]||0}</span>
         </div>
-        ${rawDesc ? `<div style="font-size:12px;color:var(--text-muted);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${esc(desc)}</div>` : ''}
-        ${tagHtml||extraTags ? `<div style="display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-top:2px">${tagHtml}${extraTags ? ' '+extraTags : ''}</div>` : ''}
+        ${rawDesc ? `<div class="story-hdesc">${esc(desc)}</div>` : ''}
+        ${tagHtml||extraTags ? `<div class="story-htags">${tagHtml}${extraTags ? extraTags : ''}</div>` : ''}
       </div>
     </a>`;
   }).join('');
