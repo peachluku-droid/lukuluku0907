@@ -15,106 +15,42 @@
   if (!document.querySelector('link[href*="Nunito"]')) {
     const fontLink = document.createElement('link');
     fontLink.rel = 'stylesheet';
-    fontLink.href = 'https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Pacifico&display=swap';
+    fontLink.href = 'https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap';
     document.head.appendChild(fontLink);
   }
 
   // ── 1. Inject CSS ──────────────────────────────────────────────────────────
   const CSS = `
-/* ─── TOPBAR (Dakingo style: 2 rows) ─────────────────────── */
+/* ─── TOPBAR ─────────────────────────────────────────────── */
 .topbar {
   background: var(--bg2);
   border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  display: flex; align-items: center;
+  justify-content: space-between; height: 56px;
   position: sticky; top: 0; z-index: 100;
   transition: background .3s;
 }
-/* Row 1: logo + search + account */
-.topbar-row1 {
-  padding: 0 1.5rem;
-  display: flex; align-items: center;
-  justify-content: space-between; height: 56px;
-  gap: 14px;
-}
-/* Row 2: nav tabs */
-.topbar-row2 {
-  display: flex; align-items: center;
-  padding: 0 1.5rem 0;
-  gap: 0;
-  border-top: 1px solid var(--border);
-  overflow-x: auto; scrollbar-width: none;
-}
-.topbar-row2::-webkit-scrollbar { display: none; }
+.logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+.logo img { width: 36px; height: 36px; object-fit: contain; border-radius: 50%; }
+.logo-text { font-family: 'Nunito', sans-serif; font-size: 18px; font-weight: 800; color: var(--peach); letter-spacing: -0.3px; }
 
-/* Logo */
-.logo { display: flex; align-items: center; gap: 7px; text-decoration: none; flex-shrink: 0; }
-.logo img { width: 34px; height: 34px; object-fit: contain; border-radius: 50%; }
-.logo-text {
-  font-family: 'Pacifico', cursive, 'Nunito', sans-serif;
-  font-size: 22px; font-weight: 400;
-  color: var(--peach);
-  letter-spacing: -0.3px;
-  line-height: 1;
-}
-.logo-text-d {
-  /* Chữ D đầu có màu khác như Dakingo */
-  color: var(--peach-dark);
-}
-
-/* Search bar (Dakingo style — nổi bật giữa) */
-.nb-search-wrap {
-  flex: 1; max-width: 340px;
-  position: relative; display: flex; align-items: center;
-}
-.nb-search-input {
-  width: 100%;
-  padding: 9px 40px 9px 14px;
-  border: 1.5px solid var(--border);
-  border-radius: 24px;
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Nunito', sans-serif;
-  font-size: 13px; font-weight: 600;
-  outline: none; transition: border .15s;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-}
-.nb-search-input:focus { border-color: var(--peach-mid); }
-.nb-search-input::placeholder { color: var(--text-muted); font-weight: 400; }
-.nb-search-btn {
-  position: absolute; right: 5px; top: 50%; transform: translateY(-50%);
-  background: var(--peach); border: none; border-radius: 50%;
-  width: 30px; height: 30px; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: background .15s;
-}
-.nb-search-btn:hover { background: var(--peach-dark); }
-.nb-search-btn svg { stroke: white; fill: none; stroke-width: 2.2; width: 13px; height: 13px; }
-
-/* Right buttons */
-.nav-right { display: flex; gap: 5px; align-items: center; flex-shrink: 0; }
-
-/* Nav tabs row 2 */
-.nav-center { display: flex; gap: 0; align-items: center; white-space: nowrap; }
+.nav-center { display: flex; gap: 2px; align-items: center; }
 .nav-center a {
-  font-size: 12px; font-weight: 700; padding: 10px 13px;
-  color: var(--text-muted); text-decoration: none;
-  transition: all .15s; display: flex; align-items: center; gap: 4px;
-  position: relative; white-space: nowrap; border-bottom: 2px solid transparent;
+  font-size: 13px; font-weight: 700; padding: 7px 14px;
+  border-radius: 8px; color: var(--text-muted); text-decoration: none;
+  transition: all .15s; display: flex; align-items: center; gap: 5px;
+  position: relative;
 }
 .nav-center a:hover { color: var(--peach); }
-.nav-center a.active { color: var(--peach); font-weight: 800; border-bottom-color: var(--peach); }
-.nav-center a svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
-
-/* ORDER NOW button (Dakingo style) */
-.nb-order-btn {
-  background: var(--peach); color: white;
-  font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 900;
-  padding: 8px 18px; border-radius: 20px; border: none;
-  cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;
-  transition: all .15s; white-space: nowrap; flex-shrink: 0;
-  letter-spacing: 0.3px;
+.nav-center a.active { color: var(--peach); font-weight: 800; }
+.nav-center a.active::after {
+  content: ''; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
+  width: 20px; height: 2px; background: var(--peach); border-radius: 2px;
 }
-.nb-order-btn:hover { background: var(--peach-dark); transform: translateY(-1px); }
+.nav-center a svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 
+.nav-right { display: flex; gap: 6px; align-items: center; }
 
 .icon-btn {
   background: none; border: none; cursor: pointer;
@@ -229,22 +165,17 @@
 
 /* Mobile */
 @media (max-width: 600px) {
-  .topbar-row1 { padding: 0 0.7rem; height: 50px; gap: 8px; }
-  .topbar-row2 { padding: 0 0.4rem; }
-  .logo-text { font-size: 18px; }
-  .nb-search-wrap { max-width: 100%; }
-  .nav-center a { padding: 8px 9px; font-size: 11px; gap: 3px; }
-  .nav-right { gap: 2px; }
+  .topbar { padding: 0 0.6rem; }
+  .logo-text { font-size: 15px; }
+  .nav-center { gap: 0; }
+  .nav-center a { padding: 5px 7px; font-size: 0; gap: 0; }
+  .nav-center a svg { width: 18px; height: 18px; }
+  .nav-right { gap: 3px; }
   .icon-btn, .theme-btn { width: 30px; height: 30px; }
   .user-nav-btn { width: 30px !important; height: 30px !important; }
   .profile-menu-btn { width: 30px !important; height: 30px !important; }
   .theme-drawer { right: 0.5rem; }
   .notif-panel { right: 0.5rem; width: calc(100vw - 1rem); }
-  .nb-order-btn { font-size: 11px; padding: 7px 12px; }
-}
-@media (max-width: 400px) {
-  .nav-center a { font-size: 0; gap: 0; padding: 8px 7px; }
-  .nav-center a svg { width: 17px; height: 17px; }
 }
 .profile-dropdown-divider { height: 1px; background: var(--border, #eee); margin: 4px 8px; }
 .dd-auth-row {
@@ -427,97 +358,69 @@
   // ── 4. HTML cho navbar ─────────────────────────────────────────────────────
   const navbarHTML = `
 <nav class="topbar" id="shared-topbar">
-  <!-- ROW 1: Logo + Search + Account (giống Dakingo) -->
-  <div class="topbar-row1">
-    <a class="logo" href="index.html">
-      <span class="logo-text"><span class="logo-text-d">P</span>each Luku</span>
+  <a class="logo" href="index.html">
+    <span class="logo-text">Peach Luku</span>
+  </a>
+
+  <div class="nav-center">
+    <a href="index.html"${isActive('home')}>
+      <svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><polyline points="9 21 9 12 15 12 15 21"/></svg>
+      Trang chủ
     </a>
+    <a href="library.html"${isActive('library')}>
+      <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      Thư viện
+    </a>
+    <a href="#" class="nav-notif-btn" id="navNotifBtn" title="Thông báo chương mới">
+      <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span class="notif-dot" id="notifDot" style="display:none"></span>
+      Thông báo
+    </a>
+  </div>
 
-    <!-- Search bar nổi bật giữa -->
-    <div class="nb-search-wrap">
-      <input class="nb-search-input" id="nbSearchInput" type="text"
-        placeholder="Tìm truyện yêu thích..."
-        autocomplete="off"
-        onkeydown="if(event.key==='Enter'){window.location.href='search.html?q='+encodeURIComponent(this.value)}">
-      <button class="nb-search-btn" onclick="window.location.href='search.html?q='+encodeURIComponent(document.getElementById('nbSearchInput').value)" aria-label="Tìm">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+  <div class="nav-right">
+    <button class="theme-btn" id="themeBtnShared" title="Đổi theme">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+    <div class="profile-menu-wrap" id="profileMenuWrap">
+      <button class="icon-btn profile-menu-btn" id="profileMenuBtn" title="Hồ sơ & Tùy chọn">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       </button>
-    </div>
-
-    <!-- Right: theme + profile + ORDER NOW -->
-    <div class="nav-right">
-      <button class="theme-btn" id="themeBtnShared" title="Đổi theme">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-      </button>
-      <div class="profile-menu-wrap" id="profileMenuWrap">
-        <button class="icon-btn profile-menu-btn" id="profileMenuBtn" title="Hồ sơ">
+      <div class="profile-dropdown" id="profileDropdown">
+        <a class="profile-dropdown-item" href="search.html">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Tìm kiếm
+        </a>
+        <div class="dd-auth-row dd-logged-out">
+          <a class="dd-auth-btn" href="#" onclick="openAuthModal('login');return false;">
+            <svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Đăng nhập
+          </a>
+          <span class="dd-auth-sep">/</span>
+          <a class="dd-auth-btn" href="#" onclick="openAuthModal('signup');return false;">
+            <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+            Đăng ký
+          </a>
+        </div>
+        <a class="profile-dropdown-item dd-logged-in" href="#" id="dd-signout" style="display:none">
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Đăng xuất
+        </a>
+        <a class="profile-dropdown-item" href="#" onclick="return false">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Nhúng truyện QT
+        </a>
+        <a class="profile-dropdown-item" href="#" onclick="openSuggestForm(event)">
+          <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          Gợi ý truyện
+        </a>
+        <div class="profile-dropdown-divider dd-logged-in" style="display:none"></div>
+        <a class="profile-dropdown-item dd-logged-in" href="profile.html" style="display:none">
           <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        </button>
-        <div class="profile-dropdown" id="profileDropdown">
-          <a class="profile-dropdown-item" href="search.html">
-            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            Tìm kiếm
-          </a>
-          <div class="dd-auth-row dd-logged-out">
-            <a class="dd-auth-btn" href="#" onclick="openAuthModal('login');return false;">
-              <svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-              Đăng nhập
-            </a>
-            <span class="dd-auth-sep">/</span>
-            <a class="dd-auth-btn" href="#" onclick="openAuthModal('signup');return false;">
-              <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
-              Đăng ký
-            </a>
-          </div>
-          <a class="profile-dropdown-item dd-logged-in" href="#" id="dd-signout" style="display:none">
-            <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-            Đăng xuất
-          </a>
-          <a class="profile-dropdown-item" href="#" onclick="return false">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-            Nhúng truyện QT
-          </a>
-          <a class="profile-dropdown-item" href="#" onclick="openSuggestForm(event)">
-            <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-            Gợi ý truyện
-          </a>
-          <div class="profile-dropdown-divider dd-logged-in" style="display:none"></div>
-          <a class="profile-dropdown-item dd-logged-in" href="profile.html" style="display:none">
-            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            Hồ sơ của tôi
+          Hồ sơ của tôi
         </a>
       </div>
     </div>
-  </div>
-
-  <!-- ROW 2: Nav tabs + ORDER NOW (giống Dakingo menu tabs) -->
-  <div class="topbar-row2">
-    <div class="nav-center">
-      <a href="index.html"${isActive('home')}>
-        <svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><polyline points="9 21 9 12 15 12 15 21"/></svg>
-        Trang chủ
-      </a>
-      <a href="library.html"${isActive('library')}>
-        <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-        Thư viện
-      </a>
-      <a href="#" class="nav-notif-btn" id="navNotifBtn" title="Thông báo chương mới">
-        <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-        <span class="notif-dot" id="notifDot" style="display:none"></span>
-        Thông báo
-      </a>
-      <a href="#" onclick="return false">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-        Nhúng truyện QT
-      </a>
-      <a href="#" onclick="openSuggestForm(event)">
-        <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-        Gợi ý truyện
-      </a>
-    </div>
-    <a class="nb-order-btn" href="write.html">
-      ✍️ VIẾT TRUYỆN
-    </a>
   </div>
 </nav>
 
