@@ -167,7 +167,7 @@ body {
 .swatch-locked { position: relative; cursor: not-allowed; opacity: 0.6; display: flex; align-items: center; justify-content: center; }
 .swatch-locked:hover { transform: scale(1.05); opacity: 0.75; }
 .swatch-lock-icon { width: 16px; height: 16px; flex-shrink: 0; }
-.cover-hero { position: relative; width: 100%; height: 260px; background: var(--peach-light); overflow: hidden; }
+.cover-hero { position: relative; width: 100%; height: 320px; background: var(--peach-light); overflow: hidden; }
 .cover-hero-blur { display: none; }
 .cover-hero-top { position: absolute; top: 14px; left: 14px; right: 14px; display: flex; align-items: center; justify-content: space-between; z-index: 5; }
 .hero-icon-btn { width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.92); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text); box-shadow: 0 2px 10px rgba(0,0,0,0.12); transition: background .2s, transform .15s; }
@@ -560,11 +560,18 @@ body                      { font-size: 16px; }
 <div class="story-body">
 <div class="story-detail-container">
   <h1 class="story-title-main" id="story-title">Đang tải...</h1>
-  <div class="author-row" onclick="goToAuthorProfile()" title="Xem hồ sơ người đăng">
-    <div class="author-avatar" id="author-avatar">
-      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+  <div class="author-row" style="justify-content:space-between" onclick="goToAuthorProfile()" title="Xem hồ sơ người đăng">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="author-avatar" id="author-avatar">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <span class="author-name" id="story-author">...</span>
+      <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:var(--text-muted);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0"><polyline points="9 18 15 12 9 6"/></svg>
     </div>
-    <span class="author-name" id="story-author">...</span>
+    <span class="status-chip done" id="story-status-chip-inline" style="font-size:12px;padding:4px 10px;cursor:default" onclick="event.stopPropagation()">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      Hoàn thành
+    </span>
   </div>
   <div class="stats-row">
     <div class="stat-block">
@@ -600,7 +607,7 @@ body                      { font-size: 16px; }
       <span id="bookmark-text">Lưu</span>
     </button>
   </div>
-  <div class="tags-row" id="tags-row">
+  <div class="tags-row" id="tags-row" style="display:none">
     <span class="status-chip done" id="story-status-chip">
       <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
       Hoàn thành
@@ -621,14 +628,10 @@ body                      { font-size: 16px; }
 <div class="story-detail-container" style="display:flex;width:100%;max-width:100%;padding-inline:0">
   <button class="tab-btn active" onclick="showTab('chapters',this)">
     <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-    Chương <span class="tab-count" id="tc-chapters">0</span>
+    Danh sách chương <span class="tab-count" id="tc-chapters">0</span>
   </button>
-  <button class="tab-btn" onclick="showTab('comments',this)">
-    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-    Review <span class="tab-count" id="tc-comments">0</span>
-  </button>
-</div><!-- /.story-detail-container inner -->
-</div><!-- /.content-tabs -->
+</div>
+</div>
 
 <div class="story-detail-container">
 <div class="tab-content active story-card" id="tab-chapters">
@@ -653,9 +656,17 @@ body                      { font-size: 16px; }
   </div>
 </div>
 
-<div class="tab-content story-card" id="tab-comments">
+<!-- REVIEW SECTION — ô riêng bên dưới -->
+<div class="tab-content active story-card" id="tab-comments" style="margin-top:0">
+  <div class="chapter-controls" style="border-bottom:1px solid var(--border)">
+    <div class="chapter-count-label">
+      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Review <span class="tab-count" id="tc-comments" style="margin-left:4px">0</span>
+    </div>
+    <a href="javascript:void(0)" style="font-size:13px;font-weight:700;color:var(--peach);text-decoration:none" onclick="document.getElementById('comment-input')?.focus()">Xem tất cả &gt;</a>
+  </div>
   <div class="comment-section">
-    <div id="compose-area"></div>
+    <div id="compose-area" style="padding:0 12px"></div>
     <div class="comment-list" id="comment-list"></div>
     <button class="load-more-btn" id="load-more-btn" style="display:none" onclick="loadMoreComments()">
       <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -730,7 +741,10 @@ let descExpanded = false;
 function toggleDesc() { descExpanded = !descExpanded; const el = document.getElementById('story-description'); const btn = document.getElementById('desc-toggle'); el.classList.toggle('clamped', !descExpanded); btn.classList.toggle('expanded', descExpanded); btn.childNodes[0].textContent = descExpanded ? 'Thu gọn' : 'Đọc thêm'; }
 function showTab(name, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  // Chỉ toggle các tab ngoại trừ tab-comments (luôn hiển thị)
+  document.querySelectorAll('.tab-content').forEach(c => {
+    if (c.id !== 'tab-comments') c.classList.remove('active');
+  });
   btn.classList.add('active');
   document.getElementById('tab-' + name).classList.add('active');
   if (name === 'comments' && comments.length === 0) loadComments();
@@ -952,14 +966,24 @@ async function loadStory() {
     document.getElementById('story-votes').textContent = formatViews(totalVotes);
     const isDone = story.status === 'completed' || story.status === 'done' || story.completed;
     const chip = document.getElementById('story-status-chip');
-    if (isDone) { chip.className = 'status-chip done'; chip.innerHTML = `<svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><polyline points="20 6 9 17 4 12"/></svg> Hoàn thành`; }
-    else { chip.className = 'status-chip ongoing'; chip.innerHTML = `<svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 1 .5 4"/></svg> Đang ra`; }
+    const chipInline = document.getElementById('story-status-chip-inline');
+    const doneHtml = '<svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><polyline points="20 6 9 17 4 12"/></svg> Hoàn thành';
+    const ongoingHtml = '<svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 1 .5 4"/></svg> Đang ra';
+    if (isDone) {
+      chip.className = 'status-chip done'; chip.innerHTML = doneHtml;
+      if (chipInline) { chipInline.className = 'status-chip done'; chipInline.innerHTML = doneHtml; }
+    } else {
+      chip.className = 'status-chip ongoing'; chip.innerHTML = ongoingHtml;
+      if (chipInline) { chipInline.className = 'status-chip ongoing'; chipInline.innerHTML = ongoingHtml; }
+    }
     if (story.cover_url) { document.getElementById('story-cover').innerHTML = `<img src="${escapeHtml(story.cover_url)}" alt="${escapeHtml(story.title)}">`;  document.getElementById('cover-blur').style.backgroundImage = `url('${escapeHtml(story.cover_url)}')`; }
     document.getElementById('story-genres').style.display = 'none';
     if (story.tags) {
       const tags = story.tags.split(',').map(t => t.trim()).filter(Boolean);
       const tagsHtml = tags.map(t => `<a class="genre-tag" href="search.html?tag=${encodeURIComponent(t)}">${escapeHtml(t)}</a>`).join('');
-      document.getElementById('tags-row').insertAdjacentHTML('beforeend', tagsHtml);
+      const genresEl = document.getElementById('story-genres');
+      genresEl.innerHTML = tagsHtml;
+      genresEl.style.display = 'flex';
     }
 
     const created = story.created_at ? new Date(story.created_at).toLocaleDateString('vi-VN') : '—';
@@ -1371,7 +1395,7 @@ async function init() {
     currentUserProfile = prof || null;
     if (currentUser && prof) profilesCache[currentUser.id] = prof;
   }
-  if (storyId) await loadStory();
+  if (storyId) { await loadStory(); await loadComments(); }
   if (currentUser && ADMIN_EMAILS.includes(currentUser.email)) { const wb = document.getElementById('write-btn'); if (wb) wb.style.display = 'flex'; }
 }
 init();
