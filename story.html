@@ -1017,7 +1017,7 @@ async function loadChapters() {
   const count = allChapters.length;
   document.getElementById('story-chapters').textContent = count;
   document.getElementById('chapter-count-label').textContent = count + ' chương';
-  document.getElementById('tc-chapters').textContent = count;
+  const tcCh = document.getElementById('tc-chapters'); if (tcCh) tcCh.textContent = count;
 
   if (allChapters.length > 0) {
     const latestChapter = allChapters.reduce((a, b) =>
@@ -1086,7 +1086,7 @@ function toggleSort() {
 }
 function searchChapters() { const q = document.getElementById('search-input').value.toLowerCase().trim(); if (!q) { renderChapters(); return; } renderChapters(allChapters.filter(ch => (ch.title || '').toLowerCase().includes(q) || String(ch.chapter_number || '').includes(q))); }
 
-async function loadCommentCount() { const { count } = await sb.from('comments').select('id', { count: 'exact', head: true }).eq('story_id', storyId); commentTotal = count || 0; document.getElementById('story-comment-count').textContent = formatViews(commentTotal); document.getElementById('tc-comments').textContent = commentTotal; }
+async function loadCommentCount() { const { count } = await sb.from('comments').select('id', { count: 'exact', head: true }).eq('story_id', storyId); commentTotal = count || 0; document.getElementById('story-comment-count').textContent = formatViews(commentTotal); const tcCmt = document.getElementById('tc-comments'); if (tcCmt) tcCmt.textContent = commentTotal; }
 
 function renderComposeArea() {
   const area = document.getElementById('compose-area');
