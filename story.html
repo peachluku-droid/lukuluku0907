@@ -135,7 +135,7 @@ body {
 }
 @media (min-width: 900px) {
   .page-wrapper { max-width: 860px; }
-  .cover-hero { padding: 0; height: 320px; }
+  .cover-book { width: 130px; height: 178px; }
 }
 @media (min-width: 1200px) {
   .page-wrapper { max-width: 1000px; }
@@ -167,16 +167,24 @@ body {
 .swatch-locked { position: relative; cursor: not-allowed; opacity: 0.6; display: flex; align-items: center; justify-content: center; }
 .swatch-locked:hover { transform: scale(1.05); opacity: 0.75; }
 .swatch-lock-icon { width: 16px; height: 16px; flex-shrink: 0; }
-.cover-hero { position: relative; width: 100%; height: 320px; background: var(--peach-light); overflow: hidden; }
+.cover-hero { position: relative; width: 100%; padding: 14px 16px 16px; box-sizing: border-box; background: var(--peach-light); overflow: hidden; display: flex; gap: 14px; align-items: flex-start; }
 .cover-hero-blur { display: none; }
-.cover-hero-top { position: absolute; top: 14px; left: 14px; right: 14px; display: flex; align-items: center; justify-content: space-between; z-index: 5; }
+.cover-hero-top { position: absolute; top: 14px; left: 16px; right: 16px; display: flex; align-items: center; justify-content: space-between; z-index: 5; }
 .hero-icon-btn { width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.92); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text); box-shadow: 0 2px 10px rgba(0,0,0,0.12); transition: background .2s, transform .15s; }
 .hero-icon-btn:hover { background: #fff; transform: scale(1.05); }
 .hero-icon-btn svg { width: 19px; height: 19px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.cover-book { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 0; box-shadow: none; background: var(--peach-light); display: flex; align-items: center; justify-content: center; }
+.cover-book { position: relative; inset: auto; width: 110px; height: 152px; flex-shrink: 0; margin-top: 38px; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 16px rgba(0,0,0,0.18); background: var(--peach-light); display: flex; align-items: center; justify-content: center; }
 .cover-book img { width: 100%; height: 100%; object-fit: cover; }
 .cover-book-ph { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
-.cover-book-ph svg { width: 52px; height: 52px; stroke: var(--peach-mid); fill: none; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+.cover-book-ph svg { width: 36px; height: 36px; stroke: var(--peach-mid); fill: none; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+.cover-hero-info { flex: 1; min-width: 0; margin-top: 38px; padding-top: 4px; }
+.cover-hero-info .story-title-main { font-size: 17px; margin-bottom: .5rem; line-height: 1.3; }
+.cover-hero-info .author-row { margin-bottom: 0; }
+.cover-hero-info .author-name { font-size: 14.5px; }
+.cover-hero-info .author-avatar { width: 28px; height: 28px; }
+@media (max-width: 380px) {
+  .cover-book { width: 92px; height: 128px; }
+}
 .story-body { background: var(--bg2); padding: 1.2rem 0 0; margin-bottom: 0; }
 .story-detail-container { width: min(100%, 760px); margin: 0 auto; padding-inline: 16px; box-sizing: border-box; }
 .story-card { width: 100%; max-width: 100%; margin: 0; box-sizing: border-box; }
@@ -217,7 +225,9 @@ body {
 .genre-tag { padding: 5px 13px; background: var(--peach-light); color: var(--peach-dark); border-radius: 20px; font-size: 13.5px; font-weight: 600; cursor: pointer; text-decoration: none; transition: background .2s, color .2s; }
 .genre-tag:hover { background: var(--gradient); color: white; }
 .description-box { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: .9rem 1rem; margin-bottom: 1.4rem; box-shadow: 0 2px 8px var(--shadow); }
-.description-label { font-size: 12.5px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 5px; }
+.description-label { font-size: 12.5px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 5px; display: flex; align-items: center; gap: 7px; }
+.section-icon { width: 22px; height: 22px; border-radius: 7px; background: var(--peach-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.section-icon svg { width: 13px; height: 13px; stroke: var(--peach-dark); fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 .description-text { font-size: 15.5px; line-height: 1.45; color: var(--text); }
 .description-text.clamped { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
 .description-text * { font-family: inherit !important; font-size: inherit !important; color: inherit !important; background: transparent !important; }
@@ -247,7 +257,7 @@ body {
 .comment-card { margin: 8px 10px; border-radius: 14px !important; border: 1px solid var(--peach-mid) !important; border-bottom: 1px solid var(--peach-mid) !important; }
 .comment-card:last-child { margin-bottom: 8px; }
 .chapter-controls { display: flex; justify-content: space-between; align-items: center; padding: .9rem 1.2rem .7rem; flex-wrap: wrap; gap: .6rem; background: var(--bg); }
-.chapter-count-label { font-size: 15.5px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 6px; }
+.chapter-count-label { font-size: 12.5px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .6px; display: flex; align-items: center; gap: 7px; }
 .chapter-count-label svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; color: var(--text-muted); }
 .sort-btn { padding: 5px 12px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 16px; font-size: 14px; font-weight: 700; color: var(--text); cursor: pointer; transition: all .15s; font-family: 'Plus Jakarta Sans', sans-serif; display: flex; align-items: center; gap: 5px; }
 .sort-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: transform .2s; }
@@ -334,7 +344,8 @@ body {
 .comment-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .comment-bubble { flex: 1; min-width: 0; }
 .comment-header { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; flex-wrap: wrap; }
-.comment-name { font-size: 15px; font-weight: 700; }
+.comment-name { font-size: 15px; font-weight: 700; transition: color .15s; }
+.comment-name:hover { color: var(--peach); }
 .comment-time { font-size: 13px; color: var(--text-muted); font-weight: 600; }
 .comment-text { font-size: 15.5px; line-height: 1.65; color: var(--text); word-break: break-word; }
 .comment-actions { display: flex; align-items: center; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
@@ -350,7 +361,8 @@ body {
 .reply-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .reply-bubble { flex: 1; min-width: 0; }
 .reply-header { display: flex; align-items: center; gap: 7px; margin-bottom: 3px; }
-.reply-name { font-size: 14.5px; font-weight: 700; }
+.reply-name { font-size: 14.5px; font-weight: 700; transition: color .15s; }
+.reply-name:hover { color: var(--peach); }
 .reply-time { font-size: 12.5px; color: var(--text-muted); font-weight: 600; }
 .reply-text { font-size: 15px; line-height: 1.6; color: var(--text); word-break: break-word; }
 .reply-actions { display: flex; align-items: center; gap: 6px; margin-top: 5px; }
@@ -473,7 +485,7 @@ body                      { font-size: 16px; }
 .read-more-btn            { font-size: 12.5px; }
 .tab-btn                  { font-size: 13px; }
 .tab-count                { font-size: 10px; }
-.chapter-count-label      { font-size: 13.5px; }
+.chapter-count-label      { font-size: 11.5px; }
 .sort-btn                 { font-size: 12px; }
 .chapter-search-bar input { font-size: 13px; }
 .chapter-name             { font-size: 13.5px; }
@@ -555,24 +567,26 @@ body                      { font-size: 16px; }
       <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
     </div>
   </div>
-</div>
-
-<div class="story-body">
-<div class="story-detail-container">
-  <h1 class="story-title-main" id="story-title">Đang tải...</h1>
-  <div class="author-row" style="justify-content:space-between" onclick="goToAuthorProfile()" title="Xem hồ sơ người đăng">
-    <div style="display:flex;align-items:center;gap:10px">
-      <div class="author-avatar" id="author-avatar">
-        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+  <div class="cover-hero-info">
+    <h1 class="story-title-main" id="story-title">Đang tải...</h1>
+    <div class="author-row" style="justify-content:space-between" onclick="goToAuthorProfile()" title="Xem hồ sơ người đăng">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="author-avatar" id="author-avatar">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <span class="author-name" id="story-author">...</span>
+        <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:var(--text-muted);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
-      <span class="author-name" id="story-author">...</span>
-      <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:var(--text-muted);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0"><polyline points="9 18 15 12 9 6"/></svg>
     </div>
-    <span class="status-chip done" id="story-status-chip-inline" style="font-size:12px;padding:4px 10px;cursor:default" onclick="event.stopPropagation()">
+    <span class="status-chip done" id="story-status-chip-inline" style="font-size:12px;padding:4px 10px;cursor:default;margin-top:8px;display:inline-flex" onclick="event.stopPropagation()">
       <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
       Hoàn thành
     </span>
   </div>
+</div>
+
+<div class="story-body">
+<div class="story-detail-container">
   <div class="stats-row">
     <div class="stat-block">
       <span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
@@ -615,7 +629,7 @@ body                      { font-size: 16px; }
   </div>
   <div id="story-genres" style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:1.2rem"></div>
   <div class="description-box story-card">
-    <div class="description-label">Tóm tắt</div>
+    <div class="description-label"><span class="section-icon"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></span>Tóm tắt</div>
     <div class="description-text clamped" id="story-description">...</div>
     <button class="read-more-btn" id="desc-toggle" onclick="toggleDesc()">
       Đọc thêm <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -624,20 +638,12 @@ body                      { font-size: 16px; }
 </div><!-- /.story-detail-container -->
 
 <div style="height:12px;background:var(--bg2)"></div>
-<div class="content-tabs">
-<div class="story-detail-container" style="display:flex;width:100%;max-width:100%;padding-inline:0">
-  <button class="tab-btn active" onclick="showTab('chapters',this)">
-    <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-    Danh sách chương <span class="tab-count" id="tc-chapters">0</span>
-  </button>
-</div>
-</div>
 
 <div class="story-detail-container">
 <div class="tab-content active story-card" id="tab-chapters">
   <div class="chapter-controls">
     <div class="chapter-count-label">
-      <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      <span class="section-icon"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
       <span id="chapter-count-label">0 chương</span>
     </div>
     <button class="sort-btn" id="sort-toggle" onclick="toggleSort()">
@@ -657,10 +663,10 @@ body                      { font-size: 16px; }
 </div>
 
 <!-- REVIEW SECTION — ô riêng bên dưới -->
-<div class="tab-content active story-card" id="tab-comments" style="margin-top:0">
+<div class="tab-content active story-card" id="tab-comments" style="margin-top:14px">
   <div class="chapter-controls" style="border-bottom:1px solid var(--border)">
     <div class="chapter-count-label">
-      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span class="section-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
       Review <span class="tab-count" id="tc-comments" style="margin-left:4px">0</span>
     </div>
     <a href="javascript:void(0)" style="font-size:13px;font-weight:700;color:var(--peach);text-decoration:none" onclick="document.getElementById('comment-input')?.focus()">Xem tất cả &gt;</a>
@@ -1268,7 +1274,10 @@ async function loadReplies(parentId) {
       <button class="reply-submit" onclick="submitReply('${parentId}')">Gửi</button>
     </div>
   </div>` : '';
-  if (!replies.length) { sec.innerHTML = composeBox; return; }
+  if (!replies.length) { sec.innerHTML = composeBox;
+    const labelEl2 = document.getElementById('reply-label-' + parentId);
+    if (labelEl2) labelEl2.textContent = 'Trả lời';
+    return; }
   sec.innerHTML = replies.map(r => {
     const rname = displayName(r.user_id, r.user_email);
     const isOwn = currentUser && r.user_id === currentUser.id;
@@ -1293,6 +1302,8 @@ async function loadReplies(parentId) {
       </div>
     </div>`;
   }).join('') + composeBox;
+  const labelEl3 = document.getElementById('reply-label-' + parentId);
+  if (labelEl3) labelEl3.textContent = `Xem ${replies.length} trả lời`;
 }
 
 async function submitReply(parentId) {
