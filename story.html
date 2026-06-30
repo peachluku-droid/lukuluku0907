@@ -135,7 +135,11 @@ body {
 }
 @media (min-width: 900px) {
   .page-wrapper { max-width: 860px; }
-  .cover-book { width: 130px; height: 178px; }
+  .cover-hero { padding: 20px 28px 26px; gap: 24px; }
+  .cover-book { width: 160px; height: 220px; margin-top: 46px; }
+  .cover-hero-info { margin-top: 46px; }
+  .cover-hero-info .story-title-main { font-size: 22px; }
+  .cover-hero-top { top: 20px; left: 28px; right: 28px; }
 }
 @media (min-width: 1200px) {
   .page-wrapper { max-width: 1000px; }
@@ -167,21 +171,22 @@ body {
 .swatch-locked { position: relative; cursor: not-allowed; opacity: 0.6; display: flex; align-items: center; justify-content: center; }
 .swatch-locked:hover { transform: scale(1.05); opacity: 0.75; }
 .swatch-lock-icon { width: 16px; height: 16px; flex-shrink: 0; }
-.cover-hero { position: relative; width: 100%; padding: 14px 16px 16px; box-sizing: border-box; background: var(--peach-light); overflow: hidden; display: flex; gap: 14px; align-items: flex-start; }
+.cover-hero { position: relative; width: 100%; padding: 14px 16px 20px; box-sizing: border-box; background: linear-gradient(135deg, rgba(143,80,62,0.72) 0%, rgba(181,110,84,0.65) 45%, rgba(217,138,110,0.60) 100%); overflow: hidden; display: flex; gap: 14px; align-items: flex-start; }
 .cover-hero-blur { display: none; }
 .cover-hero-top { position: absolute; top: 14px; left: 16px; right: 16px; display: flex; align-items: center; justify-content: space-between; z-index: 5; }
-.hero-icon-btn { width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.92); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text); box-shadow: 0 2px 10px rgba(0,0,0,0.12); transition: background .2s, transform .15s; }
-.hero-icon-btn:hover { background: #fff; transform: scale(1.05); }
+.hero-icon-btn { width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.18); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #fff; box-shadow: none; transition: background .2s, transform .15s, opacity .4s; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+.hero-icon-btn:hover { background: rgba(255,255,255,0.28); transform: scale(1.05); }
 .hero-icon-btn svg { width: 19px; height: 19px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.cover-book { position: relative; inset: auto; width: 110px; height: 152px; flex-shrink: 0; margin-top: 38px; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 16px rgba(0,0,0,0.18); background: var(--peach-light); display: flex; align-items: center; justify-content: center; }
+.hero-icon-btn.hidden { opacity: 0; pointer-events: none; }
+.cover-book { position: relative; inset: auto; width: 110px; height: 152px; flex-shrink: 0; margin-top: 38px; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.28); background: var(--peach-light); display: flex; align-items: center; justify-content: center; }
 .cover-book img { width: 100%; height: 100%; object-fit: cover; }
 .cover-book-ph { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
 .cover-book-ph svg { width: 36px; height: 36px; stroke: var(--peach-mid); fill: none; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
 .cover-hero-info { flex: 1; min-width: 0; margin-top: 38px; padding-top: 4px; }
-.cover-hero-info .story-title-main { font-size: 17px; margin-bottom: .5rem; line-height: 1.3; }
-.cover-hero-info .author-row { margin-bottom: 0; }
-.cover-hero-info .author-name { font-size: 14.5px; }
+.cover-hero-info .story-title-main { font-size: 17px; margin-bottom: .5rem; line-height: 1.3; color: #fff; }
+.cover-hero-info .author-name { font-size: 14.5px; color: rgba(255,255,255,0.9); }
 .cover-hero-info .author-avatar { width: 28px; height: 28px; }
+.cover-hero-info .author-row svg { stroke: rgba(255,255,255,0.7); }
 @media (max-width: 380px) {
   .cover-book { width: 92px; height: 128px; }
 }
@@ -629,7 +634,7 @@ body                      { font-size: 16px; }
   </div>
   <div id="story-genres" style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:1.2rem"></div>
   <div class="description-box story-card">
-    <div class="description-label"><span class="section-icon"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></span>Tóm tắt</div>
+    <div class="description-label">Tóm tắt</div>
     <div class="description-text clamped" id="story-description">...</div>
     <button class="read-more-btn" id="desc-toggle" onclick="toggleDesc()">
       Đọc thêm <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -643,7 +648,6 @@ body                      { font-size: 16px; }
 <div class="tab-content active story-card" id="tab-chapters">
   <div class="chapter-controls">
     <div class="chapter-count-label">
-      <span class="section-icon"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
       <span id="chapter-count-label">0 chương</span>
     </div>
     <button class="sort-btn" id="sort-toggle" onclick="toggleSort()">
@@ -666,7 +670,6 @@ body                      { font-size: 16px; }
 <div class="tab-content active story-card" id="tab-comments" style="margin-top:14px">
   <div class="chapter-controls" style="border-bottom:1px solid var(--border)">
     <div class="chapter-count-label">
-      <span class="section-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
       Review <span class="tab-count" id="tc-comments" style="margin-left:4px">0</span>
     </div>
     <a href="javascript:void(0)" style="font-size:13px;font-weight:700;color:var(--peach);text-decoration:none" onclick="document.getElementById('comment-input')?.focus()">Xem tất cả &gt;</a>
@@ -1496,6 +1499,26 @@ function _setMeta(k, v) { const el = document.querySelector('[property="'+k+'"]'
   function injectWatermark() { if (document.getElementById('__pl_wm')) return; const wm = document.createElement('div'); wm.id = '__pl_wm'; wm.style.cssText = 'position:fixed;bottom:18px;right:18px;font-size:13px;color:var(--text-muted,#aaa);font-family:"Nunito",sans-serif;font-weight:700;pointer-events:none;z-index:9999;opacity:0.45;letter-spacing:.3px;'; wm.textContent = '© Peach Luku'; document.body.appendChild(wm); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', injectWatermark); else injectWatermark();
   document.addEventListener('DOMContentLoaded', function() { document.querySelectorAll('meta[name="description"],meta[property="og:description"]').forEach(m => m.removeAttribute('content')); });
+  // Auto-hide hero buttons
+  (function() {
+    let hideTimer;
+    function showHeroBtns() {
+      document.querySelectorAll('.hero-icon-btn').forEach(b => b.classList.remove('hidden'));
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(() => {
+        document.querySelectorAll('.hero-icon-btn').forEach(b => b.classList.add('hidden'));
+      }, 5000);
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      const hero = document.getElementById('cover-hero');
+      if (hero) {
+        hero.addEventListener('click', showHeroBtns);
+        hero.addEventListener('touchstart', showHeroBtns, { passive: true });
+        hero.addEventListener('mousemove', showHeroBtns);
+      }
+      showHeroBtns();
+    });
+  })();
 })();
 </script>
 <script src="navbar.js"></script>
