@@ -1190,7 +1190,7 @@ async function renderCmtOverview() {
   const list = document.getElementById('cmt-overview-list-full')
   list.innerHTML = '<p class="toc-empty">Đang tải...</p>'
   const { data, error } = await fetchCommentsWithProfiles(
-    sb.from('comments').select('*').eq('story_id', STORY_ID).eq('chapter_id', CHAPTER_UUID).order('created_at', { ascending: true })
+    sb.from('comments').select('*').eq('story_id', STORY_ID).eq('chapter_id', CHAPTER_UUID).order('created_at', { ascending: false })
   )
   if (error) { list.innerHTML = `<p class="toc-empty">Lỗi tải bình luận.</p>`; return }
   if (!data||!data.length) { list.innerHTML = '<p class="toc-empty">Chưa có bình luận nào trong chương này.</p>'; return }
@@ -1207,7 +1207,7 @@ async function renderCmtOverview() {
     const info = pidInfo[c.paragraph_id]
     const quoteHtml = info ? `<div class="cmt-overview-context" onclick="openCmtSheet('${c.paragraph_id}', true)">§${info.num} · ${escapeHtml(info.excerpt)}</div>` : ''
     return `<div class="cmt-bubble" id="ov-cmt-${c.id}">
-      <div class="cmt-avatar" style="background:${color}">${avatarHtml}</div>
+      <div class="cmt-avatar" style="background:${avatarSrc?'transparent':color}">${avatarHtml}</div>
       <div class="cmt-body">
         ${quoteHtml}
         <div class="cmt-user">${name}</div>
@@ -1279,7 +1279,7 @@ async function loadSheetComments(pid) {
   const list = document.getElementById('sheet-cmt-list')
   list.innerHTML = '<p class="empty-msg">Đang tải...</p>'
   const { data, error } = await fetchCommentsWithProfiles(
-    sb.from('comments').select('*').eq('story_id',STORY_ID).eq('chapter_id',CHAPTER_UUID).eq('paragraph_id',pid).order('created_at',{ascending:true})
+    sb.from('comments').select('*').eq('story_id',STORY_ID).eq('chapter_id',CHAPTER_UUID).eq('paragraph_id',pid).order('created_at',{ascending:false})
   )
   if (error) { list.innerHTML = `<p class="empty-msg">Lỗi tải bình luận.</p>`; return }
   const btn = document.querySelector(`.cmt-trigger[data-pid="${pid}"] .cnt`)
@@ -1291,7 +1291,7 @@ async function loadSheetComments(pid) {
     const avatarHtml = avatarSrc ? `<img src="${escapeHtml(avatarSrc)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : name.charAt(0).toUpperCase()
     const isOwn = chCurrentUser && c.user_id === chCurrentUser.id
     return `<div class="cmt-bubble" id="cmt-${c.id}">
-      <div class="cmt-avatar" style="background:${color}">${avatarHtml}</div>
+      <div class="cmt-avatar" style="background:${avatarSrc?'transparent':color}">${avatarHtml}</div>
       <div class="cmt-body">
         <div class="cmt-user">${name}</div>
         ${c.content ? `<div class="cmt-content">${renderContentWithTag(c.content)}</div>` : ''}
@@ -1424,7 +1424,7 @@ async function loadChapterEndComments() {
   const list = document.getElementById('chapter-end-cmt-list'); if (!list) return
   list.innerHTML = '<p class="empty-msg">Đang tải...</p>'
   const { data, error } = await fetchCommentsWithProfiles(
-    sb.from('comments').select('*').eq('story_id',STORY_ID).eq('chapter_id',CHAPTER_UUID).eq('paragraph_id','__chapter__').order('created_at',{ascending:true})
+    sb.from('comments').select('*').eq('story_id',STORY_ID).eq('chapter_id',CHAPTER_UUID).eq('paragraph_id','__chapter__').order('created_at',{ascending:false})
   )
   const countEl = document.getElementById('chapter-end-cmt-count')
   if (countEl) countEl.textContent = (data||[]).length
@@ -1435,7 +1435,7 @@ async function loadChapterEndComments() {
     const avatarHtml = avatarSrc ? `<img src="${escapeHtml(avatarSrc)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : name.charAt(0).toUpperCase()
     const isOwn = chCurrentUser && c.user_id===chCurrentUser.id
     return `<div class="cmt-bubble" id="echcmt-${c.id}">
-      <div class="cmt-avatar" style="background:${color}">${avatarHtml}</div>
+      <div class="cmt-avatar" style="background:${avatarSrc?'transparent':color}">${avatarHtml}</div>
       <div class="cmt-body">
         <div class="cmt-user">${name}</div>
         ${c.content ? `<div class="cmt-content">${renderContentWithTag(c.content)}</div>` : ''}
