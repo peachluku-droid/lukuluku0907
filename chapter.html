@@ -1398,7 +1398,7 @@ async function submitSheetComment() {
   const sticker_url = selectedSticker || null
   const { error } = await sb.from('comments').insert({
     story_id:STORY_ID, chapter_id:CHAPTER_UUID, paragraph_id:activePid,
-    username, user_id:chCurrentUser.id, content, image_url, sticker_url,
+    user_id:chCurrentUser.id, content, image_url, sticker_url,
     parent_id:activeParentId||null, reply_to_user_id:activeReplyUserId||null
   })
   activeReplyUserId = null; activeParentId = null; btn.disabled = false
@@ -1452,7 +1452,7 @@ async function submitChapterEndComment() {
   const username = chUserProfile?.display_name || chCurrentUser.email.split('@')[0]
   const { error } = await sb.from('comments').insert({
     story_id:STORY_ID, chapter_id:CHAPTER_UUID, paragraph_id:'__chapter__',
-    username, user_id:chCurrentUser.id, content,
+    user_id:chCurrentUser.id, content,
     parent_id:activeChapterParentId||null, reply_to_user_id:activeChapterReplyUserId||null
   })
   activeChapterReplyUserId = null; activeChapterParentId = null
