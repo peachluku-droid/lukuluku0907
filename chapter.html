@@ -293,10 +293,11 @@ body {
 .cmt-sheet-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 299; }
 .cmt-sheet-overlay.open { display: block; }
 .cmt-sheet {
-  position: fixed; inset: 0; background: var(--panel); z-index: 300;
+  position: fixed; inset: 0; background: #fff; z-index: 300;
   display: flex; flex-direction: column; height: 100vh; height: 100dvh;
   transform: translateX(100%); transition: transform .28s cubic-bezier(.32,1,.4,1);
 }
+body.theme-dark .cmt-sheet { background: var(--panel); }
 .cmt-sheet.open { transform: translateX(0); }
 .cmt-sheet-handle { display: none; }
 .cmt-sheet-header {
