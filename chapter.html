@@ -766,11 +766,21 @@ function toggleAudioSection() {
   if (!vis) el.scrollIntoView({ behavior:'smooth', block:'nearest' })
 }
 
+const AVATAR_COLORS = ['#d4537e','#5b9bd5','#71c285','#e8a838','#9b7fe8','#e87878']
+function avatarColorFor(id) {
+  const s = String(id||'')
+  let hash = 0
+  for (let i = 0; i < s.length; i++) { hash = (hash * 31 + s.charCodeAt(i)) | 0 }
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length]
+}
 function stripHtml(html) {
   const tmp = document.createElement('div'); tmp.innerHTML = html; return tmp.textContent || ''
 }
 function escapeHtml(str) {
   if (!str) return ''; const d = document.createElement('div'); d.textContent = str; return d.innerHTML
+}
+function jsEscape(str) {
+  return String(str||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n')
 }
 function formatTime(iso) {
   const diff = Math.floor((Date.now() - new Date(iso)) / 1000)
@@ -1189,10 +1199,9 @@ async function renderCmtOverview() {
   Array.from(paras).forEach((wrap,i) => {
     pidInfo[wrap.dataset.pid] = { num:i+1, excerpt:(wrap.querySelector('.para-text')?.textContent||'').trim().slice(0,100) }
   })
-  const avatarColors = ['#d4537e','#5b9bd5','#71c285','#e8a838','#9b7fe8','#e87878']
   list.innerHTML = data.map((c,i) => {
     const prof = c.profiles||{}, name = escapeHtml(prof.display_name||c.username||'Ẩn danh')
-    const color = avatarColors[i%avatarColors.length], avatarSrc = prof.avatar_url||c.avatar_url
+    const color = avatarColorFor(c.user_id), avatarSrc = prof.avatar_url||c.avatar_url
     const avatarHtml = avatarSrc ? `<img src="${escapeHtml(avatarSrc)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : name.charAt(0).toUpperCase()
     const isOwn = chCurrentUser && c.user_id === chCurrentUser.id
     const info = pidInfo[c.paragraph_id]
@@ -1207,7 +1216,7 @@ async function renderCmtOverview() {
         ${c.sticker_url ? `<img class="cmt-sticker" src="${c.sticker_url}" alt="sticker" loading="lazy" onclick="openLightbox('${c.sticker_url}')">` : ''}
         <div class="cmt-footer">
           <span class="cmt-time">${formatTime(c.created_at)}</span>
-          ${chCurrentUser ? `<button class="cmt-reply-btn" onclick="openCmtSheet('${c.paragraph_id}', true); setTimeout(()=>replyTo('${name}',${c.id},'${c.user_id}',false),250)">Trả lời</button>` : ''}
+          ${chCurrentUser ? `<button class="cmt-reply-btn" onclick="openCmtSheet('${c.paragraph_id}', true); setTimeout(()=>replyTo('${jsEscape(name)}','${c.id}','${c.user_id}',false),250)">Trả lời</button>` : ''}
           ${isOwn ? `<button class="cmt-reply-btn" style="color:#e84040" onclick="deleteComment('${c.id}','${c.paragraph_id}')">Xoá</button>` : ''}
         </div>
       </div>
@@ -1276,10 +1285,9 @@ async function loadSheetComments(pid) {
   const btn = document.querySelector(`.cmt-trigger[data-pid="${pid}"] .cnt`)
   if (btn) btn.textContent = data.length > 0 ? data.length : '+'
   if (!data.length) { list.innerHTML = '<p class="empty-msg">Chưa có bình luận.<br>Hãy là người đầu tiên!</p>'; return }
-  const avatarColors = ['#d4537e','#5b9bd5','#71c285','#e8a838','#9b7fe8','#e87878']
   list.innerHTML = data.map((c,i) => {
     const prof = c.profiles||{}, name = escapeHtml(prof.display_name||c.username||'Ẩn danh')
-    const color = avatarColors[i%avatarColors.length], avatarSrc = prof.avatar_url||c.avatar_url
+    const color = avatarColorFor(c.user_id), avatarSrc = prof.avatar_url||c.avatar_url
     const avatarHtml = avatarSrc ? `<img src="${escapeHtml(avatarSrc)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : name.charAt(0).toUpperCase()
     const isOwn = chCurrentUser && c.user_id === chCurrentUser.id
     return `<div class="cmt-bubble" id="cmt-${c.id}">
@@ -1291,7 +1299,7 @@ async function loadSheetComments(pid) {
         ${c.sticker_url ? `<img class="cmt-sticker" src="${c.sticker_url}" alt="sticker" loading="lazy" onclick="openLightbox('${c.sticker_url}')">` : ''}
         <div class="cmt-footer">
           <span class="cmt-time">${formatTime(c.created_at)}</span>
-          ${chCurrentUser ? `<button class="cmt-reply-btn" onclick="replyTo('${name}',${c.id},'${c.user_id}',false)">Trả lời</button>` : ''}
+          ${chCurrentUser ? `<button class="cmt-reply-btn" onclick="replyTo('${jsEscape(name)}','${c.id}','${c.user_id}',false)">Trả lời</button>` : ''}
           ${isOwn ? `<button class="cmt-reply-btn" style="color:#e84040" onclick="deleteComment('${c.id}','${pid}')">Xoá</button>` : ''}
         </div>
       </div>
@@ -1421,10 +1429,9 @@ async function loadChapterEndComments() {
   const countEl = document.getElementById('chapter-end-cmt-count')
   if (countEl) countEl.textContent = (data||[]).length
   if (error||!data||!data.length) { list.innerHTML = '<p class="empty-msg">Chưa có bình luận.<br>Hãy là người đầu tiên! 🌸</p>'; return }
-  const avatarColors = ['#d4537e','#5b9bd5','#71c285','#e8a838','#9b7fe8','#e87878']
   list.innerHTML = data.map((c,i) => {
     const prof=c.profiles||{}, name=escapeHtml(prof.display_name||c.username||'Ẩn danh')
-    const color=avatarColors[i%avatarColors.length], avatarSrc=prof.avatar_url||c.avatar_url
+    const color=avatarColorFor(c.user_id), avatarSrc=prof.avatar_url||c.avatar_url
     const avatarHtml = avatarSrc ? `<img src="${escapeHtml(avatarSrc)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : name.charAt(0).toUpperCase()
     const isOwn = chCurrentUser && c.user_id===chCurrentUser.id
     return `<div class="cmt-bubble" id="echcmt-${c.id}">
@@ -1436,7 +1443,7 @@ async function loadChapterEndComments() {
         ${c.sticker_url ? `<img class="cmt-sticker" src="${c.sticker_url}" alt="sticker" loading="lazy" onclick="openLightbox('${c.sticker_url}')">` : ''}
         <div class="cmt-footer">
           <span class="cmt-time">${formatTime(c.created_at)}</span>
-          ${chCurrentUser ? `<button class="cmt-reply-btn" onclick="replyTo('${name}',${c.id},'${c.user_id}',true)">Trả lời</button>` : ''}
+          ${chCurrentUser ? `<button class="cmt-reply-btn" onclick="replyTo('${jsEscape(name)}','${c.id}','${c.user_id}',true)">Trả lời</button>` : ''}
           ${isOwn ? `<button class="cmt-reply-btn" style="color:#e84040" onclick="deleteComment('${c.id}','__chapter__')">Xoá</button>` : ''}
         </div>
       </div>
