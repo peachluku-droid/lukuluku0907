@@ -389,8 +389,9 @@ body {
 .reply-hint-bar strong { color: var(--accent); }
 .reply-hint-cancel { margin-left: auto; background: none; border: none; color: var(--meta); cursor: pointer; font-size: 15px; padding: 0 2px; line-height: 1; }
 .cmt-sticker { width: 96px; height: 96px; object-fit: contain; display: block; margin-top: 4px; border-radius: 8px; cursor: pointer; }
-.sheet-input-bar { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 30px; padding: 6px 6px 6px 14px; }
+.sheet-input-bar { display: flex; align-items: center; gap: 8px; background: #fff; border: 1.5px solid var(--border); border-radius: 30px; padding: 6px 6px 6px 14px; }
 .sheet-input-bar:focus-within { border-color: var(--accent); }
+body.theme-dark .sheet-input-bar { background: var(--bg2); }
 .sheet-text-inline { flex: 1; border: none; background: transparent; font-size: 14px; color: var(--text); font-family: 'Nunito', sans-serif; outline: none; min-height: 20px; max-height: 80px; resize: none; }
 .sheet-send-inline {
   background: var(--accent); border: none; border-radius: 50%; width: 34px; height: 34px;
@@ -615,9 +616,6 @@ body {
   </div>
   <div class="cmt-sheet-detail" id="cmt-sheet-detail" style="display:none">
     <div class="cmt-para-quote" id="cmt-para-quote"></div>
-    <div class="cmt-sheet-list" id="sheet-cmt-list">
-      <p class="empty-msg">Đang tải...</p>
-    </div>
     <div class="cmt-sheet-input">
       <div class="reply-hint-bar" id="sheet-reply-hint">
         <svg viewBox="0 0 24 24" width="12" height="12" style="stroke:var(--accent);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
@@ -646,6 +644,9 @@ body {
           <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
         </button>
       </div>
+    </div>
+    <div class="cmt-sheet-list" id="sheet-cmt-list">
+      <p class="empty-msg">Đang tải...</p>
     </div>
   </div>
 </div>
@@ -827,6 +828,14 @@ async function loadChapter() {
   }
 }
 
+function getChapterTextForTts() {
+  const container = document.getElementById('paragraphs-container')
+  if (!container) return ''
+  const clone = container.cloneNode(true)
+  clone.querySelectorAll('.cmt-trigger').forEach(el => el.remove())
+  return (clone.textContent || '').trim()
+}
+
 function paraHash(text) {
   let h = 0; const s = (text||'').replace(/\u00a0/g,' ').trim()
   for (let i = 0; i < Math.min(s.length,200); i++) h = (h*31 + s.charCodeAt(i)) >>> 0
@@ -913,10 +922,11 @@ function settingsTtsToggle() {
     // Web Speech TTS
     if (_ttsActive) {
       speechSynthesis.cancel()
+      _stopTtsWatchdog()
       _ttsActive = false
       _ttsSetUi(false)
     } else {
-      const text = stripHtml(document.getElementById('paragraphs-container')?.innerHTML || '').trim()
+      const text = getChapterTextForTts()
       if (!text) return
       _ttsSpeak(text)
     }
@@ -935,7 +945,7 @@ function ttsSetRate(btn) {
 
 function ttsToggle(btn) {
   if (_ttsActive) {
-    speechSynthesis.cancel(); _ttsActive = false; _ttsSetUi(false); return
+    speechSynthesis.cancel(); _stopTtsWatchdog(); _ttsActive = false; _ttsSetUi(false); return
   }
   const text = btn.closest('.tts-player')?.dataset.text || document.querySelector('.tts-player')?.dataset.text || ''
   if (!text) return
@@ -943,6 +953,16 @@ function ttsToggle(btn) {
 }
 
 // FIX 3: set _ttsActive = true ngay, không chờ onstart
+let _ttsWatchdog = null
+function _startTtsWatchdog() {
+  clearInterval(_ttsWatchdog)
+  _ttsWatchdog = setInterval(() => {
+    if (!speechSynthesis.speaking) { clearInterval(_ttsWatchdog); _ttsWatchdog = null; return }
+    speechSynthesis.pause(); speechSynthesis.resume()
+  }, 10000)
+}
+function _stopTtsWatchdog() { clearInterval(_ttsWatchdog); _ttsWatchdog = null }
+
 function _ttsSpeak(text) {
   const utt = new SpeechSynthesisUtterance(text)
   utt.lang = 'vi-VN'
@@ -953,9 +973,10 @@ function _ttsSpeak(text) {
   _ttsActive = true
   _ttsSetUi(true)
   utt.onstart = () => { _ttsActive = true; _ttsSetUi(true) }
-  utt.onend   = () => { _ttsActive = false; _ttsSetUi(false) }
-  utt.onerror = () => { _ttsActive = false; _ttsSetUi(false) }
+  utt.onend   = () => { _ttsActive = false; _ttsSetUi(false); _stopTtsWatchdog() }
+  utt.onerror = () => { _ttsActive = false; _ttsSetUi(false); _stopTtsWatchdog() }
   speechSynthesis.speak(utt)
+  _startTtsWatchdog()
 }
 
 function _ttsSetUi(playing) {
@@ -967,7 +988,7 @@ function _ttsSetUi(playing) {
   _syncAudioUi(playing)
 }
 
-window.addEventListener('beforeunload', () => { speechSynthesis?.cancel(); _audio.pause() })
+window.addEventListener('beforeunload', () => { speechSynthesis?.cancel(); _stopTtsWatchdog(); _audio.pause() })
 
 function renderParagraphs(content) {
   const container = document.getElementById('paragraphs-container')
@@ -1143,7 +1164,7 @@ async function loadAllCounts() {
 
 async function fetchCommentsWithProfiles(query) {
   const { data: comments, error } = await query
-  if (error) return { data: null, error }
+  if (error) { console.error('LOAD CMT ERROR:', error); return { data: null, error } }
   if (!comments || !comments.length) return { data: [], error: null }
   const userIds = [...new Set(comments.map(c => c.user_id).filter(Boolean))]
   let profilesMap = {}
@@ -1380,7 +1401,7 @@ async function submitSheetComment() {
     parent_id:activeParentId||null, reply_to_user_id:activeReplyUserId||null
   })
   activeReplyUserId = null; activeParentId = null; btn.disabled = false
-  if (error) { alert('Gửi thất bại: ' + error.message); return }
+  if (error) { console.error('POST CMT ERROR:', error); alert('Gửi thất bại: ' + error.message); return }
   document.getElementById('sheet-cmt-input').value = ''
   document.getElementById('sheet-emoji-picker').classList.remove('open')
   document.getElementById('sheet-sticker-picker').classList.remove('open')
@@ -1436,7 +1457,7 @@ async function submitChapterEndComment() {
   activeChapterReplyUserId = null; activeChapterParentId = null
   document.getElementById('chapter-reply-hint')?.classList.remove('visible')
   btn.disabled = false
-  if (error) { alert('Gửi thất bại: ' + error.message); return }
+  if (error) { console.error('POST CMT ERROR:', error); alert('Gửi thất bại: ' + error.message); return }
   ta.value = ''; ta.style.height = 'auto'
   document.getElementById('chapter-emoji-picker')?.classList.remove('open')
   loadChapterEndComments(); loadAllCounts()
