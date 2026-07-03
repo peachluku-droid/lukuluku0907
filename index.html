@@ -410,42 +410,53 @@ body {
 /* Section divider */
 .sec-divider { height: 1px; background: var(--border); margin: 0 0 14px; }
 
-/* ─── TOP RANK GRID (4 cards ngang như bestsellers Dakingo) ─── */
+/* ─── SITE TAGLINE ─── */
+.site-tagline {
+  text-align: center; padding: 14px 16px 10px;
+  font-size: 13px; color: var(--text-muted); letter-spacing: 0.01em;
+}
+
+/* ─── TOP RANK (card ngang, 2 cột desktop, 1 cột mobile) ─── */
 .top-rank-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
   margin-bottom: 6px;
 }
-@media (max-width: 700px) { .top-rank-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; } }
+@media (max-width: 700px) { .top-rank-grid { grid-template-columns: 1fr; gap: 8px; } }
 
 .top-rank-card {
   background: var(--card); border: 1.5px solid var(--border);
-  border-radius: 16px; overflow: hidden;
+  border-radius: 14px; overflow: hidden;
   cursor: pointer; transition: all .2s; text-decoration: none; color: var(--text);
-  display: flex; flex-direction: column;
+  display: flex; flex-direction: row; align-items: stretch;
 }
-.top-rank-card:hover { border-color: var(--peach-mid); transform: translateY(-4px); box-shadow: 0 8px 24px rgba(192,57,43,0.12); }
+.top-rank-card:hover { border-color: var(--peach-mid); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(192,57,43,0.12); }
 .rank-cover-wrap {
-  position: relative; width: 100%; padding-top: 130%;
+  position: relative; width: 72px; flex-shrink: 0;
   overflow: hidden; background: linear-gradient(145deg, var(--peach-light), var(--gold-light));
 }
 .rank-cover-wrap img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .rank-badge {
-  position: absolute; top: 8px; left: 8px;
-  width: 26px; height: 26px; border-radius: 8px;
+  position: absolute; top: 6px; left: 6px;
+  width: 22px; height: 22px; border-radius: 7px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 900; z-index: 1;
+  font-size: 10px; font-weight: 900; z-index: 1;
 }
 .rank-1 { background: #FFF8E1; color: #B85B30; }
 .rank-2 { background: #F0F0F8; color: #7a7aaa; }
 .rank-3 { background: #FEF0E9; color: var(--peach-dark); }
 .rank-n { background: rgba(0,0,0,0.3); color: #fff; }
 .rank-hidden { display: none; }
-.rank-info { padding: 8px 10px 10px; flex: 1; }
-.rank-title { font-size: 11px; font-weight: 800; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 4px; }
+.rank-info { padding: 8px 10px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.rank-title { font-size: 12px; font-weight: 800; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 4px; }
 .rank-author { font-size: 10px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 3px; }
 .rank-author svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2; flex-shrink: 0; }
 .rank-views { font-size: 10px; color: var(--peach); font-weight: 700; display: flex; align-items: center; gap: 3px; margin-top: 3px; }
 .rank-views svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2; flex-shrink: 0; }
+
+/* ─── CONVERT SECTION ─── */
+.convert-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 6px; }
+@media (max-width: 1100px) { .convert-grid { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 600px) { .convert-grid { grid-template-columns: repeat(2, 1fr); } }
 
 /* ─── NEW UPDATE GRID (6 cols desktop, 3 mobile) ─── */
 .new-update-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
@@ -604,15 +615,15 @@ body {
 /* ─── FOOTER ─── */
 footer {
   margin-top: 1.5rem;
-  background: var(--peach);
+  background: transparent;
   padding: 1.2rem 1.5rem;
   text-align: center;
-  border-radius: 16px 16px 0 0;
+  border-radius: 0;
 }
-footer p { font-size: 12px; color: rgba(255,255,255,0.85); margin-bottom: 8px; font-weight: 600; }
+footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; }
 .flinks { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-.flink { font-size: 11px; font-weight: 800; color: var(--peach); background: #fff; padding: 3px 12px; border-radius: 20px; text-decoration: none; transition: all .15s; }
-.flink:hover { background: var(--gold); color: #5D2E0C; }
+.flink { font-size: 11px; font-weight: 800; color: var(--peach-dark); background: var(--peach-light); padding: 3px 12px; border-radius: 20px; text-decoration: none; transition: all .15s; }
+.flink:hover { background: var(--peach-mid); color: #fff; }
 
 /* ─── MODAL BẢNG XẾP HẠNG ─── */
 .rank-modal-overlay { position: fixed; inset: 0; z-index: 500; background: var(--bg2); display: none; flex-direction: column; overflow: hidden; }
@@ -779,78 +790,16 @@ body.theme-player .pl-chat-wrap { display: block; }
   </div>
 </div>
 
-<!-- HERO (Dakingo style) -->
+
+
+<!-- TAGLINE -->
+<!-- HERO (rút gọn) -->
 <div class="hero">
   <div class="hero-logo">
     <img id="heroImg" src="" alt="Peach Luku">
   </div>
   <div class="hero-body">
-    <h1>🍑 Peach Luku</h1>
-    <p class="hero-sub">Nơi thắp sáng truyện sẽ gay của bạn ✨</p>
-    <div class="hero-search-row">
-      <div class="inline-search">
-        <div class="inline-search-icon">
-          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        </div>
-        <input class="inline-search-input" id="heroSearchInput" type="text" placeholder="Tìm truyện yêu thích..." autocomplete="off">
-        <button class="inline-search-btn" onclick="goSearch()" aria-label="Tìm">
-          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        </button>
-      </div>
-    </div>
-    <a class="hero-cta" href="library.html">
-      <svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:currentColor;stroke:none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      KHÁM PHÁ NGAY
-    </a>
-  </div>
-  <div class="hero-right-images">
-    <div class="hero-right-img">📖</div>
-    <div class="hero-right-img">🌸</div>
-  </div>
-</div>
-
-<!-- WELCOME BANNER -->
-<div class="welcome-banner">
-  <span>🍑</span>
-  <span>Chào mừng đến với Peach Luku — nơi thắp sáng truyện sẽ gay của bạn!</span>
-  <span>🍑</span>
-</div>
-
-<!-- GENRE CHIPS (Menu thể loại kiểu Dakingo) -->
-<div class="genre-chips-section" id="genreChipsSection">
-  <div class="genre-chips-row" id="genreChipsRow">
-    <div class="genre-chip-card active" onclick="setGenreChip('',this)">
-      <span class="genre-chip-icon">📚</span>
-      <span class="genre-chip-label">Tất cả</span>
-    </div>
-    <div class="genre-chip-card" onclick="setGenreChip('ngôn tình',this)">
-      <span class="genre-chip-icon">💕</span>
-      <span class="genre-chip-label">Ngôn tình</span>
-    </div>
-    <div class="genre-chip-card" onclick="setGenreChip('fantasy',this)">
-      <span class="genre-chip-icon">🔮</span>
-      <span class="genre-chip-label">Fantasy</span>
-    </div>
-    <div class="genre-chip-card" onclick="setGenreChip('slice of life',this)">
-      <span class="genre-chip-icon">🌸</span>
-      <span class="genre-chip-label">Slice of Life</span>
-    </div>
-    <div class="genre-chip-card" onclick="setGenreChip('hài hước',this)">
-      <span class="genre-chip-icon">😂</span>
-      <span class="genre-chip-label">Hài hước</span>
-    </div>
-    <div class="genre-chip-card" onclick="setGenreChip('drama',this)">
-      <span class="genre-chip-icon">🎭</span>
-      <span class="genre-chip-label">Drama</span>
-    </div>
-    <div class="genre-chip-card" onclick="setGenreChip('học đường',this)">
-      <span class="genre-chip-icon">🏫</span>
-      <span class="genre-chip-label">Học đường</span>
-    </div>
-    <div class="genre-chip-card" onclick="setGenreChip('hoàn thành',this)">
-      <span class="genre-chip-icon">✅</span>
-      <span class="genre-chip-label">Hoàn thành</span>
-    </div>
+    <p class="hero-sub">Nơi thắp sáng truyện sẽ gay của bạn</p>
   </div>
 </div>
 
@@ -952,34 +901,14 @@ body.theme-player .pl-chat-wrap { display: block; }
   </div>
 </div>
 
-<!-- SECTION: TRUYỆN NUÔI DƯỠNG TÂM HỒN (gộp Top rank + Mới thêm) -->
+<!-- SECTION: GỘP Mới cập nhật + Convert + Top rank -->
 <div class="section">
-  <div class="sec-head">
-    <div class="sec-title">
-      <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      Top truyện
-    </div>
-    <button class="see-all" id="topRankBtn" onclick="openRankModal()">
-      VIEW ALL
-      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-    </button>
-  </div>
-
-  <!-- Top rank cards (4 card dạng cover dọc như Dakingo bestsellers) -->
-  <div class="top-rank-grid" id="top-rank-grid">
-    <div class="skel-card"><div class="skel-cover"></div><div class="skel-line"></div><div class="skel-line short"></div></div>
-    <div class="skel-card"><div class="skel-cover"></div><div class="skel-line"></div><div class="skel-line short"></div></div>
-    <div class="skel-card"><div class="skel-cover"></div><div class="skel-line"></div><div class="skel-line short"></div></div>
-    <div class="skel-card"><div class="skel-cover"></div><div class="skel-line"></div><div class="skel-line short"></div></div>
-  </div>
-
-  <div class="sec-divider" style="margin-top:16px"></div>
 
   <!-- Truyện mới thêm grid -->
   <div class="sec-head" style="margin-bottom:12px">
     <div class="sec-title" id="newUpdateTitle" style="font-size:13px">
       <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      Mới cập nhật
+      MỚI CẬP NHẬT
     </div>
     <div class="sec-search-wrap" id="secSearchWrap">
       <button class="sec-search-btn" id="secSearchToggle" onclick="toggleSecSearch()" title="Tìm kiếm" aria-label="Tìm kiếm">
@@ -1037,18 +966,54 @@ body.theme-player .pl-chat-wrap { display: block; }
     <div class="skel-card"><div class="skel-cover"></div><div class="skel-line"></div><div class="skel-line short"></div></div>
   </div>
   <div class="new-update-grid" id="dien-thoai-list" style="display:none"></div>
+
+  <div class="sec-divider" style="margin-top:16px"></div>
+
+  <!-- Truyện convert (tag qt) -->
+  <div class="sec-head" style="margin-bottom:12px">
+    <div class="sec-title" style="font-size:13px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+      TRUYỆN CONVERT
+    </div>
+  </div>
+  <div class="new-update-grid" id="convert-list">
+    <div class="skel-card"><div class="skel-cover"></div><div class="skel-line"></div><div class="skel-line short"></div></div>
+    <div class="skel-card"><div class="skel-cover"></div><div class="skel-line"></div><div class="skel-line short"></div></div>
+    <div class="skel-card"><div class="skel-cover"></div><div class="skel-line"></div><div class="skel-line short"></div></div>
+    <div class="skel-card"><div class="skel-cover"></div><div class="skel-line"></div><div class="skel-line short"></div></div>
+  </div>
+
+  <div class="sec-divider" style="margin-top:16px"></div>
+
+  <!-- Top rank (card ngang, 2 cột desktop, 1 cột mobile) -->
+  <div class="sec-head" style="margin-bottom:12px">
+    <div class="sec-title" style="font-size:13px">
+      <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      TOP TRUYỆN
+    </div>
+    <button class="see-all" id="topRankBtn" onclick="openRankModal()">
+      VIEW ALL
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+  <div class="top-rank-grid" id="top-rank-grid">
+    <div class="skel-card"><div class="skel-cover"></div><div class="skel-line"></div><div class="skel-line short"></div></div>
+    <div class="skel-card"><div class="skel-cover"></div><div class="skel-line"></div><div class="skel-line short"></div></div>
+    <div class="skel-card"><div class="skel-cover"></div><div class="skel-line"></div><div class="skel-line short"></div></div>
+    <div class="skel-card"><div class="skel-cover"></div><div class="skel-line"></div><div class="skel-line short"></div></div>
+  </div>
+
 </div>
 
 
 
 <footer>
-  <p>🍑 Peach Luku — Đọc truyện vui vẻ nhé! ♡</p>
-  <p style="font-size:11px;color:rgba(255,255,255,0.7);margin-bottom:10px">Nơi thắp sáng truyện sẽ gay của bạn ✨</p>
+  <p>Đọc truyện vui vẻ nhé! 📱 Biển cả và sẽ gẩy ♡</p>
   <div class="flinks">
     <a class="flink" href="#">Wattpad</a>
     <a class="flink" href="#">Wordpress</a>
     <a class="flink" href="#">Facebook</a>
-    <a class="flink" href="write.html">✍️ Viết truyện</a>
+    <a class="flink" href="https://youtube.com" target="_blank">YouTube</a>
   </div>
 </footer>
 
@@ -1216,6 +1181,36 @@ async function loadStories() {
   // ── TRUYỆN MỚI CẬP NHẬT ──
   buildGenreChips(stories);
   renderFilteredStories();
+
+  // ── TRUYỆN CONVERT (tag qt) ──
+  const convertStories = stories.filter(s => {
+    const tags = (s.tags || '').split(',').map(t => t.trim().toLowerCase());
+    return tags.includes('qt');
+  });
+  const convertEl = document.getElementById('convert-list');
+  if (convertEl) {
+    if (convertStories.length === 0) {
+      convertEl.innerHTML = '<p style="padding:12px;font-size:13px;color:var(--text-muted);grid-column:1/-1">Chưa có truyện convert</p>';
+    } else {
+      convertEl.innerHTML = convertStories.slice(0, 12).map(s => {
+        const tags = (s.tags || '').split(',').map(g => g.trim()).filter(Boolean).slice(0, 2);
+        const ch = chCounts[s.id] || 0;
+        return `
+        <a class="new-update-card" href="story.html?story=${s.id}" title="${escapeHtml(s.title)}">
+          <div class="new-update-cover">
+            ${s.cover_url ? `<img src="${escapeHtml(s.cover_url)}" alt="${escapeHtml(s.title)}" loading="lazy">` : ''}
+          </div>
+          <div class="new-update-info">
+            <div class="new-update-title">${escapeHtml(s.title)}</div>
+            <div class="new-update-author">${escapeHtml(s.author || 'Ẩn danh')}</div>
+            <div class="new-update-ch">${ch} chương</div>
+            ${tags.length ? `<div class="new-update-tags">${tags.map(g => `<span class="new-update-tag">${escapeHtml(g)}</span>`).join('')}</div>` : ''}
+          </div>
+        </a>`;
+      }).join('');
+    }
+  }
+
   initPlayerIfNeeded();
 }
 
