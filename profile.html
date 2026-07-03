@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Hồ sơ — Peach Luku</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -97,7 +97,7 @@ body {
   padding-bottom: 76px; /* chừa chỗ cho bottom-nav cố định */
 }
 
-h1, h2, h3, .fredoka { font-family: 'Baloo 2', sans-serif; }
+h1, h2, h3, .fredoka { font-family: 'Fredoka', sans-serif; }
 
 /* ── HỌA TIẾT NỀN CHẤM BI ── */
 .bg-dots {
@@ -132,7 +132,7 @@ h1, h2, h3, .fredoka { font-family: 'Baloo 2', sans-serif; }
 .topbar-right { display: flex; gap: 8px; }
 .topbar-brand {
   display: flex; align-items: center; gap: 8px;
-  font-family: 'Baloo 2', sans-serif; font-weight: 700;
+  font-family: 'Fredoka', sans-serif; font-weight: 700;
   color: var(--peach-dark); font-size: 17px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
@@ -148,7 +148,7 @@ h1, h2, h3, .fredoka { font-family: 'Baloo 2', sans-serif; }
 .profile-card {
   background: var(--card); border-radius: 26px;
   border: 1px solid var(--border); box-shadow: var(--shadow-card);
-  padding: 24px 22px 4px; position: relative; overflow: hidden;
+  padding: 22px 20px 6px; position: relative; overflow: hidden;
 }
 .header-bg-blur {
   position: absolute; top: -40px; right: -40px; width: 180px; height: 180px;
@@ -158,11 +158,11 @@ h1, h2, h3, .fredoka { font-family: 'Baloo 2', sans-serif; }
   transition: all .3s;
 }
 .header-content { display: block; text-align: left; position: relative; z-index: 1; }
-.profile-top-row { display: flex; align-items: center; gap: 20px; }
+.profile-top-row { display: flex; align-items: flex-start; gap: 18px; }
 
 /* Avatar */
 .avatar-ring {
-  width: 130px; height: 130px; flex-shrink: 0;
+  width: 116px; height: 116px; flex-shrink: 0;
   border-radius: 50%;
   border: 3px solid var(--peach-light);
   padding: 3px;
@@ -179,7 +179,7 @@ h1, h2, h3, .fredoka { font-family: 'Baloo 2', sans-serif; }
   background: var(--peach-light);
   display: flex; align-items: center; justify-content: center;
   font-size: 34px; font-weight: 700;
-  font-family: 'Baloo 2', sans-serif;
+  font-family: 'Fredoka', sans-serif;
   color: var(--peach-dark);
   overflow: hidden;
 }
@@ -196,59 +196,69 @@ h1, h2, h3, .fredoka { font-family: 'Baloo 2', sans-serif; }
 .avatar-edit-label svg { width: 12px; height: 12px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 #avatar-file { display: none; }
 
-.profile-name-block { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 5px; }
+.profile-name-block { flex: 1; min-width: 0; padding-top: 8px; }
 .profile-name {
-  font-family: 'Baloo 2', sans-serif;
-  font-size: 26px; color: var(--text);
+  font-family: 'Fredoka', sans-serif;
+  font-size: 25px; color: var(--text);
   font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -.2px;
+  line-height: 1.25;
+  margin-bottom: 4px;
 }
-.profile-username { font-size: 14.5px; color: var(--text-muted); font-weight: 600; line-height: 1.2; }
+.profile-username { font-size: 14px; color: var(--text-muted); font-weight: 600; }
 .profile-bio-preview {
   font-size: 13px; color: var(--text-muted);
   line-height: 1.55;
-  margin-top: 14px;
+  margin-top: 10px;
 }
 .profile-bio-preview:empty { display: none; margin: 0; }
 
-/* Action buttons row — 4 pill cùng hàng, cùng kích thước (theo mockup) */
-.action-row { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; margin-top: 18px; }
-.action-btn, .pill-static, .follow-btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-  height: 36px; box-sizing: border-box;
+/* Action buttons row — 4 pill dạng mockup */
+.action-row { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 18px; }
+.action-btn, .pill-static {
+  display: inline-flex; align-items: center; gap: 6px;
   background: var(--peach-light); color: var(--peach-dark);
   border: 1.5px solid var(--border);
-  border-radius: 999px; padding: 0 15px;
+  border-radius: 999px; padding: 8px 15px;
   font-family: 'Nunito Sans', sans-serif; font-size: 12.5px; font-weight: 700;
-  white-space: nowrap;
-  cursor: pointer; transition: all .15s; margin: 0;
+  cursor: pointer; transition: all .15s;
 }
-.action-btn svg, .pill-static svg, .follow-btn svg { width: 14px; height: 14px; flex-shrink: 0; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-.action-btn:hover, .follow-btn:hover { background: var(--peach); color: #fff; border-color: var(--peach); transform: translateY(-1px); }
-.action-btn:active, .follow-btn:active { transform: translateY(0) scale(.97); }
+.action-btn svg, .pill-static svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.action-btn:hover { background: var(--peach); color: #fff; border-color: var(--peach); transform: translateY(-1px); }
+.action-btn:active { transform: translateY(0) scale(.97); }
 .action-btn.primary { background: var(--peach-light); color: var(--peach-dark); }
 .pill-static { cursor: default; opacity: .88; }
 
 /* Cụm nút chỉ hiện với chính chủ (được JS bật/tắt qua #drawer-edit-btn, không đổi logic) */
-#drawer-edit-btn { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; }
+#drawer-edit-btn { display: flex; flex-wrap: wrap; gap: 9px; }
 
-/* Stats row → grid 4 cột đều nhau, thấp gọn theo mockup */
+/* Follow button (reuses action-btn styling) */
+.follow-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--peach-light); color: var(--peach-dark);
+  border: 1.5px solid var(--border);
+  border-radius: 999px; padding: 8px 15px;
+  font-family: 'Nunito Sans', sans-serif; font-size: 12.5px; font-weight: 700;
+  cursor: pointer; margin: 0; transition: all .15s;
+}
+.follow-btn:hover { background: var(--peach); color: #fff; border-color: var(--peach); transform: translateY(-1px); }
+.follow-btn:active { transform: translateY(0) scale(.97); }
+
+/* Stats row → grid 4 cột theo mockup */
 .stats-row {
   display: grid; grid-template-columns: repeat(4, 1fr);
-  width: 100%; margin-top: 18px;
+  width: 100%; margin-top: 20px;
   border-top: 1px solid var(--border);
 }
 .stat-item {
-  padding: 11px 4px;
+  padding: 14px 4px 12px;
   text-align: center; cursor: pointer;
   transition: opacity .15s;
   border-right: 1px solid var(--border);
 }
 .stat-item:last-child { border-right: none; }
 .stat-item:hover { opacity: .72; }
-.stat-num { font-family: 'Baloo 2', sans-serif; font-size: 19px; font-weight: 700; color: var(--peach-dark); line-height: 1.15; }
-.stat-label { font-size: 9.5px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .4px; margin-top: 4px; }
+.stat-num { font-family: 'Fredoka', sans-serif; font-size: 19px; font-weight: 700; color: var(--peach-dark); line-height: 1; }
+.stat-label { font-size: 9.5px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .4px; margin-top: 5px; }
 
 /* ── TAB BAR ── */
 .tab-bar {
@@ -262,7 +272,7 @@ h1, h2, h3, .fredoka { font-family: 'Baloo 2', sans-serif; }
 .tab-btn {
   flex: 1; max-width: 220px; padding: 13px 8px;
   background: none; border: none; cursor: pointer;
-  font-family: 'Baloo 2', sans-serif; font-size: 14.5px; font-weight: 600;
+  font-family: 'Fredoka', sans-serif; font-size: 14.5px; font-weight: 600;
   color: var(--text-muted);
   position: relative;
   transition: color .15s;
@@ -294,14 +304,14 @@ h1, h2, h3, .fredoka { font-family: 'Baloo 2', sans-serif; }
 .wall-post { background: var(--card); border: 1px solid var(--border); border-radius: 18px; position: relative; margin-bottom: 12px; box-shadow: var(--shadow-card); overflow: hidden; transition: box-shadow .15s, transform .15s; }
 .wall-post:hover { box-shadow: var(--shadow-card-hover); transform: translateY(-1px); }
 .wall-post-header { display: flex; align-items: center; gap: 12px; padding: 14px 16px 10px; }
-.wall-post-avatar { width: 42px; height: 42px; border-radius: 50%; background: var(--peach-light); display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; font-family: 'Baloo 2', sans-serif; color: var(--peach-dark); overflow: hidden; flex-shrink: 0; }
+.wall-post-avatar { width: 42px; height: 42px; border-radius: 50%; background: var(--peach-light); display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; font-family: 'Fredoka', sans-serif; color: var(--peach-dark); overflow: hidden; flex-shrink: 0; }
 .wall-post-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 .wall-post-name { font-size: 14px; font-weight: 700; color: var(--text); }
 .wall-post-time { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
 .wall-post-body { padding: 4px 16px 12px; font-size: 14px; color: var(--text); line-height: 1.6; white-space: pre-wrap; }
 .wall-post-footer { background: var(--bg); padding: 8px 16px; border-top: 1px solid var(--border); }
 .wall-reply-item { display: flex; gap: 10px; padding: 10px 16px; border-top: 1px solid var(--border); background: var(--bg); }
-.wall-reply-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--peach-light); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; font-family: 'Baloo 2', sans-serif; color: var(--peach-dark); overflow: hidden; flex-shrink: 0; }
+.wall-reply-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--peach-light); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; font-family: 'Fredoka', sans-serif; color: var(--peach-dark); overflow: hidden; flex-shrink: 0; }
 .wall-reply-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 .wall-replybox { padding: 8px 16px 12px; background: var(--card); border-top: 1px solid var(--border); display: none; }
 .wall-replybox.open { display: block; }
@@ -312,25 +322,25 @@ h1, h2, h3, .fredoka { font-family: 'Baloo 2', sans-serif; }
 
 /* Story list items — mockup card style (dùng bởi renderIntro/loadIntroWorks) */
 .story-hcard {
-  display: flex; gap: 15px; padding: 15px;
+  display: flex; gap: 14px; padding: 14px;
   background: var(--card); border: 1px solid var(--border);
-  border-radius: 18px; margin-bottom: 13px;
+  border-radius: 18px; margin-bottom: 12px;
   text-decoration: none; color: var(--text);
   box-shadow: var(--shadow-card);
   transition: transform .15s, box-shadow .15s, border-color .15s;
 }
 .story-hcard:hover { transform: translateY(-2px); box-shadow: var(--shadow-card-hover); border-color: var(--border-hover); }
 .story-hcard:active { transform: translateY(0) scale(.99); }
-.story-hcover { width: 100px; height: 132px; border-radius: 13px; overflow: hidden; background: linear-gradient(145deg, var(--peach-light), #FFF6FA); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 30px; }
+.story-hcover { width: 84px; height: 112px; border-radius: 12px; overflow: hidden; background: linear-gradient(145deg, var(--peach-light), #FFF6FA); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 28px; }
 .story-hcover img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.story-hinfo { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: flex-start; gap: 7px; padding: 1px 0; }
-.story-htitle { font-family: 'Baloo 2', sans-serif; font-size: 15px; font-weight: 600; line-height: 1.35; color: var(--text); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.story-hinfo { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 6px; }
+.story-htitle { font-family: 'Fredoka', sans-serif; font-size: 15px; font-weight: 600; line-height: 1.35; color: var(--text); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .story-hstats { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
 .story-hstat { font-size: 12px; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
 .story-hstat svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .story-hdesc { font-size: 12.5px; color: var(--text-muted); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.story-htags { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; margin-top: 1px; }
-.story-htag { background: var(--peach-light); color: var(--peach-dark); border-radius: 999px; padding: 4px 11px; font-size: 11px; font-weight: 800; line-height: 1; }
+.story-htags { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 2px; }
+.story-htag { background: var(--peach-light); color: var(--peach-dark); border-radius: 999px; padding: 3px 10px; font-size: 11px; font-weight: 700; }
 .story-htag-more { font-size: 11px; color: var(--text-muted); font-weight: 600; }
 
 .story-htitle-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
@@ -379,7 +389,7 @@ h1, h2, h3, .fredoka { font-family: 'Baloo 2', sans-serif; }
   box-shadow: var(--shadow-card);
 }
 .section-title {
-  font-family: 'Baloo 2', sans-serif;
+  font-family: 'Fredoka', sans-serif;
   font-size: 12px; font-weight: 600; color: var(--text-muted);
   text-transform: uppercase; letter-spacing: .6px;
   margin-bottom: 1rem;
@@ -399,7 +409,7 @@ h1, h2, h3, .fredoka { font-family: 'Baloo 2', sans-serif; }
 .save-btn {
   width: 100%; padding: 12px; border-radius: 14px;
   background: var(--peach); border: none; cursor: pointer;
-  font-family: 'Baloo 2', sans-serif; font-size: 15px; font-weight: 600;
+  font-family: 'Fredoka', sans-serif; font-size: 15px; font-weight: 600;
   color: #fff; margin-top: .75rem; transition: opacity .15s, transform .15s;
 }
 .save-btn:hover { opacity: .9; transform: translateY(-1px); }
@@ -461,7 +471,7 @@ h1, h2, h3, .fredoka { font-family: 'Baloo 2', sans-serif; }
   backdrop-filter: blur(4px);
 }
 .story-info { padding: 10px 11px 12px; flex: 1; display: flex; flex-direction: column; gap: 4px; }
-.story-title { font-family: 'Baloo 2', sans-serif; font-size: 13px; font-weight: 600; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.story-title { font-family: 'Fredoka', sans-serif; font-size: 13px; font-weight: 600; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .story-meta { font-size: 11px; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 4px; margin-top: 2px; }
 .story-meta svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2; }
 
@@ -482,12 +492,12 @@ h1, h2, h3, .fredoka { font-family: 'Baloo 2', sans-serif; }
   margin: 2rem 1.25rem;
   box-shadow: var(--shadow-card);
 }
-.login-wall h2 { font-family: 'Baloo 2', sans-serif; font-size: 17px; font-weight: 600; }
+.login-wall h2 { font-family: 'Fredoka', sans-serif; font-size: 17px; font-weight: 600; }
 .login-wall p { font-size: 13px; color: var(--text-muted); }
 .login-wall-btn {
   background: var(--peach); color: #fff; border: none;
   border-radius: 14px; padding: 10px 28px;
-  font-family: 'Baloo 2', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer;
+  font-family: 'Fredoka', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer;
   transition: transform .15s, opacity .15s;
 }
 .login-wall-btn:hover { transform: translateY(-1px); opacity: .92; }
@@ -521,7 +531,7 @@ h1, h2, h3, .fredoka { font-family: 'Baloo 2', sans-serif; }
   box-shadow: 0 8px 28px rgba(0,0,0,0.15); display: none;
 }
 .theme-drawer.open { display: block; }
-.theme-drawer-title { font-family: 'Baloo 2', sans-serif; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: .5px; }
+.theme-drawer-title { font-family: 'Fredoka', sans-serif; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: .5px; }
 .theme-swatches { display: grid; grid-template-columns: repeat(4,1fr); gap: 7px; }
 .swatch { width: 36px; height: 36px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: all .15s; }
 .swatch.active { border-color: var(--peach); box-shadow: 0 0 0 2px var(--bg2), 0 0 0 4px var(--peach); }
@@ -683,7 +693,7 @@ h1, h2, h3, .fredoka { font-family: 'Baloo 2', sans-serif; }
         <div class="wall-compose-box">
           <svg viewBox="0 0 24 24" width="18" height="18" style="stroke:var(--text-muted);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           <textarea id="wall-input" placeholder="Đăng một tin nhắn..." rows="1" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
-          <button onclick="postWall()" style="background:var(--peach);color:#fff;border:none;border-radius:10px;padding:9px 18px;font-family:'Baloo 2',sans-serif;font-size:13px;font-weight:600;cursor:pointer;flex-shrink:0">Đăng</button>
+          <button onclick="postWall()" style="background:var(--peach);color:#fff;border:none;border-radius:10px;padding:9px 18px;font-family:'Fredoka',sans-serif;font-size:13px;font-weight:600;cursor:pointer;flex-shrink:0">Đăng</button>
         </div>
       </div>
       <div id="wall-list" style="color:var(--text-muted);font-size:13px;text-align:center;padding:2rem">Đang tải...</div>
@@ -721,7 +731,7 @@ h1, h2, h3, .fredoka { font-family: 'Baloo 2', sans-serif; }
 <div id="edit-modal" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.5);align-items:flex-end;justify-content:center" onclick="if(event.target===this)closeEditModal()">
   <div id="edit-modal-box" style="background:var(--bg2);width:100%;max-width:600px;border-radius:24px 24px 0 0;padding:20px 20px 36px;transform:translateY(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);max-height:90vh;overflow-y:auto">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
-      <span style="font-family:'Baloo 2',sans-serif;font-size:16px;font-weight:600;color:var(--text)">Chỉnh sửa hồ sơ</span>
+      <span style="font-family:'Fredoka',sans-serif;font-size:16px;font-weight:600;color:var(--text)">Chỉnh sửa hồ sơ</span>
       <button onclick="closeEditModal()" style="background:var(--peach-light);border:none;border-radius:50%;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--peach-dark)">
         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
@@ -739,7 +749,7 @@ h1, h2, h3, .fredoka { font-family: 'Baloo 2', sans-serif; }
         <label style="font-size:12px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:5px">Giới thiệu bản thân</label>
         <textarea id="ed-bio" rows="4" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:12px;padding:10px 13px;font-family:'Nunito Sans',sans-serif;font-size:14px;color:var(--text);outline:none;resize:none;box-sizing:border-box" onfocus="this.style.borderColor='var(--peach-mid)'" onblur="this.style.borderColor='var(--border)'"></textarea>
       </div>
-      <button onclick="saveProfile()" style="width:100%;padding:13px;border-radius:14px;background:var(--peach);border:none;cursor:pointer;font-family:'Baloo 2',sans-serif;font-size:15px;font-weight:600;color:#fff">Lưu thông tin</button>
+      <button onclick="saveProfile()" style="width:100%;padding:13px;border-radius:14px;background:var(--peach);border:none;cursor:pointer;font-family:'Fredoka',sans-serif;font-size:15px;font-weight:600;color:#fff">Lưu thông tin</button>
       <div style="border-top:1px solid var(--border);padding-top:14px">
         <label style="font-size:12px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:5px">Đổi mật khẩu</label>
         <input id="pw-new" type="password" placeholder="Mật khẩu mới" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:12px;padding:10px 13px;font-family:'Nunito Sans',sans-serif;font-size:14px;color:var(--text);outline:none;box-sizing:border-box;margin-bottom:10px">
@@ -900,7 +910,7 @@ function renderIntro() {
   // Works section
   html += `<div style="margin-top:16px;padding-bottom:16px;border-bottom:1px solid var(--border)">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-      <span style="font-family:'Baloo 2',sans-serif;font-size:15px;font-weight:600;color:var(--text)">Truyện của ${esc(p.username||p.display_name||'...')} <span style="color:var(--peach)">›</span></span>
+      <span style="font-family:'Fredoka',sans-serif;font-size:15px;font-weight:600;color:var(--text)">Truyện của ${esc(p.username||p.display_name||'...')} <span style="color:var(--peach)">›</span></span>
       <span id="intro-works-count" style="font-size:12px;color:var(--text-muted)"></span>
     </div>
     <div id="intro-works-list"></div>
@@ -909,7 +919,7 @@ function renderIntro() {
   // Reading list section
   html += `<div style="margin-top:16px">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-      <span style="font-family:'Baloo 2',sans-serif;font-size:15px;font-weight:600;color:var(--text)">Danh sách Đọc</span>
+      <span style="font-family:'Fredoka',sans-serif;font-size:15px;font-weight:600;color:var(--text)">Danh sách Đọc</span>
       <button onclick="toggleReadingLists()" style="background:none;border:none;cursor:pointer;color:var(--text-muted);padding:4px">
         <svg viewBox="0 0 24 24" width="18" height="18" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
       </button>
@@ -1004,7 +1014,7 @@ async function loadReadingLists() {
     return `<div style="display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--border)">
       <div style="display:flex;position:relative;flex-shrink:0">${covers}</div>
       <div style="flex:1;min-width:0">
-        <div style="font-family:'Baloo 2',sans-serif;font-size:14px;font-weight:600;color:var(--text)">${esc(name)}</div>
+        <div style="font-family:'Fredoka',sans-serif;font-size:14px;font-weight:600;color:var(--text)">${esc(name)}</div>
         <div style="font-size:12px;color:var(--text-muted);margin-top:2px">${items.length} truyện</div>
       </div>
     </div>`;
@@ -1342,9 +1352,9 @@ function renderLoginWall() {
   document.getElementById('header-content').innerHTML = `
     <div style="padding:56px 0 24px;color:var(--text);text-align:center">
       <div style="font-size:48px;margin-bottom:12px">🐹</div>
-      <div style="font-family:'Baloo 2',sans-serif;font-size:18px;font-weight:600;margin-bottom:6px">Peach Luku</div>
+      <div style="font-family:'Fredoka',sans-serif;font-size:18px;font-weight:600;margin-bottom:6px">Peach Luku</div>
       <div style="font-size:13px;opacity:.7;margin-bottom:20px">Đăng nhập để xem hồ sơ của bạn</div>
-      <button onclick="location.href='auth.html'" style="background:var(--peach);color:#fff;border:none;border-radius:12px;padding:10px 28px;font-family:'Baloo 2',sans-serif;font-size:15px;font-weight:800;cursor:pointer">Đăng nhập</button>
+      <button onclick="location.href='auth.html'" style="background:var(--peach);color:#fff;border:none;border-radius:12px;padding:10px 28px;font-family:'Fredoka',sans-serif;font-size:15px;font-weight:800;cursor:pointer">Đăng nhập</button>
     </div>`;
   document.getElementById('tab-bar').style.display = 'none';
   document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
