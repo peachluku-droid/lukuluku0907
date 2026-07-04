@@ -38,28 +38,31 @@
 <style>
 /* ========== DAKINGO-STYLE REDESIGN FOR PEACH LUKU ========== */
 
-/* ─── CSS VARIABLES (Dakingo palette) ──────────────── */
+/* ─── CSS VARIABLES (Peach Luku — warm ivory & wine palette) ──────────────── */
 :root, body.theme-light {
-  --crimson: #C0392B;
-  --crimson-dark: #A93226;
-  --crimson-light: #FDECEA;
-  --crimson-mid: #E74C3C;
-  --cream: #FDF6F0;
-  --cream2: #FFFFFF;
-  --gold: #F4C542;
-  --gold-dark: #D4A017;
+  --crimson: #8D1B2A;
+  --crimson-dark: #6E141F;
+  --crimson-light: #F7E9E6;
+  --crimson-mid: #A32637;
+  --cream: #F8EFE7;
+  --cream2: #FFFDFB;
+  --gold: #D9A441;
+  --gold-dark: #B4832A;
   --choco: #5D2E0C;
-  --text-main: #2C2C2C;
-  --text-muted: #777777;
-  --border: rgba(192,57,43,0.15);
-  --border-hover: #E74C3C;
+  --text-main: #2B2B2B;
+  --text-muted: #7B7B7B;
+  --border: #ECD8D2;
+  --border-hover: #A32637;
   /* alias cho backward compat */
-  --peach: #C0392B; --peach-light: #FDECEA; --peach-mid: #E74C3C;
-  --peach-dark: #A93226; --peach-darker: #7A1C10;
-  --gold-light: #FFF9E6;
-  --bg: #FDF6F0; --bg2: #FFFFFF;
-  --card: #FFFFFF; --text: #2C2C2C;
-  --border-hover: #E74C3C;
+  --peach: #8D1B2A; --peach-light: #F7E9E6; --peach-mid: #A32637;
+  --peach-dark: #6E141F; --peach-darker: #4A0E16;
+  --gold-light: #FBF3E3;
+  --bg: #F8EFE7; --bg2: #FFFDFB;
+  --card: #FFFDFB; --text: #2B2B2B;
+  --border-hover: #A32637;
+  --shadow-soft: 0 2px 14px rgba(141,27,42,0.06);
+  --shadow-md: 0 8px 28px rgba(141,27,42,0.10);
+  --radius-lg: 22px; --radius-md: 16px; --radius-sm: 12px;
 }
 body.theme-dark {
   --crimson: #E74C3C; --crimson-dark: #C0392B; --crimson-light: #2A0A08;
@@ -221,41 +224,62 @@ body {
 .swatch-locked { position: relative; cursor: not-allowed; opacity: 0.6; display: flex; align-items: center; justify-content: center; }
 .swatch-lock-icon { width: 15px; height: 15px; flex-shrink: 0; }
 
-/* ─── HERO BANNER (Dakingo style) ─── */
+/* ─── HERO BANNER (Peach Luku wine-red style) ─── */
 .hero {
-  background: linear-gradient(135deg, var(--peach) 0%, var(--peach-dark) 100%);
-  padding: 2.2rem 2rem;
-  display: flex; align-items: center; gap: 2rem;
+  background:
+    radial-gradient(ellipse 420px 260px at 88% -10%, rgba(255,255,255,0.08), transparent 60%),
+    linear-gradient(135deg, var(--peach-mid) 0%, var(--peach) 45%, var(--peach-dark) 100%);
+  margin: 14px 1.2rem 0;
+  border-radius: var(--radius-lg);
+  padding: 2.4rem 2.2rem;
+  display: flex; align-items: center; gap: 1.6rem;
   position: relative; overflow: hidden;
-  min-height: 180px;
+  min-height: 190px;
+  box-shadow: var(--shadow-md);
 }
 .hero::before {
   content: '';
-  position: absolute; top: -40%; right: -5%;
-  width: 280px; height: 280px;
+  position: absolute; top: -45%; right: -6%;
+  width: 300px; height: 300px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.06);
   pointer-events: none;
 }
 .hero::after {
   content: '';
-  position: absolute; bottom: -50%; right: 18%;
-  width: 180px; height: 180px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.05);
+  position: absolute; left: 0; right: 0; bottom: 0; height: 46%;
+  background-image:
+    linear-gradient(rgba(0,0,0,0) 0%, rgba(0,0,0,0.10) 100%),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0 26px, transparent 26px 54px);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 70%);
+  mask-image: linear-gradient(to bottom, transparent, black 70%);
   pointer-events: none;
 }
 .hero-logo { flex-shrink: 0; position: relative; z-index: 1; }
 .hero-logo img {
-  width: 110px; height: 110px; object-fit: contain;
-  border-radius: 50%; border: 3px solid rgba(255,255,255,0.3);
-  filter: drop-shadow(0 6px 20px rgba(0,0,0,0.25));
+  width: 116px; height: 116px; object-fit: contain;
+  border-radius: 50%; border: 3px solid rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.08);
+  filter: drop-shadow(0 8px 22px rgba(0,0,0,0.28));
 }
 .hero-body {
   flex: 1; display: flex; flex-direction: column;
   align-items: flex-start; text-align: left;
   position: relative; z-index: 1;
 }
+.hero-title {
+  font-size: 34px; font-weight: 900; color: #fff;
+  margin: 0 0 6px; line-height: 1.15;
+  text-shadow: 0 3px 12px rgba(0,0,0,0.22);
+  font-family: 'Nunito', sans-serif;
+  letter-spacing: -0.8px;
+}
+.hero-body .hero-sub {
+  font-size: 13.5px; color: rgba(255,255,255,0.92);
+  margin: 0; font-weight: 700; letter-spacing: 0.2px;
+  display: flex; align-items: center; gap: 8px;
+}
+.hero-sub-star { color: var(--gold); font-size: 12px; }
 .hero-body h1 {
   font-size: 26px; font-weight: 900; color: #fff;
   margin-bottom: 6px; line-height: 1.25;
@@ -263,17 +287,13 @@ body {
   font-family: 'Nunito', sans-serif;
   letter-spacing: -0.5px;
 }
-.hero-body .hero-sub {
-  font-size: 13px; color: rgba(255,255,255,0.85);
-  margin-bottom: 16px; font-weight: 600;
-}
 .hero-cta {
   display: inline-flex; align-items: center; gap: 6px;
   background: var(--gold); color: var(--choco, #5D2E0C);
   font-size: 12px; font-weight: 900;
   padding: 9px 20px; border-radius: 30px;
   text-decoration: none; border: none; cursor: pointer;
-  transition: all .2s; box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+  transition: all .25s; box-shadow: 0 4px 14px rgba(0,0,0,0.2);
   letter-spacing: 0.3px;
 }
 .hero-cta:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
@@ -320,9 +340,9 @@ body {
 .hero-right-img img { width: 100%; height: 100%; object-fit: cover; }
 
 @media (max-width: 600px) {
-  .hero { padding: 1.4rem 1rem; gap: 1rem; min-height: auto; }
-  .hero-logo img { width: 75px; height: 75px; }
-  .hero-body h1 { font-size: 18px; }
+  .hero { margin: 10px 0.6rem 0; padding: 1.6rem 1.1rem; gap: 1rem; min-height: auto; border-radius: var(--radius-md); }
+  .hero-logo img { width: 78px; height: 78px; }
+  .hero-title { font-size: 22px; }
   .hero-right-images { display: none; }
   .hero-search-row { max-width: 100%; }
   .hero-cta { font-size: 11px; padding: 7px 14px; }
@@ -330,32 +350,34 @@ body {
 
 /* ─── NOTICE BANNER ─── */
 .notice-banner {
-  background: var(--bg2); border: 1.5px solid var(--border-hover);
-  border-radius: 14px; margin: 10px 1.2rem;
-  padding: 7px 12px; display: flex; align-items: center; gap: 10px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius-md); margin: 14px 1.2rem 0;
+  padding: 10px 14px; display: flex; align-items: center; gap: 12px;
   overflow: hidden; max-width: calc(100% - 2.4rem - 2px);
+  box-shadow: var(--shadow-soft);
 }
 .notice-badge {
   background: var(--peach); color: white;
-  font-size: 10px; font-weight: 800; padding: 3px 9px; border-radius: 20px;
-  white-space: nowrap; flex-shrink: 0; display: flex; align-items: center; gap: 4px; letter-spacing: 0.3px;
+  font-size: 10px; font-weight: 800; padding: 5px 12px; border-radius: 20px;
+  white-space: nowrap; flex-shrink: 0; display: flex; align-items: center; gap: 5px; letter-spacing: 0.3px;
+  box-shadow: 0 3px 10px rgba(141,27,42,0.25);
 }
 .notice-badge svg { width: 12px; height: 12px; stroke: white; fill: none; stroke-width: 2.2; flex-shrink: 0; }
 .notice-scroll-wrap { overflow: hidden; flex: 1; }
 .notice-scroll-text {
   display: inline-block; white-space: nowrap;
   animation: scroll-left 12s linear infinite;
-  font-size: 12px; font-weight: 600; color: var(--text-muted); padding-left: 100%;
+  font-size: 12.5px; font-weight: 700; color: var(--text); padding-left: 100%;
 }
 @media (hover: hover) { .notice-scroll-wrap:hover .notice-scroll-text { animation-play-state: paused; } }
 @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 .notice-close {
   background: none; border: none; cursor: pointer; color: var(--text-muted);
-  flex-shrink: 0; padding: 2px; display: flex; align-items: center; border-radius: 5px; transition: all .15s;
+  flex-shrink: 0; padding: 4px; display: flex; align-items: center; border-radius: 8px; transition: all .2s;
 }
 .notice-close:hover { background: var(--peach-light); color: var(--peach); }
 .notice-close svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.2; }
-@media (max-width: 600px) { .notice-banner { margin: 10px 0.6rem; max-width: calc(100% - 1.2rem - 2px); } }
+@media (max-width: 600px) { .notice-banner { margin: 10px 0.6rem 0; max-width: calc(100% - 1.2rem - 2px); } }
 
 /* ─── GENRE CHIPS (Menu thể loại như Dakingo) ─── */
 .genre-chips-section {
@@ -374,24 +396,24 @@ body {
 .genre-chips-row::-webkit-scrollbar { display: none; }
 .genre-chip-card {
   display: flex; flex-direction: column; align-items: center; gap: 5px;
-  padding: 10px 16px; border-radius: 14px;
+  padding: 10px 16px; border-radius: var(--radius-sm);
   background: var(--bg); border: 1.5px solid var(--border);
-  cursor: pointer; transition: all .15s; flex-shrink: 0;
+  cursor: pointer; transition: all .25s; flex-shrink: 0;
   text-decoration: none; color: var(--text-muted);
   min-width: 70px;
 }
 .genre-chip-card:hover, .genre-chip-card.active {
   background: var(--peach-light); border-color: var(--peach);
   color: var(--peach); transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(192,57,43,0.15);
+  box-shadow: var(--shadow-soft);
 }
 .genre-chip-icon { font-size: 22px; line-height: 1; }
 .genre-chip-label { font-size: 10px; font-weight: 800; white-space: nowrap; }
 
 /* ─── SECTION COMMON ─── */
-.section { padding: 1.2rem 1.2rem; box-sizing: border-box; max-width: 100%; }
-@media (max-width: 600px) { .section { padding: 0.8rem 0.6rem; } }
-.sec-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; gap: 8px; flex-wrap: nowrap; }
+.section { padding: 2rem 1.2rem; box-sizing: border-box; max-width: 100%; }
+@media (max-width: 600px) { .section { padding: 1.2rem 0.6rem; } }
+.sec-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; gap: 8px; flex-wrap: nowrap; }
 .sec-title {
   font-size: 15px; font-weight: 900; display: flex; align-items: center; gap: 7px;
   color: var(--peach); flex-shrink: 1; min-width: 0;
@@ -401,14 +423,14 @@ body {
 .see-all {
   font-size: 11px; color: #fff; background: var(--peach); border: none;
   cursor: pointer; font-family: 'Nunito', sans-serif; font-weight: 800;
-  padding: 5px 14px; border-radius: 20px; display: flex; align-items: center; gap: 3px;
-  transition: all .15s; white-space: nowrap;
+  padding: 6px 16px; border-radius: 20px; display: flex; align-items: center; gap: 3px;
+  transition: all .25s; white-space: nowrap; box-shadow: 0 3px 10px rgba(141,27,42,0.2);
 }
 .see-all:hover { background: var(--peach-dark); transform: translateY(-1px); }
 .see-all svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2.2; }
 
 /* Section divider */
-.sec-divider { height: 1px; background: var(--border); margin: 0 0 14px; }
+.sec-divider { height: 1px; background: var(--border); margin: 8px 0 20px; }
 
 /* ─── SITE TAGLINE ─── */
 .site-tagline {
@@ -416,42 +438,51 @@ body {
   font-size: 13px; color: var(--text-muted); letter-spacing: 0.01em;
 }
 
-/* ─── TOP RANK (card ngang, 2 cột desktop, 1 cột mobile) ─── */
+/* ─── TOP RANK (Ranking Card kiểu mockup: số to bên trái) ─── */
 .top-rank-grid {
-  display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
   margin-bottom: 6px;
 }
-@media (max-width: 700px) { .top-rank-grid { grid-template-columns: 1fr; gap: 8px; } }
+@media (max-width: 700px) { .top-rank-grid { grid-template-columns: 1fr; gap: 10px; } }
 
 .top-rank-card {
-  background: var(--card); border: 1.5px solid var(--border);
-  border-radius: 14px; overflow: hidden;
-  cursor: pointer; transition: all .2s; text-decoration: none; color: var(--text);
-  display: flex; flex-direction: row; align-items: stretch;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius-md); overflow: visible;
+  cursor: pointer; transition: all .25s; text-decoration: none; color: var(--text);
+  display: flex; flex-direction: row; align-items: center;
+  padding: 10px 12px 10px 40px; position: relative;
+  box-shadow: var(--shadow-soft);
 }
-.top-rank-card:hover { border-color: var(--peach-mid); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(192,57,43,0.12); }
+.top-rank-card:hover { border-color: var(--peach-mid); transform: translateY(-3px); box-shadow: var(--shadow-md); }
 .rank-cover-wrap {
-  position: relative; width: 72px; flex-shrink: 0;
-  overflow: hidden; background: linear-gradient(145deg, var(--peach-light), var(--gold-light));
+  position: relative; width: 56px; height: 56px; flex-shrink: 0; margin-right: 12px;
+  overflow: hidden; border-radius: 10px;
+  background: linear-gradient(145deg, var(--peach-light), var(--gold-light));
+  box-shadow: 0 3px 10px rgba(0,0,0,0.12);
 }
 .rank-cover-wrap img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .rank-badge {
-  position: absolute; top: 6px; left: 6px;
-  width: 22px; height: 22px; border-radius: 7px;
+  position: absolute; left: 8px; top: 50%; transform: translateY(-50%);
+  width: 26px; height: 26px; border-radius: 0; background: none !important;
   display: flex; align-items: center; justify-content: center;
-  font-size: 10px; font-weight: 900; z-index: 1;
+  font-size: 22px; font-weight: 900; font-style: italic; z-index: 1;
+  font-family: 'Nunito', sans-serif;
 }
-.rank-1 { background: #FFF8E1; color: #B85B30; }
-.rank-2 { background: #F0F0F8; color: #7a7aaa; }
-.rank-3 { background: #FEF0E9; color: var(--peach-dark); }
-.rank-n { background: rgba(0,0,0,0.3); color: #fff; }
+.rank-1 { color: var(--gold-dark); }
+.rank-2 { color: #ABABC0; }
+.rank-3 { color: var(--peach-mid); }
+.rank-n { color: var(--border); }
 .rank-hidden { display: none; }
-.rank-info { padding: 8px 10px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
-.rank-title { font-size: 12px; font-weight: 800; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 4px; }
-.rank-author { font-size: 10px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 3px; }
+.rank-info { padding: 0; flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+.rank-title { font-size: 12.5px; font-weight: 800; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 4px; }
+.rank-author { font-size: 10.5px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 3px; }
 .rank-author svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2; flex-shrink: 0; }
-.rank-views { font-size: 10px; color: var(--peach); font-weight: 700; display: flex; align-items: center; gap: 3px; margin-top: 3px; }
+.rank-views { font-size: 10.5px; color: var(--peach); font-weight: 700; display: flex; align-items: center; gap: 3px; margin-top: 3px; }
 .rank-views svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2; flex-shrink: 0; }
+@media (max-width: 420px) {
+  .top-rank-card { padding-left: 34px; }
+  .rank-badge { left: 6px; font-size: 18px; }
+}
 
 /* ─── CONVERT SECTION ─── */
 .convert-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 6px; }
@@ -465,34 +496,37 @@ body {
 @media (max-width: 400px) { .new-update-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; } }
 
 .new-update-card {
-  background: var(--card); border: 1.5px solid var(--border); border-radius: 16px;
-  cursor: pointer; transition: all .2s; overflow: hidden;
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-md);
+  cursor: pointer; transition: all .25s; overflow: hidden;
   text-decoration: none; color: var(--text); display: block;
+  box-shadow: var(--shadow-soft);
 }
-.new-update-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(192,57,43,0.1); border-color: var(--peach-mid); }
+.new-update-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); border-color: var(--peach-mid); }
 .new-update-cover-wrap {
   position: relative; width: 100%; padding-top: 140%;
   overflow: hidden; background: linear-gradient(145deg, var(--peach-light), var(--gold-light));
-  border-radius: 14px 14px 0 0;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
 }
-.new-update-cover-wrap img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.new-update-cover-wrap img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .35s; }
+.new-update-card:hover .new-update-cover-wrap img { transform: scale(1.05); }
 .new-update-ch-badge {
-  position: absolute; top: 6px; left: 6px;
-  background: rgba(192,57,43,0.85); color: white;
-  font-size: 9px; font-weight: 800; padding: 2px 7px; border-radius: 10px;
+  position: absolute; top: 8px; left: 8px;
+  background: rgba(141,27,42,0.88); color: white;
+  font-size: 9px; font-weight: 800; padding: 3px 8px; border-radius: 10px;
+  backdrop-filter: blur(2px);
 }
-.status-badge { position: absolute; top: 6px; right: 6px; font-size: 9px; font-weight: 800; padding: 2px 7px; border-radius: 10px; color: white; }
-.status-full { background: #27ae60; }
-.status-on { background: #e74c3c; }
-.new-update-info { padding: 8px 9px 10px; flex: 1; display: flex; flex-direction: column; gap: 3px; }
-.new-update-title { font-size: 11px; font-weight: 800; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.new-update-tags { display: flex; flex-wrap: wrap; gap: 2px; margin-top: 2px; }
+.status-badge { position: absolute; top: 8px; right: 8px; font-size: 9px; font-weight: 800; padding: 3px 8px; border-radius: 10px; color: white; }
+.status-full { background: #2E9B5C; }
+.status-on { background: var(--peach-mid); }
+.new-update-info { padding: 10px 10px 12px; flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.new-update-title { font-size: 11.5px; font-weight: 800; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.new-update-tags { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 3px; }
 .new-update-tag {
-  font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 8px;
+  font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 8px;
   background: var(--peach-light); color: var(--peach-dark);
-  border: 1px solid var(--border); cursor: pointer; transition: background .15s;
+  border: none; cursor: pointer; transition: all .2s;
 }
-.new-update-tag:hover { background: var(--border-hover); color: white; }
+.new-update-tag:hover { background: var(--peach); color: white; }
 
 /* ─── SKELETON ─── */
 .skel-card { border-radius: 14px; overflow: hidden; background: var(--card); border: 1px solid var(--border); }
@@ -504,7 +538,7 @@ body {
 /* ─── CHAT SECTION ─── */
 .chat-section { padding: 0 1.2rem 1rem; }
 @media (max-width: 600px) { .chat-section { padding: 0 0.6rem 1rem; } }
-.chat-box { background: var(--card); border: 1.5px solid var(--border); border-radius: 16px; overflow: hidden; }
+.chat-box { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-soft); }
 .chat-panel-head { background: var(--peach); padding: 11px 14px; display: flex; align-items: center; gap: 8px; }
 .chat-panel-title { flex: 1; font-size: 13px; font-weight: 900; color: #fff; letter-spacing: .3px; display: flex; align-items: center; gap: 6px; }
 .chat-panel-title svg { width: 14px; height: 14px; stroke: #fff; fill: none; stroke-width: 2.2; }
@@ -581,6 +615,141 @@ body {
 
 /* ─── EMPTY BOX ─── */
 .empty-box { background: linear-gradient(135deg, var(--peach-light), var(--gold-light)); border-radius: 16px; padding: 1.2rem 1.4rem; text-align: center; }
+
+/* ─── PEACH LUKU RADIO (widget trang trí) ─── */
+.radio-section {
+  display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px;
+  margin: 16px 1.2rem 0;
+}
+@media (max-width: 900px) { .radio-section { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { .radio-section { margin: 12px 0.6rem 0; gap: 12px; } }
+
+.radio-card, .radio-playlist-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft); padding: 18px 20px;
+}
+.radio-label {
+  font-size: 11px; font-weight: 800; letter-spacing: .6px; color: var(--peach);
+  display: flex; align-items: center; gap: 6px; margin-bottom: 14px; text-transform: uppercase;
+}
+.radio-label svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+.radio-body { display: flex; align-items: center; gap: 20px; }
+@media (max-width: 520px) { .radio-body { flex-direction: column; align-items: stretch; text-align: center; } }
+
+.radio-turntable { position: relative; width: 128px; height: 128px; flex-shrink: 0; margin: 0 auto; }
+.radio-disc {
+  width: 100%; height: 100%; border-radius: 50%;
+  background:
+    repeating-radial-gradient(circle at center, #2b2b2b 0 3px, #333 3px 6px);
+  box-shadow: 0 10px 26px rgba(0,0,0,0.28);
+  display: flex; align-items: center; justify-content: center;
+  animation: radioSpin 6s linear infinite; animation-play-state: paused;
+}
+.radio-disc.spinning { animation-play-state: running; }
+.radio-disc-center {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--peach-mid), var(--peach-dark));
+  border: 3px solid #1a1a1a; box-shadow: inset 0 0 0 2px rgba(255,255,255,0.08);
+}
+@keyframes radioSpin { to { transform: rotate(360deg); } }
+.radio-tonearm {
+  position: absolute; top: -6px; right: -8px; width: 46px; height: 46px;
+  transform-origin: 90% 10%; transform: rotate(-18deg);
+  transition: transform .35s ease;
+}
+.radio-tonearm::before {
+  content: ''; position: absolute; top: 4px; right: 4px; width: 6px; height: 6px; border-radius: 50%; background: var(--text-muted);
+}
+.radio-tonearm::after {
+  content: ''; position: absolute; top: 8px; right: 7px; width: 3px; height: 38px; border-radius: 3px;
+  background: linear-gradient(var(--text-muted), var(--border)); transform: rotate(28deg); transform-origin: top center;
+}
+.radio-turntable.playing .radio-tonearm { transform: rotate(2deg); }
+
+.radio-info { flex: 1; min-width: 0; }
+.radio-song { font-size: 18px; font-weight: 900; color: var(--text); line-height: 1.2; }
+.radio-artist { font-size: 12.5px; color: var(--text-muted); font-weight: 700; margin-top: 2px; margin-bottom: 12px; }
+.radio-progress-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.radio-time { font-size: 11px; font-weight: 700; color: var(--text-muted); flex-shrink: 0; width: 34px; }
+.radio-time:last-child { text-align: right; }
+.radio-waveform { flex: 1; display: flex; align-items: center; gap: 2px; height: 26px; cursor: pointer; }
+.radio-waveform span { display: block; width: 3px; border-radius: 3px; background: var(--border); flex-shrink: 0; transition: background .2s, height .2s; }
+.radio-waveform span.active { background: var(--peach); }
+.radio-waveform.playing span.active { animation: radioWave 1s ease-in-out infinite; animation-delay: calc(var(--i) * 0.06s); }
+@keyframes radioWave { 0%, 100% { transform: scaleY(0.7); } 50% { transform: scaleY(1.25); } }
+.radio-controls { display: flex; align-items: center; gap: 10px; }
+@media (max-width: 520px) { .radio-controls { justify-content: center; } }
+.radio-ctrl-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 6px; border-radius: 50%; transition: all .2s; display: flex; }
+.radio-ctrl-btn:hover { color: var(--peach); background: var(--peach-light); }
+.radio-ctrl-btn svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2; }
+.radio-ctrl-btn.active { color: var(--peach); }
+.radio-play-btn {
+  width: 44px; height: 44px; border-radius: 50%; background: var(--peach); color: #fff; border: none;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  transition: all .2s; box-shadow: 0 6px 16px rgba(141,27,42,0.3);
+}
+.radio-play-btn:hover { background: var(--peach-dark); transform: scale(1.05); }
+.radio-play-btn svg { width: 18px; height: 18px; stroke: none; fill: currentColor; }
+
+.radio-playlist-card { display: flex; flex-direction: column; max-height: 260px; }
+.radio-playlist-card.collapsed .radio-playlist-list { display: none; }
+.radio-playlist-head { display: flex; align-items: center; justify-content: space-between; font-size: 11px; font-weight: 800; letter-spacing: .6px; color: var(--peach); margin-bottom: 10px; }
+.radio-playlist-toggle { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 3px; border-radius: 6px; transition: all .2s; }
+.radio-playlist-toggle:hover { color: var(--peach); }
+.radio-playlist-toggle svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.4; transition: transform .2s; }
+.radio-playlist-card.collapsed .radio-playlist-toggle svg { transform: rotate(180deg); }
+.radio-playlist-list { display: flex; flex-direction: column; gap: 2px; overflow-y: auto; }
+.radio-playlist-item {
+  display: flex; align-items: center; gap: 10px; padding: 8px 8px; border-radius: 10px;
+  cursor: pointer; transition: background .2s;
+}
+.radio-playlist-item:hover { background: var(--peach-light); }
+.radio-playlist-item.active { background: var(--peach-light); }
+.radio-playlist-icon { width: 15px; height: 15px; flex-shrink: 0; color: var(--text-muted); display: flex; }
+.radio-playlist-item.active .radio-playlist-icon { color: var(--peach); }
+.radio-playlist-icon svg { width: 100%; height: 100%; stroke: currentColor; fill: none; stroke-width: 2; }
+.radio-playlist-icon.eq svg { stroke: none; fill: currentColor; }
+.radio-playlist-text { flex: 1; min-width: 0; }
+.radio-playlist-song { font-size: 12.5px; font-weight: 800; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.radio-playlist-item.active .radio-playlist-song { color: var(--peach); }
+.radio-playlist-artist { font-size: 10.5px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ─── MINI FLOATING PLAYER ─── */
+.mini-player {
+  position: fixed; right: 18px; bottom: 18px; width: 250px; z-index: 150;
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md); padding: 12px 14px 14px; transition: transform .3s, opacity .3s;
+}
+.mini-player.hidden { transform: translateY(140%); opacity: 0; pointer-events: none; }
+.mini-player-head { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 800; letter-spacing: .4px; color: var(--peach); margin-bottom: 10px; }
+.mini-player-head svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+.mini-player-head span { flex: 1; }
+.mini-player-close { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 2px; border-radius: 6px; transition: all .2s; }
+.mini-player-close:hover { color: var(--peach); background: var(--peach-light); }
+.mini-player-close svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2.4; }
+.mini-player-body { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.mini-disc {
+  width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
+  background: repeating-radial-gradient(circle at center, #2b2b2b 0 2px, #333 2px 4px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+  animation: radioSpin 6s linear infinite; animation-play-state: paused;
+}
+.mini-disc.spinning { animation-play-state: running; }
+.mini-info { flex: 1; min-width: 0; }
+.mini-song { font-size: 13px; font-weight: 800; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mini-artist { font-size: 11px; color: var(--text-muted); margin-top: 1px; margin-bottom: 6px; }
+.mini-progress { height: 3px; border-radius: 3px; background: var(--border); overflow: hidden; }
+.mini-progress-fill { height: 100%; width: 38%; background: var(--peach); border-radius: 3px; transition: width .3s; }
+.mini-controls { display: flex; align-items: center; justify-content: center; gap: 14px; }
+.mini-ctrl-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 4px; border-radius: 50%; transition: all .2s; display: flex; }
+.mini-ctrl-btn:hover { color: var(--peach); background: var(--peach-light); }
+.mini-ctrl-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; }
+.mini-play-btn { width: 34px; height: 34px; border-radius: 50%; background: var(--peach); color: #fff; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; }
+.mini-play-btn:hover { background: var(--peach-dark); transform: scale(1.06); }
+.mini-play-btn svg { width: 14px; height: 14px; stroke: none; fill: currentColor; }
+@media (max-width: 600px) {
+  .mini-player { right: 10px; bottom: 10px; width: 210px; padding: 10px 12px 12px; }
+}
 .empty-box p { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
 .empty-box span { font-size: 11px; color: var(--text-muted); }
 
@@ -614,16 +783,16 @@ body {
 
 /* ─── FOOTER ─── */
 footer {
-  margin-top: 1.5rem;
+  margin-top: 2rem;
   background: transparent;
-  padding: 1.2rem 1.5rem;
+  padding: 2rem 1.5rem 2.4rem;
   text-align: center;
   border-radius: 0;
 }
-footer p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; }
+footer p { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; font-weight: 700; }
 .flinks { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-.flink { font-size: 11px; font-weight: 800; color: var(--peach-dark); background: var(--peach-light); padding: 3px 12px; border-radius: 20px; text-decoration: none; transition: all .15s; }
-.flink:hover { background: var(--peach-mid); color: #fff; }
+.flink { font-size: 11.5px; font-weight: 800; color: var(--peach-dark); background: var(--card); border: 1px solid var(--border); padding: 8px 18px; border-radius: 30px; text-decoration: none; transition: all .25s; box-shadow: var(--shadow-soft); }
+.flink:hover { background: var(--peach); border-color: var(--peach); color: #fff; transform: translateY(-2px); }
 
 /* ─── MODAL BẢNG XẾP HẠNG ─── */
 .rank-modal-overlay { position: fixed; inset: 0; z-index: 500; background: var(--bg2); display: none; flex-direction: column; overflow: hidden; }
@@ -793,13 +962,14 @@ body.theme-player .pl-chat-wrap { display: block; }
 
 
 <!-- TAGLINE -->
-<!-- HERO (rút gọn) -->
+<!-- HERO -->
 <div class="hero">
   <div class="hero-logo">
     <img id="heroImg" src="" alt="Peach Luku">
   </div>
   <div class="hero-body">
-    <p class="hero-sub">Nơi thắp sáng truyện sẽ gay của bạn</p>
+    <h1 class="hero-title">Peach Luku</h1>
+    <p class="hero-sub"><span class="hero-sub-star">✦</span> Nơi thắp sáng truyện sẽ gay của bạn <span class="hero-sub-star">✦</span></p>
   </div>
 </div>
 
@@ -814,6 +984,57 @@ body.theme-player .pl-chat-wrap { display: block; }
   </div>
 </div>
 
+<!-- PEACH LUKU RADIO (widget trang trí, không ảnh hưởng tính năng đọc truyện) -->
+<div class="radio-section">
+  <div class="radio-card">
+    <div class="radio-label">
+      <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+      PEACH LUKU RADIO
+    </div>
+    <div class="radio-body">
+      <div class="radio-turntable" id="radioTurntable">
+        <div class="radio-disc" id="radioDisc"><div class="radio-disc-center"></div></div>
+        <div class="radio-tonearm" id="radioTonearm"></div>
+      </div>
+      <div class="radio-info">
+        <div class="radio-song" id="radioSongTitle">Best of Me</div>
+        <div class="radio-artist" id="radioSongArtist">BTS</div>
+        <div class="radio-progress-row">
+          <span class="radio-time" id="radioTimeCur">01:24</span>
+          <div class="radio-waveform" id="radioWaveform"></div>
+          <span class="radio-time" id="radioTimeTotal">03:35</span>
+        </div>
+        <div class="radio-controls">
+          <button class="radio-ctrl-btn" id="radioShuffleBtn" title="Ngẫu nhiên" onclick="radioShuffle()">
+            <svg viewBox="0 0 24 24"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+          </button>
+          <button class="radio-ctrl-btn" title="Bài trước" onclick="radioPrev()">
+            <svg viewBox="0 0 24 24"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
+          </button>
+          <button class="radio-play-btn" id="radioPlayBtn" onclick="radioTogglePlay()">
+            <svg id="radioPlayIcon" viewBox="0 0 24 24"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+          </button>
+          <button class="radio-ctrl-btn" title="Bài sau" onclick="radioNext()">
+            <svg viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+          </button>
+          <button class="radio-ctrl-btn" title="Lặp lại" onclick="radioLoop(this)">
+            <svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="radio-playlist-card">
+    <div class="radio-playlist-head">
+      <span>PLAYLIST</span>
+      <button class="radio-playlist-toggle" onclick="this.closest('.radio-playlist-card').classList.toggle('collapsed')" title="Thu gọn">
+        <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+      </button>
+    </div>
+    <div class="radio-playlist-list" id="radioPlaylist"></div>
+  </div>
+</div>
 
 <!-- CHAT INLINE -->
 <div class="chat-section">
@@ -1006,6 +1227,31 @@ body.theme-player .pl-chat-wrap { display: block; }
 </div>
 
 
+
+<!-- MINI FLOATING PLAYER (trang trí, đồng bộ hiển thị với PEACH LUKU RADIO) -->
+<div class="mini-player" id="miniPlayer">
+  <div class="mini-player-head">
+    <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+    <span>PEACH LUKU RADIO</span>
+    <button class="mini-player-close" onclick="document.getElementById('miniPlayer').classList.add('hidden')" title="Ẩn">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="mini-player-body">
+    <div class="mini-disc" id="miniDisc"></div>
+    <div class="mini-info">
+      <div class="mini-song" id="miniSongTitle">Best of Me</div>
+      <div class="mini-artist" id="miniSongArtist">BTS</div>
+      <div class="mini-progress"><div class="mini-progress-fill" id="miniProgressFill"></div></div>
+    </div>
+  </div>
+  <div class="mini-controls">
+    <button class="mini-ctrl-btn" onclick="radioPrev()"><svg viewBox="0 0 24 24"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg></button>
+    <button class="mini-play-btn" id="miniPlayBtn" onclick="radioTogglePlay()"><svg id="miniPlayIcon" viewBox="0 0 24 24"><polygon points="6 4 20 12 6 20 6 4"/></svg></button>
+    <button class="mini-ctrl-btn" onclick="radioNext()"><svg viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg></button>
+    <button class="mini-ctrl-btn" title="Danh sách" onclick="document.querySelector('.radio-section')?.scrollIntoView({behavior:'smooth'})"><svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></button>
+  </div>
+</div>
 
 <footer>
   <p>Đọc truyện vui vẻ nhé! 📱 Biển cả và sẽ gẩy ♡</p>
@@ -2154,6 +2400,109 @@ if (window.PlSEO) {
   PlSEO.injectWebSiteJsonLd();
   PlSEO.injectBreadcrumb([{ name: 'Peach Luku', url: 'https://peachluku.com/' }]);
 }
+</script>
+
+<!-- ═══ PEACH LUKU RADIO — widget UI trang trí, KHÔNG kết nối audio/API thật ═══ -->
+<script>
+(function () {
+  const RADIO_PLAYLIST = [
+    { song: 'Best of Me', artist: 'BTS' },
+    { song: 'Photograph', artist: 'Ed Sheeran' },
+    { song: 'Fix You', artist: 'Coldplay' },
+    { song: 'The Truth Untold', artist: 'BTS' },
+    { song: 'Yellow', artist: 'Coldplay' }
+  ];
+  let radioIdx = 0;
+  let radioPlaying = false;
+
+  const $ = (id) => document.getElementById(id);
+
+  function buildWaveform(el, bars) {
+    if (!el) return;
+    el.innerHTML = '';
+    for (let i = 0; i < bars; i++) {
+      const span = document.createElement('span');
+      const h = 6 + Math.round(Math.random() * 18);
+      span.style.height = h + 'px';
+      span.style.setProperty('--i', i);
+      if (i < Math.round(bars * 0.32)) span.classList.add('active');
+      el.appendChild(span);
+    }
+  }
+
+  function buildPlaylist() {
+    const wrap = $('radioPlaylist');
+    if (!wrap) return;
+    wrap.innerHTML = RADIO_PLAYLIST.map((t, i) => `
+      <div class="radio-playlist-item${i === radioIdx ? ' active' : ''}" data-idx="${i}">
+        <span class="radio-playlist-icon${i === radioIdx && radioPlaying ? ' eq' : ''}">
+          ${i === radioIdx && radioPlaying
+            ? '<svg viewBox="0 0 24 24"><rect x="4" y="10" width="3" height="8"/><rect x="10.5" y="4" width="3" height="14"/><rect x="17" y="8" width="3" height="10"/></svg>'
+            : '<svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>'}
+        </span>
+        <span class="radio-playlist-text">
+          <div class="radio-playlist-song">${t.song}</div>
+          <div class="radio-playlist-artist">${t.artist}</div>
+        </span>
+      </div>
+    `).join('');
+    wrap.querySelectorAll('.radio-playlist-item').forEach(item => {
+      item.addEventListener('click', () => radioSelect(parseInt(item.dataset.idx, 10)));
+    });
+  }
+
+  function renderTrack() {
+    const t = RADIO_PLAYLIST[radioIdx];
+    [ $('radioSongTitle'), $('miniSongTitle') ].forEach(el => el && (el.textContent = t.song));
+    [ $('radioSongArtist'), $('miniSongArtist') ].forEach(el => el && (el.textContent = t.artist));
+    buildWaveform($('radioWaveform'), 46);
+    buildPlaylist();
+  }
+
+  function updatePlayVisual() {
+    const disc = $('radioDisc'), miniDisc = $('miniDisc'), turntable = $('radioTurntable');
+    const wave = $('radioWaveform');
+    [disc, miniDisc].forEach(el => el && el.classList.toggle('spinning', radioPlaying));
+    turntable && turntable.classList.toggle('playing', radioPlaying);
+    wave && wave.classList.toggle('playing', radioPlaying);
+
+    const playIconPath = radioPlaying
+      ? '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>'
+      : '<polygon points="6 4 20 12 6 20 6 4"/>';
+    const pIcon = $('radioPlayIcon'), mIcon = $('miniPlayIcon');
+    if (pIcon) { pIcon.setAttribute('fill', radioPlaying ? 'currentColor' : 'currentColor'); pIcon.innerHTML = playIconPath; }
+    if (mIcon) mIcon.innerHTML = playIconPath;
+  }
+
+  window.radioTogglePlay = function () {
+    radioPlaying = !radioPlaying;
+    updatePlayVisual();
+    buildPlaylist();
+  };
+  window.radioNext = function () {
+    radioIdx = (radioIdx + 1) % RADIO_PLAYLIST.length;
+    renderTrack();
+  };
+  window.radioPrev = function () {
+    radioIdx = (radioIdx - 1 + RADIO_PLAYLIST.length) % RADIO_PLAYLIST.length;
+    renderTrack();
+  };
+  window.radioSelect = function (i) {
+    radioIdx = i;
+    renderTrack();
+    if (!radioPlaying) window.radioTogglePlay();
+  };
+  window.radioShuffle = function (btn) {
+    radioIdx = Math.floor(Math.random() * RADIO_PLAYLIST.length);
+    renderTrack();
+  };
+  window.radioLoop = function (btn) {
+    if (btn) btn.classList.toggle('active');
+  };
+
+  document.addEventListener('DOMContentLoaded', renderTrack);
+  if (document.readyState !== 'loading') renderTrack();
+})();
 </script>
 </body>
 </html>
