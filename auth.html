@@ -3,805 +3,1027 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, nofollow">
-<link rel="canonical" href="https://peachluku.com/">
-<title>Đăng nhập — Peach Luku</title>
+<link rel="canonical" href="https://peachluku.com/search.html">
+<meta name="description" content="Tìm kiếm truyện chữ tiếng Việt tại Peach Luku — ngôn tình, fantasy, slice of life và nhiều thể loại khác">
+<meta name="robots" content="index, follow">
+<meta property="og:site_name" content="Peach Luku">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://peachluku.com/search.html">
+<meta property="og:title" content="Tìm kiếm truyện — Peach Luku">
+<meta property="og:description" content="Tìm kiếm truyện chữ tiếng Việt tại Peach Luku — ngôn tình, fantasy, slice of life và nhiều thể loại khác">
+<meta property="og:image" content="https://jnlqzqtavfptkfvnndxq.supabase.co/storage/v1/object/public/avatars/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="vi_VN">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Tìm kiếm truyện — Peach Luku">
+<meta name="twitter:description" content="Tìm kiếm truyện chữ tiếng Việt tại Peach Luku">
+<meta name="twitter:image" content="https://jnlqzqtavfptkfvnndxq.supabase.co/storage/v1/object/public/avatars/og-cover.png">
+<title>Tìm kiếm truyện — Peach Luku</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://jnlqzqtavfptkfvnndxq.supabase.co">
+<script src="/seo.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-:root {
-  --peach: #E8835A; --peach-light: #FEF0E9; --peach-mid: #F2A882;
-  --peach-dark: #B85B30; --peach-darker: #7A3A1A;
-  --gold: #C9A84C; --gold-light: #FDF6E3;
-  --bg: #FDF6F2; --bg2: #ffffff;
-  --card: #ffffff; --text: #2C1A0E; --text-muted: #9A7A6A;
-  --border: rgba(232,131,90,0.18); --border-hover: #F2A882;
-  --danger: #e05252; --danger-light: #fff0f0;
-  --success: #4caf7d; --success-light: #f0fff6;
+:root, body.theme-light {
+  --peach: #8D1B2A; --peach-light: #F7E9E6; --peach-mid: #A32637;
+  --peach-dark: #6E141F; --peach-darker: #4A0E16;
+  --gold: #D9A441; --gold-light: #FBF3E3;
+  --bg: #F8EFE7; --bg2: #FFFDFB;
+  --card: #FFFDFB; --text: #2B2B2B; --text-muted: #7B7B7B;
+  --border: #ECD8D2; --border-hover: #A32637;
+}
+body.theme-dark {
+  --peach: #F2A882; --peach-light: #2A1A0E; --peach-mid: #C87050;
+  --peach-dark: #F2C0A0; --peach-darker: #FFE0CC;
+  --gold: #D4B86A; --gold-light: #1A1500;
+  --bg: #1a1a1a; --bg2: #242424;
+  --card: #242424; --text: #F0D8C8; --text-muted: #A08070;
+  --border: rgba(242,168,130,0.15); --border-hover: #C87050;
+}
+body.theme-sepia {
+  --peach: #8B5E3C; --peach-light: #F0E8D8; --peach-mid: #A67C52;
+  --peach-dark: #6B3E1C; --peach-darker: #4B2E0C;
+  --gold: #8B7040; --gold-light: #F5EDD8;
+  --bg: #f5f0e8; --bg2: #faf7f0;
+  --card: #faf7f0; --text: #3d2b1f; --text-muted: #9a8070;
+  --border: rgba(139,94,60,0.18); --border-hover: #A67C52;
+}
+body.theme-blue {
+  --peach: #2a5bbf; --peach-light: #dce8fc; --peach-mid: #4a7de0;
+  --peach-dark: #1a3b8f; --peach-darker: #0a1b4f;
+  --gold: #2a7bbf; --gold-light: #e0eeff;
+  --bg: #e8f0fe; --bg2: #f4f7ff;
+  --card: #f4f7ff; --text: #1a2a4a; --text-muted: #7a9ac0;
+  --border: rgba(42,91,191,0.18); --border-hover: #4a7de0;
+}
+body.theme-pink {
+  --peach: #d4537e; --peach-light: #ffe6f2; --peach-mid: #e876a0;
+  --peach-dark: #993556; --peach-darker: #721a3e;
+  --gold: #d46080; --gold-light: #fff0f8;
+  --bg: #fff0f6; --bg2: #fff8fb;
+  --card: #fff8fb; --text: #2c1a22; --text-muted: #c09aaa;
+  --border: rgba(212,83,126,0.18); --border-hover: #e876a0;
+}
+body.theme-purple {
+  --peach: #6a3bbf; --peach-light: #e8dcfc; --peach-mid: #8a5de0;
+  --peach-dark: #4a1b8f; --peach-darker: #2a0b5f;
+  --gold: #7a4bd0; --gold-light: #f2eeff;
+  --bg: #f0ebff; --bg2: #f9f6ff;
+  --card: #f9f6ff; --text: #2a1a4a; --text-muted: #9a7ac0;
+  --border: rgba(106,59,191,0.18); --border-hover: #8a5de0;
+}
+body.theme-gray {
+  --peach: #555555; --peach-light: #e8e8e8; --peach-mid: #777777;
+  --peach-dark: #333333; --peach-darker: #111111;
+  --gold: #666666; --gold-light: #f0f0f0;
+  --bg: #f0f0f0; --bg2: #fafafa;
+  --card: #fafafa; --text: #222222; --text-muted: #888888;
+  --border: rgba(85,85,85,0.18); --border-hover: #777777;
+}
+body.theme-green {
+  --peach: #5a9e6f; --peach-light: #e8f5ee; --peach-mid: #7dbb93;
+  --peach-dark: #3a7a52; --peach-darker: #1e5235;
+  --gold: #6aaa7a; --gold-light: #f0faf4;
+  --bg: #f0faf4; --bg2: #fafffe;
+  --card: #fafffe; --text: #1a3326; --text-muted: #6a9a7a;
+  --border: rgba(90,158,111,0.18); --border-hover: #7dbb93;
+}
+body.theme-wattpad {
+  --peach: #f26522; --peach-light: #fff3e0; --peach-mid: #f8863a;
+  --peach-dark: #c04a00; --peach-darker: #8a3000;
+  --gold: #e8821a; --gold-light: #fff8e0;
+  --bg: #faf5ee; --bg2: #fff9f2;
+  --card: #fff9f2; --text: #2c1f0e; --text-muted: #a08050;
+  --border: rgba(242,101,34,0.18); --border-hover: #f8863a;
+}
+
+/* ── Nav avatar fix ── */
+#nav-user-btn,
+.user-nav-btn,
+.icon-btn[id="nav-user-btn"] {
+  overflow: hidden;
+}
+#nav-user-btn img,
+.user-nav-btn img {
+  width: 34px; height: 34px;
+  border-radius: 50%; object-fit: cover; display: block;
 }
 
 body {
   font-family: 'Nunito', sans-serif;
   background: var(--bg);
   color: var(--text);
-  min-height: 100vh;
-  /* ✅ SỬA: bỏ overflow:hidden, dùng overflow-y:auto để cuộn được */
-  overflow-y: auto;
-  display: flex;
-  align-items: flex-start; /* ✅ SỬA: flex-start thay vì center để không bị kẹt */
-  justify-content: center;
-  padding: 4rem 1rem 2rem; /* ✅ SỬA: thêm padding-top để tránh nút "Về trang chủ" */
-  position: relative;
+  transition: background .3s, color .3s;
 }
 
-/* ─── BG DECORATION ──────────────────────────── */
-.bg-blob {
-  position: fixed; border-radius: 50%; pointer-events: none; z-index: 0;
-  filter: blur(60px); opacity: 0.35;
-}
-.bg-blob-1 { width: 340px; height: 340px; background: var(--peach-mid); top: -80px; right: -80px; }
-.bg-blob-2 { width: 280px; height: 280px; background: var(--gold-light); bottom: -60px; left: -60px; }
-.bg-blob-3 { width: 200px; height: 200px; background: var(--peach-light); top: 50%; left: -40px; transform: translateY(-50%); }
-
-/* ─── CARD ───────────────────────────────────── */
-.auth-card {
+.topbar {
   background: var(--bg2);
-  border-radius: 28px;
-  padding: 2.4rem 2rem 2rem;
-  width: 100%; max-width: 400px;
-  box-shadow: 0 20px 60px rgba(232,131,90,0.13), 0 4px 16px rgba(0,0,0,0.06);
-  border: 1px solid var(--border);
-  position: relative; z-index: 1;
-  animation: cardIn .35s cubic-bezier(.22,1,.36,1) both;
-  margin-bottom: 2rem; /* ✅ thêm margin dưới */
+  border-bottom: 1px solid var(--border);
+  padding: 0 1.25rem;
+  display: flex; align-items: center;
+  justify-content: space-between; height: 56px;
+  position: sticky; top: 0; z-index: 100;
+  transition: background .3s;
 }
-@keyframes cardIn {
-  from { opacity: 0; transform: translateY(20px) scale(0.97); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
+.logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+.logo-text { font-family: 'Nunito', sans-serif; font-size: 19px; font-weight: 800; color: var(--peach); }
+.back-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--text); padding: 6px; border-radius: 50%;
+  display: flex; align-items: center; transition: background .15s;
 }
+.back-btn:hover { background: var(--peach-light); }
+.back-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.topbar-right { display: flex; align-items: center; gap: 8px; }
+.theme-btn {
+  background: none; border: 1.5px solid var(--border-hover);
+  border-radius: 20px; width: 34px; height: 34px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all .15s; flex-shrink: 0; color: var(--peach);
+}
+.theme-btn:hover { background: var(--peach-light); }
+.theme-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.icon-btn {
+  background: none; border: 1.5px solid var(--border-hover);
+  border-radius: 20px; width: 34px; height: 34px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all .15s; color: var(--peach); text-decoration: none; overflow: hidden;
+}
+.icon-btn:hover { background: var(--peach-light); }
+.icon-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.filter-toggle-btn {
+  background: none; border: 1.5px solid var(--border-hover);
+  border-radius: 20px; height: 34px; padding: 0 12px;
+  cursor: pointer; display: flex; align-items: center; gap: 5px;
+  font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700;
+  color: var(--text-muted); transition: all .15s; flex-shrink: 0;
+}
+.filter-toggle-btn:hover { background: var(--peach-light); color: var(--peach-dark); }
+.filter-toggle-btn.has-active { background: var(--peach); color: white; border-color: var(--peach); }
+.filter-toggle-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.filter-badge {
+  background: white; color: var(--peach);
+  font-size: 10px; font-weight: 800;
+  width: 16px; height: 16px; border-radius: 50%;
+  display: none; align-items: center; justify-content: center;
+  line-height: 1;
+}
+.filter-toggle-btn.has-active .filter-badge { display: flex; }
 
-/* ─── HEADER ─────────────────────────────────── */
-.auth-logo {
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  margin-bottom: 4px; text-decoration: none;
+.theme-drawer {
+  position: fixed; top: 58px; right: 1rem; z-index: 300;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 14px 16px; width: 220px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+  display: none;
 }
-.auth-logo-text {
-  font-family: 'Nunito', sans-serif; font-size: 26px; font-weight: 800; color: var(--peach);
-}
-.auth-tagline {
-  text-align: center; font-size: 12.5px; color: var(--text-muted);
-  font-weight: 600; margin-bottom: 1.8rem; line-height: 1.5;
-}
+.theme-drawer.open { display: block; }
+.theme-drawer-title { font-size: 12px; font-weight: 800; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: .5px; }
+.theme-swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.swatch { width: 38px; height: 38px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: all .15s; }
+.swatch.active { border-color: var(--peach); box-shadow: 0 0 0 2px var(--bg2), 0 0 0 4px var(--peach); }
+.swatch:hover { transform: scale(1.12); }
+.swatch-label { font-size: 10px; text-align: center; color: var(--text-muted); margin-top: 3px; font-weight: 700; }
 
-/* ─── TAB BAR ────────────────────────────────── */
-.tab-bar {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  background: var(--bg); border-radius: 16px;
-  padding: 4px; gap: 3px;
-  margin-bottom: 1.8rem;
-  border: 1.5px solid var(--border);
+.search-wrap {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 0.85rem 1.25rem;
+  transition: background .3s;
 }
-.tab-btn {
-  padding: 9px 6px;
-  border: none; border-radius: 12px; background: transparent;
-  font-family: 'Nunito', sans-serif; font-size: 12.5px; font-weight: 700;
-  color: var(--text-muted); cursor: pointer;
-  transition: all .18s; display: flex; align-items: center; justify-content: center; gap: 5px;
-}
-.tab-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
-.tab-btn:hover { color: var(--peach-dark); background: var(--peach-light); }
-.tab-btn.active {
-  background: var(--peach); color: white;
-  box-shadow: 0 4px 14px rgba(232,131,90,0.28);
-}
-
-/* ─── PANE ───────────────────────────────────── */
-.tab-pane { display: none; }
-.tab-pane.active { display: block; animation: paneIn .2s ease both; }
-@keyframes paneIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-
-/* ─── FORM ELEMENTS ──────────────────────────── */
-.pane-title {
-  font-size: 16px; font-weight: 800; margin-bottom: 4px;
-}
-.pane-sub {
-  font-size: 12px; color: var(--text-muted); font-weight: 600;
-  margin-bottom: 1.4rem; line-height: 1.5;
-}
-
-.field { margin-bottom: 1rem; }
-.field-label {
-  display: flex; align-items: center; gap: 5px;
-  font-size: 11px; font-weight: 800; color: var(--text-muted);
-  text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px;
-}
-.field-label svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.field-wrap { position: relative; }
-.field-input {
-  width: 100%; padding: 12px 44px 12px 14px;
+.search-box { position: relative; max-width: 680px; margin: 0 auto; }
+.search-icon { display: none; }
+.search-input {
+  width: 100%;
+  padding: 12px 52px 12px 20px;
   border: 1.5px solid var(--border-hover);
-  border-radius: 13px; background: var(--bg);
-  color: var(--text); font-family: 'Nunito', sans-serif;
-  font-size: 14px; font-weight: 600; outline: none;
+  border-radius: 28px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Nunito', sans-serif;
+  font-size: 15px; font-weight: 600;
+  outline: none;
   transition: border .15s, box-shadow .15s;
 }
-.field-input:focus { border-color: var(--peach); box-shadow: 0 0 0 3px rgba(232,131,90,0.12); }
-.field-input::placeholder { color: var(--text-muted); font-weight: 400; }
-.field-input.error { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(224,82,82,0.1); }
-.field-icon {
-  position: absolute; right: 13px; top: 50%; transform: translateY(-50%);
-  color: var(--text-muted); pointer-events: none; display: flex; align-items: center;
-}
-.field-icon svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-/* eye toggle */
-.eye-btn {
-  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
-  background: none; border: none; cursor: pointer;
-  color: var(--text-muted); display: flex; align-items: center; padding: 2px;
-  transition: color .12s;
-}
-.eye-btn:hover { color: var(--peach); }
-.eye-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-
-/* strength bar */
-.pw-strength { margin-top: 7px; display: none; }
-.pw-strength.visible { display: block; }
-.pw-strength-bar { display: flex; gap: 4px; margin-bottom: 4px; }
-.pw-seg {
-  flex: 1; height: 3px; border-radius: 3px;
-  background: var(--border); transition: background .2s;
-}
-.pw-seg.weak   { background: var(--danger); }
-.pw-seg.fair   { background: var(--gold); }
-.pw-seg.good   { background: #74c0fc; }
-.pw-seg.strong { background: var(--success); }
-.pw-strength-label { font-size: 10px; font-weight: 800; color: var(--text-muted); }
-
-/* checkbox */
-.field-check {
-  display: flex; align-items: flex-start; gap: 9px;
-  margin-bottom: 1rem; cursor: pointer; user-select: none;
-}
-.field-check input[type="checkbox"] { display: none; }
-.check-box {
-  width: 18px; height: 18px; border-radius: 6px; flex-shrink: 0;
-  border: 1.5px solid var(--border-hover); background: var(--bg);
+.search-input:focus { border-color: var(--peach); box-shadow: 0 0 0 3px rgba(232,131,90,0.12); }
+.search-input::placeholder { color: var(--text-muted); font-weight: 400; }
+.search-btn {
+  position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; border-radius: 50%;
+  width: 36px; height: 36px; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  margin-top: 1px; transition: all .12s;
+  transition: color .15s;
 }
-.field-check input:checked + .check-box {
-  background: var(--peach); border-color: var(--peach);
+.search-btn:hover { background: none; }
+.search-btn svg { stroke: var(--peach); fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; width: 18px; height: 18px; }
+.clear-btn {
+  position: absolute; right: 50px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer;
+  color: var(--text-muted); line-height: 1;
+  display: none; padding: 4px;
 }
-.field-check input:checked + .check-box svg { display: block; }
-.check-box svg { display: none; width: 11px; height: 11px; stroke: white; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-.check-label { font-size: 12px; font-weight: 600; color: var(--text-muted); line-height: 1.5; }
-.check-label a { color: var(--peach); text-decoration: none; font-weight: 700; }
-.check-label a:hover { text-decoration: underline; }
+.clear-btn.visible { display: flex; align-items: center; }
+.clear-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
 
-/* ─── ALERT ──────────────────────────────────── */
-.alert {
-  display: none; padding: 10px 14px; border-radius: 12px;
-  font-size: 12.5px; font-weight: 700; margin-bottom: 1rem;
-  display: flex; align-items: flex-start; gap: 8px;
+.filter-panel {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height .28s cubic-bezier(.4,0,.2,1), padding .28s;
+  padding: 0 1.25rem;
 }
-.alert { display: none; }
-.alert.show { display: flex; }
-.alert svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; margin-top: 1px; }
-.alert-error { background: var(--danger-light); color: var(--danger); border: 1px solid rgba(224,82,82,0.2); }
-.alert-success { background: var(--success-light); color: var(--success); border: 1px solid rgba(76,175,125,0.2); }
-
-/* ─── SUBMIT BTN ─────────────────────────────── */
-.submit-btn {
-  width: 100%; padding: 13px;
-  background: var(--peach); color: white; border: none;
-  border-radius: 14px; font-family: 'Nunito', sans-serif;
-  font-size: 14px; font-weight: 800; cursor: pointer;
-  transition: all .15s; display: flex; align-items: center; justify-content: center; gap: 8px;
-  margin-bottom: 1rem; box-shadow: 0 4px 16px rgba(232,131,90,0.25);
+.filter-panel.open {
+  max-height: 320px;
+  padding: 1rem 1.25rem;
 }
-.submit-btn:hover:not(:disabled) { background: var(--peach-dark); box-shadow: 0 6px 20px rgba(232,131,90,0.35); transform: translateY(-1px); }
-.submit-btn:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
-.submit-btn svg { width: 16px; height: 16px; stroke: white; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-.btn-spinner {
-  width: 16px; height: 16px; border: 2.5px solid rgba(255,255,255,0.35);
-  border-top-color: white; border-radius: 50%;
-  animation: spin .7s linear infinite; display: none; flex-shrink: 0;
+.filter-section { margin-bottom: 14px; }
+.filter-section:last-child { margin-bottom: 0; }
+.filter-section-label {
+  font-size: 10px; font-weight: 800; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .6px;
+  margin-bottom: 8px; display: flex; align-items: center; gap: 5px;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* ─── DIVIDER ────────────────────────────────── */
-.divider {
-  display: flex; align-items: center; gap: 10px;
-  margin-bottom: 1rem; color: var(--text-muted); font-size: 11px; font-weight: 700;
-}
-.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-/* ─── FOOTER LINK ────────────────────────────── */
-.auth-footer {
-  text-align: center; font-size: 12px; color: var(--text-muted); font-weight: 600;
-  margin-top: 0.5rem;
-}
-.auth-footer a {
-  color: var(--peach); font-weight: 700; text-decoration: none; cursor: pointer;
-}
-.auth-footer a:hover { text-decoration: underline; }
-
-/* ─── BACK TO HOME ───────────────────────────── */
-.back-home {
-  position: fixed; top: 16px; left: 16px; z-index: 10;
-  display: flex; align-items: center; gap: 6px;
-  text-decoration: none; color: var(--text-muted);
+.chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  flex-shrink: 0;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border-hover);
+  background: var(--bg);
+  color: var(--text-muted);
+  font-family: 'Nunito', sans-serif;
   font-size: 12px; font-weight: 700;
+  cursor: pointer; transition: all .12s;
+  white-space: nowrap;
+}
+.chip:hover { background: var(--peach-light); color: var(--peach-dark); border-color: var(--peach-mid); }
+.chip.active { background: var(--peach); color: white; border-color: var(--peach); }
+.filter-divider { height: 1px; background: var(--border); margin: 12px 0; }
+
+.active-filters-bar {
+  padding: 0.5rem 1.25rem;
+  display: none;
+  align-items: center; gap: 6px;
+  flex-wrap: wrap;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+}
+.active-filters-bar.visible { display: flex; }
+.active-tag {
+  display: flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 20px;
+  background: var(--peach-light); color: var(--peach-dark);
+  border: 1.5px solid var(--peach-mid);
+  font-size: 11px; font-weight: 700;
+}
+.active-tag button {
+  background: none; border: none; cursor: pointer;
+  color: var(--peach-dark); display: flex; align-items: center;
+  padding: 0; margin-left: 2px; opacity: .7;
+}
+.active-tag button:hover { opacity: 1; }
+.active-tag button svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+.clear-all-btn {
+  background: none; border: none; cursor: pointer;
+  font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 700;
+  color: var(--peach-dark); padding: 3px 8px;
+  text-decoration: underline; opacity: .7;
+}
+.clear-all-btn:hover { opacity: 1; }
+
+.content { padding: 1.1rem 1.25rem; max-width: 940px; margin: 0 auto; }
+
+.status-label {
+  font-size: 13px; color: var(--text-muted);
+  font-weight: 600; margin-bottom: 1rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.status-label span { color: var(--peach); font-weight: 800; }
+
+
+.profile-result-card {
+  display: flex; align-items: center; gap: 14px;
   background: var(--bg2); border: 1.5px solid var(--border);
-  padding: 7px 14px; border-radius: 20px;
+  border-radius: 16px; padding: 14px 16px;
+  margin-bottom: 18px; text-decoration: none; color: inherit;
+  transition: border-color .15s, box-shadow .15s;
+}
+.profile-result-card:hover { border-color: var(--peach-mid); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+.profile-result-avatar {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--peach-light); border: 2px solid var(--peach-mid);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 800; color: var(--peach); flex-shrink: 0; overflow: hidden;
+}
+.profile-result-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.profile-result-info { flex: 1; min-width: 0; }
+.profile-result-name { font-size: 15px; font-weight: 800; color: var(--text); }
+.profile-result-username { font-size: 12px; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
+.profile-result-label { font-size: 11px; font-weight: 700; color: var(--peach); background: var(--peach-light); padding: 2px 8px; border-radius: 20px; flex-shrink: 0; }
+
+.story-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(138px, 1fr)); gap: 13px; }
+.story-card {
+  display: flex; flex-direction: column;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px; overflow: hidden;
+  text-decoration: none; color: inherit;
   transition: all .15s;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
-.back-home:hover { background: var(--peach-light); color: var(--peach-dark); border-color: var(--peach-mid); }
-.back-home svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.story-card:hover { border-color: var(--peach-mid); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+.story-cover { position: relative; width: 100%; padding-top: 140%; background: linear-gradient(145deg, var(--peach-light), var(--gold-light)); overflow: hidden; flex-shrink: 0; }
+.story-cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none; }
+.story-cover.has-img img { display: block; }
+.story-cover.has-img .cover-ph { display: none; }
+.cover-ph { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+.ch-badge { position: absolute; bottom: 7px; right: 7px; background: rgba(0,0,0,0.52); color: white; font-size: 10px; font-weight: 800; padding: 3px 7px; border-radius: 10px; backdrop-filter: blur(4px); }
+.status-badge {
+  position: absolute; top: 7px; left: 7px;
+  font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 8px;
+  text-transform: uppercase; letter-spacing: .3px;
+}
+.status-badge.done { background: rgba(76,175,125,0.85); color: white; }
+.status-badge.ongoing { background: rgba(232,131,90,0.85); color: white; }
+.story-info { padding: 9px 10px 11px; flex: 1; display: flex; flex-direction: column; gap: 3px; }
+.story-name { font-size: 12.5px; font-weight: 800; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.story-author { font-size: 11px; color: var(--text-muted); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.story-meta { display: flex; align-items: center; gap: 8px; margin-top: auto; }
+.story-views { font-size: 11px; color: var(--peach); font-weight: 700; display: flex; align-items: center; gap: 3px; }
 
-/* ─── SUCCESS SCREEN ─────────────────────────── */
-.success-screen {
-  display: none; text-align: center; padding: 0.5rem 0;
-  flex-direction: column; align-items: center; gap: 10px;
-}
-.success-screen.show { display: flex; animation: paneIn .25s ease both; }
-.success-icon-wrap {
-  width: 64px; height: 64px; border-radius: 50%;
-  background: var(--success-light); border: 2px solid var(--success);
-  display: flex; align-items: center; justify-content: center; margin-bottom: 4px;
-}
-.success-icon-wrap svg { width: 30px; height: 30px; stroke: var(--success); fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-.success-title { font-size: 16px; font-weight: 800; }
-.success-sub { font-size: 12.5px; color: var(--text-muted); max-width: 260px; line-height: 1.6; }
+.skeleton-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(138px, 1fr)); gap: 13px; }
+.skeleton-card { border-radius: 14px; overflow: hidden; background: var(--card); border: 1px solid var(--border); }
+.skeleton-cover { width: 100%; padding-top: 140%; background: linear-gradient(90deg, var(--border) 25%, var(--peach-light) 50%, var(--border) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; }
+.skeleton-info { padding: 9px 10px 11px; display: flex; flex-direction: column; gap: 6px; }
+.skeleton-line { height: 10px; border-radius: 6px; background: linear-gradient(90deg, var(--border) 25%, var(--peach-light) 50%, var(--border) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; }
+.skeleton-line.short { width: 60%; }
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
-/* ── USERNAME PROMPT ── */
-.username-overlay {
-  position: fixed; inset: 0; z-index: 999;
-  background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
-  display: none; align-items: center; justify-content: center; padding: 20px;
+.empty-state { text-align: center; padding: 3rem 1rem; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.empty-state-icon svg { width: 50px; height: 50px; stroke: var(--peach-mid); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.empty-state-title { font-size: 15px; font-weight: 800; }
+.empty-state-sub { font-size: 13px; color: var(--text-muted); max-width: 260px; line-height: 1.6; }
+
+.suggest-section { margin-top: 1.5rem; }
+.suggest-title { font-size: 12px; font-weight: 800; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: .4px; }
+.suggest-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.suggest-chip {
+  padding: 5px 14px; border-radius: 20px;
+  background: var(--peach-light); color: var(--peach-dark);
+  border: 1.5px solid var(--border-hover);
+  font-size: 12px; font-weight: 700; cursor: pointer; transition: all .15s;
 }
-.username-overlay.open { display: flex; }
-.username-modal {
-  background: var(--bg2); border-radius: 24px; padding: 32px 28px;
-  width: 100%; max-width: 380px; text-align: center;
-  animation: fadeUp .25s ease;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+.suggest-chip:hover { background: var(--peach); color: white; border-color: var(--peach); }
+
+@media (max-width: 480px) {
+  .topbar { padding: 0 1rem; }
+  .search-wrap { padding: 0.7rem 1rem; }
+  .filter-panel { padding: 0 1rem; }
+  .filter-panel.open { padding: 0.9rem 1rem; }
+  .active-filters-bar { padding: 0.45rem 1rem; }
+  .content { padding: 1rem; }
+  .story-grid, .skeleton-grid { grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 10px; }
 }
-.username-modal-icon { font-size: 48px; margin-bottom: 12px; }
-.username-modal h2 { font-size: 18px; font-weight: 900; color: var(--text); margin-bottom: 6px; }
-.username-modal p { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
-.username-input {
-  width: 100%; padding: 12px 16px; border: 1.5px solid var(--border);
-  border-radius: 14px; font-family: 'Nunito', sans-serif;
-  font-size: 14px; font-weight: 700; color: var(--text);
-  background: var(--bg); outline: none; text-align: center;
-  transition: border .15s; box-sizing: border-box;
+
+.profile-menu-wrap { position: relative; }
+.profile-dropdown {
+  position: absolute; top: calc(100% + 8px); right: 0; z-index: 300;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 8px; width: 200px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+  display: none; flex-direction: column; gap: 2px;
 }
-.username-input:focus { border-color: var(--peach); }
-.username-hint { font-size: 11px; color: var(--text-muted); margin: 8px 0 16px; }
-.username-submit {
-  width: 100%; padding: 13px; border: none; border-radius: 14px;
-  background: var(--peach); color: white; font-family: 'Nunito', sans-serif;
-  font-size: 14px; font-weight: 800; cursor: pointer;
-  transition: background .15s; margin-bottom: 10px;
+.profile-dropdown.open { display: flex; }
+.profile-dropdown-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 9px 12px; border-radius: 10px;
+  font-size: 13px; font-weight: 700; color: var(--text);
+  text-decoration: none; transition: all .15s;
 }
-.username-submit:hover { background: var(--peach-dark); }
-.username-err { font-size: 12px; color: #e84040; min-height: 16px; margin-bottom: 8px; }
+.profile-dropdown-item:hover { background: var(--peach-light); color: var(--peach); }
+.profile-dropdown-item svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; opacity: .7; }
+.profile-dropdown-divider { height: 1px; background: var(--border); margin: 4px 8px; }
 
 
-#username-avail-hint.ok  { color: #4caf50; }
-#username-avail-hint.err { color: #e84040; }
-.field-icon.checking { animation: spin .6s linear infinite; }
+.dd-auth-row {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 10px; margin: 2px 0;
+}
+.dd-auth-btn {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 5px;
+  padding: 7px 6px; border-radius: 9px;
+  font-size: 12px; font-weight: 800; color: var(--peach);
+  text-decoration: none; background: var(--peach-light);
+  transition: background .15s, color .15s;
+}
+.dd-auth-btn:hover { background: var(--peach); color: #fff; }
+.dd-auth-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; opacity:1; }
+.dd-auth-sep { color: var(--text-muted); font-size: 13px; flex-shrink: 0; }
+
+
+/* Profile button tròn */
+.profile-menu-btn {
+  border-radius: 50% !important;
+  width: 34px !important; height: 34px !important;
+  border: 2px solid var(--border-hover) !important;
+  background: var(--peach-light) !important;
+  color: var(--peach-dark) !important;
+  font-weight: 800; font-size: 14px;
+  overflow: hidden; padding: 0 !important;
+  flex-shrink: 0;
+}
+.profile-menu-btn:hover { border-color: var(--peach) !important; background: var(--peach-light) !important; }
+.profile-menu-btn svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
 </style>
 </head>
-<body>
+<body class="theme-light">
 
-<!-- BG BLOBS -->
-<div class="bg-blob bg-blob-1"></div>
-<div class="bg-blob bg-blob-2"></div>
-<div class="bg-blob bg-blob-3"></div>
 
-<!-- BACK TO HOME -->
-<a class="back-home" href="index.html">
-  <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-  Về trang chủ
-</a>
 
-<!-- CARD -->
-<div class="auth-card">
+<div class="theme-drawer" id="theme-drawer">
+  <div class="theme-drawer-title">Chọn giao diện</div>
+  <div class="theme-swatches">
+    <div><div class="swatch" style="background:#FDF6F2;border:2px solid #F2A882" onclick="setTheme('light',this)"></div><div class="swatch-label">Sáng</div></div>
+    <div><div class="swatch" style="background:#1a1a1a" onclick="setTheme('dark',this)"></div><div class="swatch-label">Tối</div></div>
+    <div><div class="swatch" style="background:#f5f0e8;border:2px solid #A67C52" onclick="setTheme('sepia',this)"></div><div class="swatch-label">Sepia</div></div>
+    <div><div class="swatch" style="background:#e8f0fe;border:2px solid #4a7de0" onclick="setTheme('blue',this)"></div><div class="swatch-label">Xanh</div></div>
+    <div><div class="swatch" style="background:#fff0f6;border:2px solid #e876a0" onclick="setTheme('pink',this)"></div><div class="swatch-label">Hồng</div></div>
+    <div><div class="swatch" style="background:#f0ebff;border:2px solid #8a5de0" onclick="setTheme('purple',this)"></div><div class="swatch-label">Tím</div></div>
+    <div><div class="swatch" style="background:#f0f0f0;border:2px solid #777" onclick="setTheme('gray',this)"></div><div class="swatch-label">Xám</div></div>
+    <div><div class="swatch" style="background:#faf5ee;border:2px solid #f8863a" onclick="setTheme('wattpad',this)"></div><div class="swatch-label">Warm</div></div>
+  </div>
+</div>
 
-  <!-- LOGO -->
-  <a class="auth-logo" href="index.html">
-    <span class="auth-logo-text">Peach Luku</span>
-  </a>
-  <div class="auth-tagline">Web đọc truyện chữ của bạn</div>
-
-  <!-- TAB BAR -->
-  <div class="tab-bar">
-    <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">
-      <svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-      Đăng nhập
+<div class="search-wrap">
+  <div class="search-box">
+    <span class="search-icon">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </span>
+    <input id="searchInput" class="search-input" type="text"
+      placeholder="Tìm tên truyện, tác giả..."
+      autocomplete="off"
+      oninput="onInputChange()"
+      onkeydown="if(event.key==='Enter') doSearch()">
+    <button class="clear-btn" id="clearBtn" onclick="clearSearch()">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
-    <button class="tab-btn" id="tab-signup" onclick="switchTab('signup')">
-      <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
-      Đăng ký
-    </button>
-    <button class="tab-btn" id="tab-reset" onclick="switchTab('reset')">
-      <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>
-      Đặt lại
+    <button class="search-btn" onclick="doSearch()">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     </button>
   </div>
+</div>
 
-  <!-- ══ PANE: LOGIN ══ -->
-  <div class="tab-pane active" id="pane-login">
-    <div class="pane-title">Chào mừng trở lại</div>
-    <div class="pane-sub">Đăng nhập để tiếp tục đọc truyện</div>
-
-    <div class="alert alert-error" id="login-err">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      <span id="login-err-msg">Email hoặc mật khẩu không đúng</span>
+<div class="filter-panel" id="filterPanel">
+  <div class="filter-section">
+    <div class="filter-section-label">
+      <svg viewBox="0 0 24 24" width="12" height="12" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Thể loại
     </div>
-
-    <div class="field">
-      <div class="field-label">
-        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        Email
-      </div>
-      <div class="field-wrap">
-        <input class="field-input" id="login-email" type="email" placeholder="you@email.com" autocomplete="email" onkeydown="if(event.key==='Enter')doLogin()">
-        <span class="field-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
-      </div>
-    </div>
-
-    <div class="field">
-      <div class="field-label">
-        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        Mật khẩu
-      </div>
-      <div class="field-wrap">
-        <input class="field-input" id="login-pw" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
-        <button class="eye-btn" type="button" onclick="toggleEye('login-pw',this)">
-          <svg viewBox="0 0 24 24" class="eye-show"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-        </button>
-      </div>
-    </div>
-
-    <div style="text-align:right;margin-top:-6px;margin-bottom:14px">
-      <a style="font-size:12px;font-weight:700;color:var(--peach);cursor:pointer;text-decoration:none" onclick="switchTab('reset')">Quên mật khẩu?</a>
-    </div>
-
-    <button class="submit-btn" id="login-btn" onclick="doLogin()">
-      <div class="btn-spinner" id="login-spinner"></div>
-      <svg viewBox="0 0 24 24" id="login-icon"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-      <span id="login-btn-text">Đăng nhập</span>
-    </button>
-
-    <div class="auth-footer">
-      Chưa có tài khoản? <a onclick="switchTab('signup')">Đăng ký ngay</a>
+    <div class="chip-row" id="genreChips">
+      <div class="chip active" data-genre="all" onclick="setGenre('all',this)">Tất cả</div>
     </div>
   </div>
-
-  <!-- ══ PANE: SIGNUP ══ -->
-  <div class="tab-pane" id="pane-signup">
-    <div class="pane-title">Tạo tài khoản</div>
-    <div class="pane-sub">Tham gia để lưu tiến độ đọc và theo dõi truyện</div>
-
-    <div class="alert alert-error" id="signup-err">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      <span id="signup-err-msg">Đã có lỗi xảy ra</span>
+  <div class="filter-divider"></div>
+  <div class="filter-section">
+    <div class="filter-section-label">
+      <svg viewBox="0 0 24 24" width="12" height="12" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Trạng thái
     </div>
-    <div class="alert alert-success" id="signup-ok">
-      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-      <span>Đăng ký thành công! Kiểm tra email để xác nhận tài khoản.</span>
-    </div>
-
-    <div class="field">
-      <div class="field-label">
-        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        Username
-      </div>
-      <div id="username-avail-hint" style="font-size:11px;margin-top:4px;min-height:16px;font-weight:700"></div>
-      <div class="field-wrap">
-        <input class="field-input" id="signup-name" type="text" placeholder="vd: hamster_doc_truyen" oninput="checkUsernameAvail(this.value)" autocomplete="name" onkeydown="if(event.key==='Enter')doSignup()">
-        <span class="field-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
-      </div>
-    </div>
-
-    <div class="field">
-      <div class="field-label">
-        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        Email
-      </div>
-      <div class="field-wrap">
-        <input class="field-input" id="signup-email" type="email" placeholder="you@email.com" autocomplete="email" onkeydown="if(event.key==='Enter')doSignup()">
-        <span class="field-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
-      </div>
-    </div>
-
-    <div class="field">
-      <div class="field-label">
-        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        Mật khẩu
-      </div>
-      <div class="field-wrap">
-        <input class="field-input" id="signup-pw" type="password" placeholder="Tối thiểu 6 ký tự" autocomplete="new-password" oninput="checkStrength(this.value)" onkeydown="if(event.key==='Enter')doSignup()">
-        <button class="eye-btn" type="button" onclick="toggleEye('signup-pw',this)">
-          <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-        </button>
-      </div>
-      <div class="pw-strength" id="pw-strength">
-        <div class="pw-strength-bar">
-          <div class="pw-seg" id="ps1"></div>
-          <div class="pw-seg" id="ps2"></div>
-          <div class="pw-seg" id="ps3"></div>
-          <div class="pw-seg" id="ps4"></div>
-        </div>
-        <div class="pw-strength-label" id="ps-label">Quá ngắn</div>
-      </div>
-    </div>
-
-    <div class="field">
-      <div class="field-label">
-        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        Xác nhận mật khẩu
-      </div>
-      <div class="field-wrap">
-        <input class="field-input" id="signup-pw2" type="password" placeholder="Nhập lại mật khẩu" autocomplete="new-password" onkeydown="if(event.key==='Enter')doSignup()">
-        <button class="eye-btn" type="button" onclick="toggleEye('signup-pw2',this)">
-          <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-        </button>
-      </div>
-    </div>
-
-    <label class="field-check">
-      <input type="checkbox" id="signup-agree">
-      <div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-      <span class="check-label">Tôi đồng ý với <a href="#">điều khoản sử dụng</a> của Peach Luku</span>
-    </label>
-
-    <button class="submit-btn" id="signup-btn" onclick="doSignup()">
-      <div class="btn-spinner" id="signup-spinner"></div>
-      <svg viewBox="0 0 24 24" id="signup-icon"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
-      <span id="signup-btn-text">Tạo tài khoản</span>
-    </button>
-
-    <div class="auth-footer">
-      Đã có tài khoản? <a onclick="switchTab('login')">Đăng nhập</a>
+    <div class="chip-row">
+      <div class="chip active" data-status="all" onclick="setStatus('all',this)">Tất cả</div>
+      <div class="chip" data-status="ongoing" onclick="setStatus('ongoing',this)">Đang ra</div>
+      <div class="chip" data-status="completed" onclick="setStatus('completed',this)">Hoàn thành</div>
     </div>
   </div>
-
-  <!-- ══ PANE: RESET ══ -->
-  <div class="tab-pane" id="pane-reset">
-
-    <!-- form -->
-    <div id="reset-form-wrap">
-      <div class="pane-title">Quên mật khẩu?</div>
-      <div class="pane-sub">Nhập email của bạn — chúng tôi sẽ gửi link đặt lại mật khẩu</div>
-
-      <div class="alert alert-error" id="reset-err">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        <span id="reset-err-msg">Không tìm thấy tài khoản với email này</span>
-      </div>
-
-      <div class="field">
-        <div class="field-label">
-          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          Email đã đăng ký
-        </div>
-        <div class="field-wrap">
-          <input class="field-input" id="reset-email" type="email" placeholder="you@email.com" autocomplete="email" onkeydown="if(event.key==='Enter')doReset()">
-          <span class="field-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
-        </div>
-      </div>
-
-      <button class="submit-btn" id="reset-btn" onclick="doReset()">
-        <div class="btn-spinner" id="reset-spinner"></div>
-        <svg viewBox="0 0 24 24" id="reset-icon"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.6 3.4 2 2 0 0 1 3.57 1.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.75a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16"/></svg>
-        <span id="reset-btn-text">Gửi link đặt lại</span>
-      </button>
-
-      <div class="auth-footer">
-        Nhớ mật khẩu rồi? <a onclick="switchTab('login')">Đăng nhập</a>
-      </div>
+  <div class="filter-divider"></div>
+  <div class="filter-section">
+    <div class="filter-section-label">
+      <svg viewBox="0 0 24 24" width="12" height="12" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      Sắp xếp
     </div>
-
-    <!-- success -->
-    <div class="success-screen" id="reset-success">
-      <div class="success-icon-wrap">
-        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-      </div>
-      <div class="success-title">Email đã được gửi!</div>
-      <div class="success-sub">Kiểm tra hộp thư của bạn và nhấn link để đặt lại mật khẩu. Kiểm tra cả thư mục Spam nhé.</div>
-      <button class="submit-btn" style="margin-top:8px;max-width:220px" onclick="switchTab('login')">
-        <svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-        Về đăng nhập
-      </button>
+    <div class="chip-row">
+      <div class="chip active" data-sort="newest" onclick="setSort('newest',this)">Mới nhất</div>
+      <div class="chip" data-sort="views" onclick="setSort('views',this)">Lượt xem</div>
+      <div class="chip" data-sort="chapters" onclick="setSort('chapters',this)">Số chương</div>
+      <div class="chip" data-sort="title" onclick="setSort('title',this)">A → Z</div>
     </div>
+  </div>
+</div>
 
-  </div><!-- /pane-reset -->
+<div class="active-filters-bar" id="activeFiltersBar">
+  <div id="activeTagsRow" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex:1"></div>
+  <button class="clear-all-btn" onclick="clearAllFilters()">Xoá tất cả</button>
+</div>
 
-</div><!-- /auth-card -->
+<div class="content">
+  <div id="statusLabel" class="status-label" style="display:none"></div>
+  <div id="profileArea"></div>
+  <div id="resultArea"></div>
+</div>
 
 <script>
-/* ── SUPABASE ── */
 const SUPABASE_URL = 'https://jnlqzqtavfptkfvnndxq.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ojRrfSwxK_B6-TGSXaYGxQ_DKERN0-f';
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+if (!window._sb) window._sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const sb = window._sb;
+window.sb = sb; // Export cho navbar.js
 
-/* ── TAB SWITCHING ── */
-function switchTab(tab) {
-  ['login','signup','reset'].forEach(t => {
-    document.getElementById('tab-'+t).classList.toggle('active', t === tab);
-    document.getElementById('pane-'+t).classList.toggle('active', t === tab);
-  });
-  clearAlerts();
-  // update page title
-  const titles = { login: 'Đăng nhập', signup: 'Đăng ký', reset: 'Đặt lại mật khẩu' };
-  document.title = titles[tab] + ' — Peach Luku';
+let allStories = [];
+let chapterCounts = {};
+let profileMap = {};
+let searchQuery = '';
+let authorFilter = '';
+let activeGenre = 'all';
+let activeStatus = 'all';
+let activeSort = 'newest';
+let filterPanelOpen = false;
+
+function setTheme(name, el) {
+  document.body.className = 'theme-' + name;
+  localStorage.setItem('plTheme', name);
+  document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+  if (el) el.classList.add('active');
+}
+function toggleThemeDrawer() {
+  document.getElementById('theme-drawer').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  const drawer = document.getElementById('theme-drawer');
+  if (!drawer.contains(e.target) && !e.target.closest('.theme-btn')) {
+    drawer.classList.remove('open');
+  }
+});
+(function() {
+  const saved = localStorage.getItem('plTheme') || 'light';
+  document.body.className = 'theme-' + saved;
+})();
+
+function escapeHtml(s) {
+  if (!s) return '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function formatViews(n) {
+  if (!n) return '0';
+  if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
+  if (n >= 1000) return (n/1000).toFixed(1) + 'K';
+  return n.toString();
 }
 
-function clearAlerts() {
-  document.querySelectorAll('.alert').forEach(a => a.classList.remove('show'));
+function onInputChange() {
+  const val = document.getElementById('searchInput').value;
+  document.getElementById('clearBtn').classList.toggle('visible', val.length > 0);
+  searchQuery = val;
+  renderResults();
+}
+function clearSearch() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('clearBtn').classList.remove('visible');
+  searchQuery = '';
+  renderResults();
+}
+function doSearch() {
+  searchQuery = document.getElementById('searchInput').value.trim();
+  renderResults();
 }
 
-/* ── PASSWORD EYE TOGGLE ── */
-function toggleEye(inputId, btn) {
-  const inp = document.getElementById(inputId);
-  const isHidden = inp.type === 'password';
-  inp.type = isHidden ? 'text' : 'password';
-  btn.innerHTML = isHidden
-    ? `<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`
-    : `<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+function toggleFilterPanel() {
+  filterPanelOpen = !filterPanelOpen;
+  document.getElementById('filterPanel').classList.toggle('open', filterPanelOpen);
 }
 
-/* ── PASSWORD STRENGTH ── */
-function checkStrength(val) {
-  const bar = document.getElementById('pw-strength');
-  bar.classList.toggle('visible', val.length > 0);
-  if (!val.length) return;
-  let score = 0;
-  if (val.length >= 6) score++;
-  if (val.length >= 10) score++;
-  if (/[A-Z]/.test(val) && /[0-9]/.test(val)) score++;
-  if (/[^A-Za-z0-9]/.test(val)) score++;
-  const classes = ['','weak','fair','good','strong'];
-  const labels  = ['','Yếu','Trung bình','Tốt','Mạnh'];
-  const colors  = ['','var(--danger)','var(--gold)','#74c0fc','var(--success)'];
-  [1,2,3,4].forEach(i => {
-    const seg = document.getElementById('ps'+i);
-    seg.className = 'pw-seg' + (i <= score ? ' '+classes[score] : '');
-  });
-  const lbl = document.getElementById('ps-label');
-  lbl.textContent = labels[score] || 'Quá ngắn';
-  lbl.style.color = colors[score] || 'var(--text-muted)';
+function setGenre(val, el) {
+  activeGenre = val;
+  document.querySelectorAll('[data-genre]').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  updateFilterUI();
+  renderResults();
+}
+function setStatus(val, el) {
+  activeStatus = val;
+  document.querySelectorAll('[data-status]').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  updateFilterUI();
+  renderResults();
+}
+function setSort(val, el) {
+  activeSort = val;
+  document.querySelectorAll('[data-sort]').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  updateFilterUI();
+  renderResults();
 }
 
-/* ── LOADING STATE ── */
-function setLoading(prefix, loading) {
-  const btn = document.getElementById(prefix+'-btn');
-  const spinner = document.getElementById(prefix+'-spinner');
-  const icon = document.getElementById(prefix+'-icon');
-  const txt = document.getElementById(prefix+'-btn-text');
-  btn.disabled = loading;
-  spinner.style.display = loading ? 'block' : 'none';
-  if (icon) icon.style.display = loading ? 'none' : '';
-  if (txt) txt.textContent = loading
-    ? (prefix === 'login' ? 'Đang đăng nhập...' : prefix === 'signup' ? 'Đang tạo tài khoản...' : 'Đang gửi...')
-    : (prefix === 'login' ? 'Đăng nhập' : prefix === 'signup' ? 'Tạo tài khoản' : 'Gửi link đặt lại');
+function clearAllFilters() {
+  activeGenre = 'all'; activeStatus = 'all'; activeSort = 'newest';
+  document.querySelector('[data-genre="all"]').classList.add('active');
+  document.querySelectorAll('[data-genre]:not([data-genre="all"])').forEach(c => c.classList.remove('active'));
+  document.querySelector('[data-status="all"]').classList.add('active');
+  document.querySelectorAll('[data-status]:not([data-status="all"])').forEach(c => c.classList.remove('active'));
+  document.querySelector('[data-sort="newest"]').classList.add('active');
+  document.querySelectorAll('[data-sort]:not([data-sort="newest"])').forEach(c => c.classList.remove('active'));
+  updateFilterUI();
+  renderResults();
 }
 
-function showErr(prefix, msg) {
-  const el = document.getElementById(prefix+'-err');
-  const msgEl = document.getElementById(prefix+'-err-msg');
-  if (msgEl && msg) msgEl.textContent = msg;
-  el.classList.add('show');
+function countActiveFilters() {
+  let n = 0;
+  if (activeGenre !== 'all') n++;
+  if (activeStatus !== 'all') n++;
+  if (activeSort !== 'newest') n++;
+  return n;
 }
 
-/* ── LOGIN ── */
-async function doLogin() {
-  clearAlerts();
-  const email = document.getElementById('login-email').value.trim();
-  const pw    = document.getElementById('login-pw').value;
+function updateFilterUI() {
+  const n = countActiveFilters();
+  const btn = document.getElementById('filterToggleBtn');
+  const badge = document.getElementById('filterBadge');
+  btn.classList.toggle('has-active', n > 0);
+  badge.textContent = n;
+  const bar = document.getElementById('activeFiltersBar');
+  const row = document.getElementById('activeTagsRow');
+  const tags = [];
+  if (activeGenre !== 'all') tags.push({ label: '📚 ' + activeGenre, key: 'genre' });
+  if (activeStatus !== 'all') tags.push({ label: '⏱ ' + (activeStatus === 'ongoing' ? 'Đang ra' : 'Hoàn thành'), key: 'status' });
+  if (activeSort !== 'newest') {
+    const sortLabels = { views: '👁 Lượt xem', chapters: '📖 Số chương', title: '🔤 A→Z' };
+    tags.push({ label: sortLabels[activeSort] || activeSort, key: 'sort' });
+  }
+  bar.classList.toggle('visible', tags.length > 0);
+  row.innerHTML = tags.map(t => `
+    <div class="active-tag">
+      ${escapeHtml(t.label)}
+      <button onclick="removeFilter('${t.key}')">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>`).join('');
+}
 
-  if (!email || !pw) { showErr('login', 'Vui lòng điền đầy đủ email và mật khẩu'); return; }
+function removeFilter(key) {
+  if (key === 'genre') {
+    activeGenre = 'all';
+    document.querySelectorAll('[data-genre]').forEach(c => c.classList.remove('active'));
+    const el = document.querySelector('[data-genre="all"]');
+    if (el) el.classList.add('active');
+  } else if (key === 'status') {
+    activeStatus = 'all';
+    document.querySelectorAll('[data-status]').forEach(c => c.classList.remove('active'));
+    const el = document.querySelector('[data-status="all"]');
+    if (el) el.classList.add('active');
+  } else if (key === 'sort') {
+    activeSort = 'newest';
+    document.querySelectorAll('[data-sort]').forEach(c => c.classList.remove('active'));
+    const el = document.querySelector('[data-sort="newest"]');
+    if (el) el.classList.add('active');
+  }
+  updateFilterUI();
+  renderResults();
+}
 
-  setLoading('login', true);
-  const { error } = await sb.auth.signInWithPassword({ email, password: pw });
-  setLoading('login', false);
 
-  if (error) {
-    const msg = error.message.includes('Invalid') ? 'Email hoặc mật khẩu không đúng'
-              : error.message.includes('confirm') ? 'Vui lòng xác nhận email trước khi đăng nhập'
-              : error.message;
-    showErr('login', msg);
-    document.getElementById('login-email').classList.toggle('error', true);
-    document.getElementById('login-pw').classList.toggle('error', true);
+function renderProfileResult(q) {
+  const profileArea = document.getElementById('profileArea');
+  if (!profileArea) return;
+  if (!q || q.length < 2) { profileArea.innerHTML = ''; return; }
+  const ql = q.toLowerCase();
+  const matched = Object.entries(profileMap).filter(([id, p]) =>
+    (p.username || '').toLowerCase().includes(ql) ||
+    (p.display_name || '').toLowerCase().includes(ql)
+  );
+  if (!matched.length) { profileArea.innerHTML = ''; return; }
+  profileArea.innerHTML = matched.map(([id, p]) => {
+    const initials = (p.display_name || p.username || '?')[0].toUpperCase();
+    const avatarHtml = p.avatar_url
+      ? `<img src="${escapeHtml(p.avatar_url)}" alt="avatar">`
+      : initials;
+    return `<a class="profile-result-card" href="profile.html?user=${escapeHtml(id)}">
+      <div class="profile-result-avatar">${avatarHtml}</div>
+      <div class="profile-result-info">
+        <div class="profile-result-name">${escapeHtml(p.display_name || p.username || 'Người dùng')}</div>
+        <div class="profile-result-username">@${escapeHtml(p.username || '')}</div>
+      </div>
+      <div class="profile-result-label">Xem trang</div>
+    </a>`;
+  }).join('');
+}
+
+function renderResults() {
+  renderProfileResult(searchQuery);
+  let stories = [...allStories];
+  if (activeGenre !== 'all') {
+    stories = stories.filter(s => {
+      const genres = (s.genre || '').split(',').map(g => g.trim());
+      return genres.includes(activeGenre);
+    });
+  }
+  if (activeStatus !== 'all') {
+    stories = stories.filter(s => {
+      if (activeStatus === 'completed') return s.status === 'completed' || s.status === 'done' || s.completed === true;
+      if (activeStatus === 'ongoing') return !s.status || s.status === 'ongoing';
+      return true;
+    });
+  }
+  if (authorFilter) {
+    stories = stories.filter(s =>
+      (s.author || '').toLowerCase() === authorFilter.toLowerCase() ||
+      (s.uploader_name || '').toLowerCase() === authorFilter.toLowerCase() ||
+      (s.uploader_username || '').toLowerCase() === authorFilter.toLowerCase()
+    );
+  }
+  if (searchQuery && !authorFilter) {
+    const q = searchQuery.toLowerCase();
+    stories = stories.filter(s =>
+      (s.title || '').toLowerCase().includes(q) ||
+      (s.author || '').toLowerCase().includes(q) ||
+      (s.uploader_name || '').toLowerCase().includes(q) ||
+      (s.uploader_username || '').toLowerCase().includes(q) ||
+      (s.user_id || '').toLowerCase().includes(q) ||
+      (s.description || '').toLowerCase().includes(q)
+    );
+  }
+  if (activeSort === 'views') stories.sort((a, b) => (b.total_views || 0) - (a.total_views || 0));
+  else if (activeSort === 'chapters') stories.sort((a, b) => (chapterCounts[b.id] || 0) - (chapterCounts[a.id] || 0));
+  else if (activeSort === 'title') stories.sort((a, b) => (a.title || '').localeCompare(b.title || '', 'vi'));
+
+  const statusEl = document.getElementById('statusLabel');
+  const resultEl = document.getElementById('resultArea');
+  const hasFilter = searchQuery || activeGenre !== 'all' || activeStatus !== 'all';
+  if (hasFilter) {
+    statusEl.style.display = '';
+    let label = '';
+    if (searchQuery) label = `Tìm thấy <span>${stories.length}</span> kết quả cho "<span>${escapeHtml(searchQuery)}</span>"`;
+    else label = `<span>${stories.length}</span> truyện`;
+    if (activeGenre !== 'all') label += ` · thể loại <span>${escapeHtml(activeGenre)}</span>`;
+    if (activeStatus === 'completed') label += ` · <span>hoàn thành</span>`;
+    if (activeStatus === 'ongoing') label += ` · <span>đang ra</span>`;
+    statusEl.innerHTML = label;
+  } else {
+    statusEl.style.display = 'none';
+  }
+
+  if (stories.length === 0) {
+    resultEl.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+        <div class="empty-state-title">Không tìm thấy truyện nào</div>
+        <div class="empty-state-sub">Thử thay đổi từ khoá hoặc bỏ bớt bộ lọc nhé 🐹</div>
+      </div>
+      <div class="suggest-section">
+        <div class="suggest-title">Gợi ý tìm kiếm</div>
+        <div class="suggest-chips" id="suggestChips"></div>
+      </div>`;
+    renderSuggestChips();
     return;
   }
 
-  // Kiểm tra đã có display_name chưa
-  const { data: { user } } = await sb.auth.getUser();
-  const { data: prof } = await sb.from('profiles').select('display_name').eq('id', user.id).maybeSingle();
-  if (!prof?.display_name) {
-    showUsernamePrompt(user.id);
-    return;
-  }
-  const redirect = new URLSearchParams(location.search).get('next') || 'index.html';
-  location.href = redirect;
+  resultEl.innerHTML = `<div class="story-grid">${stories.map(s => {
+    const hasCover = !!s.cover_url;
+    const ch = chapterCounts[s.id] || 0;
+    const isDone = s.status === 'completed' || s.status === 'done' || s.completed === true;
+    return `
+    <a class="story-card" href="story.html?story=${s.id}">
+      <div class="story-cover${hasCover ? ' has-img' : ''}">
+        <span class="cover-ph"><svg viewBox="0 0 24 24" width="34" height="34" style="stroke:var(--peach-mid);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="12" y1="7" x2="16" y2="7"/><line x1="12" y1="11" x2="16" y2="11"/></svg></span>
+        ${hasCover ? `<img src="${escapeHtml(s.cover_url)}" alt="${escapeHtml(s.title)}" loading="lazy">` : ''}
+        ${ch > 0 ? `<span class="ch-badge">${ch} ch.</span>` : ''}
+        <span class="status-badge ${isDone ? 'done' : 'ongoing'}">${isDone ? 'Full' : 'Đang ra'}</span>
+      </div>
+      <div class="story-info">
+        <div class="story-name">${escapeHtml(s.title)}</div>
+        <div class="story-author"><svg viewBox="0 0 24 24" width="10" height="10" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;display:inline-block;vertical-align:middle;margin-right:2px"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> ${escapeHtml(s.author || 'Ẩn danh')}</div>
+        <div class="story-meta">
+          <div class="story-views">
+            <svg viewBox="0 0 24 24" width="11" height="11" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            ${formatViews(s.total_views || 0)}
+          </div>
+        </div>
+      </div>
+    </a>`;
+  }).join('')}</div>`;
 }
 
-/* ── SIGNUP ── */
-async function doSignup() {
-  clearAlerts();
-  const name  = document.getElementById('signup-name').value.trim();
-  const email = document.getElementById('signup-email').value.trim();
-  const pw    = document.getElementById('signup-pw').value;
-  const pw2   = document.getElementById('signup-pw2').value;
-  const agree = document.getElementById('signup-agree').checked;
-
-  if (!name)  { showErr('signup', 'Vui lòng nhập tên hiển thị'); return; }
-  if (!email) { showErr('signup', 'Vui lòng nhập email'); return; }
-  if (pw.length < 6) { showErr('signup', 'Mật khẩu phải có ít nhất 6 ký tự'); return; }
-  if (pw !== pw2)    { showErr('signup', 'Mật khẩu xác nhận không khớp'); return; }
-  if (!agree)        { showErr('signup', 'Bạn cần đồng ý với điều khoản sử dụng'); return; }
-
-  // Kiểm tra username đã tồn tại chưa
-  const { data: existingName } = await sb.from('profiles')
-    .select('id').eq('display_name', name).maybeSingle();
-  if (existingName) { showErr('signup', 'Username này đã có người dùng rồi, chọn tên khác nhé!'); return; }
-
-  setLoading('signup', true);
-  const { data: signUpData, error } = await sb.auth.signUp({
-    email, password: pw,
-    options: { data: { display_name: name } }
-  });
-  
-  if (error) {
-    setLoading('signup', false);
-    const msg = error.message.includes('already') ? 'Email này đã được đăng ký. Thử đăng nhập?'
-              : error.message;
-    showErr('signup', msg);
-    return;
-  }
-
-  // Upsert profile với display_name ngay lập tức
-  if (signUpData?.user) {
-    await sb.from('profiles').upsert({
-      id: signUpData.user.id,
-      display_name: name,
-      updated_at: new Date().toISOString()
-    }, { onConflict: 'id' });
-  }
-
-  setLoading('signup', false);
-  document.getElementById('signup-ok').classList.add('show');
-  ['signup-name','signup-email','signup-pw','signup-pw2'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('signup-agree').checked = false;
-  document.getElementById('pw-strength').classList.remove('visible');
+function renderSuggestChips() {
+  const el = document.getElementById('suggestChips');
+  if (!el) return;
+  const samples = allStories.slice(0, 8).map(s => s.title);
+  el.innerHTML = samples.map(t =>
+    `<div class="suggest-chip" onclick="setSuggest('${escapeHtml(t).replace(/'/g,"&#39;")}')">${escapeHtml(t)}</div>`
+  ).join('');
+}
+function setSuggest(text) {
+  document.getElementById('searchInput').value = text;
+  document.getElementById('clearBtn').classList.add('visible');
+  searchQuery = text;
+  renderResults();
 }
 
-/* ── RESET ── */
-async function doReset() {
-  clearAlerts();
-  const email = document.getElementById('reset-email').value.trim();
-  if (!email) { showErr('reset', 'Vui lòng nhập email'); return; }
-
-  setLoading('reset', true);
-  const { error } = await sb.auth.resetPasswordForEmail(email, {
-    redirectTo: location.origin + '/auth.html?tab=newpw'
-  });
-  setLoading('reset', false);
-
-  if (error) {
-    showErr('reset', error.message);
-    return;
-  }
-
-  document.getElementById('reset-form-wrap').style.display = 'none';
-  document.getElementById('reset-success').classList.add('show');
-}
-
-/* ── CHECK SESSION (auto-redirect if logged in) ── */
 async function init() {
-  let redirected = false;
-  function doRedirect() {
-    if (redirected) return;
-    redirected = true;
-    const redirect = new URLSearchParams(location.search).get('next') || 'index.html';
-    location.href = redirect;
-  }
-  // Cách 1: getSession
-  try {
-    const { data: { session } } = await sb.auth.getSession();
-    if (session) { doRedirect(); return; }
-  } catch(e) {}
-  // Cách 2: onAuthStateChange fallback
-  sb.auth.onAuthStateChange((event, session) => {
-    if (session) doRedirect();
+  document.getElementById('resultArea').innerHTML = `
+    <div class="skeleton-grid">
+      ${Array(8).fill(`
+        <div class="skeleton-card">
+          <div class="skeleton-cover"></div>
+          <div class="skeleton-info">
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line short"></div>
+          </div>
+        </div>`).join('')}
+    </div>`;
+
+  const [{ data: stories }, { data: chapters }, { data: profiles }] = await Promise.all([
+    sb.from('stories').select('*').order('created_at', { ascending: false }),
+    sb.from('chapters').select('story_id'),
+    sb.from('profiles').select('id, display_name, username, avatar_url')
+  ]);
+
+  profileMap = {};
+  (profiles || []).forEach(p => { profileMap[p.id] = { display_name: p.display_name || '', username: p.username || '', avatar_url: p.avatar_url || '' }; });
+
+  allStories = (stories || []).map(s => ({ ...s, uploader_name: (profileMap[s.user_id] && profileMap[s.user_id].display_name) || '', uploader_username: (profileMap[s.user_id] && profileMap[s.user_id].username) || '' }));
+  chapterCounts = {};
+  if (chapters) chapters.forEach(c => { chapterCounts[c.story_id] = (chapterCounts[c.story_id] || 0) + 1; });
+
+  // Luôn render lại sau khi data load xong (xóa skeleton)
+  renderResults();
+
+  const genres = new Set();
+  allStories.forEach(s => {
+    if (s.genre) s.genre.split(',').forEach(g => { const t = g.trim(); if (t) genres.add(t); });
   });
-  // check URL tab param
-  const tab = new URLSearchParams(location.search).get('tab');
-  if (tab === 'signup' || tab === 'reset') switchTab(tab);
+  const genreChips = document.getElementById('genreChips');
+  genres.forEach(g => {
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.dataset.genre = g;
+    chip.textContent = g;
+    chip.onclick = () => setGenre(g, chip);
+    genreChips.appendChild(chip);
+  });
+
+  const params = new URLSearchParams(window.location.search);
+  const q = params.get('q');
+  const genre = params.get('genre');
+  if (q) {
+    document.getElementById('searchInput').value = q;
+    document.getElementById('clearBtn').classList.add('visible');
+    searchQuery = q;
+  }
+  if (genre && genre !== 'all') {
+    activeGenre = genre;
+    const el = document.querySelector(`[data-genre="${genre}"]`);
+    if (el) {
+      document.querySelectorAll('[data-genre]').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+    }
+    filterPanelOpen = true;
+    document.getElementById('filterPanel').classList.add('open');
+  }
+  const authorParam = params.get('author');
+  if (authorParam) {
+    authorFilter = authorParam;
+    document.getElementById('searchInput').value = authorParam;
+    document.getElementById('clearBtn').classList.add('visible');
+    searchQuery = authorParam;
+    // Hiện banner tác giả
+    const banner = document.createElement('div');
+    banner.style.cssText = 'background:var(--peach-light);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin-bottom:12px;font-size:13px;font-weight:700;color:var(--peach-dark);display:flex;align-items:center;gap:8px';
+    banner.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Truyện của tác giả: <span style="color:var(--peach)">' + escapeHtml(authorParam) + '</span>';
+    document.getElementById('resultArea').before(banner);
+  }
+
+  updateFilterUI();
+
+  if (!searchQuery && activeGenre === 'all' && activeStatus === 'all') {
+    document.getElementById('profileArea').innerHTML = '';
+  document.getElementById('resultArea').innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+        <div class="empty-state-title">Tìm truyện bạn muốn đọc</div>
+        <div class="empty-state-sub">Nhập tên truyện, tác giả hoặc dùng bộ lọc 🐹</div>
+      </div>
+      <div class="suggest-section">
+        <div class="suggest-title">Truyện nổi bật</div>
+        <div class="suggest-chips" id="suggestChips"></div>
+      </div>`;
+    renderSuggestChips();
+  } else {
+    renderResults();
+  }
+
+  document.getElementById('searchInput').focus();
 }
 
 init();
 
-/* ── USERNAME PROMPT ── */
-let pendingUserId = null;
+/* ── FIX: loadNavAvatar với ảnh constrained ── */
+async function loadNavAvatar() {
+  const { data: { session } } = await sb.auth.getSession();
+  const btn = document.getElementById('nav-user-btn');
+  if (!btn) return;
+  if (!session) {
+    btn.href = 'auth.html?next=' + encodeURIComponent(location.pathname + location.search);
+    btn.title = 'Đăng nhập';
+    return;
+  }
+  btn.href = 'profile.html';
+  btn.title = 'Hồ sơ của tôi';
+  const { data: prof } = await sb.from('profiles').select('display_name, avatar_url').eq('id', session.user.id).maybeSingle();
+  if (prof?.avatar_url) {
+    btn.innerHTML = '<img src="' + prof.avatar_url + '" alt="avatar" style="width:34px;height:34px;border-radius:50%;object-fit:cover;display:block;">';
+  } else {
+    btn.textContent = (prof?.display_name || session.user.email || 'U')[0].toUpperCase();
+  }
+}
+loadNavAvatar();
 
-function showUsernamePrompt(userId) {
-  pendingUserId = userId;
-  document.getElementById('usernameOverlay').classList.add('open');
-  setTimeout(() => document.getElementById('usernameInput').focus(), 100);
+/* ── PROFILE DROPDOWN ── */
+function toggleProfileMenu(e) {
+  e.preventDefault(); e.stopPropagation();
+  const dd = document.getElementById('profileDropdown');
+  dd.classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  const wrap = document.getElementById('profileMenuWrap');
+  if (wrap && !wrap.contains(e.target)) {
+    const dd = document.getElementById('profileDropdown');
+    if (dd) dd.classList.remove('open');
+  }
+});
+
+async function loadNavAvatar() {
+  const { data: { session } } = await sb.auth.getSession();
+  const btn = document.getElementById('nav-user-btn');
+  if (!btn) return;
+  const loggedIn = document.querySelectorAll('.dd-logged-in');
+  const loggedOut = document.querySelectorAll('.dd-logged-out');
+  if (!session) {
+    loggedIn.forEach(el => el.style.display = 'none');
+    loggedOut.forEach(el => el.style.display = 'flex');
+    btn.title = 'Đăng nhập';
+    return;
+  }
+  loggedIn.forEach(el => el.style.display = 'flex');
+  loggedOut.forEach(el => el.style.display = 'none');
+  btn.title = 'Hồ sơ của tôi';
+  const { data: prof } = await sb.from('profiles')
+    .select('display_name, avatar_url')
+    .eq('id', session.user.id)
+    .maybeSingle();
+  if (prof?.avatar_url) {
+    btn.innerHTML = '';
+    const img = document.createElement('img');
+    img.src = prof.avatar_url;
+    img.alt = 'avatar';
+    img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;display:block';
+    btn.appendChild(img);
+    btn.classList.add('has-avatar');
+  } else {
+    const initials = (prof?.display_name || session.user.email || 'U')[0].toUpperCase();
+    btn.innerHTML = initials;
+    btn.style.fontSize = '14px';
+    btn.style.fontWeight = '800';
+  }
 }
 
-async function saveUsername() {
-  const name = document.getElementById('usernameInput').value.trim();
-  const errEl = document.getElementById('usernameErr');
-  errEl.textContent = '';
-  if (!name) { errEl.textContent = 'Vui lòng nhập tên!'; return; }
-  if (name.length < 2) { errEl.textContent = 'Tên phải có ít nhất 2 ký tự'; return; }
-  if (!/^[a-zA-ZÀ-ỹ0-9 _.-]+$/u.test(name)) { errEl.textContent = 'Tên không được chứa ký tự đặc biệt'; return; }
-
-  // Kiểm tra trùng tên
-  const { data: existing } = await sb.from('profiles').select('id').eq('display_name', name).maybeSingle();
-  if (existing) { errEl.textContent = 'Tên này đã có người dùng, chọn tên khác nhé!'; return; }
-
-  const { error } = await sb.from('profiles').upsert({
-    id: pendingUserId,
-    display_name: name,
-    updated_at: new Date().toISOString()
-  }, { onConflict: 'id' });
-
-  if (error) { errEl.textContent = 'Lỗi lưu tên: ' + error.message; return; }
-
-  document.getElementById('usernameOverlay').classList.remove('open');
-  const redirect = new URLSearchParams(location.search).get('next') || 'index.html';
-  location.href = redirect;
+async function signOut(e) {
+  e.preventDefault();
+  await sb.auth.signOut();
+  location.href = 'index.html';
 }
 
+loadNavAvatar();
 
-/* ── USERNAME REALTIME CHECK ── */
-let usernameCheckTimer = null;
-async function checkUsernameAvail(val) {
-  const hint = document.getElementById('username-avail-hint');
-  if (!hint) return;
-  const name = val.trim();
-  if (!name || name.length < 2) { hint.textContent = ''; hint.className = ''; return; }
-  hint.textContent = 'Đang kiểm tra...'; hint.className = '';
-  clearTimeout(usernameCheckTimer);
-  usernameCheckTimer = setTimeout(async () => {
-    const { data } = await sb.from('profiles').select('id').eq('display_name', name).maybeSingle();
-    if (data) {
-      hint.textContent = '✗ Username đã có người dùng';
-      hint.className = 'err';
-    } else {
-      hint.textContent = '✓ Username có thể dùng được!';
-      hint.className = 'ok';
-    }
-  }, 500);
-}
+// SEO: noindex trang có ?q= (kết quả search) và ?tag= để tránh duplicate
+// CollectionPage JSON-LD chỉ cho trang gốc /search.html
+(function () {
+  if (!window.PlSEO) return;
+  const p = new URLSearchParams(location.search);
+  const q   = p.get('q');
+  const tag = p.get('tag');
+  if (q || tag) {
+    // Trang kết quả → noindex, canonical về trang gốc
+    PlSEO.noindex();
+    const label = q ? `Tìm kiếm "${q}"` : `Thể loại #${tag}`;
+    document.title = label + ' — Peach Luku';
+  } else {
+    PlSEO.injectCollectionPageJsonLd(
+      'Tìm kiếm truyện — Peach Luku',
+      'https://peachluku.com/search.html',
+      'Tìm kiếm truyện chữ tiếng Việt tại Peach Luku — ngôn tình, fantasy, slice of life và nhiều thể loại khác'
+    );
+    PlSEO.injectBreadcrumb([
+      { name: 'Peach Luku', url: 'https://peachluku.com/' },
+      { name: 'Tìm kiếm', url: 'https://peachluku.com/search.html' },
+    ]);
+  }
+}());
 
 </script>
-
-<!-- USERNAME PROMPT -->
-<div class="username-overlay" id="usernameOverlay">
-  <div class="username-modal">
-    <div class="username-modal-icon">🐹</div>
-    <h2>Đặt tên hiển thị của bạn</h2>
-    <p>Tên này sẽ được mọi người nhìn thấy khi bạn bình luận hoặc đăng truyện</p>
-    <input class="username-input" id="usernameInput" type="text"
-      placeholder="Tên của bạn..." maxlength="30"
-      onkeydown="if(event.key==='Enter')saveUsername()">
-    <div class="username-hint">Tối đa 30 ký tự, không dùng ký tự đặc biệt</div>
-    <div class="username-err" id="usernameErr"></div>
-    <button class="username-submit" onclick="saveUsername()">Xác nhận</button>
-  </div>
-</div>
-
+<script src="navbar.js"></script>
 </body>
 </html>
