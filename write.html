@@ -546,7 +546,7 @@ body { display: block; }
 .content-editable:empty::before { content: attr(data-ph); color: var(--text-muted); font-style: italic; }
 .content-editable p {
   margin-top: 0;
-  margin-bottom: 0.5em;
+  margin-bottom: 0.25em;
   font-family: 'Noto Serif', Georgia, serif !important;
   font-size: 19px !important;
   line-height: 1.4 !important;
@@ -1783,97 +1783,24 @@ function initPasteHandler() {
       const tmp = document.createElement('div');
       tmp.innerHTML = rawHtml;
 
-      // Loại mọi script/style/comment trước
-      tmp.querySelectorAll('script, style, meta, link, title').forEach(el => el.remove());
-
-      // Convert mọi block (div/h1-h6/li/tr/blockquote...) thành <p>, giữ nội dung con.
-      // Xử lý TOP-DOWN và "đẩy phẳng" (flatten) mọi block lồng nhau nhiều cấp ra thành
-      // các <p> ngang hàng — không bao giờ để <p> lồng trong <p>. Đây là yêu cầu bắt buộc
-      // để nội dung dán từ nguồn ngoài (Word, web khác, hoặc copy lại từ chính trang này)
-      // luôn quy về đúng 1 cấu trúc phẳng chuẩn, khớp 100% format/khoảng cách của bản thảo web.
-      const BLOCKS = ['DIV','H1','H2','H3','H4','H5','H6','LI','TR','BLOCKQUOTE','SECTION','ARTICLE','HEADER','FOOTER','PRE','FIGURE','TABLE','THEAD','TBODY','UL','OL','P'];
-
-      function flattenToParagraphs(root) {
-        // root: container tạm (DocumentFragment-like). Trả về mảng các <p> phẳng.
-        const result = [];
-        let current = document.createElement('p');
-
-        function flush() {
-          if (current.childNodes.length) result.push(current);
-          current = document.createElement('p');
-        }
-
-        function walk(node) {
-          Array.from(node.childNodes).forEach(child => {
-            if (child.nodeType === Node.TEXT_NODE) {
-              current.appendChild(child);
-            } else if (child.nodeType === Node.ELEMENT_NODE) {
-              const tag = child.tagName;
-              if (BLOCKS.includes(tag)) {
-                // Gặp block mới → đóng đoạn hiện tại, đệ quy xuống con của block này,
-                // rồi mở đoạn mới tiếp theo (đảm bảo không bao giờ lồng <p> trong <p>)
-                flush();
-                walk(child);
-                flush();
-              } else if (tag === 'BR') {
-                current.appendChild(document.createElement('br'));
-              } else {
-                // inline tag (strong/em/b/i/u/img/span/font...) → giữ nguyên cây con,
-                // xử lý sanitize ở bước sau
-                current.appendChild(child.cloneNode(true));
-              }
-            }
-          });
-        }
-
-        walk(root);
-        flush();
-        return result.filter(p => p.childNodes.length > 0);
-      }
-
-      const flatParas = flattenToParagraphs(tmp);
-      tmp.innerHTML = '';
-      flatParas.forEach(p => tmp.appendChild(p));
-
-      // Unwrap mọi tag không thuộc whitelist (giữ nội dung con), strip toàn bộ attribute trừ src/alt cho img
-      const WHITELIST = new Set(['P','BR','STRONG','B','EM','I','U','IMG']);
-      function sanitize(root) {
-        Array.from(root.childNodes).forEach(node => {
-          if (node.nodeType === Node.ELEMENT_NODE) {
-            sanitize(node);
-            if (!WHITELIST.has(node.tagName)) {
-              const parent = node.parentNode;
-              while (node.firstChild) parent.insertBefore(node.firstChild, node);
-              parent.removeChild(node);
-            } else {
-              Array.from(node.attributes).forEach(attr => {
-                if (node.tagName === 'IMG' && (attr.name === 'src' || attr.name === 'alt')) return;
-                node.removeAttribute(attr.name);
-              });
-            }
-          }
+      // Loại mọi script/style/comment/thẻ nguy hiểm trước
+      tmp.querySelectorAll('script, style, meta, link, title, iframe, object, embed').forEach(el => el.remove());
+      // Xoá mọi attribute "on..." (event handler) có thể lẫn trong HTML dán vào, để an toàn
+      tmp.querySelectorAll('*').forEach(el => {
+        Array.from(el.attributes).forEach(attr => {
+          if (/^on/i.test(attr.name)) el.removeAttribute(attr.name);
         });
-      }
-      sanitize(tmp);
+      });
 
-      // Đảm bảo có ít nhất 1 đoạn, loại bỏ p rỗng thừa (giữ tối đa 1 dòng trống liên tiếp)
-      // Fix lỗi 1&2: gộp các <p> trống liên tiếp ngay từ lúc dán, tránh khoảng cách bị
-      // nhân đôi/ba khi nguồn dán (kể cả copy lại từ chính trang này) chứa nhiều dòng trống liền nhau.
-      function isEmptyPasteP(n) {
-        if (!n || n.nodeType !== Node.ELEMENT_NODE || n.tagName !== 'P') return false;
-        const text = (n.textContent || '').replace(/\u00a0/g, '').trim();
-        if (text) return false;
-        return !n.querySelector('img');
-      }
-      let pn = tmp.firstChild;
-      while (pn) {
-        const pnNext = pn.nextSibling;
-        if (isEmptyPasteP(pn) && isEmptyPasteP(pnNext)) pn.remove();
-        pn = pnNext;
-      }
-
-      let html = tmp.innerHTML;
-      pasteHtml = html || '<p><br></p>';
+      // Fix lỗi 1&2 (khoảng cách bị nhân đôi khi dán): TRƯỚC ĐÂY ở đây có 1 bộ "làm phẳng
+      // đoạn văn" (flatten) riêng, không biết đến khối chú thích/media (annotation-block,
+      // media-block) như bản trong cleanEditorContent() — nên khi dán lại nội dung có
+      // kèm chú thích, nó xé nhỏ cấu trúc chú thích thành nhiều <p> rỗng lồng nhau, gây
+      // khoảng cách dồn lại rất lớn. Nay bỏ hẳn bộ xử lý riêng đó, chỉ chèn HTML đã lọc
+      // script/style ở trên, và giao TOÀN BỘ việc làm phẳng + gộp đoạn trống cho đúng 1
+      // hàm cleanEditorContent() duy nhất (đã hiểu đúng annotation-block/media-block và
+      // đã có bước gộp đoạn <p> trống liên tiếp) chạy ngay sau khi dán, bên dưới.
+      pasteHtml = tmp.innerHTML || '<p><br></p>';
     } else {
       const text = clipData.getData('text/plain') || '';
       const lines = text.split('\n').map(l => l.trim());
@@ -1925,7 +1852,15 @@ function cleanEditorContent() {
     let current = document.createElement('p');
 
     function flush() {
-      if (current.childNodes.length) result.push(current);
+      // Fix: chỉ tính là "có nội dung" nếu có node phần tử (br/img...) hoặc text thật sự
+      // (không chỉ khoảng trắng/xuống dòng). Nếu không, khoảng trắng vô hình giữa các thẻ
+      // trong HTML nguồn (rất phổ biến khi dán từ Word/Google Docs hoặc copy lại chính
+      // trang này) sẽ bị hiểu nhầm thành 1 đoạn có nội dung → sinh ra các đoạn <p> rỗng
+      // lẻ tẻ xen giữa mỗi đoạn/khối, làm khoảng cách bị dồn to hơn nhiều so với bình thường.
+      const hasContent = Array.from(current.childNodes).some(n =>
+        n.nodeType === Node.ELEMENT_NODE || (n.textContent && n.textContent.replace(/\u00a0/g,'').trim())
+      );
+      if (hasContent) result.push(current);
       current = document.createElement('p');
     }
 
