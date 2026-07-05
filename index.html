@@ -636,35 +636,157 @@ body {
 .radio-body { display: flex; align-items: center; gap: 20px; }
 @media (max-width: 520px) { .radio-body { flex-direction: column; align-items: stretch; text-align: center; } }
 
-.radio-turntable { position: relative; width: 128px; height: 128px; flex-shrink: 0; margin: 0 auto; }
+/* ── REALISTIC VINYL TURNTABLE ── */
+.radio-turntable {
+  position: relative;
+  width: 160px; height: 160px;
+  flex-shrink: 0; margin: 0 auto;
+}
+
+/* Platter base — cream-colored rectangular body */
+.radio-platter-base {
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #e8ddd0 0%, #d4c8b8 40%, #c9bda8 100%);
+  box-shadow:
+    0 8px 24px rgba(0,0,0,0.22),
+    0 2px 6px rgba(0,0,0,0.14),
+    inset 0 1px 0 rgba(255,255,255,0.55),
+    inset 0 -2px 4px rgba(0,0,0,0.12);
+}
+
+/* Platter mat — dark circular area where disc sits */
+.radio-platter-mat {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 124px; height: 124px;
+  border-radius: 50%;
+  transform: translate(-50%, -54%);
+  background: radial-gradient(circle at 40% 35%, #3a3a3a 0%, #1c1c1c 60%, #111 100%);
+  box-shadow:
+    0 4px 14px rgba(0,0,0,0.5),
+    inset 0 2px 4px rgba(255,255,255,0.04);
+}
+
+/* Vinyl disc — spins when playing */
 .radio-disc {
-  width: 100%; height: 100%; border-radius: 50%;
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  transform: translate(-50%, -54%);
   background:
-    repeating-radial-gradient(circle at center, #2b2b2b 0 3px, #333 3px 6px);
-  box-shadow: 0 10px 26px rgba(0,0,0,0.28);
+    radial-gradient(circle at center, transparent 18px, rgba(255,255,255,0.03) 18px 19px, transparent 19px),
+    repeating-radial-gradient(circle at center,
+      #1a1a1a 0px, #252525 1.2px,
+      #1a1a1a 1.2px, #2a2a2a 2.4px,
+      #1e1e1e 2.4px, #282828 3.6px,
+      #1a1a1a 3.6px, #232323 4.8px,
+      #202020 4.8px, #2c2c2c 6px
+    );
+  box-shadow:
+    0 6px 18px rgba(0,0,0,0.55),
+    0 2px 6px rgba(0,0,0,0.35),
+    inset 0 0 0 1px rgba(255,255,255,0.04);
   display: flex; align-items: center; justify-content: center;
-  animation: radioSpin 6s linear infinite; animation-play-state: paused;
+  animation: radioSpin 2.8s linear infinite;
+  animation-play-state: paused;
+  will-change: transform;
 }
 .radio-disc.spinning { animation-play-state: running; }
+
+/* Center label — red Peach Luku label */
 .radio-disc-center {
-  width: 34px; height: 34px; border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, var(--peach-mid), var(--peach-dark));
-  border: 3px solid #1a1a1a; box-shadow: inset 0 0 0 2px rgba(255,255,255,0.08);
+  width: 38px; height: 38px; border-radius: 50%;
+  background:
+    radial-gradient(circle at 38% 32%, #c0283a 0%, #8D1B2A 45%, #6a1220 100%);
+  border: 2px solid #111;
+  box-shadow:
+    inset 0 1px 3px rgba(255,255,255,0.18),
+    inset 0 -1px 3px rgba(0,0,0,0.4),
+    0 1px 4px rgba(0,0,0,0.5);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; z-index: 2;
 }
-@keyframes radioSpin { to { transform: rotate(360deg); } }
-.radio-tonearm {
-  position: absolute; top: -6px; right: -8px; width: 46px; height: 46px;
-  transform-origin: 90% 10%; transform: rotate(-18deg);
-  transition: transform .35s ease;
+.radio-disc-center::before {
+  content: 'Peach\ALuku';
+  white-space: pre;
+  font-family: 'Nunito', sans-serif;
+  font-size: 5.5px; font-weight: 900;
+  color: rgba(255,255,255,0.82);
+  text-align: center; line-height: 1.3;
+  letter-spacing: 0.1px;
 }
-.radio-tonearm::before {
-  content: ''; position: absolute; top: 4px; right: 4px; width: 6px; height: 6px; border-radius: 50%; background: var(--text-muted);
+.radio-disc-center::after {
+  content: '';
+  position: absolute; width: 5px; height: 5px; border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #ccc, #888);
+  box-shadow: 0 0 0 1px #555;
 }
-.radio-tonearm::after {
-  content: ''; position: absolute; top: 8px; right: 7px; width: 3px; height: 38px; border-radius: 3px;
-  background: linear-gradient(var(--text-muted), var(--border)); transform: rotate(28deg); transform-origin: top center;
+
+@keyframes radioSpin { to { transform: translate(-50%, -54%) rotate(360deg); } }
+
+/* Tonearm assembly */
+.radio-tonearm-wrap {
+  position: absolute;
+  top: 2px; right: -4px;
+  width: 60px; height: 60px;
+  transform-origin: 85% 12%;
+  transform: rotate(-20deg);
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10;
 }
-.radio-turntable.playing .radio-tonearm { transform: rotate(2deg); }
+/* Pivot ball */
+.radio-tonearm-wrap::before {
+  content: '';
+  position: absolute;
+  top: 4px; right: 4px;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #d0d0d0, #888 55%, #555 100%);
+  box-shadow:
+    0 2px 5px rgba(0,0,0,0.5),
+    inset 0 1px 2px rgba(255,255,255,0.4);
+  z-index: 3;
+}
+/* Arm tube */
+.radio-tonearm-arm {
+  position: absolute;
+  top: 8px; right: 8px;
+  width: 3px; height: 50px;
+  border-radius: 3px 3px 0 0;
+  background: linear-gradient(90deg, #bbb 0%, #e0e0e0 30%, #c8c8c8 60%, #999 100%);
+  transform: rotate(26deg);
+  transform-origin: top center;
+  box-shadow: 1px 0 3px rgba(0,0,0,0.3), -1px 0 1px rgba(255,255,255,0.2);
+}
+/* Headshell + stylus */
+.radio-tonearm-arm::after {
+  content: '';
+  position: absolute;
+  bottom: -6px; left: -3px;
+  width: 9px; height: 8px;
+  border-radius: 0 0 3px 3px;
+  background: linear-gradient(180deg, #ccc, #999);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+
+.radio-turntable.playing .radio-tonearm-wrap {
+  transform: rotate(-3deg);
+}
+
+/* Decorative screws on base */
+.radio-platter-base::before,
+.radio-platter-base::after {
+  content: '';
+  position: absolute;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #e0d8cc, #b8a898 50%, #9a8878 100%);
+  box-shadow: inset 0 1px 2px rgba(255,255,255,0.4), 0 1px 2px rgba(0,0,0,0.3);
+}
+.radio-platter-base::before { bottom: 8px; left: 10px; }
+.radio-platter-base::after  { bottom: 8px; right: 10px; }
 
 .radio-info { flex: 1; min-width: 0; }
 .radio-song { font-size: 18px; font-weight: 900; color: var(--text); line-height: 1.2; }
@@ -729,10 +851,24 @@ body {
 .mini-player-close svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2.4; }
 .mini-player-body { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
 .mini-disc {
-  width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
-  background: repeating-radial-gradient(circle at center, #2b2b2b 0 2px, #333 2px 4px);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-  animation: radioSpin 6s linear infinite; animation-play-state: paused;
+  width: 48px; height: 48px; border-radius: 50%; flex-shrink: 0;
+  background:
+    radial-gradient(circle at center, #8D1B2A 0px, #8D1B2A 10px, #111 10px 11px,
+      #1a1a1a 11px 12px, #252525 12px 13px, #1a1a1a 13px 14px, #2a2a2a 14px 15px,
+      #1e1e1e 15px 16px, #282828 16px 17px, #1a1a1a 17px 18px, #232323 18px 19px,
+      #202020 19px 24px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.35), inset 0 0 0 1px rgba(255,255,255,0.04);
+  animation: miniDiscSpin 2.8s linear infinite; animation-play-state: paused;
+  position: relative;
+}
+@keyframes miniDiscSpin { to { transform: rotate(360deg); } }
+.mini-disc::after {
+  content: '';
+  position: absolute; top: 50%; left: 50%;
+  width: 6px; height: 6px; border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle at 35% 35%, #d0d0d0, #888);
+  box-shadow: 0 0 0 1px #333;
 }
 .mini-disc.spinning { animation-play-state: running; }
 .mini-info { flex: 1; min-width: 0; }
@@ -771,15 +907,44 @@ body {
 .filter-genre-chip { padding: 3px 9px; border-radius: 20px; border: 1.5px solid var(--border); background: none; font-family: 'Nunito', sans-serif; font-size: 10px; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: all .15s; }
 .filter-genre-chip:hover { border-color: var(--peach-mid); color: var(--peach); }
 .filter-genre-chip.active { background: var(--peach-light); border-color: var(--peach-mid); color: var(--peach-dark); }
-.sec-search-wrap { display: flex; align-items: center; gap: 0; position: relative; flex-shrink: 0; }
-.sec-search-wrap.expanded { flex: 1; min-width: 0; }
-.sec-search-btn { background: none; border: none; cursor: pointer; padding: 5px; display: flex; align-items: center; color: var(--text-muted); border-radius: 50%; transition: color .15s, background .15s; flex-shrink: 0; z-index: 1; }
-.sec-search-btn:hover { color: var(--peach); background: var(--peach-light); }
-.sec-search-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
-.sec-search-input { width: 0; opacity: 0; border: none; outline: none; padding: 5px 0; font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 600; background: transparent; color: var(--text); border-bottom: 1.5px solid transparent; transition: width .3s cubic-bezier(.4,0,.2,1), opacity .25s, border-color .2s, padding .3s; pointer-events: none; }
-.sec-search-input.open { width: 170px; opacity: 1; border-bottom-color: var(--peach); padding: 5px 8px; pointer-events: auto; }
-.sec-search-wrap.expanded .sec-search-input.open { width: auto; flex: 1; min-width: 0; }
-@media (max-width: 600px) { .sec-search-input.open { width: 100px; } }
+.sec-search-wrap {
+  display: flex; align-items: center;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+  flex-shrink: 0;
+  transition: border-color .2s, box-shadow .2s;
+}
+.sec-search-wrap:focus-within {
+  border-color: var(--peach-mid);
+  box-shadow: 0 0 0 3px rgba(141,27,42,0.07);
+}
+.sec-search-input {
+  width: 190px; opacity: 1;
+  border: none; outline: none;
+  padding: 7px 4px 7px 14px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 12px; font-weight: 600;
+  background: transparent; color: var(--text);
+  pointer-events: auto;
+}
+.sec-search-input::placeholder { color: var(--text-muted); font-weight: 400; }
+.sec-search-btn {
+  background: var(--peach-dark);
+  border: none; cursor: pointer;
+  padding: 6px 10px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  flex-shrink: 0;
+  transition: background .15s;
+  border-radius: 0;
+  margin: 0;
+}
+.sec-search-btn:hover { background: var(--peach); }
+.sec-search-btn svg { width: 14px; height: 14px; stroke: #fff; fill: none; stroke-width: 2.5; }
+
+@media (max-width: 600px) { .sec-search-input { width: 130px; } }
 
 /* ─── FOOTER ─── */
 footer {
@@ -993,8 +1158,14 @@ body.theme-player .pl-chat-wrap { display: block; }
     </div>
     <div class="radio-body">
       <div class="radio-turntable" id="radioTurntable">
-        <div class="radio-disc" id="radioDisc"><div class="radio-disc-center"></div></div>
-        <div class="radio-tonearm" id="radioTonearm"></div>
+        <div class="radio-platter-base"></div>
+        <div class="radio-platter-mat"></div>
+        <div class="radio-disc" id="radioDisc">
+          <div class="radio-disc-center"></div>
+        </div>
+        <div class="radio-tonearm-wrap" id="radioTonearm">
+          <div class="radio-tonearm-arm"></div>
+        </div>
       </div>
       <div class="radio-info">
         <div class="radio-song" id="radioSongTitle">Best of Me</div>
@@ -1132,12 +1303,12 @@ body.theme-player .pl-chat-wrap { display: block; }
       MỚI CẬP NHẬT
     </div>
     <div class="sec-search-wrap" id="secSearchWrap">
-      <button class="sec-search-btn" id="secSearchToggle" onclick="toggleSecSearch()" title="Tìm kiếm" aria-label="Tìm kiếm">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      </button>
       <input class="sec-search-input" id="secSearchInput" type="text" placeholder="Tìm truyện..." autocomplete="off"
         oninput="goSearchSec()"
-        onkeydown="if(event.key==='Enter')goSearchSec()" onblur="collapseSecSearch()"/>
+        onkeydown="if(event.key==='Enter')goSearchSec()"/>
+      <button class="sec-search-btn" id="secSearchToggle" onclick="goSearchSec()" title="Tìm kiếm" aria-label="Tìm kiếm">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
       <div style="position:relative">
         <button class="sec-search-btn" id="filterToggleBtn" onclick="toggleFilterMenu(event)" title="Lọc & sắp xếp" aria-label="Lọc">
           <svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round">
@@ -1330,42 +1501,15 @@ function goSearch() {
   else location.href = 'search.html';
 }
 function toggleSecSearch() {
-  const input = document.getElementById('secSearchInput');
-  const wrap = document.getElementById('secSearchWrap');
-  const title = document.getElementById('newUpdateTitle');
-  if (input.classList.contains('open')) {
-    if (!input.value.trim()) {
-      input.classList.remove('open');
-      wrap.classList.remove('expanded');
-      if (title) title.style.display = '';
-      currentSearchQ = '';
-      renderFilteredStories();
-    }
-  } else {
-    input.classList.add('open');
-    wrap.classList.add('expanded');
-    if (title) title.style.display = 'none';
-    setTimeout(() => input.focus(), 50);
-  }
+  // bar luôn hiện — không cần toggle, click nút submit = search
+  goSearchSec();
 }
 function goSearchSec() {
   currentSearchQ = document.getElementById('secSearchInput')?.value.trim().toLowerCase() || '';
   renderFilteredStories();
 }
 function collapseSecSearch() {
-  const input = document.getElementById('secSearchInput');
-  const wrap = document.getElementById('secSearchWrap');
-  const title = document.getElementById('newUpdateTitle');
-  setTimeout(() => {
-    if (!document.activeElement?.closest('#secSearchWrap')) {
-      input.classList.remove('open');
-      wrap.classList.remove('expanded');
-      if (title) title.style.display = '';
-      input.value = '';
-      currentSearchQ = '';
-      renderFilteredStories();
-    }
-  }, 150);
+  // bar luôn hiện — không collapse
 }
 document.addEventListener('DOMContentLoaded', function() {
   const inp = document.getElementById('heroSearchInput');
@@ -2402,106 +2546,275 @@ if (window.PlSEO) {
 }
 </script>
 
-<!-- ═══ PEACH LUKU RADIO — widget UI trang trí, KHÔNG kết nối audio/API thật ═══ -->
+<!-- ═══ PEACH LUKU RADIO — nâng cấp: audio thật, localStorage, waveform sống, spin đĩa, tay kim ═══ -->
 <script>
 (function () {
+  'use strict';
+
+  // ── PLAYLIST — tự thêm bài bằng cách sửa mảng này ──────────────────────────
+  // src: đường dẫn file nhạc (mp3/ogg). Để rỗng '' nếu chưa có file.
+  // cover: URL ảnh bìa (tuỳ chọn, hiện tại chưa dùng trong card radio).
   const RADIO_PLAYLIST = [
-    { song: 'Best of Me', artist: 'BTS' },
-    { song: 'Photograph', artist: 'Ed Sheeran' },
-    { song: 'Fix You', artist: 'Coldplay' },
-    { song: 'The Truth Untold', artist: 'BTS' },
-    { song: 'Yellow', artist: 'Coldplay' }
+    { title: 'Best of Me',       artist: 'BTS',        src: '', cover: '' },
+    { title: 'Photograph',       artist: 'Ed Sheeran', src: '', cover: '' },
+    { title: 'Fix You',          artist: 'Coldplay',   src: '', cover: '' },
+    { title: 'The Truth Untold', artist: 'BTS',        src: '', cover: '' },
+    { title: 'Yellow',           artist: 'Coldplay',   src: '', cover: '' }
   ];
-  let radioIdx = 0;
-  let radioPlaying = false;
 
-  const $ = (id) => document.getElementById(id);
+  const LS_IDX = 'plRadioIdx';
+  const $      = id => document.getElementById(id);
 
-  function buildWaveform(el, bars) {
-    if (!el) return;
-    el.innerHTML = '';
-    for (let i = 0; i < bars; i++) {
-      const span = document.createElement('span');
-      const h = 6 + Math.round(Math.random() * 18);
-      span.style.height = h + 'px';
-      span.style.setProperty('--i', i);
-      if (i < Math.round(bars * 0.32)) span.classList.add('active');
-      el.appendChild(span);
+  // ── State ───────────────────────────────────────────────────────────────────
+  let radioIdx      = Math.max(0, Math.min(parseInt(localStorage.getItem(LS_IDX) || '0', 10), RADIO_PLAYLIST.length - 1));
+  let radioPlaying  = false;
+  let radioLooping  = false;
+  let radioShuffled = false;
+
+  // ── Audio engine ────────────────────────────────────────────────────────────
+  let audio = null;
+
+  function getAudio() {
+    if (!audio) {
+      audio = new Audio();
+      audio.preload = 'metadata';
+      audio.addEventListener('ended', () => {
+        if (radioLooping) { audio.currentTime = 0; audio.play().catch(() => {}); }
+        else window.radioNext();
+      });
+      audio.addEventListener('timeupdate', onTimeUpdate);
+      audio.addEventListener('loadedmetadata', () => updateTimeDisplay(audio.currentTime, audio.duration));
+      audio.addEventListener('error', () => { if (radioPlaying) startFakeTimer(); });
     }
+    return audio;
   }
 
+  // ── Fake timer (visual-only khi không có src) ───────────────────────────────
+  let fakeTimer = null, fakeCur = 0, fakeTotal = 215;
+
+  function startFakeTimer() {
+    stopFakeTimer();
+    if (!fakeTotal) fakeTotal = 150 + Math.round(Math.random() * 120);
+    fakeTimer = setInterval(() => {
+      if (!radioPlaying) return;
+      fakeCur = Math.min(fakeCur + 0.5, fakeTotal);
+      updateTimeDisplay(fakeCur, fakeTotal);
+      updateWaveformProgress(fakeCur / fakeTotal);
+      updateMiniProgress(fakeCur / fakeTotal);
+      if (fakeCur >= fakeTotal) {
+        stopFakeTimer();
+        if (radioLooping) { fakeCur = 0; startFakeTimer(); }
+        else window.radioNext();
+      }
+    }, 500);
+  }
+
+  function stopFakeTimer() { if (fakeTimer) { clearInterval(fakeTimer); fakeTimer = null; } }
+
+  function onTimeUpdate() {
+    const cur = audio.currentTime, total = audio.duration || 0;
+    updateTimeDisplay(cur, total);
+    if (total > 0) { updateWaveformProgress(cur / total); updateMiniProgress(cur / total); }
+  }
+
+  // ── Helpers ─────────────────────────────────────────────────────────────────
+  function fmt(s) {
+    s = Math.floor(s || 0);
+    return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+  }
+  function updateTimeDisplay(cur, total) {
+    const c = $('radioTimeCur'), t = $('radioTimeTotal');
+    if (c) c.textContent = fmt(cur);
+    if (t) t.textContent = fmt(total || 0);
+  }
+  function updateMiniProgress(r) {
+    const f = $('miniProgressFill');
+    if (f) f.style.width = Math.min(100, Math.round(r * 100)) + '%';
+  }
+
+  // ── Waveform ────────────────────────────────────────────────────────────────
+  function buildWaveform() {
+    const el = $('radioWaveform');
+    if (!el) return;
+    const BARS = 46;
+    const seed = radioIdx * 7;
+    el.innerHTML = Array.from({length: BARS}, (_, i) => {
+      const h = 6 + Math.round(Math.abs(Math.sin((i + seed) * 0.6)) * 13 + Math.abs(Math.cos((i + seed) * 0.4)) * 7);
+      return `<span style="height:${h}px;--i:${i}"></span>`;
+    }).join('');
+    updateWaveformProgress(0);
+  }
+
+  function updateWaveformProgress(ratio) {
+    const el = $('radioWaveform');
+    if (!el) return;
+    const cutoff = Math.round(ratio * el.children.length);
+    Array.from(el.children).forEach((sp, i) => sp.classList.toggle('active', i < cutoff));
+  }
+
+  function attachWaveformSeek() {
+    const el = $('radioWaveform');
+    if (!el || el._seekBound) return;
+    el._seekBound = true;
+    el.addEventListener('click', e => {
+      const ratio = (e.clientX - el.getBoundingClientRect().left) / el.offsetWidth;
+      if (audio && audio.duration) {
+        audio.currentTime = ratio * audio.duration;
+      } else {
+        fakeCur = ratio * fakeTotal;
+        updateTimeDisplay(fakeCur, fakeTotal);
+        updateWaveformProgress(ratio);
+        updateMiniProgress(ratio);
+      }
+    });
+  }
+
+  // ── Playlist render ──────────────────────────────────────────────────────────
   function buildPlaylist() {
     const wrap = $('radioPlaylist');
     if (!wrap) return;
-    wrap.innerHTML = RADIO_PLAYLIST.map((t, i) => `
-      <div class="radio-playlist-item${i === radioIdx ? ' active' : ''}" data-idx="${i}">
-        <span class="radio-playlist-icon${i === radioIdx && radioPlaying ? ' eq' : ''}">
-          ${i === radioIdx && radioPlaying
+    wrap.innerHTML = RADIO_PLAYLIST.map((t, i) => {
+      const active = i === radioIdx;
+      const eq     = active && radioPlaying;
+      return `<div class="radio-playlist-item${active ? ' active' : ''}" data-idx="${i}">
+        <span class="radio-playlist-icon${eq ? ' eq' : ''}">
+          ${eq
             ? '<svg viewBox="0 0 24 24"><rect x="4" y="10" width="3" height="8"/><rect x="10.5" y="4" width="3" height="14"/><rect x="17" y="8" width="3" height="10"/></svg>'
             : '<svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>'}
         </span>
         <span class="radio-playlist-text">
-          <div class="radio-playlist-song">${t.song}</div>
+          <div class="radio-playlist-song">${t.title}</div>
           <div class="radio-playlist-artist">${t.artist}</div>
         </span>
-      </div>
-    `).join('');
-    wrap.querySelectorAll('.radio-playlist-item').forEach(item => {
-      item.addEventListener('click', () => radioSelect(parseInt(item.dataset.idx, 10)));
-    });
+      </div>`;
+    }).join('');
+    wrap.querySelectorAll('.radio-playlist-item').forEach(el =>
+      el.addEventListener('click', () => window.radioSelect(+el.dataset.idx)));
   }
 
-  function renderTrack() {
+  // ── Render track (đổi bài) ───────────────────────────────────────────────────
+  function renderTrack(autoplay) {
     const t = RADIO_PLAYLIST[radioIdx];
-    [ $('radioSongTitle'), $('miniSongTitle') ].forEach(el => el && (el.textContent = t.song));
-    [ $('radioSongArtist'), $('miniSongArtist') ].forEach(el => el && (el.textContent = t.artist));
-    buildWaveform($('radioWaveform'), 46);
+    if (!t) return;
+    localStorage.setItem(LS_IDX, radioIdx);
+
+    [$('radioSongTitle'), $('miniSongTitle')].forEach(el => el && (el.textContent = t.title));
+    [$('radioSongArtist'), $('miniSongArtist')].forEach(el => el && (el.textContent = t.artist));
+
+    buildWaveform();
     buildPlaylist();
+    updateMiniProgress(0);
+
+    stopFakeTimer();
+    fakeCur = 0;
+    fakeTotal = 150 + (radioIdx * 17 % 90);
+
+    if (t.src) {
+      const a = getAudio();
+      const wasPlaying = radioPlaying;
+      a.pause(); a.src = t.src; a.load();
+      updateTimeDisplay(0, 0);
+      if (autoplay || wasPlaying) {
+        a.play()
+          .then(() => { radioPlaying = true; updatePlayVisual(); })
+          .catch(() => { radioPlaying = true; updatePlayVisual(); startFakeTimer(); });
+      }
+    } else {
+      if (audio) { audio.pause(); audio.src = ''; }
+      updateTimeDisplay(0, fakeTotal);
+      if (autoplay || radioPlaying) { radioPlaying = true; startFakeTimer(); }
+    }
+
+    updatePlayVisual();
   }
 
+  // ── Play/pause visual ────────────────────────────────────────────────────────
   function updatePlayVisual() {
-    const disc = $('radioDisc'), miniDisc = $('miniDisc'), turntable = $('radioTurntable');
-    const wave = $('radioWaveform');
-    [disc, miniDisc].forEach(el => el && el.classList.toggle('spinning', radioPlaying));
-    turntable && turntable.classList.toggle('playing', radioPlaying);
-    wave && wave.classList.toggle('playing', radioPlaying);
+    [$('radioDisc'), $('miniDisc')].forEach(el => el && el.classList.toggle('spinning', radioPlaying));
+    const tt = $('radioTurntable');
+    if (tt) tt.classList.toggle('playing', radioPlaying);
+    const wv = $('radioWaveform');
+    if (wv) wv.classList.toggle('playing', radioPlaying);
 
-    const playIconPath = radioPlaying
-      ? '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>'
-      : '<polygon points="6 4 20 12 6 20 6 4"/>';
-    const pIcon = $('radioPlayIcon'), mIcon = $('miniPlayIcon');
-    if (pIcon) { pIcon.setAttribute('fill', radioPlaying ? 'currentColor' : 'currentColor'); pIcon.innerHTML = playIconPath; }
-    if (mIcon) mIcon.innerHTML = playIconPath;
+    const pauseSVG = '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>';
+    const playSVG  = '<polygon points="6 4 20 12 6 20 6 4"/>';
+    const ico = radioPlaying ? pauseSVG : playSVG;
+    [$('radioPlayIcon'), $('miniPlayIcon')].forEach(el => el && (el.innerHTML = ico));
   }
 
+  // ── Public API ───────────────────────────────────────────────────────────────
   window.radioTogglePlay = function () {
     radioPlaying = !radioPlaying;
+    if (radioPlaying) {
+      const t = RADIO_PLAYLIST[radioIdx];
+      if (t && t.src && audio && audio.src) {
+        audio.play().catch(() => startFakeTimer());
+      } else {
+        startFakeTimer();
+      }
+    } else {
+      if (audio) audio.pause();
+      stopFakeTimer();
+    }
     updatePlayVisual();
     buildPlaylist();
   };
+
   window.radioNext = function () {
     radioIdx = (radioIdx + 1) % RADIO_PLAYLIST.length;
-    renderTrack();
-  };
-  window.radioPrev = function () {
-    radioIdx = (radioIdx - 1 + RADIO_PLAYLIST.length) % RADIO_PLAYLIST.length;
-    renderTrack();
-  };
-  window.radioSelect = function (i) {
-    radioIdx = i;
-    renderTrack();
-    if (!radioPlaying) window.radioTogglePlay();
-  };
-  window.radioShuffle = function (btn) {
-    radioIdx = Math.floor(Math.random() * RADIO_PLAYLIST.length);
-    renderTrack();
-  };
-  window.radioLoop = function (btn) {
-    if (btn) btn.classList.toggle('active');
+    renderTrack(true);
   };
 
-  document.addEventListener('DOMContentLoaded', renderTrack);
-  if (document.readyState !== 'loading') renderTrack();
+  window.radioPrev = function () {
+    // <3s → restart bài hiện tại; >=3s → bài trước
+    const curTime = (audio && audio.duration) ? audio.currentTime : fakeCur;
+    if (curTime >= 3) {
+      if (audio && audio.src) { audio.currentTime = 0; }
+      else { fakeCur = 0; updateTimeDisplay(0, fakeTotal); updateWaveformProgress(0); updateMiniProgress(0); }
+      return;
+    }
+    radioIdx = (radioIdx - 1 + RADIO_PLAYLIST.length) % RADIO_PLAYLIST.length;
+    renderTrack(true);
+  };
+
+  window.radioSelect = function (i) {
+    if (i === radioIdx && radioPlaying) return;
+    radioIdx = i;
+    radioPlaying = true;
+    renderTrack(true);
+  };
+
+  window.radioShuffle = function (btn) {
+    radioShuffled = !radioShuffled;
+    if (btn) btn.classList.toggle('active', radioShuffled);
+    if (radioShuffled) {
+      let next;
+      do { next = Math.floor(Math.random() * RADIO_PLAYLIST.length); }
+      while (next === radioIdx && RADIO_PLAYLIST.length > 1);
+      radioIdx = next;
+      renderTrack(true);
+    }
+  };
+
+  window.radioLoop = function (btn) {
+    radioLooping = !radioLooping;
+    if (btn) btn.classList.toggle('active', radioLooping);
+    if (audio) audio.loop = radioLooping;
+  };
+
+  // ── Init ─────────────────────────────────────────────────────────────────────
+  function init() {
+    attachWaveformSeek();
+    renderTrack(false);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+
+  window.addEventListener('beforeunload', () => {
+    stopFakeTimer();
+    if (audio) { audio.pause(); audio.src = ''; audio = null; }
+  });
 })();
 </script>
 </body>
