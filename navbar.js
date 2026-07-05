@@ -97,14 +97,36 @@
 
 /* Profile dropdown */
 .profile-menu-wrap { position: relative; }
+.profile-menu-wrap { position: static; }
 .profile-dropdown {
-  display: none; flex-direction: column;
-  position: absolute; right: 0; top: calc(100% + 8px);
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 18px; min-width: 190px;
-  box-shadow: 0 14px 36px rgba(141,27,42,.14); z-index: 200; overflow: hidden;
+  position: fixed; top: 0; right: -280px; bottom: 0; z-index: 400;
+  width: 260px;
+  background: var(--bg2); border-left: 1px solid var(--border);
+  padding: 0; display: flex; flex-direction: column;
+  box-shadow: -6px 0 28px rgba(0,0,0,0.13);
+  transition: right .28s cubic-bezier(.4,0,.2,1);
+  overflow-y: auto;
 }
-.profile-dropdown.open { display: flex; }
+.profile-dropdown.open { right: 0; }
+.profile-sidebar-overlay {
+  display: none; position: fixed; inset: 0; z-index: 399;
+  background: rgba(0,0,0,0.28);
+}
+.profile-sidebar-overlay.open { display: block; }
+.profile-sidebar-header {
+  padding: 14px 16px; display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid var(--border); flex-shrink: 0;
+  background: var(--peach);
+}
+.profile-sidebar-header span { font-size: 13px; font-weight: 800; color: #fff; flex: 1; }
+.profile-sidebar-close {
+  background: none; border: none; cursor: pointer;
+  color: rgba(255,255,255,.85); padding: 4px;
+  display: flex; align-items: center; border-radius: 6px; transition: background .15s;
+}
+.profile-sidebar-close:hover { background: rgba(255,255,255,.2); }
+.profile-sidebar-close svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2.2; }
+.profile-sidebar-body { padding: 8px; display: flex; flex-direction: column; gap: 2px; flex: 1; }
 .profile-dropdown-item {
   display: flex; align-items: center; gap: 9px;
   padding: 10px 14px; font-size: 13px; font-weight: 700;
@@ -363,18 +385,15 @@
   </a>
 
   <div class="nav-center">
-    <a href="index.html"${isActive('home')}>
+    <a href="index.html"${isActive('home')} title="Trang chủ">
       <svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><polyline points="9 21 9 12 15 12 15 21"/></svg>
-      Trang chủ
     </a>
-    <a href="library.html"${isActive('library')}>
+    <a href="library.html"${isActive('library')} title="Thư viện">
       <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-      Thư viện
     </a>
     <a href="#" class="nav-notif-btn" id="navNotifBtn" title="Thông báo chương mới">
       <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
       <span class="notif-dot" id="notifDot" style="display:none"></span>
-      Thông báo
     </a>
   </div>
 
@@ -386,7 +405,15 @@
       <button class="icon-btn profile-menu-btn" id="profileMenuBtn" title="Hồ sơ & Tùy chọn">
         <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       </button>
+      <div class="profile-sidebar-overlay" id="profileSidebarOverlay" onclick="closeProfileSidebar()"></div>
       <div class="profile-dropdown" id="profileDropdown">
+        <div class="profile-sidebar-header">
+          <span>Menu</span>
+          <button class="profile-sidebar-close" onclick="closeProfileSidebar()">
+            <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="profile-sidebar-body">
         <a class="profile-dropdown-item" href="search.html">
           <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           Tìm kiếm
@@ -419,6 +446,7 @@
           <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           Hồ sơ của tôi
         </a>
+        </div><!-- /profile-sidebar-body -->
       </div>
     </div>
   </div>
@@ -657,20 +685,28 @@
       notifPanel.classList.remove('open');
     });
 
-    // Profile dropdown
+    // Profile → sidebar
     const profileBtn = document.getElementById('profileMenuBtn');
     if (profileBtn) profileBtn.addEventListener('click', function (e) {
       e.preventDefault(); e.stopPropagation();
       const dd = document.getElementById('profileDropdown');
+      const ov = document.getElementById('profileSidebarOverlay');
       dd.classList.toggle('open');
+      if (ov) ov.classList.toggle('open', dd.classList.contains('open'));
       if (notifPanel) notifPanel.classList.remove('open');
     });
+    window.closeProfileSidebar = function() {
+      const dd = document.getElementById('profileDropdown');
+      const ov = document.getElementById('profileSidebarOverlay');
+      if (dd) dd.classList.remove('open');
+      if (ov) ov.classList.remove('open');
+    };
 
-    // Click ngoài để đóng
+    // Click ngoài để đóng (sidebar dùng overlay thay thế)
     document.addEventListener('click', function (e) {
       const wrap = document.getElementById('profileMenuWrap');
       const dd = document.getElementById('profileDropdown');
-      if (wrap && dd && !wrap.contains(e.target)) dd.classList.remove('open');
+      // Sidebar đóng qua overlay click, không cần check ngoài nữa
 
       if (themeDrawer && themeBtn && !themeDrawer.contains(e.target) && !themeBtn.contains(e.target)) {
         themeDrawer.classList.remove('open');
