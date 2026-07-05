@@ -226,6 +226,7 @@ body {
 
 /* ─── HERO BANNER (Peach Luku wine-red style) ─── */
 .hero {
+  margin: 0 !important; border-radius: 0 !important; max-width: 100% !important;
   background:
     radial-gradient(ellipse 420px 260px at 88% -10%, rgba(255,255,255,0.08), transparent 60%),
     linear-gradient(135deg, var(--peach-mid) 0%, var(--peach) 45%, var(--peach-dark) 100%);
@@ -340,7 +341,7 @@ body {
 .hero-right-img img { width: 100%; height: 100%; object-fit: cover; }
 
 @media (max-width: 600px) {
-  .hero { margin: 10px 0.6rem 0; padding: 1.6rem 1.1rem; gap: 1rem; min-height: auto; border-radius: var(--radius-md); }
+  .hero { margin: 0 !important; border-radius: 0 !important; padding: 1.6rem 1.1rem; gap: 1rem; min-height: auto; }
   .hero-logo img { width: 78px; height: 78px; }
   .hero-title { font-size: 22px; }
   .hero-right-images { display: none; }
@@ -357,12 +358,11 @@ body {
   box-shadow: var(--shadow-soft);
 }
 .notice-badge {
-  background: var(--peach); color: white;
-  font-size: 10px; font-weight: 800; padding: 5px 12px; border-radius: 20px;
-  white-space: nowrap; flex-shrink: 0; display: flex; align-items: center; gap: 5px; letter-spacing: 0.3px;
-  box-shadow: 0 3px 10px rgba(141,27,42,0.25);
+  color: var(--peach);
+  padding: 4px 6px; border-radius: 6px;
+  flex-shrink: 0; display: flex; align-items: center;
 }
-.notice-badge svg { width: 12px; height: 12px; stroke: white; fill: none; stroke-width: 2.2; flex-shrink: 0; }
+.notice-badge svg { width: 14px; height: 14px; stroke: var(--peach); fill: none; stroke-width: 2.2; flex-shrink: 0; }
 .notice-scroll-wrap { overflow: hidden; flex: 1; }
 .notice-scroll-text {
   display: inline-block; white-space: nowrap;
@@ -536,8 +536,7 @@ body {
 @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
 /* ─── CHAT SECTION ─── */
-.chat-section { padding: 0 1.2rem 1rem; }
-@media (max-width: 600px) { .chat-section { padding: 0 0.6rem 1rem; } }
+/* chat-section moved to fixed position */
 .chat-box { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-soft); }
 .chat-panel-head { background: var(--peach); padding: 11px 14px; display: flex; align-items: center; gap: 8px; }
 .chat-panel-title { flex: 1; font-size: 13px; font-weight: 900; color: #fff; letter-spacing: .3px; display: flex; align-items: center; gap: 6px; }
@@ -618,11 +617,9 @@ body {
 
 /* ─── PEACH LUKU RADIO (widget trang trí) ─── */
 .radio-section {
-  display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px;
   margin: 16px 1.2rem 0;
 }
-@media (max-width: 900px) { .radio-section { grid-template-columns: 1fr; } }
-@media (max-width: 600px) { .radio-section { margin: 12px 0.6rem 0; gap: 12px; } }
+@media (max-width: 600px) { .radio-section { margin: 12px 0.6rem 0; } }
 
 .radio-card, .radio-playlist-card {
   background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg);
@@ -908,10 +905,10 @@ body {
 .filter-genre-chip:hover { border-color: var(--peach-mid); color: var(--peach); }
 .filter-genre-chip.active { background: var(--peach-light); border-color: var(--peach-mid); color: var(--peach-dark); }
 .sec-search-wrap {
-  display: flex; align-items: center;
+  display: flex; align-items: stretch;
   background: var(--bg);
   border: 1.5px solid var(--border);
-  border-radius: 999px;
+  border-radius: 8px;
   overflow: hidden;
   flex-shrink: 0;
   transition: border-color .2s, box-shadow .2s;
@@ -930,22 +927,100 @@ body {
   pointer-events: auto;
 }
 .sec-search-input::placeholder { color: var(--text-muted); font-weight: 400; }
-.sec-search-btn {
+.sec-search-btns {
+  display: flex; align-items: stretch;
   background: var(--peach-dark);
+  flex-shrink: 0; align-self: stretch;
+}
+.sec-search-btn {
+  background: transparent;
   border: none; cursor: pointer;
-  padding: 6px 10px;
+  padding: 0 11px;
   display: flex; align-items: center; justify-content: center;
   color: #fff;
   flex-shrink: 0;
   transition: background .15s;
   border-radius: 0;
-  margin: 0;
+  margin: 0; min-height: 34px;
 }
-.sec-search-btn:hover { background: var(--peach); }
+.sec-search-btn:hover { background: rgba(255,255,255,0.15); }
 .sec-search-btn svg { width: 14px; height: 14px; stroke: #fff; fill: none; stroke-width: 2.5; }
 
 @media (max-width: 600px) { .sec-search-input { width: 130px; } }
 
+
+/* ── CHAT BUTTON + POPUP ── */
+/* chat section padding remove — nút nằm ngoài flow */
+.chat-section {
+  position: fixed; bottom: 24px; right: 24px;
+  z-index: 300; display: flex; flex-direction: column; align-items: flex-end; gap: 10px;
+}
+@media (max-width: 600px) { .chat-section { bottom: 16px; right: 14px; } }
+
+/* Nút tròn */
+.chat-open-btn {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--peach);
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 18px rgba(141,27,42,0.35);
+  transition: background .15s, transform .15s, box-shadow .15s;
+  position: relative;
+}
+.chat-open-btn:hover {
+  background: var(--peach-dark);
+  transform: scale(1.07);
+  box-shadow: 0 6px 24px rgba(141,27,42,0.45);
+}
+.chat-open-btn svg { width: 22px; height: 22px; stroke: #fff; fill: none; stroke-width: 2; }
+.chat-btn-arrow { display: none; }
+/* Badge online */
+.chat-open-btn .chat-online-count {
+  position: absolute; top: -3px; right: -3px;
+  background: #e84040; color: #fff;
+  font-size: 9px; font-weight: 800;
+  padding: 1px 5px; border-radius: 10px;
+  border: 2px solid var(--bg);
+  min-width: 16px; text-align: center;
+  margin-left: 0;
+}
+
+/* Chat popup nổi trên nút */
+.chat-popup {
+  display: none; flex-direction: column;
+  width: 300px; max-height: 420px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius-md); box-shadow: 0 8px 32px rgba(0,0,0,.18);
+  overflow: hidden;
+  transform-origin: bottom right;
+  animation: chatPopIn .18s ease;
+}
+@keyframes chatPopIn {
+  from { opacity:0; transform: scale(.92) translateY(8px); }
+  to   { opacity:1; transform: scale(1)  translateY(0); }
+}
+.chat-popup.open { display: flex; }
+.chat-popup-head {
+  background: var(--peach); padding: 11px 14px;
+  display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+}
+.chat-popup-close {
+  background: none; border: none; cursor: pointer;
+  color: rgba(255,255,255,.85); padding: 3px;
+  display: flex; align-items: center; border-radius: 6px;
+  transition: background .15s; margin-left: auto;
+}
+.chat-popup-close:hover { background: rgba(255,255,255,.2); }
+.chat-popup-close svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.2; }
+.chat-popup .chat-list { max-height: 260px; }
+
+/* ── PLAYLIST INLINE (trong radio card) ── */
+.radio-playlist-inline {
+  margin-top: 16px; padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.radio-playlist-inline.collapsed .radio-playlist-list { display: none; }
+.radio-playlist-inline.collapsed .radio-playlist-toggle svg { transform: rotate(180deg); }
 /* ─── FOOTER ─── */
 footer {
   margin-top: 2rem;
@@ -1140,9 +1215,8 @@ body.theme-player .pl-chat-wrap { display: block; }
 
 <!-- THÔNG BÁO BANNER (dưới hero, trên section truyện) -->
 <div class="notice-banner" id="noticeBanner">
-  <div class="notice-badge">
+  <div class="notice-badge" title="Thông báo">
     <svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-    THÔNG BÁO
   </div>
   <div class="notice-scroll-wrap">
     <span class="notice-scroll-text" id="noticeScrollText">...</span>
@@ -1194,28 +1268,38 @@ body.theme-player .pl-chat-wrap { display: block; }
         </div>
       </div>
     </div>
-  </div>
-
-  <div class="radio-playlist-card">
-    <div class="radio-playlist-head">
-      <span>PLAYLIST</span>
-      <button class="radio-playlist-toggle" onclick="this.closest('.radio-playlist-card').classList.toggle('collapsed')" title="Thu gọn">
-        <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
-      </button>
+    <!-- Playlist nằm trong cùng card radio -->
+    <div class="radio-playlist-inline">
+      <div class="radio-playlist-head">
+        <span>PLAYLIST</span>
+        <button class="radio-playlist-toggle" onclick="this.closest('.radio-playlist-inline').classList.toggle('collapsed')" title="Thu gọn">
+          <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+        </button>
+      </div>
+      <div class="radio-playlist-list" id="radioPlaylist"></div>
     </div>
-    <div class="radio-playlist-list" id="radioPlaylist"></div>
   </div>
 </div>
 
-<!-- CHAT INLINE -->
+<!-- CHAT BUTTON (mở popup) -->
 <div class="chat-section">
-  <div class="chat-box">
-    <div class="chat-panel-head">
+  <button class="chat-open-btn" id="chatOpenBtn" onclick="toggleChatPopup()">
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <span>NÓI GÌ ĐI MẤY BÀ</span>
+    <span class="chat-online-count" id="chatOnlineCount" style="margin-left:auto"></span>
+    <svg class="chat-btn-arrow" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+
+  <!-- Chat popup -->
+  <div class="chat-popup" id="chatPopup">
+    <div class="chat-popup-head">
       <div class="chat-panel-title">
         <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         NÓI GÌ ĐI MẤY BÀ
       </div>
-      <span class="chat-online-count" id="chatOnlineCount"></span>
+      <button class="chat-popup-close" onclick="toggleChatPopup()" title="Đóng">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
     </div>
     <div class="chat-list" id="chatList">
       <div class="chat-empty">Đang tải...</div>
@@ -1306,17 +1390,18 @@ body.theme-player .pl-chat-wrap { display: block; }
       <input class="sec-search-input" id="secSearchInput" type="text" placeholder="Tìm truyện..." autocomplete="off"
         oninput="goSearchSec()"
         onkeydown="if(event.key==='Enter')goSearchSec()"/>
-      <button class="sec-search-btn" id="secSearchToggle" onclick="goSearchSec()" title="Tìm kiếm" aria-label="Tìm kiếm">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      </button>
-      <div style="position:relative">
-        <button class="sec-search-btn" id="filterToggleBtn" onclick="toggleFilterMenu(event)" title="Lọc & sắp xếp" aria-label="Lọc">
-          <svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round">
-            <line x1="3" y1="6" x2="21" y2="6"/>
-            <line x1="6" y1="12" x2="21" y2="12"/>
-            <line x1="9" y1="18" x2="21" y2="18"/>
-          </svg>
+      <div class="sec-search-btns">
+        <button class="sec-search-btn" id="secSearchToggle" onclick="goSearchSec()" title="Tìm kiếm" aria-label="Tìm kiếm">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         </button>
+        <div style="position:relative">
+          <button class="sec-search-btn" id="filterToggleBtn" onclick="toggleFilterMenu(event)" title="Lọc & sắp xếp" aria-label="Lọc" style="border-left:1px solid rgba(255,255,255,0.25)">
+            <svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round">
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <line x1="6" y1="12" x2="21" y2="12"/>
+              <line x1="9" y1="18" x2="21" y2="18"/>
+            </svg>
+          </button>
         <!-- FILTER DROPDOWN -->
         <div class="filter-dropdown" id="filterDropdown">
           <div class="filter-section-label">Sắp xếp</div>
@@ -1344,11 +1429,12 @@ body.theme-player .pl-chat-wrap { display: block; }
             <button class="filter-genre-chip active" data-genre="" onclick="setGenre('',this)">Tất cả</button>
           </div>
         </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Story grid (vertical cards, 6 cols laptop, 2 cols mobile) -->
+  <!-- Story gridvertical cards, 6 cols laptop, 2 cols mobile) -->
   <div class="new-update-grid" id="dien-thoai-skeleton">
     <div class="skel-card"><div class="skel-cover"></div><div class="skel-line"></div><div class="skel-line short"></div></div>
     <div class="skel-card"><div class="skel-cover"></div><div class="skel-line"></div><div class="skel-line short"></div></div>
@@ -1366,6 +1452,15 @@ body.theme-player .pl-chat-wrap { display: block; }
     <div class="sec-title" style="font-size:13px">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
       TRUYỆN CONVERT
+    </div>
+    <div class="sec-search-wrap">
+      <input class="sec-search-input" id="qtSearchInput" type="text" placeholder="Tìm truyện QT..." autocomplete="off"
+        oninput="goSearchQt()" onkeydown="if(event.key==='Enter')goSearchQt()"/>
+      <div class="sec-search-btns">
+        <button class="sec-search-btn" onclick="goSearchQt()" title="Tìm kiếm">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+      </div>
     </div>
   </div>
   <div class="new-update-grid" id="convert-list">
@@ -1500,6 +1595,21 @@ function goSearch() {
   if (q) location.href = 'search.html?q=' + encodeURIComponent(q);
   else location.href = 'search.html';
 }
+function toggleChatPopup() {
+  const popup = document.getElementById('chatPopup');
+  if (popup) popup.classList.toggle('open');
+}
+
+function goSearchQt() {
+  const q = (document.getElementById('qtSearchInput')?.value || '').trim().toLowerCase();
+  const cards = document.querySelectorAll('#convert-list .story-card, #convert-list .new-update-card');
+  cards.forEach(card => {
+    const title  = (card.querySelector('.story-title, .card-title')?.textContent || '').toLowerCase();
+    const author = (card.querySelector('.story-author, .card-author')?.textContent || '').toLowerCase();
+    card.style.display = (!q || title.includes(q) || author.includes(q)) ? '' : 'none';
+  });
+}
+
 function toggleSecSearch() {
   // bar luôn hiện — không cần toggle, click nút submit = search
   goSearchSec();
