@@ -618,6 +618,7 @@ body {
 /* ─── PEACH LUKU RADIO (widget trang trí) ─── */
 .radio-section {
   margin: 16px 1.2rem 0;
+  position: relative;
 }
 @media (max-width: 600px) { .radio-section { margin: 12px 0.6rem 0; } }
 
@@ -630,8 +631,13 @@ body {
   display: flex; align-items: center; gap: 6px; margin-bottom: 14px; text-transform: uppercase;
 }
 .radio-label svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
-.radio-body { display: flex; align-items: center; gap: 20px; }
-@media (max-width: 520px) { .radio-body { flex-direction: column; align-items: stretch; text-align: center; } }
+.radio-body { display: flex; align-items: center; gap: 16px; flex-wrap: nowrap; }
+@media (max-width: 520px) {
+  .radio-body { gap: 10px; }
+  .radio-turntable { width: 90px !important; height: 90px !important; flex-shrink: 0; }
+  .radio-info { flex: 1; min-width: 0; text-align: left; }
+  .radio-controls { justify-content: flex-start; flex-wrap: wrap; gap: 6px; }
+}
 
 /* ── REALISTIC VINYL TURNTABLE ── */
 .radio-turntable {
@@ -834,54 +840,13 @@ body {
 .radio-playlist-artist { font-size: 10.5px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* ─── MINI FLOATING PLAYER ─── */
-.mini-player {
-  position: fixed; right: 18px; bottom: 18px; width: 250px; z-index: 150;
-  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md); padding: 12px 14px 14px; transition: transform .3s, opacity .3s;
-}
-.mini-player.hidden { transform: translateY(140%); opacity: 0; pointer-events: none; }
-.mini-player-head { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 800; letter-spacing: .4px; color: var(--peach); margin-bottom: 10px; }
-.mini-player-head svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2.5; }
-.mini-player-head span { flex: 1; }
-.mini-player-close { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 2px; border-radius: 6px; transition: all .2s; }
-.mini-player-close:hover { color: var(--peach); background: var(--peach-light); }
-.mini-player-close svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2.4; }
-.mini-player-body { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-.mini-disc {
-  width: 48px; height: 48px; border-radius: 50%; flex-shrink: 0;
-  background:
-    radial-gradient(circle at center, #8D1B2A 0px, #8D1B2A 10px, #111 10px 11px,
-      #1a1a1a 11px 12px, #252525 12px 13px, #1a1a1a 13px 14px, #2a2a2a 14px 15px,
-      #1e1e1e 15px 16px, #282828 16px 17px, #1a1a1a 17px 18px, #232323 18px 19px,
-      #202020 19px 24px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.35), inset 0 0 0 1px rgba(255,255,255,0.04);
-  animation: miniDiscSpin 2.8s linear infinite; animation-play-state: paused;
-  position: relative;
-}
-@keyframes miniDiscSpin { to { transform: rotate(360deg); } }
-.mini-disc::after {
-  content: '';
-  position: absolute; top: 50%; left: 50%;
-  width: 6px; height: 6px; border-radius: 50%;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(circle at 35% 35%, #d0d0d0, #888);
-  box-shadow: 0 0 0 1px #333;
-}
-.mini-disc.spinning { animation-play-state: running; }
-.mini-info { flex: 1; min-width: 0; }
-.mini-song { font-size: 13px; font-weight: 800; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.mini-artist { font-size: 11px; color: var(--text-muted); margin-top: 1px; margin-bottom: 6px; }
-.mini-progress { height: 3px; border-radius: 3px; background: var(--border); overflow: hidden; }
-.mini-progress-fill { height: 100%; width: 38%; background: var(--peach); border-radius: 3px; transition: width .3s; }
-.mini-controls { display: flex; align-items: center; justify-content: center; gap: 14px; }
-.mini-ctrl-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 4px; border-radius: 50%; transition: all .2s; display: flex; }
 .mini-ctrl-btn:hover { color: var(--peach); background: var(--peach-light); }
 .mini-ctrl-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; }
 .mini-play-btn { width: 34px; height: 34px; border-radius: 50%; background: var(--peach); color: #fff; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; }
 .mini-play-btn:hover { background: var(--peach-dark); transform: scale(1.06); }
 .mini-play-btn svg { width: 14px; height: 14px; stroke: none; fill: currentColor; }
 @media (max-width: 600px) {
-  .mini-player { right: 10px; bottom: 10px; width: 210px; padding: 10px 12px 12px; }
+
 }
 .empty-box p { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
 .empty-box span { font-size: 11px; color: var(--text-muted); }
@@ -1014,13 +979,20 @@ body {
 .chat-popup-close svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.2; }
 .chat-popup .chat-list { max-height: 260px; }
 
-/* ── PLAYLIST INLINE (trong radio card) ── */
-.radio-playlist-inline {
-  margin-top: 16px; padding-top: 14px;
-  border-top: 1px solid var(--border);
+/* ── PLAYLIST POPUP ── */
+.radio-playlist-popup {
+  display: none;
+  position: absolute; right: 0; top: 0;
+  z-index: 50;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius-md); box-shadow: 0 8px 24px rgba(0,0,0,.14);
+  padding: 10px; width: 230px; max-height: 280px;
+  overflow-y: auto;
 }
-.radio-playlist-inline.collapsed .radio-playlist-list { display: none; }
-.radio-playlist-inline.collapsed .radio-playlist-toggle svg { transform: rotate(180deg); }
+.radio-playlist-popup.open { display: block; }
+@media (max-width: 520px) {
+  .radio-playlist-popup { width: 100%; right: 0; left: 0; top: auto; bottom: calc(100% + 6px); }
+}
 /* ─── FOOTER ─── */
 footer {
   margin-top: 2rem;
@@ -1223,14 +1195,9 @@ body.theme-player .pl-chat-wrap { display: block; }
   </div>
 </div>
 
-<!-- PEACH LUKU RADIO (widget trang trí, không ảnh hưởng tính năng đọc truyện) -->
+<!-- PEACH LUKU RADIO -->
 <div class="radio-section">
-  <div class="radio-card">
-    <div class="radio-label">
-      <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-      PEACH LUKU RADIO
-    </div>
-    <div class="radio-body">
+  <div class="radio-body">
       <div class="radio-turntable" id="radioTurntable">
         <div class="radio-platter-base"></div>
         <div class="radio-platter-mat"></div>
@@ -1265,15 +1232,18 @@ body.theme-player .pl-chat-wrap { display: block; }
           <button class="radio-ctrl-btn" title="Lặp lại" onclick="radioLoop(this)">
             <svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
           </button>
+          <button class="radio-ctrl-btn radio-playlist-dot-btn" title="Danh sách phát" onclick="document.getElementById('radioPlaylistPopup').classList.toggle('open')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/></svg>
+          </button>
         </div>
       </div>
     </div>
-    <!-- Playlist nằm trong cùng card radio -->
-    <div class="radio-playlist-inline">
+    <!-- Playlist popup triggered by dot button -->
+    <div class="radio-playlist-popup" id="radioPlaylistPopup">
       <div class="radio-playlist-head">
         <span>PLAYLIST</span>
-        <button class="radio-playlist-toggle" onclick="this.closest('.radio-playlist-inline').classList.toggle('collapsed')" title="Thu gọn">
-          <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+        <button class="radio-playlist-toggle" onclick="document.getElementById('radioPlaylistPopup').classList.remove('open')" title="Đóng">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
       <div class="radio-playlist-list" id="radioPlaylist"></div>
@@ -1283,11 +1253,9 @@ body.theme-player .pl-chat-wrap { display: block; }
 
 <!-- CHAT BUTTON (mở popup) -->
 <div class="chat-section">
-  <button class="chat-open-btn" id="chatOpenBtn" onclick="toggleChatPopup()">
+  <button class="chat-open-btn" id="chatOpenBtn" onclick="toggleChatPopup()" title="NÓI GÌ ĐI MẤY BÀ">
     <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-    <span>NÓI GÌ ĐI MẤY BÀ</span>
-    <span class="chat-online-count" id="chatOnlineCount" style="margin-left:auto"></span>
-    <svg class="chat-btn-arrow" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+    <span class="chat-online-count" id="chatOnlineCount"></span>
   </button>
 
   <!-- Chat popup -->
@@ -1495,29 +1463,7 @@ body.theme-player .pl-chat-wrap { display: block; }
 
 
 <!-- MINI FLOATING PLAYER (trang trí, đồng bộ hiển thị với PEACH LUKU RADIO) -->
-<div class="mini-player" id="miniPlayer">
-  <div class="mini-player-head">
-    <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
-    <span>PEACH LUKU RADIO</span>
-    <button class="mini-player-close" onclick="document.getElementById('miniPlayer').classList.add('hidden')" title="Ẩn">
-      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
-  </div>
-  <div class="mini-player-body">
-    <div class="mini-disc" id="miniDisc"></div>
-    <div class="mini-info">
-      <div class="mini-song" id="miniSongTitle">Best of Me</div>
-      <div class="mini-artist" id="miniSongArtist">BTS</div>
-      <div class="mini-progress"><div class="mini-progress-fill" id="miniProgressFill"></div></div>
-    </div>
-  </div>
-  <div class="mini-controls">
-    <button class="mini-ctrl-btn" onclick="radioPrev()"><svg viewBox="0 0 24 24"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg></button>
-    <button class="mini-play-btn" id="miniPlayBtn" onclick="radioTogglePlay()"><svg id="miniPlayIcon" viewBox="0 0 24 24"><polygon points="6 4 20 12 6 20 6 4"/></svg></button>
-    <button class="mini-ctrl-btn" onclick="radioNext()"><svg viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg></button>
-    <button class="mini-ctrl-btn" title="Danh sách" onclick="document.querySelector('.radio-section')?.scrollIntoView({behavior:'smooth'})"><svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></button>
-  </div>
-</div>
+
 
 <footer>
   <p>Đọc truyện vui vẻ nhé! 📱 Biển cả và sẽ gẩy ♡</p>
@@ -2737,10 +2683,7 @@ if (window.PlSEO) {
     if (c) c.textContent = fmt(cur);
     if (t) t.textContent = fmt(total || 0);
   }
-  function updateMiniProgress(r) {
-    const f = $('miniProgressFill');
-    if (f) f.style.width = Math.min(100, Math.round(r * 100)) + '%';
-  }
+  function updateMiniProgress(r) { /* mini player removed */ }
 
   // ── Waveform ────────────────────────────────────────────────────────────────
   function buildWaveform() {
@@ -2808,12 +2751,11 @@ if (window.PlSEO) {
     if (!t) return;
     localStorage.setItem(LS_IDX, radioIdx);
 
-    [$('radioSongTitle'), $('miniSongTitle')].forEach(el => el && (el.textContent = t.title));
-    [$('radioSongArtist'), $('miniSongArtist')].forEach(el => el && (el.textContent = t.artist));
+    const rtt = $('radioSongTitle'); if (rtt) rtt.textContent = t.title;
+    const rta = $('radioSongArtist'); if (rta) rta.textContent = t.artist;
 
     buildWaveform();
     buildPlaylist();
-    updateMiniProgress(0);
 
     stopFakeTimer();
     fakeCur = 0;
@@ -2840,16 +2782,17 @@ if (window.PlSEO) {
 
   // ── Play/pause visual ────────────────────────────────────────────────────────
   function updatePlayVisual() {
-    [$('radioDisc'), $('miniDisc')].forEach(el => el && el.classList.toggle('spinning', radioPlaying));
+    const disc = $('radioDisc');
+    if (disc) disc.classList.toggle('spinning', radioPlaying);
     const tt = $('radioTurntable');
     if (tt) tt.classList.toggle('playing', radioPlaying);
     const wv = $('radioWaveform');
     if (wv) wv.classList.toggle('playing', radioPlaying);
-
     const pauseSVG = '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>';
     const playSVG  = '<polygon points="6 4 20 12 6 20 6 4"/>';
     const ico = radioPlaying ? pauseSVG : playSVG;
-    [$('radioPlayIcon'), $('miniPlayIcon')].forEach(el => el && (el.innerHTML = ico));
+    const pi = $('radioPlayIcon');
+    if (pi) pi.innerHTML = ico;
   }
 
   // ── Public API ───────────────────────────────────────────────────────────────
