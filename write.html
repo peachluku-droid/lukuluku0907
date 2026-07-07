@@ -1684,6 +1684,68 @@ function newChapter() {
   closeSidebar();
 }
 
+// ── CARET SAVE / RESTORE ──
+// Lưu vị trí caret bằng cách đếm offset ký tự từ đầu editor,
+// sau khi DOM bị rebuild (innerHTML = '') vẫn khôi phục đúng chỗ.
+function saveCaretPosition(containerEl) {
+  const sel = window.getSelection();
+  if (!sel || sel.rangeCount === 0) return null;
+  const range = sel.getRangeAt(0);
+  if (!containerEl.contains(range.startContainer)) return null;
+
+  // Tính offset ký tự tính từ đầu containerEl đến startContainer/startOffset
+  function getCharOffset(root, targetNode, targetOffset) {
+    let offset = 0;
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+    let node;
+    while ((node = walker.nextNode())) {
+      if (node === targetNode) { offset += targetOffset; return offset; }
+      offset += node.textContent.length;
+    }
+    return offset;
+  }
+
+  return {
+    start: getCharOffset(containerEl, range.startContainer, range.startOffset),
+    end:   getCharOffset(containerEl, range.endContainer,   range.endOffset),
+  };
+}
+
+function restoreCaretPosition(containerEl, saved) {
+  if (!saved) return;
+  try {
+    function findNodeAtOffset(root, targetOffset) {
+      let offset = 0;
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+      let node;
+      while ((node = walker.nextNode())) {
+        const len = node.textContent.length;
+        if (offset + len >= targetOffset) {
+          return { node, offset: targetOffset - offset };
+        }
+        offset += len;
+      }
+      // Fallback: cuối cùng
+      return node ? { node, offset: node.textContent.length } : null;
+    }
+
+    const startPos = findNodeAtOffset(containerEl, saved.start);
+    const endPos   = findNodeAtOffset(containerEl, saved.end);
+    if (!startPos) return;
+
+    const range = document.createRange();
+    range.setStart(startPos.node, startPos.offset);
+    if (endPos && saved.end !== saved.start) {
+      range.setEnd(endPos.node, endPos.offset);
+    } else {
+      range.collapse(true);
+    }
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  } catch(e) {}
+}
+
 // ── SAVE / PUBLISH ──
 let __paraIdSeq = 0;
 function genParaId() {
@@ -1707,12 +1769,19 @@ async function saveDraft() {
   const title = document.getElementById('chTitle').value.trim();
   if (!title) { showToast('Nhập tên chương trước khi lưu!', 'err'); document.getElementById('chTitle').focus(); return; }
 
+  // Lưu vị trí caret TRƯỚC khi clean (cleanEditorContent rebuild innerHTML → caret bị mất)
+  const ed = document.getElementById('chContent');
+  // Ưu tiên vị trí caret hiện tại; fallback về vị trí lưu lúc gõ cuối (cho autosave)
+  const _caretSaved = saveCaretPosition(ed) || _lastCaretBeforeAutoSave || null;
+
   // Clean toàn bộ inline style/font do browser hoặc paste để lại
   // (chuẩn hóa cấu trúc về p/br/strong/b/em/i/u/img; pid cũ trên block bị convert vẫn được giữ)
   cleanEditorContent();
 
+  // Khôi phục caret ngay sau clean để người dùng tiếp tục gõ đúng chỗ
+  restoreCaretPosition(ed, _caretSaved);
+
   // Gán data-pid cố định vào từng đoạn trước khi lưu (mọi thẻ phải có data-pid duy nhất)
-  const ed = document.getElementById('chContent');
   ed.querySelectorAll('p, .media-block, .annotation-block').forEach(el => {
     if (!el.dataset.pid) {
       el.dataset.pid = genParaId();
@@ -1753,6 +1822,14 @@ async function saveDraft() {
   pushHistory(title, content);
   clearLocalDraft();
   loadChapterList();
+
+  // Khôi phục caret lần nữa sau các await phía trên (focus có thể bị mất khi await)
+  // chỉ restore khi editor đang hiển thị và không có element nào khác đang focus
+  const _activeTag = document.activeElement?.tagName;
+  if (_caretSaved && (!document.activeElement || _activeTag === 'BODY' || document.activeElement === ed)) {
+    restoreCaretPosition(ed, _caretSaved);
+  }
+
   return true;
 }
 
@@ -3674,10 +3751,16 @@ async function restoreLocalDraftIfNeeded() {
   } catch(e) {}
 }
 
+// Caret position được lưu mỗi lần user gõ để autosave timer dùng lại
+let _lastCaretBeforeAutoSave = null;
+
 function onContentInput() {
   isDirty = true; setSaveStatus('Chưa lưu'); updateWordCount();
   // Fix lỗi 5: lưu bản thảo (localStorage) ngay tức thì để không mất nội dung nếu thoát app đột ngột.
   saveLocalDraft();
+  // Lưu vị trí caret ngay tại thời điểm user đang gõ (trước khi autosave chạy 2s sau)
+  const ed = document.getElementById('chContent');
+  _lastCaretBeforeAutoSave = saveCaretPosition(ed);
   // Lưu lên server sau khi ngừng gõ 2 giây (thay vì 15 giây như trước) — vẫn giữ debounce nhỏ
   // để tránh gửi request lên Supabase liên tục theo từng phím gõ.
   clearTimeout(autoSaveTimer);
