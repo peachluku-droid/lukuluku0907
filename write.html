@@ -1749,15 +1749,18 @@ function restoreCaretPosition(containerEl, saved) {
       }
       remaining -= len;
     }
-    // Fallback: đặt caret cuối block nếu offset vượt quá
+    // Fallback: đặt caret cuối block nếu offset vượt quá, hoặc block trống (<p><br></p>)
+    const range = document.createRange();
     if (node) {
-      const range = document.createRange();
       range.setStart(node, node.textContent.length);
-      range.collapse(true);
-      const sel = window.getSelection();
-      sel.removeAllRanges();
-      sel.addRange(range);
+    } else {
+      // Block rỗng (vd: <p><br></p>) — đặt caret vào đầu block
+      range.setStart(block, 0);
     }
+    range.collapse(true);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
   } catch(e) {}
 }
 
@@ -1842,16 +1845,21 @@ async function saveDraft() {
   clearLocalDraft();
   loadChapterList();
 
-  // Khôi phục caret sau khi các await hoàn thành (autosave chạy ngầm, editor có thể mất focus).
-  // Chỉ restore nếu không có input/textarea nào đang được user focus chủ động (ví dụ: ô tìm kiếm).
+  // Khôi phục caret sau khi save xong. Dùng setTimeout để chờ loadChapterList() render xong
+  // (loadChapterList có thể gây reflow làm mất selection). KHÔNG gọi ed.focus() trước
+  // restoreCaretPosition vì focus() sẽ tự đặt caret về đầu editor trước khi restore kịp chạy.
   if (_caretSaved) {
-    const active = document.activeElement;
-    const userFocusedInput = active && active !== ed && active !== document.body
-      && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable);
-    if (!userFocusedInput) {
-      ed.focus();
-      restoreCaretPosition(ed, _caretSaved);
-    }
+    setTimeout(() => {
+      const active = document.activeElement;
+      const userFocusedOther = active && active !== ed && active !== document.body
+        && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA'
+            || (active.isContentEditable && active !== ed));
+      if (!userFocusedOther) {
+        restoreCaretPosition(ed, _caretSaved);
+        // focus sau restore để browser nhận selection mới (không trước)
+        if (document.activeElement !== ed) ed.focus({ preventScroll: true });
+      }
+    }, 0);
   }
 
   return true;
@@ -1980,7 +1988,10 @@ function cleanEditorContent() {
             // Nếu đây là <p> đơn (không còn block con khác) và đoạn hiện tại đang trống
             // → giữ luôn data-pid gốc của nó thay vì merge, để không mất liên kết comment.
             const hasNestedBlock = Array.from(child.children).some(c => BLOCK_TAGS.has(c.tagName) && !isSpecialBlock(c));
-            if (tag === 'P' && !hasNestedBlock && !current.childNodes.length) {
+            if (tag === 'P' && !hasNestedBlock) {
+              // Đoạn <p> đơn (không lồng block) → luôn flush rồi tạo <p> riêng để giữ đúng cấu trúc đoạn.
+              // Nếu có data-pid → giữ nguyên pid (kể cả khi current đang có nội dung dở).
+              flush();
               const keepPid = child.dataset && child.dataset.pid;
               const p = document.createElement('p');
               if (keepPid) p.dataset.pid = keepPid;
@@ -2095,31 +2106,22 @@ function cleanEditorContent() {
 
 function fmt(cmd) {
   const ed = document.getElementById('chContent');
-  ed.focus();
 
-  // Kiểm tra trạng thái hiện tại
-  const isActive = document.queryCommandState(cmd);
-
-  // Nếu đang active thì tắt, nếu không thì bật
+  // KHÔNG gọi ed.focus() trước execCommand trên mobile:
+  // focus() reset selection ngay lập tức → queryCommandState đọc sai trạng thái → toggle nút sai chiều.
+  // preventToolbarBlur() đã giữ selection khi chạm toolbar nên không cần focus() thủ công ở đây.
   document.execCommand(cmd, false, null);
 
-  // Cập nhật trạng thái nút active (desktop toolbar)
-  const cmdToBtn = { bold: 'dtbBold', italic: 'dtbItalic', underline: 'dtbUnderline' };
-  const btnId = cmdToBtn[cmd];
-  if (btnId) {
-    const btn = document.getElementById(btnId);
-    if (btn) btn.classList.toggle('active', !isActive);
-  }
+  // Đọc trạng thái THỰC SAU execCommand để cập nhật nút đúng chiều (bật/tắt)
+  const isNowActive = document.queryCommandState(cmd);
 
-  // Cập nhật nút mobile format panel
+  const cmdToBtn  = { bold: 'dtbBold', italic: 'dtbItalic', underline: 'dtbUnderline' };
   const mobileMap = { bold: 'mobileBtnB', italic: 'mobileBtnI', underline: 'mobileBtnU' };
-  const mBtnId = mobileMap[cmd];
-  if (mBtnId) {
-    const mBtn = document.getElementById(mBtnId);
-    if (mBtn) mBtn.classList.toggle('active', !isActive);
-  }
 
-  ed.focus();
+  const dBtn = document.getElementById(cmdToBtn[cmd]);
+  const mBtn = document.getElementById(mobileMap[cmd]);
+  if (dBtn) dBtn.classList.toggle('active', isNowActive);
+  if (mBtn) mBtn.classList.toggle('active', isNowActive);
 }
 
 // Theo dõi trạng thái selection để cập nhật nút active
@@ -3785,9 +3787,24 @@ function initCaretTracker() {
   if (!ed) return;
   document.addEventListener('selectionchange', () => {
     const sel = window.getSelection();
-    if (sel && sel.rangeCount > 0 && ed.contains(sel.getRangeAt(0).startContainer)) {
-      _trackedCaret = saveCaretPosition(ed);
+    if (!sel || sel.rangeCount === 0) return;
+    const anchor = sel.getRangeAt(0).startContainer;
+    if (!ed.contains(anchor)) return;
+
+    // Gán data-pid ngay cho đoạn đang chứa caret nếu chưa có.
+    // Đây là trường hợp user vừa nhấn Enter tạo đoạn mới — browser tạo <p> chưa có pid.
+    // Nếu không gán sớm ở đây, saveCaretPosition() sẽ trả null (không có pid anchor)
+    // và _trackedCaret sẽ fallback về đoạn cũ → caret nhảy về đoạn trước sau autosave.
+    let n = anchor.nodeType === Node.TEXT_NODE ? anchor.parentNode : anchor;
+    while (n && n !== ed) {
+      if (n.tagName === 'P' && !n.dataset.pid) {
+        n.dataset.pid = genParaId();
+        break;
+      }
+      n = n.parentNode;
     }
+
+    _trackedCaret = saveCaretPosition(ed);
   });
 }
 
