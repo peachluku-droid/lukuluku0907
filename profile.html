@@ -213,14 +213,14 @@ h1, h2, h3, .fredoka { font-family: 'Fredoka', sans-serif; }
 .profile-bio-preview:empty { display: none; margin: 0; }
 
 /* Action buttons row — 4 pill dạng mockup */
-.action-row { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 18px; }
+.action-row { display: flex; flex-wrap: nowrap; gap: 7px; margin-top: 16px; }
 .action-btn, .pill-static {
   display: inline-flex; align-items: center; gap: 6px;
   background: var(--peach-light); color: var(--peach-dark);
   border: 1.5px solid var(--border);
-  border-radius: 999px; padding: 8px 15px;
-  font-family: 'Nunito Sans', sans-serif; font-size: 12.5px; font-weight: 700;
-  cursor: pointer; transition: all .15s;
+  border-radius: 999px; padding: 7px 11px;
+  font-family: 'Nunito Sans', sans-serif; font-size: 11.5px; font-weight: 700;
+  cursor: pointer; transition: all .15s; white-space: nowrap; flex-shrink: 0;
 }
 .action-btn svg, .pill-static svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 .action-btn:hover { background: var(--peach); color: #fff; border-color: var(--peach); transform: translateY(-1px); }
@@ -229,7 +229,7 @@ h1, h2, h3, .fredoka { font-family: 'Fredoka', sans-serif; }
 .pill-static { cursor: default; opacity: .88; }
 
 /* Cụm nút chỉ hiện với chính chủ (được JS bật/tắt qua #drawer-edit-btn, không đổi logic) */
-#drawer-edit-btn { display: flex; flex-wrap: wrap; gap: 9px; }
+#drawer-edit-btn { display: flex; flex-wrap: nowrap; gap: 7px; }
 
 /* Follow button (reuses action-btn styling) */
 .follow-btn {
@@ -555,6 +555,49 @@ h1, h2, h3, .fredoka { font-family: 'Fredoka', sans-serif; }
 }
 .bnav-item svg { width: 21px; height: 21px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .bnav-item.active { color: var(--peach-dark); background: var(--peach-light); }
+
+/* ── READING LIST HORIZONTAL SCROLL ── */
+.rl-section { margin-bottom: 24px; }
+.rl-section-header { display: flex; align-items: baseline; gap: 6px; margin-bottom: 4px; }
+.rl-section-title { font-family: 'Fredoka', sans-serif; font-size: 16px; font-weight: 700; color: var(--text); cursor: pointer; }
+.rl-section-title:hover { color: var(--peach); }
+.rl-section-chevron { color: var(--peach); font-size: 16px; font-weight: 700; }
+.rl-section-meta { font-size: 12px; color: var(--text-muted); font-weight: 600; margin-bottom: 10px; }
+.rl-scroll-row {
+  display: flex; gap: 0;
+  overflow-x: auto; overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 8px;
+  margin: 0 -1rem; padding-left: 1rem;
+}
+.rl-scroll-row::-webkit-scrollbar { display: none; }
+.rl-scroll-row { scrollbar-width: none; }
+.rl-card {
+  display: flex; gap: 12px; flex-shrink: 0;
+  width: calc(100vw - 48px); max-width: 460px;
+  scroll-snap-align: start;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 12px; margin-right: 10px;
+  box-shadow: var(--shadow-card);
+  text-decoration: none; color: var(--text);
+  transition: box-shadow .15s, transform .15s, border-color .15s;
+  box-sizing: border-box;
+}
+.rl-card:last-child { margin-right: 1rem; }
+.rl-card:hover { box-shadow: var(--shadow-card-hover); border-color: var(--border-hover); transform: translateY(-1px); }
+.rl-cover { width: 90px; height: 120px; border-radius: 10px; overflow: hidden; background: linear-gradient(145deg, var(--peach-light), #FFF6FA); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 28px; }
+.rl-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.rl-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; overflow: hidden; }
+.rl-title { font-family: 'Fredoka', sans-serif; font-size: 15px; font-weight: 600; line-height: 1.3; color: var(--text); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.rl-stats { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.rl-stat { font-size: 12px; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
+.rl-stat svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.rl-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.rl-tags { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+.rl-tag { background: var(--peach-light); color: var(--peach-dark); border-radius: 999px; padding: 3px 10px; font-size: 11px; font-weight: 700; }
+.rl-tag-more { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+
 </style>
 
 </head>
@@ -567,10 +610,7 @@ h1, h2, h3, .fredoka { font-family: 'Fredoka', sans-serif; }
   <button class="topbar-btn" onclick="history.back()">
     <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
   </button>
-  <div class="topbar-brand">
-    <span class="brand-emoji">🍑</span>
-    <span>Archive of Our Own</span><span class="brand-beta">beta</span>
-  </div>
+
   <div class="topbar-right">
     <button class="topbar-btn" onclick="toggleThemeDrawer()" id="theme-toggle-btn" title="Đổi theme">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
@@ -986,7 +1026,10 @@ async function loadReadingLists() {
   if (!el) return;
   el.innerHTML = '<div style="font-size:13px;color:var(--text-muted)">Đang tải...</div>';
 
-  const { data: bms } = await sb.from('bookmarks').select('list_name, story_id, stories(title,cover_url)').eq('user_id', profileUserId);
+  const { data: bms } = await sb.from('bookmarks')
+    .select('list_name, story_id, stories(id,title,cover_url,total_views,votes,description,tags)')
+    .eq('user_id', profileUserId);
+
   if (!bms || !bms.length) {
     el.innerHTML = `<div class="empty-list-card">
       <svg viewBox="0 0 24 24" width="26" height="26" style="stroke:var(--peach-mid);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
@@ -995,7 +1038,6 @@ async function loadReadingLists() {
     return;
   }
 
-  // Group theo list_name
   const lists = {};
   bms.forEach(b => {
     const name = b.list_name || 'Danh sách đọc';
@@ -1003,20 +1045,46 @@ async function loadReadingLists() {
     lists[name].push(b);
   });
 
+  const allStoryIds = bms.map(b => b.story_id).filter(Boolean);
+  let chapCount = {};
+  if (allStoryIds.length) {
+    const { data: chapData } = await sb.from('chapters')
+      .select('story_id').in('story_id', allStoryIds).eq('is_published', true);
+    (chapData||[]).forEach(c => { chapCount[c.story_id] = (chapCount[c.story_id]||0) + 1; });
+  }
+
   el.innerHTML = Object.entries(lists).map(([name, items]) => {
-    // Hiện tối đa 3 ảnh bìa chồng nhau
-    const covers = items.slice(0,3).map((b,i) => {
+    const cardsHtml = items.map(b => {
       const s = b.stories || {};
-      return `<div style="width:44px;height:62px;border-radius:6px;overflow:hidden;background:var(--peach-light);flex-shrink:0;border:2px solid var(--bg2);margin-left:${i>0?'-14px':'0'};z-index:${3-i}">
-        ${s.cover_url ? `<img src="${esc(s.cover_url)}" style="width:100%;height:100%;object-fit:cover">` : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:16px">📖</div>'}
-      </div>`;
+      const tags = s.tags ? s.tags.split(',').map(t=>t.trim()).filter(Boolean) : [];
+      const rawDesc = s.description ? s.description.replace(/<[^>]+>/g,'') : '';
+      const desc = rawDesc.slice(0,100) + (rawDesc.length>100?'...':'');
+      const tagHtml = tags.slice(0,3).map(t=>`<span class="rl-tag">${esc(t)}</span>`).join('');
+      const extraTags = tags.length > 3 ? `<span class="rl-tag-more">+ ${tags.length-3} thẻ khác</span>` : '';
+      const chaps = chapCount[b.story_id] || 0;
+      return `<a class="rl-card" href="story.html?story=${esc(s.id||b.story_id)}">
+        <div class="rl-cover">
+          ${s.cover_url ? `<img src="${esc(s.cover_url)}" loading="lazy" onerror="this.parentElement.innerHTML='📖'">` : '📖'}
+        </div>
+        <div class="rl-info">
+          <div class="rl-title">${esc(s.title||'Không có tên')}</div>
+          <div class="rl-stats">
+            <span class="rl-stat"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>${fmtNum(s.total_views||0)}</span>
+            <span class="rl-stat"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>${fmtNum(s.votes||0)}</span>
+            <span class="rl-stat"><svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/></svg>${chaps}</span>
+          </div>
+          ${rawDesc ? `<div class="rl-desc">${esc(desc)}</div>` : ''}
+          ${tagHtml||extraTags ? `<div class="rl-tags">${tagHtml}${extraTags}</div>` : ''}
+        </div>
+      </a>`;
     }).join('');
-    return `<div style="display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--border)">
-      <div style="display:flex;position:relative;flex-shrink:0">${covers}</div>
-      <div style="flex:1;min-width:0">
-        <div style="font-family:'Fredoka',sans-serif;font-size:14px;font-weight:600;color:var(--text)">${esc(name)}</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px">${items.length} truyện</div>
+    return `<div class="rl-section">
+      <div class="rl-section-header">
+        <span class="rl-section-title">${esc(name)}</span>
+        <span class="rl-section-chevron">›</span>
       </div>
+      <div class="rl-section-meta">Danh Sách Đọc • ${items.length} Truyện</div>
+      <div class="rl-scroll-row">${cardsHtml}</div>
     </div>`;
   }).join('');
 }
