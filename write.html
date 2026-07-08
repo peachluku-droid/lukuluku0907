@@ -1847,7 +1847,7 @@ async function saveDraft(isAutosave = false) {
   }
   isDirty = false;
   setSaveStatus('Đã lưu ✓');
-  showToast('Đã lưu bản thảo!', 'ok');
+  if (!isAutosave) showToast('Đã lưu bản thảo!', 'ok');
   pushHistory(title, content);
   clearLocalDraft();
   loadChapterList();
