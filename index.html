@@ -130,7 +130,7 @@ body {
 .topbar {
   background: var(--bg2);
   border-bottom: 1px solid var(--border);
-  padding: 0 1.2rem;
+  padding: 0;
   display: flex; align-items: center;
   justify-content: space-between; height: 52px;
   position: sticky; top: 0; z-index: 100;
@@ -165,7 +165,7 @@ body {
 .icon-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
 
 @media (max-width: 600px) {
-  .topbar { padding: 0 0.6rem; }
+  .topbar { padding: 0; }
   .logo-text { font-size: 14px; }
   .nav-center a { padding: 5px 6px; font-size: 0; gap: 0; }
   .nav-center a svg { width: 17px; height: 17px; }
@@ -230,7 +230,7 @@ body {
   background:
     radial-gradient(ellipse 420px 260px at 88% -10%, rgba(255,255,255,0.08), transparent 60%),
     linear-gradient(135deg, var(--peach-mid) 0%, var(--peach) 45%, var(--peach-dark) 100%);
-  margin: 14px 1.2rem 0;
+  margin: 0;
   border-radius: var(--radius-lg);
   padding: 2.4rem 2.2rem;
   display: flex; align-items: center; gap: 1.6rem;
@@ -352,7 +352,7 @@ body {
 /* ─── NOTICE BANNER ─── */
 .notice-banner {
   background: var(--card); border: 1px solid var(--border);
-  border-radius: var(--radius-md); margin: 14px 1.2rem 0;
+  border-radius: 0; margin: 0;
   padding: 10px 14px; display: flex; align-items: center; gap: 12px;
   overflow: hidden; max-width: calc(100% - 2.4rem - 2px);
   box-shadow: var(--shadow-soft);
@@ -377,11 +377,11 @@ body {
 }
 .notice-close:hover { background: var(--peach-light); color: var(--peach); }
 .notice-close svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.2; }
-@media (max-width: 600px) { .notice-banner { margin: 10px 0.6rem 0; max-width: calc(100% - 1.2rem - 2px); } }
+@media (max-width: 600px) { .notice-banner { margin: 0; max-width: 100%; } }
 
 /* ─── GENRE CHIPS (Menu thể loại như Dakingo) ─── */
 .genre-chips-section {
-  padding: 14px 1.2rem 4px;
+  padding: 14px 0 4px;
   background: var(--bg2);
   border-bottom: 1px solid var(--border);
 }
@@ -411,8 +411,8 @@ body {
 .genre-chip-label { font-size: 10px; font-weight: 800; white-space: nowrap; }
 
 /* ─── SECTION COMMON ─── */
-.section { padding: 2rem 1.2rem; box-sizing: border-box; max-width: 100%; }
-@media (max-width: 600px) { .section { padding: 1.2rem 0.6rem; } }
+.section { padding: 2rem 0; box-sizing: border-box; max-width: 100%; }
+@media (max-width: 600px) { .section { padding: 1.2rem 0; } }
 .sec-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; gap: 8px; flex-wrap: nowrap; }
 .sec-title {
   font-size: 15px; font-weight: 900; display: flex; align-items: center; gap: 7px;
@@ -584,9 +584,8 @@ body {
 /* ─── PROFILE DROPDOWN ─── */
 .profile-menu-wrap { position: relative; }
 .profile-menu-btn { position: relative; }
-.profile-dropdown { position: absolute; top: calc(100% + 8px); right: 0; z-index: 300; background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 8px; width: 195px; box-shadow: 0 8px 28px rgba(0,0,0,0.12); display: none; flex-direction: column; gap: 2px; }
-.profile-dropdown.open { display: flex; }
-.profile-dropdown-item { display: flex; align-items: center; gap: 8px; padding: 8px 11px; border-radius: 10px; font-size: 12px; font-weight: 700; color: var(--text); text-decoration: none; transition: all .15s; }
+/* profile-dropdown styles moved to navbar.js */
+.profile-dropdown-item { display: flex; align-items: center; gap: 8px; padding: 8px 11px; border-radius: 0; font-size: 12px; font-weight: 700; color: var(--text); text-decoration: none; transition: all .15s; }
 .profile-dropdown-item:hover { background: var(--peach-light); color: var(--peach); }
 .profile-dropdown-item svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; flex-shrink: 0; opacity: .7; }
 .profile-dropdown-divider { height: 1px; background: var(--border); margin: 4px 8px; }
@@ -617,10 +616,10 @@ body {
 
 /* ─── PEACH LUKU RADIO (widget trang trí) ─── */
 .radio-section {
-  margin: 16px 1.2rem 0;
+  margin: 16px 0 0;
   position: relative;
 }
-@media (max-width: 600px) { .radio-section { margin: 12px 0.6rem 0; } }
+@media (max-width: 600px) { .radio-section { margin: 8px 0 0; } }
 
 .radio-card, .radio-playlist-card {
   background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg);
@@ -824,7 +823,39 @@ body {
 .radio-playlist-toggle svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.4; transition: transform .2s; }
 .radio-playlist-card.collapsed .radio-playlist-toggle svg { transform: rotate(180deg); }
 .radio-playlist-list { display: flex; flex-direction: column; gap: 2px; overflow-y: auto; }
-.radio-playlist-item {
+
+/* ── RADIO PLAYLIST LINK INPUT ── */
+.radio-playlist-item { flex-direction: column; align-items: stretch; gap: 0; }
+.radio-playlist-item-row { display: flex; align-items: center; gap: 8px; padding: 2px 0; }
+.radio-playlist-link-row {
+  display: none; padding: 5px 0 3px 28px; gap: 6px; align-items: center;
+}
+.radio-playlist-link-row.open { display: flex; }
+.radio-playlist-link-input {
+  flex: 1; border: 1px solid var(--border); border-radius: 6px;
+  padding: 5px 8px; font-size: 10px; font-family: 'Nunito', sans-serif;
+  background: var(--bg); color: var(--text); outline: none;
+  transition: border-color .15s;
+}
+.radio-playlist-link-input:focus { border-color: var(--peach-mid); }
+.radio-playlist-link-input::placeholder { color: var(--text-muted); }
+.radio-playlist-link-save {
+  background: var(--peach); color: #fff; border: none; cursor: pointer;
+  padding: 5px 9px; border-radius: 6px; font-size: 10px; font-weight: 700;
+  font-family: 'Nunito', sans-serif; white-space: nowrap;
+  transition: background .15s;
+}
+.radio-playlist-link-save:hover { background: var(--peach-dark); }
+.radio-link-btn {
+  background: none; border: none; cursor: pointer; padding: 2px 4px;
+  color: var(--text-muted); border-radius: 4px; flex-shrink: 0;
+  transition: color .15s, background .15s; margin-left: auto;
+  display: flex; align-items: center;
+}
+.radio-link-btn:hover { color: var(--peach); background: var(--peach-light); }
+.radio-link-btn.has-link { color: var(--peach); }
+.radio-link-btn svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2; }
+.radio-playlist-item-placeholder {
   display: flex; align-items: center; gap: 10px; padding: 8px 8px; border-radius: 10px;
   cursor: pointer; transition: background .2s;
 }
@@ -993,6 +1024,128 @@ body {
 @media (max-width: 520px) {
   .radio-playlist-popup { width: 100%; right: 0; left: 0; top: auto; bottom: calc(100% + 6px); }
 }
+
+/* ── RADIO PLAYLIST LINK INPUT ── */
+.radio-playlist-item { flex-direction: column; align-items: stretch; gap: 0; }
+.radio-playlist-item-row { display: flex; align-items: center; gap: 8px; padding: 2px 0; }
+.radio-playlist-link-row {
+  display: none; padding: 5px 0 3px 28px; gap: 6px; align-items: center;
+}
+.radio-playlist-link-row.open { display: flex; }
+.radio-playlist-link-input {
+  flex: 1; border: 1px solid var(--border); border-radius: 6px;
+  padding: 5px 8px; font-size: 10px; font-family: 'Nunito', sans-serif;
+  background: var(--bg); color: var(--text); outline: none;
+  transition: border-color .15s;
+}
+.radio-playlist-link-input:focus { border-color: var(--peach-mid); }
+.radio-playlist-link-input::placeholder { color: var(--text-muted); }
+.radio-playlist-link-save {
+  background: var(--peach); color: #fff; border: none; cursor: pointer;
+  padding: 5px 9px; border-radius: 6px; font-size: 10px; font-weight: 700;
+  font-family: 'Nunito', sans-serif; white-space: nowrap;
+  transition: background .15s;
+}
+.radio-playlist-link-save:hover { background: var(--peach-dark); }
+.radio-link-btn {
+  background: none; border: none; cursor: pointer; padding: 2px 4px;
+  color: var(--text-muted); border-radius: 4px; flex-shrink: 0;
+  transition: color .15s, background .15s; margin-left: auto;
+  display: flex; align-items: center;
+}
+.radio-link-btn:hover { color: var(--peach); background: var(--peach-light); }
+.radio-link-btn.has-link { color: var(--peach); }
+.radio-link-btn svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+/* ── RADIO ADD TRACK FORM ── */
+.radio-add-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--peach); padding: 2px 4px; border-radius: 4px;
+  display: flex; align-items: center;
+  transition: background .15s;
+}
+.radio-add-btn:hover { background: var(--peach-light); }
+.radio-add-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+.radio-add-form {
+  display: none; flex-direction: column; gap: 6px;
+  padding: 10px; margin-bottom: 8px;
+  background: var(--bg); border-radius: 10px;
+  border: 1px solid var(--border);
+}
+.radio-add-form.open { display: flex; }
+.radio-add-input {
+  border: 1px solid var(--border); border-radius: 6px;
+  padding: 6px 9px; font-size: 11px; font-family: 'Nunito', sans-serif;
+  background: var(--card); color: var(--text); outline: none;
+  transition: border-color .15s;
+}
+.radio-add-input:focus { border-color: var(--peach-mid); }
+.radio-add-input::placeholder { color: var(--text-muted); }
+.radio-add-submit {
+  flex: 1; background: var(--peach); color: #fff; border: none;
+  border-radius: 6px; padding: 6px; font-size: 11px; font-weight: 800;
+  font-family: 'Nunito', sans-serif; cursor: pointer;
+  transition: background .15s;
+}
+.radio-add-submit:hover { background: var(--peach-dark); }
+.radio-add-cancel {
+  background: var(--border); color: var(--text-muted); border: none;
+  border-radius: 6px; padding: 6px 10px; font-size: 11px; font-weight: 700;
+  font-family: 'Nunito', sans-serif; cursor: pointer;
+  transition: background .15s;
+}
+.radio-add-cancel:hover { background: var(--peach-light); }
+
+/* ── NOTICE EDIT ── */
+.notice-edit-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--text-muted); padding: 4px 6px; border-radius: 6px;
+  display: flex; align-items: center; flex-shrink: 0;
+  transition: color .15s, background .15s; margin-left: 4px;
+}
+.notice-edit-btn:hover { color: var(--peach); background: var(--peach-light); }
+.notice-edit-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; }
+.notice-edit-modal {
+  display: none; position: fixed; inset: 0; z-index: 500;
+  background: rgba(0,0,0,0.35); align-items: center; justify-content: center;
+}
+.notice-edit-modal.open { display: flex; }
+.notice-edit-box {
+  background: var(--card); border-radius: 16px; padding: 20px;
+  width: min(420px, 90vw); box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+  display: flex; flex-direction: column; gap: 12px;
+}
+.notice-edit-head {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 13px; font-weight: 800; color: var(--peach);
+}
+.notice-edit-head button {
+  background: none; border: none; cursor: pointer;
+  color: var(--text-muted); padding: 3px; border-radius: 6px;
+  display: flex; transition: background .15s;
+}
+.notice-edit-head button:hover { background: var(--peach-light); }
+.notice-edit-head button svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2.2; }
+.notice-edit-textarea {
+  border: 1px solid var(--border); border-radius: 10px;
+  padding: 10px 12px; font-size: 13px; font-family: 'Nunito', sans-serif;
+  background: var(--bg); color: var(--text); outline: none; resize: vertical;
+  transition: border-color .15s; line-height: 1.6;
+}
+.notice-edit-textarea:focus { border-color: var(--peach-mid); }
+.notice-edit-actions { display: flex; gap: 8px; }
+.notice-edit-save {
+  flex: 1; background: var(--peach); color: #fff; border: none;
+  border-radius: 8px; padding: 8px; font-size: 12px; font-weight: 800;
+  font-family: 'Nunito', sans-serif; cursor: pointer; transition: background .15s;
+}
+.notice-edit-save:hover { background: var(--peach-dark); }
+.notice-edit-cancel {
+  background: var(--border); color: var(--text-muted); border: none;
+  border-radius: 8px; padding: 8px 14px; font-size: 12px; font-weight: 700;
+  font-family: 'Nunito', sans-serif; cursor: pointer; transition: background .15s;
+}
+.notice-edit-cancel:hover { background: var(--peach-light); }
 /* ─── FOOTER ─── */
 footer {
   margin-top: 2rem;
@@ -1115,7 +1268,7 @@ body.theme-player .pl-chat-wrap { display: block; }
   text-align: center;
   font-size: 12px;
   font-weight: 800;
-  padding: 7px 1.2rem;
+  padding: 7px 0;
   letter-spacing: 0.3px;
   display: flex; align-items: center; justify-content: center; gap: 6px;
 }
@@ -1190,8 +1343,28 @@ body.theme-player .pl-chat-wrap { display: block; }
   <div class="notice-badge" title="Thông báo">
     <svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
   </div>
-  <div class="notice-scroll-wrap">
-    <span class="notice-scroll-text" id="noticeScrollText">...</span>
+  <div class="notice-scroll-wrap" id="noticeScrollWrap" style="flex:1">
+    <span class="notice-scroll-text" id="noticeScrollText" style="cursor:default">...</span>
+  </div>
+  <button class="notice-edit-btn" id="noticeEditBtn" onclick="openNoticeEdit()" title="Sửa thông báo" style="display:none">
+    <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+  </button>
+</div>
+
+<!-- Notice edit modal -->
+<div class="notice-edit-modal" id="noticeEditModal">
+  <div class="notice-edit-box">
+    <div class="notice-edit-head">
+      <span>Sửa thông báo</span>
+      <button onclick="closeNoticeEdit()">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <textarea class="notice-edit-textarea" id="noticeEditInput" placeholder="Nhập nội dung thông báo..." rows="3"></textarea>
+    <div class="notice-edit-actions">
+      <button class="notice-edit-save" onclick="saveNoticeText()">💾 Lưu</button>
+      <button class="notice-edit-cancel" onclick="closeNoticeEdit()">Huỷ</button>
+    </div>
   </div>
 </div>
 
@@ -1242,9 +1415,24 @@ body.theme-player .pl-chat-wrap { display: block; }
     <div class="radio-playlist-popup" id="radioPlaylistPopup">
       <div class="radio-playlist-head">
         <span>PLAYLIST</span>
-        <button class="radio-playlist-toggle" onclick="document.getElementById('radioPlaylistPopup').classList.remove('open')" title="Đóng">
-          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
+        <div style="display:flex;align-items:center;gap:6px">
+          <button class="radio-add-btn radio-admin-only" onclick="toggleAddForm()" title="Thêm bài mới" style="display:none">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <button class="radio-playlist-toggle" onclick="document.getElementById('radioPlaylistPopup').classList.remove('open')" title="Đóng">
+            <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+      <!-- Form thêm bài (chỉ admin) -->
+      <div class="radio-add-form radio-admin-only" id="radioAddForm" style="display:none">
+        <input class="radio-add-input" id="addTitle" placeholder="Tên bài hát *" />
+        <input class="radio-add-input" id="addArtist" placeholder="Ca sĩ / nhóm *" />
+        <input class="radio-add-input" id="addSrc" placeholder="Link MP3 (tuỳ chọn)" />
+        <div style="display:flex;gap:6px">
+          <button class="radio-add-submit" onclick="addNewTrack()">✓ Thêm</button>
+          <button class="radio-add-cancel" onclick="toggleAddForm()">Huỷ</button>
+        </div>
       </div>
       <div class="radio-playlist-list" id="radioPlaylist"></div>
     </div>
@@ -1362,7 +1550,7 @@ body.theme-player .pl-chat-wrap { display: block; }
         <button class="sec-search-btn" id="secSearchToggle" onclick="goSearchSec()" title="Tìm kiếm" aria-label="Tìm kiếm">
           <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         </button>
-        <div style="position:relative">
+        <div style="position:relative;display:flex;align-items:stretch">
           <button class="sec-search-btn" id="filterToggleBtn" onclick="toggleFilterMenu(event)" title="Lọc & sắp xếp" aria-label="Lọc" style="border-left:1px solid rgba(255,255,255,0.25)">
             <svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round">
               <line x1="3" y1="6" x2="21" y2="6"/>
@@ -1370,8 +1558,8 @@ body.theme-player .pl-chat-wrap { display: block; }
               <line x1="9" y1="18" x2="21" y2="18"/>
             </svg>
           </button>
-        <!-- FILTER DROPDOWN -->
-        <div class="filter-dropdown" id="filterDropdown">
+          <!-- FILTER DROPDOWN -->
+          <div class="filter-dropdown" id="filterDropdown">
           <div class="filter-section-label">Sắp xếp</div>
           <div class="filter-sort-pills">
             <button class="filter-sort-pill active" data-key="date" data-dir="desc" data-label-desc="Mới nhất" data-label-asc="Cũ nhất" onclick="cycleSortPill('date',this)">
@@ -1428,6 +1616,39 @@ body.theme-player .pl-chat-wrap { display: block; }
         <button class="sec-search-btn" onclick="goSearchQt()" title="Tìm kiếm">
           <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         </button>
+        <div style="position:relative;display:flex;align-items:stretch">
+          <button class="sec-search-btn" id="qtFilterToggleBtn" onclick="toggleQtFilterMenu(event)" title="Lọc & sắp xếp" style="border-left:1px solid rgba(255,255,255,0.25)">
+            <svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round">
+              <line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="21" y2="12"/><line x1="9" y1="18" x2="21" y2="18"/>
+            </svg>
+          </button>
+          <div class="filter-dropdown" id="qtFilterDropdown">
+            <div class="filter-section-label">Sắp xếp</div>
+            <div class="filter-sort-pills">
+              <button class="filter-sort-pill active" data-key="date" data-dir="desc" data-label-desc="Mới nhất" data-label-asc="Cũ nhất" onclick="cycleQtSortPill('date',this)">
+                <span class="fsp-label">Mới nhất</span>
+                <svg class="fsp-arrow" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="6 13 12 19 18 13"/></svg>
+              </button>
+              <button class="filter-sort-pill" data-key="views" data-dir="desc" data-label-desc="Xem nhiều" data-label-asc="Xem ít" onclick="cycleQtSortPill('views',this)">
+                <span class="fsp-label">Xem nhiều</span>
+                <svg class="fsp-arrow" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="6 13 12 19 18 13"/></svg>
+              </button>
+              <button class="filter-sort-pill" data-key="alpha" data-dir="asc" data-label-asc="A–Z" data-label-desc="Z–A" onclick="cycleQtSortPill('alpha',this)">
+                <span class="fsp-label">A–Z</span>
+                <svg class="fsp-arrow" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="6 13 12 19 18 13"/></svg>
+              </button>
+              <button class="filter-sort-pill" data-key="status" data-dir="on" data-label-on="Đang ra" data-label-full="Hoàn thành" onclick="cycleQtSortPill('status',this)">
+                <span class="fsp-label">Đang ra</span>
+                <svg class="fsp-arrow" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="6 13 12 19 18 13"/></svg>
+              </button>
+            </div>
+            <div class="filter-divider"></div>
+            <div class="filter-section-label">Thể loại (QT)</div>
+            <div class="filter-genre-wrap" id="qtFilterGenreWrap">
+              <button class="filter-genre-chip active" data-genre="" onclick="setQtGenre('',this)">Tất cả</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1546,14 +1767,108 @@ function toggleChatPopup() {
   if (popup) popup.classList.toggle('open');
 }
 
+let qtSortKey = 'date', qtSortDir = 'desc', qtGenre = '', qtSearchQ = '';
+
+function toggleQtFilterMenu(e) {
+  e.stopPropagation();
+  document.getElementById('qtFilterDropdown').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  const dd = document.getElementById('qtFilterDropdown');
+  const btn = document.getElementById('qtFilterToggleBtn');
+  if (dd && !dd.contains(e.target) && btn && !btn.contains(e.target)) dd.classList.remove('open');
+});
+
+function cycleQtSortPill(key, el) {
+  const dirs = { date:['desc','asc'], views:['desc','asc'], alpha:['asc','desc'], status:['on','full'] };
+  document.querySelectorAll('#qtFilterDropdown .filter-sort-pill').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  if (qtSortKey === key) {
+    qtSortDir = qtSortDir === dirs[key][0] ? dirs[key][1] : dirs[key][0];
+  } else { qtSortKey = key; qtSortDir = dirs[key][0]; }
+  el.dataset.dir = qtSortDir;
+  el.querySelector('.fsp-label').textContent = el.dataset['label' + qtSortDir.charAt(0).toUpperCase() + qtSortDir.slice(1)];
+  renderQtStories();
+}
+
+function setQtGenre(genre, el) {
+  qtGenre = genre;
+  document.querySelectorAll('#qtFilterGenreWrap .filter-genre-chip').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderQtStories();
+}
+
 function goSearchQt() {
-  const q = (document.getElementById('qtSearchInput')?.value || '').trim().toLowerCase();
-  const cards = document.querySelectorAll('#convert-list .story-card, #convert-list .new-update-card');
-  cards.forEach(card => {
-    const title  = (card.querySelector('.story-title, .card-title')?.textContent || '').toLowerCase();
-    const author = (card.querySelector('.story-author, .card-author')?.textContent || '').toLowerCase();
-    card.style.display = (!q || title.includes(q) || author.includes(q)) ? '' : 'none';
+  qtSearchQ = (document.getElementById('qtSearchInput')?.value || '').trim().toLowerCase();
+  renderQtStories();
+}
+
+function renderQtStories() {
+  // Lấy tất cả truyện QT từ cache
+  let stories = allStoriesCache.filter(s => {
+    const tags = (s.tags || '').split(',').map(t => t.trim().toLowerCase());
+    return tags.includes('qt');
   });
+
+  // Build genre chips từ đúng tag của truyện QT
+  const qtWrap = document.getElementById('qtFilterGenreWrap');
+  if (qtWrap && qtWrap.children.length <= 1) {
+    const allTags = new Set();
+    stories.forEach(s => (s.tags||'').split(',').map(t=>t.trim()).filter(Boolean).forEach(t=>allTags.add(t)));
+    allTags.forEach(tag => {
+      if (tag.toLowerCase() === 'qt') return;
+      const btn = document.createElement('button');
+      btn.className = 'filter-genre-chip';
+      btn.dataset.genre = tag;
+      btn.textContent = tag;
+      btn.onclick = function(){ setQtGenre(tag, this); };
+      qtWrap.appendChild(btn);
+    });
+  }
+
+  // Filter genre
+  if (qtGenre) stories = stories.filter(s => (s.tags||'').toLowerCase().includes(qtGenre.toLowerCase()));
+
+  // Filter search
+  if (qtSearchQ) {
+    const q = qtSearchQ;
+    const statusMap = {'hoàn thành':'full','full':'full','đang ra':'on','on':'on'};
+    const sf = statusMap[q];
+    stories = stories.filter(s => sf ? s.status===sf :
+      (s.title||'').toLowerCase().includes(q) || (s.author||'').toLowerCase().includes(q) || (s.tags||'').toLowerCase().includes(q));
+  }
+
+  // Sort
+  const byDate = (a,b) => {
+    const da = latestChDateCache[a.id]||a.created_at||'';
+    const db = latestChDateCache[b.id]||b.created_at||'';
+    return db.localeCompare(da);
+  };
+  if (qtSortKey==='views') stories.sort((a,b)=>qtSortDir==='desc'?(b.total_views||0)-(a.total_views||0):(a.total_views||0)-(b.total_views||0));
+  else if (qtSortKey==='alpha') stories.sort((a,b)=>qtSortDir==='asc'?(a.title||'').localeCompare(b.title||'','vi'):(b.title||'').localeCompare(a.title||'','vi'));
+  else if (qtSortKey==='status') { stories=stories.filter(s=>qtSortDir==='full'?s.status==='full':(s.status==='on'||!s.status)); stories.sort(byDate); }
+  else stories.sort(byDate);
+
+  const el = document.getElementById('convert-list');
+  if (!el) return;
+  const ch = chCountsCache;
+  if (!stories.length) {
+    el.innerHTML = '<p style="padding:12px;font-size:13px;color:var(--text-muted);grid-column:1/-1">Không tìm thấy truyện nào</p>';
+    return;
+  }
+  el.innerHTML = stories.slice(0,12).map(s => {
+    const tags = (s.tags||'').split(',').map(g=>g.trim()).filter(t=>t.toLowerCase()!=='qt').slice(0,2);
+    const c = ch[s.id]||0;
+    return `<a class="new-update-card" href="story.html?story=${s.id}" title="${escapeHtml(s.title)}">
+      <div class="new-update-cover">${s.cover_url?`<img src="${escapeHtml(s.cover_url)}" alt="${escapeHtml(s.title)}" loading="lazy">`:''}
+      </div>
+      <div class="new-update-info">
+        <div class="new-update-title">${escapeHtml(s.title)}</div>
+        <div class="new-update-author">${escapeHtml(s.author||'Ẩn danh')}</div>
+        <div class="new-update-ch">${c} chương</div>
+        ${tags.length?`<div class="new-update-tags">${tags.map(g=>`<span class="new-update-tag">${escapeHtml(g)}</span>`).join('')}</div>`:''}
+      </div></a>`;
+  }).join('');
 }
 
 function toggleSecSearch() {
@@ -1633,29 +1948,8 @@ async function loadStories() {
     const tags = (s.tags || '').split(',').map(t => t.trim().toLowerCase());
     return tags.includes('qt');
   });
-  const convertEl = document.getElementById('convert-list');
-  if (convertEl) {
-    if (convertStories.length === 0) {
-      convertEl.innerHTML = '<p style="padding:12px;font-size:13px;color:var(--text-muted);grid-column:1/-1">Chưa có truyện convert</p>';
-    } else {
-      convertEl.innerHTML = convertStories.slice(0, 12).map(s => {
-        const tags = (s.tags || '').split(',').map(g => g.trim()).filter(Boolean).slice(0, 2);
-        const ch = chCounts[s.id] || 0;
-        return `
-        <a class="new-update-card" href="story.html?story=${s.id}" title="${escapeHtml(s.title)}">
-          <div class="new-update-cover">
-            ${s.cover_url ? `<img src="${escapeHtml(s.cover_url)}" alt="${escapeHtml(s.title)}" loading="lazy">` : ''}
-          </div>
-          <div class="new-update-info">
-            <div class="new-update-title">${escapeHtml(s.title)}</div>
-            <div class="new-update-author">${escapeHtml(s.author || 'Ẩn danh')}</div>
-            <div class="new-update-ch">${ch} chương</div>
-            ${tags.length ? `<div class="new-update-tags">${tags.map(g => `<span class="new-update-tag">${escapeHtml(g)}</span>`).join('')}</div>` : ''}
-          </div>
-        </a>`;
-      }).join('');
-    }
-  }
+  // Render QT stories dùng hệ thống filter mới
+  renderQtStories();
 
   initPlayerIfNeeded();
 }
@@ -1967,6 +2261,25 @@ async function loadNotifications() {
 }
 
 /* ── NAV AVATAR — load avatar đúng kích thước, không phá layout ── */
+// Global admin flag
+window._isAdmin = false;
+
+async function checkAdminRole(userId) {
+  try {
+    const { data } = await sb.from('profiles').select('role').eq('id', userId).maybeSingle();
+    window._isAdmin = data?.role === 'admin';
+  } catch { window._isAdmin = false; }
+  applyAdminUI();
+}
+
+function applyAdminUI() {
+  const noticeBtn = document.getElementById('noticeEditBtn');
+  if (noticeBtn) noticeBtn.style.display = window._isAdmin ? 'flex' : 'none';
+  document.querySelectorAll('.radio-admin-only').forEach(el => {
+    el.style.display = window._isAdmin ? '' : 'none';
+  });
+}
+
 async function loadNavAvatar() {
   const { data: { session } } = await sb.auth.getSession();
   const btn = document.querySelector('.profile-menu-btn');
@@ -1990,6 +2303,9 @@ async function loadNavAvatar() {
     .select('display_name, avatar_url')
     .eq('id', session.user.id)
     .maybeSingle();
+
+  // Check admin role
+  checkAdminRole(session.user.id);
 
   if (prof?.avatar_url) {
     btn.innerHTML = '';
@@ -2723,27 +3039,166 @@ if (window.PlSEO) {
   }
 
   // ── Playlist render ──────────────────────────────────────────────────────────
+  // LS key cho từng link bài
+  const lsLinkKey = i => 'plRadioLink_' + i;
+
+  function getSavedLink(i) {
+    try { return localStorage.getItem(lsLinkKey(i)) || ''; } catch(e) { return ''; }
+  }
+  function saveLink(i, url) {
+    try { localStorage.setItem(lsLinkKey(i), url); } catch(e) {}
+    RADIO_PLAYLIST[i].src = url;
+  }
+
   function buildPlaylist() {
     const wrap = $('radioPlaylist');
     if (!wrap) return;
     wrap.innerHTML = RADIO_PLAYLIST.map((t, i) => {
-      const active = i === radioIdx;
-      const eq     = active && radioPlaying;
+      const active  = i === radioIdx;
+      const eq      = active && radioPlaying;
+      const saved   = getSavedLink(i);
+      if (saved && !t.src) t.src = saved;
+      const hasLink = !!(t.src || saved);
       return `<div class="radio-playlist-item${active ? ' active' : ''}" data-idx="${i}">
-        <span class="radio-playlist-icon${eq ? ' eq' : ''}">
-          ${eq
-            ? '<svg viewBox="0 0 24 24"><rect x="4" y="10" width="3" height="8"/><rect x="10.5" y="4" width="3" height="14"/><rect x="17" y="8" width="3" height="10"/></svg>'
-            : '<svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>'}
-        </span>
-        <span class="radio-playlist-text">
-          <div class="radio-playlist-song">${t.title}</div>
-          <div class="radio-playlist-artist">${t.artist}</div>
-        </span>
+        <div class="radio-playlist-item-row">
+          <span class="radio-playlist-icon${eq ? ' eq' : ''}">
+            ${eq
+              ? '<svg viewBox="0 0 24 24"><rect x="4" y="10" width="3" height="8"/><rect x="10.5" y="4" width="3" height="14"/><rect x="17" y="8" width="3" height="10"/></svg>'
+              : '<svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>'}
+          </span>
+          <span class="radio-playlist-text">
+            <div class="radio-playlist-song">${t.title}</div>
+            <div class="radio-playlist-artist">${t.artist}</div>
+          </span>
+          <button class="radio-link-btn${hasLink ? ' has-link' : ''}" data-link-idx="${i}" title="${hasLink ? 'Đã có link — click để đổi' : 'Dán link nhạc'}" onclick="toggleLinkRow(event,${i})">
+            <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          </button>
+  <button class="radio-link-btn" title="Xóa bài này" onclick="removeTrack(${i},event)" style="color:#c0392b">
+            <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="radio-playlist-link-row" id="linkRow_${i}">
+          <input class="radio-playlist-link-input" id="linkInput_${i}"
+            placeholder="Dán link MP3 vào đây rồi nhấn Lưu..."
+            value="${t.src || saved}"
+            onkeydown="if(event.key==='Enter')saveLinkFromInput(${i})"/>
+          <button class="radio-playlist-link-save" onclick="saveLinkFromInput(${i})">Lưu</button>
+        </div>
       </div>`;
     }).join('');
-    wrap.querySelectorAll('.radio-playlist-item').forEach(el =>
-      el.addEventListener('click', () => window.radioSelect(+el.dataset.idx)));
+    wrap.querySelectorAll('.radio-playlist-item-row').forEach(row => {
+      const item = row.closest('.radio-playlist-item');
+      row.addEventListener('click', e => {
+        if (e.target.closest('.radio-link-btn')) return;
+        window.radioSelect(+item.dataset.idx);
+      });
+    });
   }
+
+  window.toggleLinkRow = function(e, i) {
+    e.stopPropagation();
+    if (!window._isAdmin) return;
+    const row = document.getElementById('linkRow_' + i);
+    if (!row) return;
+    const isOpen = row.classList.contains('open');
+    // đóng tất cả rows khác
+    document.querySelectorAll('.radio-playlist-link-row.open').forEach(r => r.classList.remove('open'));
+    if (!isOpen) {
+      row.classList.add('open');
+      setTimeout(() => document.getElementById('linkInput_' + i)?.focus(), 50);
+    }
+  };
+
+  const LS_CUSTOM = 'plRadioCustomTracks';
+
+  const DEFAULT_COUNT = 5;
+
+  async function loadCustomTracks() {
+    try {
+      const { data } = await sb.from('site_settings')
+        .select('value').eq('key','radio_playlist').maybeSingle();
+      if (data?.value) {
+        const tracks = JSON.parse(data.value);
+        tracks.forEach(t => RADIO_PLAYLIST.push(t));
+      }
+    } catch(e) {
+      // fallback localStorage
+      try {
+        const saved = JSON.parse(localStorage.getItem(LS_CUSTOM) || '[]');
+        saved.forEach(t => RADIO_PLAYLIST.push(t));
+      } catch(e2) {}
+    }
+  }
+
+  async function saveCustomTracks() {
+    if (!window._isAdmin) return;
+    const custom = RADIO_PLAYLIST.slice(DEFAULT_COUNT);
+    try {
+      await sb.from('site_settings').upsert(
+        { key: 'radio_playlist', value: JSON.stringify(custom) },
+        { onConflict: 'key' }
+      );
+    } catch(e) { console.error('Lỗi lưu playlist:', e); }
+  }
+
+  window.toggleAddForm = function() {
+    if (!window._isAdmin) return;
+    const form = $('radioAddForm');
+    if (!form) return;
+    form.classList.toggle('open');
+    if (form.classList.contains('open')) {
+      $('addTitle')?.focus();
+      // Clear fields
+      ['addTitle','addArtist','addSrc'].forEach(id => { const el=$(id); if(el) el.value=''; });
+    }
+  };
+
+  window.addNewTrack = function() {
+    const title  = ($('addTitle')?.value || '').trim();
+    const artist = ($('addArtist')?.value || '').trim();
+    const src    = ($('addSrc')?.value || '').trim();
+    if (!title) { $('addTitle')?.focus(); return; }
+    RADIO_PLAYLIST.push({ title, artist: artist || 'Unknown', src, cover: '' });
+    saveCustomTracks();
+    toggleAddForm();
+    buildPlaylist();
+    // Scroll xuống bài mới
+    setTimeout(() => {
+      const wrap = $('radioPlaylist');
+      if (wrap) wrap.scrollTop = wrap.scrollHeight;
+    }, 100);
+  };
+
+  window.removeTrack = function(i, e) {
+    e && e.stopPropagation();
+    if (!window._isAdmin) return;
+    RADIO_PLAYLIST.splice(i, 1);
+    saveCustomTracks();
+    if (radioIdx >= RADIO_PLAYLIST.length) radioIdx = Math.max(0, RADIO_PLAYLIST.length - 1);
+    buildPlaylist();
+    renderTrack(false);
+  };
+
+  window.saveLinkFromInput = function(i) {
+    if (!window._isAdmin) return;
+    const input = document.getElementById('linkInput_' + i);
+    if (!input) return;
+    const url = input.value.trim();
+    saveLink(i, url);
+    // Đóng row
+    const row = document.getElementById('linkRow_' + i);
+    if (row) row.classList.remove('open');
+    // Cập nhật icon link btn
+    buildPlaylist();
+    // Nếu đang phát bài này thì reload track với src mới
+    if (i === radioIdx) renderTrack(radioPlaying);
+    // Thông báo nhỏ
+    const btn = document.querySelector(\`[data-link-idx="\${i}"]\`);
+    if (btn) {
+      btn.style.color = 'var(--peach)';
+      btn.title = 'Đã có link — click để đổi';
+    }
+  };
 
   // ── Render track (đổi bài) ───────────────────────────────────────────────────
   function renderTrack(autoplay) {
@@ -2856,7 +3311,14 @@ if (window.PlSEO) {
   };
 
   // ── Init ─────────────────────────────────────────────────────────────────────
-  function init() {
+  async function init() {
+    // Load custom tracks từ Supabase
+    await loadCustomTracks();
+    // Load saved links
+    RADIO_PLAYLIST.forEach((t, i) => {
+      const saved = getSavedLink(i);
+      if (saved) t.src = saved;
+    });
     attachWaveformSeek();
     renderTrack(false);
   }
@@ -2864,7 +3326,54 @@ if (window.PlSEO) {
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 
-  window.addEventListener('beforeunload', () => {
+  
+// ── NOTICE EDIT ──────────────────────────────────────────────────────────────
+const LS_NOTICE = 'plNoticeText';
+
+function openNoticeEdit() {
+  if (!window._isAdmin) return;
+  const modal = document.getElementById('noticeEditModal');
+  const input = document.getElementById('noticeEditInput');
+  const current = document.getElementById('noticeScrollText')?.textContent || '';
+  if (input) input.value = current;
+  if (modal) { modal.classList.add('open'); setTimeout(() => input?.focus(), 80); }
+}
+function closeNoticeEdit() {
+  document.getElementById('noticeEditModal')?.classList.remove('open');
+}
+async function saveNoticeText() {
+  if (!window._isAdmin) return;
+  const text = document.getElementById('noticeEditInput')?.value.trim();
+  if (!text) return;
+  // Lưu lên Supabase
+  try {
+    await sb.from('site_settings').upsert({ key: 'notice_text', value: text }, { onConflict: 'key' });
+  } catch(e) { console.error('Lỗi lưu thông báo:', e); }
+  const el = document.getElementById('noticeScrollText');
+  if (el) el.innerHTML = text;
+  closeNoticeEdit();
+}
+// Load saved notice on page load
+(function() {
+  const saved = localStorage.getItem('plNoticeText');
+  if (saved) {
+    document.addEventListener('DOMContentLoaded', () => {
+      const el = document.getElementById('noticeScrollText');
+      if (el) el.textContent = saved;
+    });
+    if (document.readyState !== 'loading') {
+      const el = document.getElementById('noticeScrollText');
+      if (el) el.textContent = saved;
+    }
+  }
+})();
+// Close modal on overlay click
+document.addEventListener('click', e => {
+  const modal = document.getElementById('noticeEditModal');
+  if (modal && e.target === modal) closeNoticeEdit();
+});
+
+window.addEventListener('beforeunload', () => {
     stopFakeTimer();
     if (audio) { audio.pause(); audio.src = ''; audio = null; }
   });
