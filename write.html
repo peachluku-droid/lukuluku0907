@@ -509,7 +509,7 @@ body { display: block; }
 .dtb-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .dtb-btn:hover { background: var(--peach-light); color: var(--peach); }
 .dtb-btn.active { background: var(--peach-light); color: var(--peach); border-color: var(--peach); font-weight: 900; }
-.panel-btn.active { background: var(--peach-light); color: var(--peach); border-color: var(--peach); }
+.panel-btn.active { background: var(--peach); color: #fff; border-color: var(--peach); font-weight: 900; }
 .desktop-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 2px; padding: 6px 12px; border-bottom: 1px solid var(--border); background: var(--bg); }
 .dtb-word-count {
   margin-left: auto; font-size: 12px; font-weight: 700;
@@ -661,7 +661,7 @@ body { display: block; }
 .panel-row { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
 .panel-btn {
   background: none; border: 1.5px solid var(--border); border-radius: 8px;
-  cursor: pointer; padding: 7px 10px; color: var(--text);
+  cursor: pointer; padding: 7px 10px; color: var(--text-muted);
   font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700;
   display: flex; align-items: center; gap: 5px; transition: all .12s;
   touch-action: manipulation;
@@ -1028,23 +1028,23 @@ body { display: block; }
             <button class="panel-btn" id="mobileBtnI" onclick="fmt('italic')"><i>I</i></button>
             <button class="panel-btn" id="mobileBtnU" onclick="fmt('underline')"><u>U</u></button>
             <div class="panel-sep"></div>
-            <button class="panel-btn" onclick="fmt('justifyLeft')">
+            <button class="panel-btn" id="mobileBtnAlignLeft" onclick="fmt('justifyLeft')">
               <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg>
             </button>
-            <button class="panel-btn" onclick="fmt('justifyCenter')">
+            <button class="panel-btn" id="mobileBtnAlignCenter" onclick="fmt('justifyCenter')">
               <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
             </button>
-            <button class="panel-btn" onclick="fmt('justifyRight')">
+            <button class="panel-btn" id="mobileBtnAlignRight" onclick="fmt('justifyRight')">
               <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="9" y1="12" x2="21" y2="12"/><line x1="6" y1="18" x2="21" y2="18"/></svg>
             </button>
             <div class="panel-sep"></div>
-            <button class="panel-btn" onclick="clearFormat()">
+            <button class="panel-btn" onclick="toggleBtnActive(this);clearFormat()">
               <svg viewBox="0 0 24 24"><path d="M22 3H7l-4 18h3l1-4h10l1 4h3L22 3z"/><line x1="4" y1="21" x2="20" y2="3"/></svg>
             </button>
           </div>
           <div class="panel-row" style="border-top:1px solid var(--border);padding-top:8px">
-            <button class="panel-btn panel-btn-wide" onclick="insertHR()">— Ngăn cách</button>
-            <button class="panel-btn panel-btn-wide" onclick="insertNote('annotation')">
+            <button class="panel-btn panel-btn-wide" onclick="toggleBtnActive(this);insertHR()">— Ngăn cách</button>
+            <button class="panel-btn panel-btn-wide" onclick="toggleBtnActive(this);insertNote('annotation')">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
               Chú thích
             </button>
@@ -1054,15 +1054,15 @@ body { display: block; }
         <!-- Media panel -->
         <div class="slide-panel" id="mediaPanel">
           <div class="panel-row">
-            <button class="panel-btn panel-btn-wide" onclick="insertImage()">
+            <button class="panel-btn panel-btn-wide" onclick="toggleBtnActive(this);insertImage()">
               <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
               Ảnh
             </button>
-            <button class="panel-btn panel-btn-wide" onclick="insertVideo()">
+            <button class="panel-btn panel-btn-wide" onclick="toggleBtnActive(this);insertVideo()">
               <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
               Video
             </button>
-            <button class="panel-btn panel-btn-wide" onclick="insertYoutube()">
+            <button class="panel-btn panel-btn-wide" onclick="toggleBtnActive(this);insertYoutube()">
               <svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#fff"/></svg>
               YouTube
             </button>
@@ -1770,7 +1770,7 @@ function genParaId() {
   __paraIdSeq++;
   return 'pid_' + Date.now().toString(36) + '_' + __paraIdSeq.toString(36) + '_' + Math.random().toString(36).slice(2, 8);
 }
-async function saveDraft() {
+async function saveDraft(isAutosave = false) {
   // Lấy session và tự refresh nếu cần
   let session;
   try {
@@ -1799,16 +1799,23 @@ async function saveDraft() {
   // Ưu tiên caret hiện tại (editor đang focus); fallback về _trackedCaret (autosave chạy sau khi ngưng gõ)
   const _caretSaved = saveCaretPosition(ed) || _trackedCaret || null;
 
-  // Bước 3: clean DOM (rebuild innerHTML → caret bị reset về đầu bởi browser)
-  cleanEditorContent();
+  // Bước 3: clean DOM (rebuild innerHTML → caret bị reset về đầu bởi browser).
+  // CHỈ chạy khi lưu thủ công / đăng chương. Khi TỰ ĐỘNG lưu (isAutosave=true, tức đang gõ dở),
+  // BỎ QUA bước này: cleanEditorContent() xoá và dựng lại toàn bộ DOM của editor, trên mobile
+  // việc này khiến bàn phím ảo mất dấu theo dõi vị trí con trỏ và nhảy dấu gõ về đầu chương,
+  // dù có restore lại selection bằng JS ngay sau đó. Không đụng tới DOM khi tự động lưu
+  // → con trỏ không bao giờ bị dịch chuyển, nên không thể "nhảy" đi đâu cả.
+  if (!isAutosave) {
+    cleanEditorContent();
 
-  // Bước 4: gán lại pid cho các đoạn mới xuất hiện sau clean (clean có thể tạo thêm <p> mới)
-  ed.querySelectorAll('p, .media-block, .annotation-block').forEach(el => {
-    if (!el.dataset.pid) el.dataset.pid = genParaId();
-  });
+    // Bước 4: gán lại pid cho các đoạn mới xuất hiện sau clean (clean có thể tạo thêm <p> mới)
+    ed.querySelectorAll('p, .media-block, .annotation-block').forEach(el => {
+      if (!el.dataset.pid) el.dataset.pid = genParaId();
+    });
 
-  // Bước 5: khôi phục caret đúng chỗ cũ (dùng pid đã lưu ở bước 2)
-  restoreCaretPosition(ed, _caretSaved);
+    // Bước 5: khôi phục caret đúng chỗ cũ (dùng pid đã lưu ở bước 2)
+    restoreCaretPosition(ed, _caretSaved);
+  }
   const content = ed.innerHTML;
 
   // Kiểm tra content size (Supabase mặc định giới hạn request ~10MB, nhưng nên giới hạn sớm)
@@ -1848,7 +1855,10 @@ async function saveDraft() {
   // Khôi phục caret sau khi save xong. Dùng setTimeout để chờ loadChapterList() render xong
   // (loadChapterList có thể gây reflow làm mất selection). KHÔNG gọi ed.focus() trước
   // restoreCaretPosition vì focus() sẽ tự đặt caret về đầu editor trước khi restore kịp chạy.
-  if (_caretSaved) {
+  // Bỏ qua hoàn toàn bước này khi autosave: DOM chưa từng bị đụng tới ở autosave nên con trỏ
+  // vẫn đang đúng chỗ; nếu ép restore về vị trí đã chụp TRƯỚC lúc chờ mạng, mà người dùng lỡ
+  // gõ thêm trong lúc chờ, con trỏ sẽ bị kéo lùi lại — gây cảm giác "nhảy vị trí".
+  if (!isAutosave && _caretSaved) {
     setTimeout(() => {
       const active = document.activeElement;
       const userFocusedOther = active && active !== ed && active !== document.body
@@ -2104,6 +2114,30 @@ function cleanEditorContent() {
 }
 
 
+// Map lệnh định dạng -> id nút desktop/mobile tương ứng (dùng chung cho fmt() và updateBtnStates())
+const FMT_CMD_TO_DESKTOP_BTN = { bold: 'dtbBold', italic: 'dtbItalic', underline: 'dtbUnderline' };
+const FMT_CMD_TO_MOBILE_BTN  = {
+  bold: 'mobileBtnB', italic: 'mobileBtnI', underline: 'mobileBtnU',
+  justifyLeft: 'mobileBtnAlignLeft', justifyCenter: 'mobileBtnAlignCenter', justifyRight: 'mobileBtnAlignRight'
+};
+const FMT_ALIGN_CMDS = ['justifyLeft', 'justifyCenter', 'justifyRight'];
+
+// Cập nhật class active của 1 nút định dạng (desktop + mobile) theo trạng thái thực tế
+function setFmtBtnActive(cmd, isActive) {
+  const dBtn = document.getElementById(FMT_CMD_TO_DESKTOP_BTN[cmd]);
+  const mBtn = document.getElementById(FMT_CMD_TO_MOBILE_BTN[cmd]);
+  if (dBtn) dBtn.classList.toggle('active', isActive);
+  if (mBtn) mBtn.classList.toggle('active', isActive);
+}
+
+// Toggle active đơn giản cho các nút hành động một-lần (không có trạng thái thực để tra,
+// vd: Xóa định dạng, Ngăn cách, Chú thích, Chèn ảnh/video...): ấn lần 1 -> active (cam đậm),
+// ấn lần 2 -> hết active (xám, không nền như ban đầu).
+function toggleBtnActive(btn) {
+  if (!btn) return;
+  btn.classList.toggle('active');
+}
+
 function fmt(cmd) {
   const ed = document.getElementById('chContent');
 
@@ -2112,16 +2146,14 @@ function fmt(cmd) {
   // preventToolbarBlur() đã giữ selection khi chạm toolbar nên không cần focus() thủ công ở đây.
   document.execCommand(cmd, false, null);
 
-  // Đọc trạng thái THỰC SAU execCommand để cập nhật nút đúng chiều (bật/tắt)
-  const isNowActive = document.queryCommandState(cmd);
-
-  const cmdToBtn  = { bold: 'dtbBold', italic: 'dtbItalic', underline: 'dtbUnderline' };
-  const mobileMap = { bold: 'mobileBtnB', italic: 'mobileBtnI', underline: 'mobileBtnU' };
-
-  const dBtn = document.getElementById(cmdToBtn[cmd]);
-  const mBtn = document.getElementById(mobileMap[cmd]);
-  if (dBtn) dBtn.classList.toggle('active', isNowActive);
-  if (mBtn) mBtn.classList.toggle('active', isNowActive);
+  if (FMT_ALIGN_CMDS.includes(cmd)) {
+    // Căn lề là nhóm loại trừ lẫn nhau (chỉ 1 trong 3 có thể active) -> đọc lại trạng thái thực
+    // của cả 3 nút để đảm bảo chỉ đúng 1 nút được bật cam, 2 nút còn lại về xám.
+    FMT_ALIGN_CMDS.forEach(c => setFmtBtnActive(c, document.queryCommandState(c)));
+  } else {
+    // Đọc trạng thái THỰC SAU execCommand để cập nhật nút đúng chiều (bật/tắt)
+    setFmtBtnActive(cmd, document.queryCommandState(cmd));
+  }
 }
 
 // Theo dõi trạng thái selection để cập nhật nút active
@@ -2129,16 +2161,8 @@ function initSelectionListener() {
   const ed = document.getElementById('chContent');
   if (!ed) return;
   function updateBtnStates() {
-    const cmds = ['bold','italic','underline'];
-    const desktopMap = { bold:'dtbBold', italic:'dtbItalic', underline:'dtbUnderline' };
-    const mobileMap  = { bold:'mobileBtnB', italic:'mobileBtnI', underline:'mobileBtnU' };
-    cmds.forEach(cmd => {
-      const active = document.queryCommandState(cmd);
-      const dBtn = document.getElementById(desktopMap[cmd]);
-      const mBtn = document.getElementById(mobileMap[cmd]);
-      if (dBtn) dBtn.classList.toggle('active', active);
-      if (mBtn) mBtn.classList.toggle('active', active);
-    });
+    const cmds = ['bold', 'italic', 'underline', ...FMT_ALIGN_CMDS];
+    cmds.forEach(cmd => setFmtBtnActive(cmd, document.queryCommandState(cmd)));
   }
   ed.addEventListener('keyup', updateBtnStates);
   ed.addEventListener('mouseup', updateBtnStates);
@@ -3669,7 +3693,7 @@ function jumpToError(idx) {
 // toolbar — điều này chỉ ngăn hành vi mặc định "cướp focus", KHÔNG ngăn sự kiện click phía sau,
 // nên vùng soạn thảo luôn giữ focus + giữ nguyên selection, chạm 1 phát là ăn ngay.
 function preventToolbarBlur() {
-  const zones = [document.querySelector('.mobile-bottom-wrap'), document.getElementById('desktopToolbar')];
+  const zones = [document.querySelector('.mobile-bottom-wrap'), document.getElementById('desktopToolbar'), document.querySelector('.topbar')];
   zones.forEach(zone => {
     if (!zone) return;
     zone.addEventListener('mousedown', e => {
@@ -3814,7 +3838,7 @@ function onContentInput() {
   saveLocalDraft();
   // Lưu lên server sau khi ngừng gõ 2 giây — debounce nhỏ để tránh spam request Supabase
   clearTimeout(autoSaveTimer);
-  autoSaveTimer = setTimeout(saveDraft, 2000);
+  autoSaveTimer = setTimeout(() => saveDraft(true), 2000);
 }
 function updateWordCount() {
   const text = document.getElementById('chContent').innerText || '';
