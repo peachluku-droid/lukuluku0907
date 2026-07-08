@@ -181,14 +181,6 @@ body {
 .chapter-stats-end .stat-btn.voted { color: var(--accent); font-weight: 700; }
 .chapter-stats-end .stat-btn.voted svg { stroke: var(--accent); fill: var(--accent); }
 
-.audio-section { padding: 16px 0; }
-.audio-section h3 { font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
-.audio-section h3 svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.audio-section audio { width: 100%; accent-color: var(--accent); }
-.audio-no-file { font-size: 13px; color: var(--meta); font-style: italic; padding: 8px 0; }
-.audio-gen-status { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--meta); padding: 8px 0; }
-.audio-gen-spin { width: 16px; height: 16px; stroke: var(--accent); fill: none; stroke-width: 2.5; stroke-linecap: round; animation: audio-gen-spin-anim 1s linear infinite; }
-@keyframes audio-gen-spin-anim { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 .tts-player { display: flex; flex-direction: column; gap: 8px; }
 .tts-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .tts-play {
@@ -272,23 +264,6 @@ body {
 .style-btn:hover { background: var(--bg2); }
 .style-btn.active { background: var(--bg2); border-color: var(--accent); color: var(--accent); }
 
-/* settings audio row */
-.settings-audio-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; }
-.settings-audio-left { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
-.settings-audio-label {
-  font-size: calc(var(--font-size, 16px) * 1.5); font-weight: 600;
-  color: var(--text); font-family: var(--font-family, 'Crimson Text', serif);
-}
-.settings-audio-play-btn {
-  width: 38px; height: 38px; border-radius: 50%;
-  background: none; border: 1.5px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; flex-shrink: 0; transition: all .15s;
-}
-.settings-audio-play-btn svg { width: 13px; height: 13px; stroke: var(--text); fill: var(--text); stroke-width: 0; }
-.settings-audio-play-btn:hover { border-color: var(--accent); }
-.settings-audio-play-btn.playing { background: var(--accent); border-color: var(--accent); }
-.settings-audio-play-btn.playing svg { stroke: #fff; fill: #fff; }
 
 .cmt-sheet-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 299; }
 .cmt-sheet-overlay.open { display: block; }
@@ -336,43 +311,22 @@ body.theme-dark .cmt-sheet { background: var(--panel); }
 .cmt-body { flex: 1; min-width: 0; }
 .cmt-user { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 2px; font-family: 'Nunito', sans-serif; }
 .cmt-content { font-size: 14px; line-height: 1.6; word-break: break-word; color: var(--text); font-family: 'Nunito', sans-serif; }
-.cmt-img { margin-top: 8px; max-width: 100%; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; display: block; }
 .cmt-footer { display: flex; align-items: center; gap: 12px; margin-top: 5px; }
 .cmt-time { font-size: 11px; color: var(--meta); font-family: 'Nunito', sans-serif; }
 .cmt-reply-btn { font-size: 12px; font-weight: 700; color: var(--accent); background: none; border: none; cursor: pointer; padding: 0; font-family: 'Nunito', sans-serif; }
 .empty-msg { text-align: center; font-size: 13px; color: var(--meta); padding: 28px 12px; line-height: 1.8; font-family: 'Nunito', sans-serif; }
 .cmt-sheet-input { padding: 10px 16px 20px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
 .sheet-emoji-row { display: flex; align-items: center; gap: 6px; }
-.sheet-emoji-btn, .sheet-img-btn {
+.sheet-emoji-btn {
   background: var(--sidebar); border: 1.5px solid var(--border);
   border-radius: 8px; padding: 5px 9px; cursor: pointer; display: flex; align-items: center;
 }
-.sheet-emoji-btn svg, .sheet-img-btn svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.sheet-emoji-btn svg svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .sheet-emoji-picker { display: none; flex-wrap: wrap; gap: 2px; padding: 8px; border: 1.5px solid var(--border); border-radius: 10px; background: var(--bg2); max-height: 130px; overflow-y: auto; }
 .sheet-emoji-picker.open { display: flex; }
 .ep-label { width: 100%; font-size: 10px; color: var(--meta); padding: 4px 2px 2px; font-weight: 700; text-transform: uppercase; }
 .ep-emoji { font-size: 19px; background: none; border: none; cursor: pointer; border-radius: 6px; padding: 3px 4px; line-height: 1; }
 .ep-emoji:hover { background: var(--sidebar); }
-.sheet-sticker-picker {
-  display: none; flex-wrap: wrap; gap: 6px; padding: 8px;
-  border: 1.5px solid var(--border); border-radius: 10px; background: var(--bg2); max-height: 180px; overflow-y: auto;
-}
-.sheet-sticker-picker.open { display: flex; }
-.sticker-pick-item {
-  width: 56px; height: 56px; border-radius: 8px; cursor: pointer;
-  border: 1.5px solid transparent; background: var(--sidebar);
-  display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 0;
-}
-.sticker-pick-item:hover { border-color: var(--accent2); }
-.sticker-pick-item img { width: 100%; height: 100%; object-fit: contain; }
-.sticker-pick-empty { font-size: 12px; color: var(--meta); padding: 8px; width: 100%; text-align: center; }
-.sticker-preview-wrap { position: relative; display: inline-block; margin-top: 4px; }
-.sticker-preview-wrap img { width: 84px; height: 84px; object-fit: contain; border-radius: 8px; background: var(--sidebar); }
-.sticker-preview-remove {
-  position: absolute; top: -6px; right: -6px; width: 20px; height: 20px; border-radius: 50%;
-  background: var(--accent); color: #fff; border: none; cursor: pointer; font-size: 11px;
-  display: flex; align-items: center; justify-content: center; line-height: 1;
-}
 .cmt-reply-tag {
   display: inline-flex; align-items: center; gap: 3px;
   background: color-mix(in srgb, var(--accent) 12%, var(--bg2));
@@ -389,7 +343,6 @@ body.theme-dark .cmt-sheet { background: var(--panel); }
 .reply-hint-bar.visible { display: flex; }
 .reply-hint-bar strong { color: var(--accent); }
 .reply-hint-cancel { margin-left: auto; background: none; border: none; color: var(--meta); cursor: pointer; font-size: 15px; padding: 0 2px; line-height: 1; }
-.cmt-sticker { width: 96px; height: 96px; object-fit: contain; display: block; margin-top: 4px; border-radius: 8px; cursor: pointer; }
 .sheet-input-bar { display: flex; align-items: center; gap: 8px; background: #fff; border: 1.5px solid var(--border); border-radius: 30px; padding: 6px 6px 6px 14px; }
 .sheet-input-bar:focus-within { border-color: var(--accent); }
 body.theme-dark .sheet-input-bar { background: var(--bg2); }
@@ -400,13 +353,6 @@ body.theme-dark .sheet-input-bar { background: var(--bg2); }
 }
 .sheet-send-inline svg { width: 15px; height: 15px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .sheet-send-inline:disabled { opacity: .4; cursor: not-allowed; }
-.img-preview-wrap { position: relative; display: inline-block; margin-top: 2px; }
-.img-preview { max-height: 70px; max-width: 100%; border-radius: 8px; border: 1px solid var(--border); display: block; }
-.img-preview-remove {
-  position: absolute; top: -6px; right: -6px; background: var(--accent); color: #fff;
-  border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 11px;
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-}
 .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 999; align-items: center; justify-content: center; }
 .lightbox.open { display: flex; }
 .lightbox img { max-width: 90vw; max-height: 90vh; border-radius: 12px; }
@@ -505,20 +451,6 @@ body.theme-dark .sheet-input-bar { background: var(--bg2); }
       <button class="style-btn" id="btn-italic" onclick="toggleItalic(this)"><i>I</i></button>
     </div>
   </div>
-  <!-- FIX 2: label đổi thành "Audio" -->
-  <div class="setting-group">
-    <div class="settings-audio-row" id="settings-audio-wrap">
-      <div class="settings-audio-left">
-        <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:var(--text);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
-        <span class="settings-audio-label">Audio</span>
-      </div>
-      <div id="settings-audio-body">
-        <button class="settings-audio-play-btn" id="settings-tts-btn" onclick="settingsTtsToggle()">
-          <svg id="settings-tts-icon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </button>
-      </div>
-    </div>
-  </div>
 </div>
 
 <div class="layout">
@@ -534,9 +466,9 @@ body.theme-dark .sheet-input-bar { background: var(--bg2); }
     <h1 class="chapter-heading" id="chapter-heading">Đang tải...</h1>
     <div class="chapter-meta" id="chapter-meta"></div>
     <div class="chapter-stats">
-      <span><svg class="ic" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span id="view-count">0</span> lượt đọc</span>
-      <span><svg class="ic" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span id="vote-count">0</span> vote</span>
-      <span class="cmt-stats-link" onclick="openCmtOverviewFull()"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span id="total-cmt-count-top">0</span> bình luận</span>
+      <span><svg class="ic" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span id="view-count">0</span></span>
+      <span><svg class="ic" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span id="vote-count">0</span></span>
+      <span class="cmt-stats-link" onclick="openCmtOverviewFull()"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span id="total-cmt-count-top">0</span></span>
     </div>
 
     <div id="paragraphs-container">
@@ -549,32 +481,18 @@ body.theme-dark .sheet-input-bar { background: var(--bg2); }
 
     <div class="end-section">
       <div class="chapter-stats-end">
-        <button class="stat-btn" onclick="toggleAudioSection()">
-          <svg viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z"/><path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
-          Audio
+        <button class="stat-btn" onclick="shareChapter()">
+          <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
         </button>
         <button class="stat-btn" id="vote-btn" onclick="submitVote()">
           <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <span id="vote-count-end">0</span> vote
+          <span id="vote-count-end">0</span>
         </button>
         <button class="stat-btn" onclick="openCmtSheet('__chapter__', false)">
           <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          <span id="total-cmt-end">0</span> bình luận
+          <span id="total-cmt-end">0</span>
         </button>
       </div>
-
-      <!-- audio section: ẩn mặc định, bấm nút Audio mới hiện -->
-      <div class="audio-section" id="audio-section-end" style="display:none">
-        <h3><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg> Audio</h3>
-        <div class="audio-no-file" id="audio-no-file-end" style="display:none">Chương này chưa có audio</div>
-        <div class="audio-gen-status" id="audio-gen-status-end" style="display:none">
-          <svg class="audio-gen-spin" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
-          <span>Đang tạo giọng đọc...</span>
-        </div>
-        <audio id="chapter-audio" controls style="display:none">
-          <source id="audio-src" src="" type="audio/mpeg">
-          Trình duyệt không hỗ trợ audio.
-        </audio>
       </div>
 
       <div class="toc-inline-section">
@@ -627,17 +545,8 @@ body.theme-dark .sheet-input-bar { background: var(--bg2); }
         <button class="sheet-emoji-btn" onclick="toggleSheetPicker()">
           <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
         </button>
-        <button class="sheet-img-btn" onclick="document.getElementById('sheet-img-input').click()" title="Thêm ảnh">
-          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-        </button>
-        <button class="sheet-img-btn" onclick="toggleStickerPicker()" title="Nhãn dán">
-          <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-10 10 10 10 0 0 0 10 10c.5 0 1-.04 1.5-.12a3.5 3.5 0 0 1-.5-1.79V18a2 2 0 0 1 2-2h2.09c.08-.5.12-1 .12-1.5A10 10 0 0 0 12 2z"/><circle cx="8" cy="9" r="1"/><circle cx="14.5" cy="8" r="1"/></svg>
-        </button>
-        <input type="file" id="sheet-img-input" accept="image/*" style="display:none" onchange="previewImg(this)">
       </div>
       <div class="sheet-emoji-picker" id="sheet-emoji-picker"></div>
-      <div class="sheet-sticker-picker" id="sheet-sticker-picker"></div>
-      <div id="img-preview-container"></div>
       <div class="sheet-input-bar">
         <textarea class="sheet-text-inline" id="sheet-cmt-input" placeholder="Viết bình luận..." rows="1"
           oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
@@ -759,13 +668,19 @@ document.addEventListener('click', e => {
   if (drawer.classList.contains('open') && !drawer.contains(e.target) && !e.target.closest('[onclick="toggleSettings()"]'))
     drawer.classList.remove('open')
 })
-function toggleAudioSection() {
-  const el = document.getElementById('audio-section-end')
-  const vis = el.style.display !== 'none'
-  el.style.display = vis ? 'none' : 'block'
-  if (!vis) el.scrollIntoView({ behavior:'smooth', block:'nearest' })
-}
 
+function shareChapter() {
+  const url = window.location.href
+  if (navigator.share) {
+    const title = document.getElementById('chapter-heading')?.textContent || document.title
+    navigator.share({ title, url }).catch(() => {})
+  } else {
+    navigator.clipboard.writeText(url).then(() => {
+      const btn = document.querySelector('[onclick="shareChapter()"]')
+      if (btn) { btn.style.opacity = '0.5'; setTimeout(() => btn.style.opacity = '', 1200) }
+    })
+  }
+}
 const AVATAR_COLORS = ['#d4537e','#5b9bd5','#71c285','#e8a838','#9b7fe8','#e87878']
 function avatarColorFor(id) {
   const s = String(id||'')
@@ -853,45 +768,8 @@ function paraHash(text) {
   return h.toString(36)
 }
 
-function setupChapterAudio(ch) {
-  const plainText = stripHtml(ch.content || '').trim()
-  if (ch.audio_url) {
-    const src = document.getElementById('audio-src')
-    const el  = document.getElementById('chapter-audio')
-    if (src) src.src = ch.audio_url
-    if (el)  { el.load(); el.style.display = 'block' }
-    document.querySelectorAll('.audio-no-file, .audio-gen-status').forEach(e => e.style.display = 'none')
-    _audioFileUrl = ch.audio_url
-    return
-  }
-  document.querySelectorAll('#chapter-audio').forEach(e => e.style.display = 'none')
-  document.querySelectorAll('.audio-no-file, .audio-gen-status').forEach(e => e.style.display = 'none')
-  _audioFileUrl = null
-  if (!plainText || !('speechSynthesis' in window)) return
-  const endSec = document.getElementById('audio-section-end')
-  if (endSec && !endSec.querySelector('.tts-player')) {
-    endSec.insertAdjacentHTML('beforeend', `
-      <div class="tts-player">
-        <div class="tts-controls">
-          <button class="tts-btn tts-play" onclick="ttsToggle(this)">
-            <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            <span>Nghe truyện</span>
-          </button>
-          <div class="tts-speed-wrap">
-            <span class="tts-speed-label">Tốc độ</span>
-            <button class="tts-speed-btn" data-rate="0.8" onclick="ttsSetRate(this)">0.8×</button>
-            <button class="tts-speed-btn active" data-rate="1" onclick="ttsSetRate(this)">1×</button>
-            <button class="tts-speed-btn" data-rate="1.5" onclick="ttsSetRate(this)">1.5×</button>
-            <button class="tts-speed-btn" data-rate="2" onclick="ttsSetRate(this)">2×</button>
-          </div>
-        </div>
-      </div>`)
-    endSec.querySelector('.tts-player').dataset.text = plainText
-  }
-}
 
 // ── AUDIO STATE ──
-let _audioFileUrl = null
 const _audio = new Audio()
 let _audioPlaying = false
 let _ttsRate = 1
@@ -921,27 +799,6 @@ function _syncAudioUi(playing) {
 
 // FIX 3: settingsTtsToggle hoạt động đúng cho cả file audio và TTS
 function settingsTtsToggle() {
-  if (_audioFileUrl) {
-    // Có file audio thật
-    if (_audioPlaying) {
-      _audio.pause()
-    } else {
-      if (_audio.src !== _audioFileUrl) { _audio.src = _audioFileUrl; _audio.load() }
-      _audio.play().catch(err => console.error('play error:', err))
-    }
-  } else {
-    // Web Speech TTS
-    if (_ttsActive) {
-      speechSynthesis.cancel()
-      _stopTtsWatchdog()
-      _ttsActive = false
-      _ttsSetUi(false)
-    } else {
-      const text = getChapterTextForTts()
-      if (!text) return
-      _ttsSpeak(text)
-    }
-  }
 }
 
 function ttsSetRate(btn) {
@@ -1212,8 +1069,6 @@ async function renderCmtOverview() {
         ${quoteHtml}
         <div class="cmt-user">${name}</div>
         ${c.content ? `<div class="cmt-content">${renderContentWithTag(c.content)}</div>` : ''}
-        ${c.image_url ? `<img class="cmt-img" src="${c.image_url}" alt="" loading="lazy" onclick="openLightbox('${c.image_url}')">` : ''}
-        ${c.sticker_url ? `<img class="cmt-sticker" src="${c.sticker_url}" alt="sticker" loading="lazy" onclick="openLightbox('${c.sticker_url}')">` : ''}
         <div class="cmt-footer">
           <span class="cmt-time">${formatTime(c.created_at)}</span>
           ${chCurrentUser ? `<button class="cmt-reply-btn" onclick="openCmtSheet('${c.paragraph_id}', true); setTimeout(()=>replyTo('${jsEscape(name)}','${c.id}','${c.user_id}',false),250)">Trả lời</button>` : ''}
@@ -1295,8 +1150,6 @@ async function loadSheetComments(pid) {
       <div class="cmt-body">
         <div class="cmt-user">${name}</div>
         ${c.content ? `<div class="cmt-content">${renderContentWithTag(c.content)}</div>` : ''}
-        ${c.image_url ? `<img class="cmt-img" src="${c.image_url}" alt="" loading="lazy" onclick="openLightbox('${c.image_url}')">` : ''}
-        ${c.sticker_url ? `<img class="cmt-sticker" src="${c.sticker_url}" alt="sticker" loading="lazy" onclick="openLightbox('${c.sticker_url}')">` : ''}
         <div class="cmt-footer">
           <span class="cmt-time">${formatTime(c.created_at)}</span>
           ${chCurrentUser ? `<button class="cmt-reply-btn" onclick="replyTo('${jsEscape(name)}','${c.id}','${c.user_id}',false)">Trả lời</button>` : ''}
@@ -1339,23 +1192,9 @@ function cancelReply() {
   if (ta?.value.startsWith('@')) { ta.value = ''; ta.style.height = 'auto' }
 }
 
-let selectedImgFile = null, selectedSticker = null
 
-function previewImg(input) {
-  const file = input.files[0]; if (!file) return
-  if (file.size > 5*1024*1024) { alert('Ảnh tối đa 5MB'); input.value=''; return }
-  selectedSticker = null; selectedImgFile = file
-  const url = URL.createObjectURL(file)
-  document.getElementById('img-preview-container').innerHTML = `
-    <div class="img-preview-wrap">
-      <img class="img-preview" src="${url}" alt="">
-      <button class="img-preview-remove" onclick="removeImg()">✕</button>
-    </div>`
-}
 function removeImg() {
-  selectedImgFile = null
   document.getElementById('img-preview-container').innerHTML = ''
-  document.getElementById('sheet-img-input').value = ''
 }
 let _webpSupport = null
 function supportsWebP() {
@@ -1386,35 +1225,23 @@ function imgExtFor(blob, file) {
   if (blob.type==='image/webp') return 'webp'; if (blob.type==='image/jpeg') return 'jpg'
   return file.name.split('.').pop() || 'jpg'
 }
-async function uploadImg(file) {
-  const compressed = await compressImage(file,1000,0.8)
-  const ext = imgExtFor(compressed, file)
-  const path = `comments/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`
-  const { error } = await sb.storage.from('comment-images').upload(path, compressed, { contentType: compressed.type||file.type, cacheControl:'31536000' })
-  if (error) { console.error('uploadImg error:', error); return null }
-  return sb.storage.from('comment-images').getPublicUrl(path).data.publicUrl
-}
 
 async function submitSheetComment() {
   if (!activePid || !chCurrentUser) { if (!chCurrentUser) alert('Vui lòng đăng nhập để bình luận!'); return }
   const content = document.getElementById('sheet-cmt-input').value.trim()
   const username = chUserProfile?.display_name || chCurrentUser.email.split('@')[0]
-  if (!content && !selectedImgFile && !selectedSticker) return alert('Nhập nội dung, chọn ảnh hoặc nhãn dán nhé!')
+  if (!content) return alert('Nhập nội dung bình luận nhé!')
   const btn = document.getElementById('sheet-send-btn'); btn.disabled = true
-  let image_url = null
-  if (selectedImgFile) { image_url = await uploadImg(selectedImgFile); if (!image_url) { alert('Upload ảnh thất bại'); btn.disabled=false; return } }
-  const sticker_url = selectedSticker || null
   const { error } = await sb.from('comments').insert({
     story_id:STORY_ID, chapter_id:CHAPTER_UUID, paragraph_id:activePid,
-    user_id:chCurrentUser.id, content, image_url, sticker_url,
+    user_id:chCurrentUser.id, content, image_url: null, sticker_url: null,
     parent_id:activeParentId||null, reply_to_user_id:activeReplyUserId||null
   })
   activeReplyUserId = null; activeParentId = null; btn.disabled = false
   if (error) { console.error('POST CMT ERROR:', error); alert('Gửi thất bại: ' + error.message); return }
   document.getElementById('sheet-cmt-input').value = ''
   document.getElementById('sheet-emoji-picker').classList.remove('open')
-  document.getElementById('sheet-sticker-picker').classList.remove('open')
-  selectedSticker = null; removeImg()
+    
   loadSheetComments(activePid); loadAllCounts()
 }
 
@@ -1439,8 +1266,6 @@ async function loadChapterEndComments() {
       <div class="cmt-body">
         <div class="cmt-user">${name}</div>
         ${c.content ? `<div class="cmt-content">${renderContentWithTag(c.content)}</div>` : ''}
-        ${c.image_url ? `<img class="cmt-img" src="${c.image_url}" alt="" loading="lazy" onclick="openLightbox('${c.image_url}')">` : ''}
-        ${c.sticker_url ? `<img class="cmt-sticker" src="${c.sticker_url}" alt="sticker" loading="lazy" onclick="openLightbox('${c.sticker_url}')">` : ''}
         <div class="cmt-footer">
           <span class="cmt-time">${formatTime(c.created_at)}</span>
           ${chCurrentUser ? `<button class="cmt-reply-btn" onclick="replyTo('${jsEscape(name)}','${c.id}','${c.user_id}',true)">Trả lời</button>` : ''}
@@ -1511,37 +1336,6 @@ function insertChapterEmoji(emoji) {
   inp.selectionStart = inp.selectionEnd = s+emoji.length; inp.focus()
 }
 
-let _stickerListCache = null
-async function loadStickerList() {
-  if (_stickerListCache) return _stickerListCache
-  try {
-    const { data, error } = await sb.storage.from('stickers').list('', { limit:100, sortBy:{column:'name',order:'asc'} })
-    if (error) return []
-    const files = (data||[]).filter(f => f.name && !f.name.startsWith('.'))
-    _stickerListCache = files.map(f => sb.storage.from('stickers').getPublicUrl(f.name).data.publicUrl)
-    return _stickerListCache
-  } catch(e) { return [] }
-}
-async function toggleStickerPicker() {
-  const picker = document.getElementById('sheet-sticker-picker')
-  const isOpening = !picker.classList.contains('open')
-  picker.classList.toggle('open'); document.getElementById('sheet-emoji-picker').classList.remove('open')
-  if (!isOpening) return
-  picker.innerHTML = '<div class="sticker-pick-empty">Đang tải...</div>'
-  const urls = await loadStickerList()
-  if (!urls.length) { picker.innerHTML = '<div class="sticker-pick-empty">Chưa có nhãn dán nào.</div>'; return }
-  picker.innerHTML = urls.map(u => `<button class="sticker-pick-item" onclick="pickSticker('${u}')"><img src="${u}" alt="sticker" loading="lazy"></button>`).join('')
-}
-function pickSticker(url) {
-  selectedSticker = url; removeImg()
-  document.getElementById('img-preview-container').innerHTML = `
-    <div class="sticker-preview-wrap">
-      <img src="${url}" alt="sticker preview">
-      <button class="sticker-preview-remove" onclick="removeSticker()">✕</button>
-    </div>`
-  document.getElementById('sheet-sticker-picker').classList.remove('open')
-}
-function removeSticker() { selectedSticker = null; document.getElementById('img-preview-container').innerHTML = '' }
 
 function openLightbox(src) { document.getElementById('lightbox-img').src = src; document.getElementById('lightbox').classList.add('open') }
 function closeLightbox() { document.getElementById('lightbox').classList.remove('open') }
@@ -1602,8 +1396,7 @@ loadNavAvatar()
       -webkit-user-select:none!important; -moz-user-select:none!important;
       -ms-user-select:none!important; user-select:none!important; -webkit-touch-callout:none!important;
     }
-    img:not(.cmt-img):not(#lightbox-img):not(.img-preview) { -webkit-user-drag:none!important; user-drag:none!important; pointer-events:none; }
-    .cmt-img { cursor:pointer; }
+    img:not(#lightbox-img) { -webkit-user-drag:none!important; user-drag:none!important; pointer-events:none; }
     ::selection { background:transparent!important; } ::-moz-selection { background:transparent!important; }
   `
   document.head.appendChild(protectCSS)
@@ -1621,7 +1414,7 @@ loadNavAvatar()
     const t=e.target
     if (t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.closest('.cmt-sheet-input')||t.closest('.sheet-input-bar')
       ||t.closest('#sheet-cmt-input')||t.closest('.cmt-sheet')||t.id==='sheet-cmt-input'
-      ||t.id==='sheet-img-input'||t.closest('.img-preview-wrap')||t.closest('.sheet-img-btn')||t.closest('.sheet-emoji-btn')) return true
+      ||t.closest('.sheet-emoji-btn')) return true
     e.preventDefault(); return false
   })
   function injectWatermark() {
