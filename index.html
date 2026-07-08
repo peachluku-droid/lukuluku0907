@@ -2335,6 +2335,15 @@ async function signOut(e) {
 
 loadNavAvatar();
 
+// Gọi checkAdminRole độc lập ngay khi trang load
+(async function initAdminCheck() {
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session?.user?.id) {
+      await checkAdminRole(session.user.id);
+    }
+  } catch(e) {}
+})();
 
 /* ── NOTICE TEXT — load từ Supabase site_settings ── */
 async function loadNoticeText() {
