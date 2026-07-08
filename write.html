@@ -1413,10 +1413,11 @@ function showApp() {
   preventToolbarBlur();
   // Đặt paragraph separator là <p> thay vì <div> (Chrome default)
   try { document.execCommand('defaultParagraphSeparator', false, 'p'); } catch(e) {}
-  // Khởi tạo paste handler và selection tracker
+  // Khởi tạo paste handler, selection tracker và caret tracker
   setTimeout(() => {
     initPasteHandler();
     initSelectionListener();
+    initCaretTracker();
   }, 300);
 }
 
@@ -1684,65 +1685,79 @@ function newChapter() {
   closeSidebar();
 }
 
-// ── CARET SAVE / RESTORE ──
-// Lưu vị trí caret bằng cách đếm offset ký tự từ đầu editor,
-// sau khi DOM bị rebuild (innerHTML = '') vẫn khôi phục đúng chỗ.
+// ── CARET SAVE / RESTORE (anchored to data-pid) ──
+// Lưu vị trí caret theo data-pid của đoạn chứa caret + offset ký tự trong đoạn đó.
+// Cách này bền vững qua cleanEditorContent() vì data-pid được giữ nguyên sau rebuild.
+// KHÔNG dùng offset ký tự toàn editor vì tổng offset thay đổi khi DOM được rebuild.
 function saveCaretPosition(containerEl) {
   const sel = window.getSelection();
   if (!sel || sel.rangeCount === 0) return null;
   const range = sel.getRangeAt(0);
   if (!containerEl.contains(range.startContainer)) return null;
 
-  // Tính offset ký tự tính từ đầu containerEl đến startContainer/startOffset
-  function getCharOffset(root, targetNode, targetOffset) {
+  // Tìm đoạn <p data-pid="..."> gần nhất chứa điểm start
+  function getEnclosingBlock(node) {
+    let n = node.nodeType === Node.TEXT_NODE ? node.parentNode : node;
+    while (n && n !== containerEl) {
+      if (n.tagName === 'P' && n.dataset && n.dataset.pid) return n;
+      n = n.parentNode;
+    }
+    return null;
+  }
+
+  // Đếm offset ký tự từ đầu block đến targetNode:targetOffset
+  function charOffsetInBlock(block, targetNode, targetOffset) {
     let offset = 0;
-    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+    const walker = document.createTreeWalker(block, NodeFilter.SHOW_TEXT, null);
     let node;
     while ((node = walker.nextNode())) {
-      if (node === targetNode) { offset += targetOffset; return offset; }
+      if (node === targetNode) return offset + targetOffset;
       offset += node.textContent.length;
     }
     return offset;
   }
 
+  const startBlock = getEnclosingBlock(range.startContainer);
+  if (!startBlock) return null;
+
   return {
-    start: getCharOffset(containerEl, range.startContainer, range.startOffset),
-    end:   getCharOffset(containerEl, range.endContainer,   range.endOffset),
+    pid:    startBlock.dataset.pid,
+    offset: charOffsetInBlock(startBlock, range.startContainer, range.startOffset),
   };
 }
 
 function restoreCaretPosition(containerEl, saved) {
-  if (!saved) return;
+  if (!saved || !saved.pid) return;
   try {
-    function findNodeAtOffset(root, targetOffset) {
-      let offset = 0;
-      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
-      let node;
-      while ((node = walker.nextNode())) {
-        const len = node.textContent.length;
-        if (offset + len >= targetOffset) {
-          return { node, offset: targetOffset - offset };
-        }
-        offset += len;
+    const block = containerEl.querySelector(`[data-pid="${saved.pid}"]`);
+    if (!block) return;
+
+    // Tìm text node và offset trong block tương ứng với saved.offset ký tự
+    let remaining = saved.offset;
+    const walker = document.createTreeWalker(block, NodeFilter.SHOW_TEXT, null);
+    let node;
+    while ((node = walker.nextNode())) {
+      const len = node.textContent.length;
+      if (remaining <= len) {
+        const range = document.createRange();
+        range.setStart(node, remaining);
+        range.collapse(true);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        return;
       }
-      // Fallback: cuối cùng
-      return node ? { node, offset: node.textContent.length } : null;
+      remaining -= len;
     }
-
-    const startPos = findNodeAtOffset(containerEl, saved.start);
-    const endPos   = findNodeAtOffset(containerEl, saved.end);
-    if (!startPos) return;
-
-    const range = document.createRange();
-    range.setStart(startPos.node, startPos.offset);
-    if (endPos && saved.end !== saved.start) {
-      range.setEnd(endPos.node, endPos.offset);
-    } else {
+    // Fallback: đặt caret cuối block nếu offset vượt quá
+    if (node) {
+      const range = document.createRange();
+      range.setStart(node, node.textContent.length);
       range.collapse(true);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
     }
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
   } catch(e) {}
 }
 
@@ -1769,24 +1784,28 @@ async function saveDraft() {
   const title = document.getElementById('chTitle').value.trim();
   if (!title) { showToast('Nhập tên chương trước khi lưu!', 'err'); document.getElementById('chTitle').focus(); return; }
 
-  // Lưu vị trí caret TRƯỚC khi clean (cleanEditorContent rebuild innerHTML → caret bị mất)
   const ed = document.getElementById('chContent');
-  // Ưu tiên vị trí caret hiện tại; fallback về vị trí lưu lúc gõ cuối (cho autosave)
-  const _caretSaved = saveCaretPosition(ed) || _lastCaretBeforeAutoSave || null;
 
-  // Clean toàn bộ inline style/font do browser hoặc paste để lại
-  // (chuẩn hóa cấu trúc về p/br/strong/b/em/i/u/img; pid cũ trên block bị convert vẫn được giữ)
+  // Bước 1: gán data-pid cho mọi đoạn TRƯỚC KHI lưu caret.
+  // saveCaretPosition() dùng data-pid làm anchor — nếu đoạn chưa có pid thì không tìm được.
+  ed.querySelectorAll('p, .media-block, .annotation-block').forEach(el => {
+    if (!el.dataset.pid) el.dataset.pid = genParaId();
+  });
+
+  // Bước 2: lưu caret (pid + offset trong đoạn đó)
+  // Ưu tiên caret hiện tại (editor đang focus); fallback về _trackedCaret (autosave chạy sau khi ngưng gõ)
+  const _caretSaved = saveCaretPosition(ed) || _trackedCaret || null;
+
+  // Bước 3: clean DOM (rebuild innerHTML → caret bị reset về đầu bởi browser)
   cleanEditorContent();
 
-  // Khôi phục caret ngay sau clean để người dùng tiếp tục gõ đúng chỗ
-  restoreCaretPosition(ed, _caretSaved);
-
-  // Gán data-pid cố định vào từng đoạn trước khi lưu (mọi thẻ phải có data-pid duy nhất)
+  // Bước 4: gán lại pid cho các đoạn mới xuất hiện sau clean (clean có thể tạo thêm <p> mới)
   ed.querySelectorAll('p, .media-block, .annotation-block').forEach(el => {
-    if (!el.dataset.pid) {
-      el.dataset.pid = genParaId();
-    }
+    if (!el.dataset.pid) el.dataset.pid = genParaId();
   });
+
+  // Bước 5: khôi phục caret đúng chỗ cũ (dùng pid đã lưu ở bước 2)
+  restoreCaretPosition(ed, _caretSaved);
   const content = ed.innerHTML;
 
   // Kiểm tra content size (Supabase mặc định giới hạn request ~10MB, nhưng nên giới hạn sớm)
@@ -1823,11 +1842,16 @@ async function saveDraft() {
   clearLocalDraft();
   loadChapterList();
 
-  // Khôi phục caret lần nữa sau các await phía trên (focus có thể bị mất khi await)
-  // chỉ restore khi editor đang hiển thị và không có element nào khác đang focus
-  const _activeTag = document.activeElement?.tagName;
-  if (_caretSaved && (!document.activeElement || _activeTag === 'BODY' || document.activeElement === ed)) {
-    restoreCaretPosition(ed, _caretSaved);
+  // Khôi phục caret sau khi các await hoàn thành (autosave chạy ngầm, editor có thể mất focus).
+  // Chỉ restore nếu không có input/textarea nào đang được user focus chủ động (ví dụ: ô tìm kiếm).
+  if (_caretSaved) {
+    const active = document.activeElement;
+    const userFocusedInput = active && active !== ed && active !== document.body
+      && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable);
+    if (!userFocusedInput) {
+      ed.focus();
+      restoreCaretPosition(ed, _caretSaved);
+    }
   }
 
   return true;
@@ -3751,18 +3775,27 @@ async function restoreLocalDraftIfNeeded() {
   } catch(e) {}
 }
 
-// Caret position được lưu mỗi lần user gõ để autosave timer dùng lại
-let _lastCaretBeforeAutoSave = null;
+// Luôn theo dõi vị trí caret mới nhất khi user đang trong editor.
+// Biến này được cập nhật qua selectionchange (xem initCaretTracker bên dưới).
+let _trackedCaret = null;
+
+// Khởi động tracker theo dõi caret liên tục — gọi 1 lần khi init editor
+function initCaretTracker() {
+  const ed = document.getElementById('chContent');
+  if (!ed) return;
+  document.addEventListener('selectionchange', () => {
+    const sel = window.getSelection();
+    if (sel && sel.rangeCount > 0 && ed.contains(sel.getRangeAt(0).startContainer)) {
+      _trackedCaret = saveCaretPosition(ed);
+    }
+  });
+}
 
 function onContentInput() {
   isDirty = true; setSaveStatus('Chưa lưu'); updateWordCount();
   // Fix lỗi 5: lưu bản thảo (localStorage) ngay tức thì để không mất nội dung nếu thoát app đột ngột.
   saveLocalDraft();
-  // Lưu vị trí caret ngay tại thời điểm user đang gõ (trước khi autosave chạy 2s sau)
-  const ed = document.getElementById('chContent');
-  _lastCaretBeforeAutoSave = saveCaretPosition(ed);
-  // Lưu lên server sau khi ngừng gõ 2 giây (thay vì 15 giây như trước) — vẫn giữ debounce nhỏ
-  // để tránh gửi request lên Supabase liên tục theo từng phím gõ.
+  // Lưu lên server sau khi ngừng gõ 2 giây — debounce nhỏ để tránh spam request Supabase
   clearTimeout(autoSaveTimer);
   autoSaveTimer = setTimeout(saveDraft, 2000);
 }
