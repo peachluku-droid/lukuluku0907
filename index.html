@@ -2286,8 +2286,8 @@ function applyAdminUI() {
     el.style.display = window._isAdmin ? '' : 'none';
   });
   // Rebuild playlist để hiện/ẩn nút admin trong playlist
-  if (typeof buildPlaylist === 'function') {
-    try { buildPlaylist(); } catch(e) {}
+  if (typeof window.buildPlaylist === 'function') {
+    try { window.buildPlaylist(); } catch(e) {}
   }
 }
 
@@ -2358,7 +2358,7 @@ async function initAdminCheck() {
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initAdminCheck);
 } else {
-  setTimeout(initAdminCheck, 300);
+  setTimeout(initAdminCheck, 800);
 }
 
 /* ── NOTICE TEXT — load từ Supabase site_settings ── */
@@ -3075,7 +3075,7 @@ if (window.PlSEO) {
     RADIO_PLAYLIST[i].src = url;
   }
 
-  function buildPlaylist() {
+  window.buildPlaylist = function() {
     const wrap = $('radioPlaylist');
     if (!wrap) return;
     wrap.innerHTML = RADIO_PLAYLIST.map((t, i) => {
@@ -3118,7 +3118,7 @@ if (window.PlSEO) {
         window.radioSelect(+item.dataset.idx);
       });
     });
-  }
+  };
 
   window.toggleLinkRow = function(e, i) {
     e.stopPropagation();
