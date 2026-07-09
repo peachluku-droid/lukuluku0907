@@ -3355,7 +3355,7 @@ if (window.PlSEO) {
 // ── NOTICE EDIT ──────────────────────────────────────────────────────────────
 const LS_NOTICE = 'plNoticeText';
 
-function openNoticeEdit() {
+window.openNoticeEdit = function() {
   if (!window._isAdmin) return;
   const modal = document.getElementById('noticeEditModal');
   const input = document.getElementById('noticeEditInput');
@@ -3363,10 +3363,10 @@ function openNoticeEdit() {
   if (input) input.value = current;
   if (modal) { modal.classList.add('open'); setTimeout(() => input?.focus(), 80); }
 }
-function closeNoticeEdit() {
+window.closeNoticeEdit = function() {
   document.getElementById('noticeEditModal')?.classList.remove('open');
-}
-async function saveNoticeText() {
+};
+window.saveNoticeText = async function() {
   if (!window._isAdmin) return;
   const text = document.getElementById('noticeEditInput')?.value.trim();
   if (!text) return;
