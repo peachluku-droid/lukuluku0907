@@ -1016,12 +1016,13 @@ body {
 /* ── PLAYLIST POPUP ── */
 .radio-playlist-popup {
   display: none;
-  position: absolute; right: 0; top: 0;
-  z-index: 50;
+  position: fixed; right: 20px; top: auto;
+  z-index: 999;
   background: var(--card); border: 1px solid var(--border);
-  border-radius: var(--radius-md); box-shadow: 0 8px 24px rgba(0,0,0,.14);
-  padding: 10px; width: 230px; max-height: 280px;
+  border-radius: var(--radius-md); box-shadow: 0 8px 24px rgba(0,0,0,.18);
+  padding: 10px; width: 240px; max-height: 320px;
   overflow-y: auto;
+  pointer-events: auto;
 }
 .radio-playlist-popup.open { display: block; }
 @media (max-width: 520px) {
@@ -1105,11 +1106,12 @@ body {
   color: var(--text-muted); padding: 4px 6px; border-radius: 6px;
   display: flex; align-items: center; flex-shrink: 0;
   transition: color .15s, background .15s; margin-left: 4px;
+  position: relative; z-index: 10; pointer-events: auto;
 }
 .notice-edit-btn:hover { color: var(--peach); background: var(--peach-light); }
 .notice-edit-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; }
 .notice-edit-modal {
-  display: none; position: fixed; inset: 0; z-index: 500;
+  display: none; position: fixed; inset: 0; z-index: 1000;
   background: rgba(0,0,0,0.35); align-items: center; justify-content: center;
 }
 .notice-edit-modal.open { display: flex; }
