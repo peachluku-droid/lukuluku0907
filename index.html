@@ -905,9 +905,10 @@ body {
   background: var(--bg);
   border: 1.5px solid var(--border);
   border-radius: 8px;
-  overflow: hidden;
+  overflow: visible;
   flex-shrink: 0;
   transition: border-color .2s, box-shadow .2s;
+  position: relative;
 }
 .sec-search-wrap:focus-within {
   border-color: var(--peach-mid);
@@ -927,6 +928,8 @@ body {
   display: flex; align-items: stretch;
   background: var(--peach-dark);
   flex-shrink: 0; align-self: stretch;
+  position: relative;
+  overflow: visible;
 }
 .sec-search-btn {
   background: transparent;
@@ -2273,11 +2276,17 @@ async function checkAdminRole(userId) {
 }
 
 function applyAdminUI() {
+  // Notice edit btn
   const noticeBtn = document.getElementById('noticeEditBtn');
   if (noticeBtn) noticeBtn.style.display = window._isAdmin ? 'flex' : 'none';
+  // Radio admin buttons
   document.querySelectorAll('.radio-admin-only').forEach(el => {
     el.style.display = window._isAdmin ? '' : 'none';
   });
+  // Rebuild playlist để hiện/ẩn nút admin trong playlist
+  if (typeof buildPlaylist === 'function') {
+    try { buildPlaylist(); } catch(e) {}
+  }
 }
 
 async function loadNavAvatar() {
@@ -2335,15 +2344,20 @@ async function signOut(e) {
 
 loadNavAvatar();
 
-// Gọi checkAdminRole độc lập ngay khi trang load
-(async function initAdminCheck() {
+// Gọi checkAdminRole sau khi DOM load xong
+async function initAdminCheck() {
   try {
     const { data: { session } } = await sb.auth.getSession();
     if (session?.user?.id) {
       await checkAdminRole(session.user.id);
     }
   } catch(e) {}
-})();
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initAdminCheck);
+} else {
+  setTimeout(initAdminCheck, 300);
+}
 
 /* ── NOTICE TEXT — load từ Supabase site_settings ── */
 async function loadNoticeText() {
