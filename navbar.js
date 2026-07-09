@@ -25,7 +25,7 @@
 .topbar {
   background: var(--bg2);
   border-bottom: 1px solid var(--border);
-  padding: 0;
+  padding: 0 2rem;
   display: flex; align-items: center;
   justify-content: space-between; height: 56px;
   position: sticky; top: 0; z-index: 100;
@@ -139,7 +139,7 @@
 .theme-drawer {
   display: none; position: fixed; right: 1rem; top: 60px;
   background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 0; padding: 16px; min-width: 210px;
+  border-radius: 20px; padding: 16px; min-width: 210px;
   box-shadow: 0 14px 36px rgba(141,27,42,.14); z-index: 200;
 }
 .theme-drawer.open { display: block; }
@@ -187,7 +187,7 @@
 
 /* Mobile */
 @media (max-width: 600px) {
-  .topbar { padding: 0; }
+  .topbar { padding: 0 0.6rem; }
   .logo-text { font-size: 15px; }
   .nav-center { gap: 0; }
   .nav-center a { padding: 5px 7px; font-size: 0; gap: 0; }
