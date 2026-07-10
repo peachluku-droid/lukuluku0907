@@ -366,6 +366,37 @@ body.theme-dark .sheet-input-bar { background: var(--bg2); }
 .skel-para { display: flex; flex-direction: column; gap: 8px; }
 .skel-line { height: 14px; border-radius: 6px; background: linear-gradient(90deg, var(--border) 25%, color-mix(in srgb, var(--accent) 6%, var(--bg2)) 50%, var(--border) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; }
 @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+.sheet-emoji-btn, .sheet-img-btn {
+  background: var(--sidebar); border: 1.5px solid var(--border);
+  border-radius: 8px; padding: 5px 9px; cursor: pointer; display: flex; align-items: center;
+}
+.sheet-emoji-btn svg, .sheet-img-btn svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.sheet-sticker-picker {
+  display: none; flex-wrap: wrap; gap: 6px; padding: 8px;
+  border: 1.5px solid var(--border); border-radius: 10px; background: var(--bg2); max-height: 180px; overflow-y: auto;
+}
+.sheet-sticker-picker.open { display: flex; }
+.sticker-pick-item {
+  width: 56px; height: 56px; border-radius: 8px; cursor: pointer;
+  border: 1.5px solid transparent; background: var(--sidebar);
+  display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 0;
+}
+.sticker-pick-item:hover { border-color: var(--accent2); }
+.sticker-pick-item img { width: 100%; height: 100%; object-fit: contain; }
+.sticker-pick-empty { font-size: 12px; color: var(--meta); padding: 8px; width: 100%; text-align: center; }
+.sticker-preview-wrap { position: relative; display: inline-block; margin-top: 4px; }
+.sticker-preview-wrap img { width: 84px; height: 84px; object-fit: contain; border-radius: 8px; background: var(--sidebar); }
+.sticker-preview-remove {
+  position: absolute; top: -6px; right: -6px; width: 20px; height: 20px; border-radius: 50%;
+  background: var(--accent); color: #fff; border: none; cursor: pointer; font-size: 11px;
+  display: flex; align-items: center; justify-content: center; line-height: 1;
+}
+.cmt-sticker { width: 96px; height: 96px; object-fit: contain; display: block; margin-top: 4px; border-radius: 8px; cursor: pointer; }
+
+.cmt-replies { margin-top: 6px; padding-left: 12px; border-left: 2px solid var(--border); display: flex; flex-direction: column; gap: 0; }
+.cmt-bubble.is-reply { padding: 8px 0; border-bottom: none; }
+.cmt-bubble.is-reply .cmt-avatar { width: 28px; height: 28px; font-size: 12px; }
 </style>
 </head>
 <body class="theme-light">
@@ -545,7 +576,16 @@ body.theme-dark .sheet-input-bar { background: var(--bg2); }
         <button class="sheet-emoji-btn" onclick="toggleSheetPicker()">
           <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
         </button>
+        <button class="sheet-img-btn" onclick="document.getElementById('sheet-img-input').click()" title="Thêm ảnh">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        </button>
+        <button class="sheet-img-btn" onclick="toggleStickerPicker()" title="Nhãn dán">
+          <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-10 10 10 10 0 0 0 10 10c.5 0 1-.04 1.5-.12a3.5 3.5 0 0 1-.5-1.79V18a2 2 0 0 1 2-2h2.09c.08-.5.12-1 .12-1.5A10 10 0 0 0 12 2z"/><circle cx="8" cy="9" r="1"/><circle cx="14.5" cy="8" r="1"/></svg>
+        </button>
+        <input type="file" id="sheet-img-input" accept="image/*" style="display:none" onchange="previewImg(this)">
       </div>
+      <div class="sheet-emoji-picker" id="sheet-emoji-picker"></div>
+      <div class="sheet-sticker-picker" id="sheet-sticker-picker"></div>
       <div class="sheet-emoji-picker" id="sheet-emoji-picker"></div>
       <div class="sheet-input-bar">
         <textarea class="sheet-text-inline" id="sheet-cmt-input" placeholder="Viết bình luận..." rows="1"
@@ -880,7 +920,7 @@ function renderParagraphs(content) {
     if (!blocks.length) blocks.push({ type:'html', content })
     paragraphs = blocks
   } else {
-    paragraphs = content.split(/\n\n+|\n/).map(s=>s.trim()).filter(Boolean).map(l=>({type:'text',content:l}))
+    paragraphs = content.split(/\n\n+/).map(s=>s.trim()).filter(Boolean).map(l=>({type:'text',content:l}))
   }
   if (!paragraphs.length) {
     container.innerHTML = '<p style="color:var(--meta);font-size:14px;text-align:center;padding:2rem">Chương này chưa có nội dung.</p>'
@@ -1068,6 +1108,7 @@ async function renderCmtOverview() {
         ${quoteHtml}
         <div class="cmt-user">${name}</div>
         ${c.content ? `<div class="cmt-content">${renderContentWithTag(c.content)}</div>` : ''}
+        ${c.sticker_url ? `<img class="cmt-sticker" src="${c.sticker_url}" alt="sticker" loading="lazy" onclick="openLightbox('${c.sticker_url}')">` : ''}
         <div class="cmt-footer">
           <span class="cmt-time">${formatTime(c.created_at)}</span>
           ${chCurrentUser ? `<button class="cmt-reply-btn" onclick="openCmtSheet('${c.paragraph_id}', true); setTimeout(()=>replyTo('${jsEscape(name)}','${c.id}','${c.user_id}',false),250)">Trả lời</button>` : ''}
@@ -1113,6 +1154,8 @@ function openCmtSheet(pid, fromOverview) {
     }
   }
   document.getElementById('sheet-emoji-picker').classList.remove('open')
+  document.getElementById('sheet-sticker-picker').classList.remove('open')
+  selectedSticker = null
   document.getElementById('cmt-sheet').classList.add('open')
   document.getElementById('cmt-overlay').classList.add('open')
   document.body.style.overflow = 'hidden'
@@ -1133,22 +1176,25 @@ async function loadSheetComments(pid) {
   const list = document.getElementById('sheet-cmt-list')
   list.innerHTML = '<p class="empty-msg">Đang tải...</p>'
   const { data, error } = await fetchCommentsWithProfiles(
-    sb.from('comments').select('*').eq('story_id',STORY_ID).eq('chapter_id',CHAPTER_UUID).eq('paragraph_id',pid).order('created_at',{ascending:false})
+    sb.from('comments').select('*').eq('story_id',STORY_ID).eq('chapter_id',CHAPTER_UUID).eq('paragraph_id',pid).order('created_at',{ascending:true})
   )
   if (error) { list.innerHTML = `<p class="empty-msg">Lỗi tải bình luận.</p>`; return }
   const btn = document.querySelector(`.cmt-trigger[data-pid="${pid}"] .cnt`)
   if (btn) btn.textContent = data.length > 0 ? data.length : '+'
   if (!data.length) { list.innerHTML = '<p class="empty-msg">Chưa có bình luận.<br>Hãy là người đầu tiên!</p>'; return }
-  list.innerHTML = data.map((c,i) => {
+  const parents = data.filter(c => !c.parent_id)
+  const replies = data.filter(c => c.parent_id)
+  const buildBubble = (c, isReply=false) => {
     const prof = c.profiles||{}, name = escapeHtml(prof.display_name||c.username||'Ẩn danh')
     const color = avatarColorFor(c.user_id), avatarSrc = prof.avatar_url||c.avatar_url
     const avatarHtml = avatarSrc ? `<img src="${escapeHtml(avatarSrc)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : name.charAt(0).toUpperCase()
     const isOwn = chCurrentUser && c.user_id === chCurrentUser.id
-    return `<div class="cmt-bubble" id="cmt-${c.id}">
+    return `<div class="cmt-bubble${isReply?' is-reply':''}" id="cmt-${c.id}">
       <div class="cmt-avatar" style="background:${avatarSrc?'transparent':color}">${avatarHtml}</div>
       <div class="cmt-body">
         <div class="cmt-user">${name}</div>
         ${c.content ? `<div class="cmt-content">${renderContentWithTag(c.content)}</div>` : ''}
+        ${c.sticker_url ? `<img class="cmt-sticker" src="${c.sticker_url}" alt="sticker" loading="lazy" onclick="openLightbox('${c.sticker_url}')">` : ''}
         <div class="cmt-footer">
           <span class="cmt-time">${formatTime(c.created_at)}</span>
           ${chCurrentUser ? `<button class="cmt-reply-btn" onclick="replyTo('${jsEscape(name)}','${c.id}','${c.user_id}',false)">Trả lời</button>` : ''}
@@ -1156,6 +1202,11 @@ async function loadSheetComments(pid) {
         </div>
       </div>
     </div>`
+  }
+  list.innerHTML = parents.map(p => {
+    const kids = replies.filter(r => r.parent_id === p.id)
+    const kidsHtml = kids.length ? `<div class="cmt-replies">${kids.map(r=>buildBubble(r,true)).join('')}</div>` : ''
+    return buildBubble(p, false) + kidsHtml
   }).join('')
 }
 
@@ -1233,13 +1284,15 @@ async function submitSheetComment() {
   const btn = document.getElementById('sheet-send-btn'); btn.disabled = true
   const { error } = await sb.from('comments').insert({
     story_id:STORY_ID, chapter_id:CHAPTER_UUID, paragraph_id:activePid,
-    user_id:chCurrentUser.id, content, image_url: null, sticker_url: null,
+    user_id:chCurrentUser.id, content, image_url: null, sticker_url: selectedSticker || null,
     parent_id:activeParentId||null, reply_to_user_id:activeReplyUserId||null
   })
   activeReplyUserId = null; activeParentId = null; btn.disabled = false
   if (error) { console.error('POST CMT ERROR:', error); alert('Gửi thất bại: ' + error.message); return }
   document.getElementById('sheet-cmt-input').value = ''
   document.getElementById('sheet-emoji-picker').classList.remove('open')
+  document.getElementById('sheet-sticker-picker').classList.remove('open')
+  selectedSticker = null
     
   loadSheetComments(activePid); loadAllCounts()
 }
@@ -1265,6 +1318,7 @@ async function loadChapterEndComments() {
       <div class="cmt-body">
         <div class="cmt-user">${name}</div>
         ${c.content ? `<div class="cmt-content">${renderContentWithTag(c.content)}</div>` : ''}
+        ${c.sticker_url ? `<img class="cmt-sticker" src="${c.sticker_url}" alt="sticker" loading="lazy" onclick="openLightbox('${c.sticker_url}')">` : ''}
         <div class="cmt-footer">
           <span class="cmt-time">${formatTime(c.created_at)}</span>
           ${chCurrentUser ? `<button class="cmt-reply-btn" onclick="replyTo('${jsEscape(name)}','${c.id}','${c.user_id}',true)">Trả lời</button>` : ''}
@@ -1335,6 +1389,41 @@ function insertChapterEmoji(emoji) {
   inp.selectionStart = inp.selectionEnd = s+emoji.length; inp.focus()
 }
 
+
+let selectedSticker = null
+let _stickerListCache = null
+async function loadStickerList() {
+  if (_stickerListCache) return _stickerListCache
+  try {
+    const { data, error } = await sb.storage.from('stickers').list('', { limit:100, sortBy:{column:'name',order:'asc'} })
+    if (error) return []
+    const files = (data||[]).filter(f => f.name && !f.name.startsWith('.'))
+    _stickerListCache = files.map(f => sb.storage.from('stickers').getPublicUrl(f.name).data.publicUrl)
+    return _stickerListCache
+  } catch(e) { return [] }
+}
+async function toggleStickerPicker() {
+  const picker = document.getElementById('sheet-sticker-picker')
+  const isOpening = !picker.classList.contains('open')
+  picker.classList.toggle('open'); document.getElementById('sheet-emoji-picker').classList.remove('open')
+  document.getElementById('sheet-sticker-picker').classList.remove('open')
+  selectedSticker = null
+  if (!isOpening) return
+  picker.innerHTML = '<div class="sticker-pick-empty">Đang tải...</div>'
+  const urls = await loadStickerList()
+  if (!urls.length) { picker.innerHTML = '<div class="sticker-pick-empty">Chưa có nhãn dán nào.</div>'; return }
+  picker.innerHTML = urls.map(u => `<button class="sticker-pick-item" onclick="pickSticker('${u}')"><img src="${u}" alt="sticker" loading="lazy"></button>`).join('')
+}
+function pickSticker(url) {
+  selectedSticker = url; removeImg()
+  document.getElementById('img-preview-container').innerHTML = `
+    <div class="sticker-preview-wrap">
+      <img src="${url}" alt="sticker preview">
+      <button class="sticker-preview-remove" onclick="removeSticker()">✕</button>
+    </div>`
+  document.getElementById('sheet-sticker-picker').classList.remove('open')
+}
+function removeSticker() { selectedSticker = null; document.getElementById('img-preview-container').innerHTML = '' }
 
 function openLightbox(src) { document.getElementById('lightbox-img').src = src; document.getElementById('lightbox').classList.add('open') }
 function closeLightbox() { document.getElementById('lightbox').classList.remove('open') }
